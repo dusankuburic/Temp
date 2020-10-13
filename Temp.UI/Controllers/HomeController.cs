@@ -11,7 +11,6 @@ namespace Temp.UI.Controllers
     public class HomeController : Controller
     {
 
-
         public IActionResult Index()
         {
             return View();
@@ -21,7 +20,5 @@ namespace Temp.UI.Controllers
         {
             return View();
         }
-
-
     }
 }
