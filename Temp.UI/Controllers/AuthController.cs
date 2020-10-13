@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Temp.Application.Auth.Admins;
+using Temp.Application.Auth.Users;
 using Temp.Database;
 
 namespace Temp.UI.Controllers
@@ -75,6 +76,30 @@ namespace Temp.UI.Controllers
         }
 
 
+        [HttpGet]
+        public IActionResult RegisterUser()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegisterUser(RegisterUser.Request request)
+        {
+            if(ModelState.IsValid)
+            {
+                var response = await new RegisterUser(_ctx).Do(request);
+                TempData["message"] = response.Messsage;
+
+                if(response.Status)
+                {
+                    SetUpUserClaims(response.Username);
+                    return RedirectToAction("Index", "User");
+                }
+            }
+
+            return View("RegisterUser");
+        }
+
         [HttpPost]
         public IActionResult Logout()
         {
@@ -98,6 +123,20 @@ namespace Temp.UI.Controllers
             var adminPrincipal = new ClaimsPrincipal(adminIdentity);
 
             HttpContext.SignInAsync(adminPrincipal);
+        }
+
+        private void SetUpUserClaims(string username)
+        {
+            var userClaims = new List<Claim>()
+                {
+                    new Claim(ClaimTypes.Name,  username),
+                    new Claim(ClaimTypes.Role, "User")
+                };
+
+            var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
+            var userPrincipal = new ClaimsPrincipal(userIdentity);
+
+            HttpContext.SignInAsync(userPrincipal);
         }
     }
 }
