@@ -30,6 +30,8 @@ namespace Temp.UI.Controllers
             return View();
         }
 
+        //TODO: Pass Status value to View so program can decide what color to use based on success 
+
         [HttpPost]
         public async Task<IActionResult> RegisterAdmin(RegisterAdmin.Request request)
         {
@@ -46,6 +48,30 @@ namespace Temp.UI.Controllers
             }
 
             return View("RegisterAdmin");
+        }
+
+        [HttpGet]
+        public IActionResult LoginAdmin()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoginAdmin(LoginAdmin.Request request)
+        {
+            if(ModelState.IsValid)
+            {
+                var response = await new LoginAdmin(_ctx).Do(request);
+                TempData["message"] = response.Mesasge;
+
+                if(response.Status)
+                {
+                    SetUpAdminClaims(response.Username);
+                    return RedirectToAction("Index", "Admin");
+                }
+            }
+
+            return View("LoginAdmin");
         }
 
 

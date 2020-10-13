@@ -43,7 +43,7 @@ namespace Temp.Application.Auth.Admins
             {
                 return new Response
                 {
-                    Message = "Admin aready exist with same username",
+                    Message = "Admin aready exists with same username",
                     Username = request.Username,
                     Status = false
                 };
