@@ -29,8 +29,6 @@ namespace Temp.UI.Controllers
             return View();
         }
 
-        //TODO: Pass Status value to View so program can decide what color to use based on success 
-
         [HttpPost]
         public async Task<IActionResult> RegisterAdmin(RegisterAdmin.Request request)
         {
@@ -78,7 +76,6 @@ namespace Temp.UI.Controllers
             
             return View("LoginAdmin");
         }
-
 
         [HttpGet]
         public IActionResult RegisterUser()
@@ -133,7 +130,6 @@ namespace Temp.UI.Controllers
 
             return View("LoginUser");
         }
-
 
         [HttpPost]
         public IActionResult Logout()
