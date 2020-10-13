@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -39,12 +37,15 @@ namespace Temp.UI.Controllers
             if (ModelState.IsValid)
             {
                 var response = await new RegisterAdmin(_ctx).Do(request);
-                TempData["message"] = response.Message;
 
                 if (response.Status)
                 {
                     SetUpAdminClaims(response.Username);
                     return RedirectToAction("Index", "Admin");
+                }
+                else
+                {
+                    TempData["message"] = response.Message;
                 }
             }
 
@@ -63,15 +64,18 @@ namespace Temp.UI.Controllers
             if(ModelState.IsValid)
             {
                 var response = await new LoginAdmin(_ctx).Do(request);
-                TempData["message"] = response.Mesasge;
-
-                if(response.Status)
+                
+                if (response.Status)
                 {
                     SetUpAdminClaims(response.Username);
                     return RedirectToAction("Index", "Admin");
                 }
+                else
+                {
+                    TempData["message"] = response.Mesasge;
+                }
             }
-
+            
             return View("LoginAdmin");
         }
 
@@ -88,12 +92,15 @@ namespace Temp.UI.Controllers
             if(ModelState.IsValid)
             {
                 var response = await new RegisterUser(_ctx).Do(request);
-                TempData["message"] = response.Messsage;
 
                 if(response.Status)
                 {
                     SetUpUserClaims(response.Username);
                     return RedirectToAction("Index", "User");
+                }
+                else
+                {
+                    TempData["message"] = response.Messsage;
                 }
             }
 
@@ -112,12 +119,15 @@ namespace Temp.UI.Controllers
             if(ModelState.IsValid)
             {
                 var response = await new LoginUser(_ctx).Do(request);
-                TempData["message"] = response.Message;
 
-                if(response.Status)
+                if (response.Status)
                 {
                     SetUpUserClaims(response.Username);
                     return RedirectToAction("Index", "User");
+                }
+                else
+                {
+                    TempData["message"] = response.Message;
                 }
             }
 

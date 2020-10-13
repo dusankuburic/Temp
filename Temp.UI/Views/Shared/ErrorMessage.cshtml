@@ -1,0 +1,12 @@
+﻿@{
+    string message = (string)TempData["message"];
+
+    if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-danger" role="alert">
+            @message
+        </div>
+    }
+
+    TempData.Remove("message");
+}
