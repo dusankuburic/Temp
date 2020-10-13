@@ -100,6 +100,31 @@ namespace Temp.UI.Controllers
             return View("RegisterUser");
         }
 
+        [HttpGet]
+        public IActionResult LoginUser()
+        {
+            return View("LoginUser");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoginUser(LoginUser.Request request)
+        {
+            if(ModelState.IsValid)
+            {
+                var response = await new LoginUser(_ctx).Do(request);
+                TempData["message"] = response.Message;
+
+                if(response.Status)
+                {
+                    SetUpUserClaims(response.Username);
+                    return RedirectToAction("Index", "User");
+                }
+            }
+
+            return View("LoginUser");
+        }
+
+
         [HttpPost]
         public IActionResult Logout()
         {
