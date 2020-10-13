@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Temp.Domain.Models;
 
 namespace Temp.Database
 {
@@ -11,5 +12,7 @@ namespace Temp.Database
         {
 
         }
+
+        public DbSet<Admin> Admins { get; set; }
     }
 }
