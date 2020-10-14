@@ -26,7 +26,7 @@ namespace Temp.Application.Auth.Admins
             }
         }
 
-        private async Task<bool> AdminExists(string username)
+        private async ValueTask<bool> AdminExists(string username)
         {
             if (await _ctx.Admins.AnyAsync(x => x.Username == username))
             {
@@ -35,7 +35,7 @@ namespace Temp.Application.Auth.Admins
             return false;
         }
 
-        public async Task<Response> Do(Request request)
+        public async ValueTask<Response> Do(Request request)
         {
             var adminExists = await AdminExists(request.Username);
 

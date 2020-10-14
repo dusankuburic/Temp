@@ -30,7 +30,7 @@ namespace Temp.Application.Auth.Users
             return true;
         }
 
-        public async Task<Response> Do(Request request)
+        public async ValueTask<Response> Do(Request request)
         {
             var user = await _ctx.Users.FirstOrDefaultAsync(x => x.Username == request.Username);
 

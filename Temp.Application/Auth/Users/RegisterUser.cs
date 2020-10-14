@@ -27,7 +27,7 @@ namespace Temp.Application.Auth.Users
             }
         }
 
-        private async Task<bool> UserExists(string username)
+        private async ValueTask<bool> UserExists(string username)
         {
             if(await _ctx.Users.AnyAsync(x => x.Username == username))
             {
@@ -37,7 +37,7 @@ namespace Temp.Application.Auth.Users
             return false;
         }
 
-        public async Task<Response> Do(Request request)
+        public async ValueTask<Response> Do(Request request)
         {
             var userExists = await UserExists(request.Username);
 

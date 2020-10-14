@@ -30,7 +30,7 @@ namespace Temp.Application.Auth.Admins
             return true;
         }
 
-        public async Task<Response> Do(Request request)
+        public async ValueTask<Response> Do(Request request)
         {
             var admin = await _ctx.Admins.FirstOrDefaultAsync(x => x.Username == request.Username);
 

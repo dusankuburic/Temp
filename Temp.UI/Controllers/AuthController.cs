@@ -150,7 +150,7 @@ namespace Temp.UI.Controllers
                     new Claim(ClaimTypes.Role, "Admin")
                 };
 
-            var adminIdentity = new ClaimsIdentity(adminClaims, "Admin Identity");
+            var adminIdentity = new ClaimsIdentity(adminClaims, "Admin_Identity");
             var adminPrincipal = new ClaimsPrincipal(adminIdentity);
 
             HttpContext.SignInAsync(adminPrincipal);
@@ -164,7 +164,7 @@ namespace Temp.UI.Controllers
                     new Claim(ClaimTypes.Role, "User")
                 };
 
-            var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
+            var userIdentity = new ClaimsIdentity(userClaims, "User_Identity");
             var userPrincipal = new ClaimsPrincipal(userIdentity);
 
             HttpContext.SignInAsync(userPrincipal);
