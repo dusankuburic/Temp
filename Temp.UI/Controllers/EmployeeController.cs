@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp;
 using Temp.Application.Empolyees;
 using Temp.Database;
 
@@ -30,6 +28,22 @@ namespace Temp.UI.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateEmployee.Request request)
+        {
+            if(ModelState.IsValid)
+            {
+                var response = await new CreateEmployee(_ctx).Do(request);
+
+                if(response.Status)
+                {
+                    TempData["success_message"] = response.Message;
+                    return RedirectToAction("Create");
+                }
+            }
+            return RedirectToAction("Create");
+        }
+
 
         [HttpGet]
         public IActionResult Edit(int id)
@@ -54,7 +68,6 @@ namespace Temp.UI.Controllers
 
             return View("Edit", request.Id);
         }
-
 
     }
 }
