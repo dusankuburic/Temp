@@ -58,7 +58,8 @@ namespace Temp.Application.Auth.Users
             {
                 Username = request.Username,
                 PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
+                PasswordSalt = passwordSalt,
+                EmployeeId = request.EmpoyeeId
             };
 
             _ctx.Users.Add(user);
@@ -75,6 +76,8 @@ namespace Temp.Application.Auth.Users
 
         public class Request
         {
+            public int EmpoyeeId {get; set;}
+
             [Required]
             public string Username { get; set; }
             [Required]

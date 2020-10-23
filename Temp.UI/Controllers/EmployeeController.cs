@@ -68,7 +68,29 @@ namespace Temp.UI.Controllers
             return View("Edit", request.Id);
         }
 
+        [HttpGet]
+        public IActionResult AssignRole(int id)
+        {
+            TempData["employee"] = new GetEmployee(_ctx).Do(id);
+            return View();
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> AssignRole(AssignRole.Request request)
+        {
+            if(ModelState.IsValid)
+            {
+                var response = await new AssignRole(_ctx).Do(request);
+
+                if(response.Status)
+                {
+                    TempData["success_message"] = response.Message;
+                    return RedirectToAction("Index");
+                }
+            }
+
+             return View("AssignRole", request.Id);
+        }
 
     }
 }

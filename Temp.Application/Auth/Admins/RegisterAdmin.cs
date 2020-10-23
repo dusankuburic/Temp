@@ -56,7 +56,8 @@ namespace Temp.Application.Auth.Admins
             {
                 Username = request.Username,
                 PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
+                PasswordSalt = passwordSalt,
+                EmployeeId = request.EmpoyeeId
             };
 
             _ctx.Admins.Add(admin);
@@ -73,6 +74,8 @@ namespace Temp.Application.Auth.Admins
 
         public class Request
         {
+            public int EmpoyeeId {get; set;}
+
             [Required]
             [MinLength(5)]
             public string Username { get; set; }
