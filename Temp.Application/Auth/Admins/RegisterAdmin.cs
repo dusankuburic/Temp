@@ -43,7 +43,7 @@ namespace Temp.Application.Auth.Admins
             {
                 return new Response
                 {
-                    Message = "Admin aready exists with same username",
+                    Message = $"Admin aready exists with {request.Username} username",
                     Username = request.Username,
                     Status = false
                 };
@@ -56,7 +56,8 @@ namespace Temp.Application.Auth.Admins
             {
                 Username = request.Username,
                 PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
+                PasswordSalt = passwordSalt,
+                EmployeeId = request.EmpoyeeId
             };
 
             _ctx.Admins.Add(admin);
@@ -73,6 +74,8 @@ namespace Temp.Application.Auth.Admins
 
         public class Request
         {
+            public int EmpoyeeId {get; set;}
+
             [Required]
             [MinLength(5)]
             public string Username { get; set; }

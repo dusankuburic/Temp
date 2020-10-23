@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp;
 using Temp.Application.Empolyees;
 using Temp.Database;
 
@@ -67,6 +66,36 @@ namespace Temp.UI.Controllers
             }
 
             return View("Edit", request.Id);
+        }
+
+        [HttpGet]
+        public IActionResult AssignRole(int id)
+        {
+            TempData["employee"] = new GetEmployee(_ctx).Do(id);
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignRole(AssignRole.Request request)
+        {
+            if(ModelState.IsValid)
+            {
+                var response = await new AssignRole(_ctx).Do(request);
+
+                if(response.Status)
+                {
+                    TempData["success_message"] = response.Message;
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["message"] = response.Message;
+                    return RedirectToAction("AssignRole", request.Id);
+                }
+
+            }
+
+             return View("AssignRole", request.Id);
         }
 
     }
