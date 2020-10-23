@@ -24,13 +24,13 @@
                     <td>@employee.FirstName</td>
                     <td>@employee.LastName</td>
 
-                    @if (@employee.Role == "Admin")
+                    @if (employee.Role == "Admin")
                     {
                         <td>
                             <span class="badge badge-pill badge-warning">@employee.Role</span>
                         </td>
                     }
-                    else if(employee.Role == "User")
+                    else if (employee.Role == "User")
                     {
                         <td>
                             <span class="badge badge-pill badge-info">@employee.Role</span>
@@ -43,6 +43,14 @@
                         </td>
                     }
                     <td><a class="btn btn-primary" asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.Id">Edit</a></td>
+                    @if (employee.Role != "Admin" && employee.Role != "User")
+                    {
+                        <td><a class="btn btn-info" asp-controller="Employee" asp-action="AssignRole" asp-route-id="@employee.Id">Assign Role</a></td>
+                    }
+                    else
+                    {
+                        <td><a class="btn btn-secondary">Remove Role</a></td>
+                    }
                 </tr>
             }
         }

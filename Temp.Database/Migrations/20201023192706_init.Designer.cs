@@ -10,8 +10,8 @@ using Temp.Database;
 namespace Temp.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201023082641_EmployeeModel")]
-    partial class EmployeeModel
+    [Migration("20201023192706_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
