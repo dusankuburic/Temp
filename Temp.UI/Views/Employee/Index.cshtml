@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Temp.Application.Empolyees.GetEmployees.EmployeeViewModel>
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+
+<div class="col-lg-8">
+    <h1 class="text-center">Employee search</h1>
+    <table class="table table-striped">
+        <tr>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Role</th>
+        </tr>
+        @{
+            foreach (var employee in Model)
+            {
+                <tr>
+                    <td>@employee.Id</td>
+                    <td>@employee.FirstName</td>
+                    <td>@employee.LastName</td>
+
+                    @if (@employee.Role == "Admin")
+                    {
+                        <td>
+                            <span class="badge badge-pill badge-warning">@employee.Role</span>
+                        </td>
+                    }
+                    else if(employee.Role == "User")
+                    {
+                        <td>
+                            <span class="badge badge-pill badge-info">@employee.Role</span>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <span class="badge badge-pill badge-secondary">@employee.Role</span>
+                        </td>
+                    }
+                </tr>
+            }
+        }
+    </table>
+</div>
+
