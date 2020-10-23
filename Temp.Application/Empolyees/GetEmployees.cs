@@ -19,6 +19,8 @@ namespace Temp.Application.Empolyees
 
         private string RoleName(int EmpolyeeId)
         {
+            string roleName = "None";
+
             var userTest = _ctx.Users
                 .Where(x => x.Employee.Id == EmpolyeeId)
                 .FirstOrDefault();
@@ -31,18 +33,16 @@ namespace Temp.Application.Empolyees
 
                 if(adminTest != null)
                 {
-                    return "Admin";
+                    roleName = "Admin";
                 }
             }
             else
             {
-                return "User";
+               roleName = "User";
             }
 
-            return "None";
+            return roleName;
         }
-
-
 
         public IEnumerable<EmployeeViewModel> Do() => 
             _ctx.Employees.ToList().Select(x => new EmployeeViewModel

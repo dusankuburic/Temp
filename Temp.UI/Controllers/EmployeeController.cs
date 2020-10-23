@@ -32,11 +32,28 @@ namespace Temp.UI.Controllers
 
 
         [HttpGet]
-        public IActionResult Edit()
+        public IActionResult Edit(int id)
         {
-            return View();
+            return View(new GetEmployee(_ctx).Do(id));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Edit(UpdateEmployee.Request request)
+        {
+            if(ModelState.IsValid)
+            {
+                var response = await new UpdateEmployee(_ctx).Do(request);
+
+                if(response.Status)
+                {
+                    TempData["success_message"] = response.Message;
+                    return RedirectToAction("Edit", response.Id);
+                }
+ 
+            }
+
+            return View("Edit", request.Id);
+        }
 
 
     }
