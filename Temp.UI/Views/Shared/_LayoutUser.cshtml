@@ -1,15 +1,19 @@
 ﻿<!DOCTYPE html>
-
 <html>
 <partial name="Header.cshtml" />
 <body>
     <partial name="nav/NavbarAuthUser.cshtml" />
-    <div class="container">
-        <div class="row justify-content-center">
-            @RenderBody()
+    <div class="d-flex" id="wrapper">
+        <partial name="sidebar/SidebarUser.cshtml" />
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <partial name="SuccessMessage.cshtml" />
+                    @RenderBody()
+                </div>
+            </div>
         </div>
     </div>
-
     <partial name="Footer.cshtml" />
     @RenderSection("Scripts", required: false)
 </body>
