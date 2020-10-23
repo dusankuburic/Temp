@@ -45,7 +45,7 @@ namespace Temp.Application.Auth.Users
             {
                 return new Response
                 {
-                    Messsage = "User already exists with same username",
+                    Messsage = $"User already exists with {request.Username} username",
                     Username = request.Username,
                     Status = false
                 };

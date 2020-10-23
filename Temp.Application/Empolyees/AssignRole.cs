@@ -19,13 +19,8 @@ namespace Temp.Application.Empolyees
         public async Task<Response> Do(Request request)
         {
 
-
-
-
             if (request.Role == "User")
             {   
-
-
                 var userRequest = new RegisterUser.Request
                 {
                     Username = request.Username,

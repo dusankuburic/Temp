@@ -87,6 +87,12 @@ namespace Temp.UI.Controllers
                     TempData["success_message"] = response.Message;
                     return RedirectToAction("Index");
                 }
+                else
+                {
+                    TempData["message"] = response.Message;
+                    return RedirectToAction("AssignRole", request.Id);
+                }
+
             }
 
              return View("AssignRole", request.Id);
