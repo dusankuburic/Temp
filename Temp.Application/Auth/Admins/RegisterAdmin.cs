@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Temp.Application.Empolyees;
 using Temp.Database;
 using Temp.Domain.Models;
 
@@ -62,6 +64,9 @@ namespace Temp.Application.Auth.Admins
 
             _ctx.Admins.Add(admin);
             await _ctx.SaveChangesAsync();
+
+            var result = new UpdateEmployeeRole(_ctx).Do("Admin",request.EmpoyeeId);
+            
 
             return new Response
             {
