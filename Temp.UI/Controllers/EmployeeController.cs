@@ -98,5 +98,28 @@ namespace Temp.UI.Controllers
              return View("AssignRole", request.Id);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveRole(RemoveEmployeeRole.Request request)
+        {
+            if(ModelState.IsValid)
+            {
+                var response = await new RemoveEmployeeRole(_ctx).Do(request);
+
+                if(response.Status)
+                {
+                    TempData["success_message"] = response.Message;           
+                }
+                else
+                {
+                    TempData["message"] = response.Message;
+                }
+
+                 return RedirectToAction("Index");
+            }
+
+            return View("Index");
+        }
+
     }
 }
