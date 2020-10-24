@@ -13,40 +13,13 @@ namespace Temp.Application.Empolyees
             _ctx = ctx;
         }
 
-        private string RoleName(int EmpolyeeId)
-        {
-            string roleName = "None";
-
-            var userTest = _ctx.Users
-                .Where(x => x.Employee.Id == EmpolyeeId)
-                .FirstOrDefault();
-
-            if(userTest == null)
-            {
-               var adminTest = _ctx.Admins
-                    .Where(x => x.Employee.Id == EmpolyeeId)
-                    .FirstOrDefault();
-
-                if(adminTest != null)
-                {
-                    roleName = "Admin";
-                }
-            }
-            else
-            {
-               roleName = "User";
-            }
-
-            return roleName;
-        }
-
         public IEnumerable<EmployeeViewModel> Do() => 
             _ctx.Employees.ToList().Select(x => new EmployeeViewModel
             {
                 Id = x.Id,
                 FirstName = x.FirstName,
                 LastName = x.LastName,
-                Role = RoleName(x.Id)
+                Role = x.Role
             });
 
 

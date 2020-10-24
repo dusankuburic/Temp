@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Temp.Application.Empolyees;
 using Temp.Database;
 using Temp.Domain.Models;
 
@@ -64,6 +65,8 @@ namespace Temp.Application.Auth.Users
 
             _ctx.Users.Add(user);
             await _ctx.SaveChangesAsync();
+
+            var result = new UpdateEmployeeRole(_ctx).Do("User",request.EmpoyeeId);
 
             return new Response
             {
