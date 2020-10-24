@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Temp.Application.Empolyees;
 using Temp.Database;
@@ -47,7 +48,14 @@ namespace Temp.UI.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            return View(new GetEmployee(_ctx).Do(id));
+            var response = new GetEmployee(_ctx).Do(id);
+
+            if (response == null)
+            {
+                return RedirectToAction("Index","Error");
+            }
+
+            return View(response);
         }
 
         [HttpPost]

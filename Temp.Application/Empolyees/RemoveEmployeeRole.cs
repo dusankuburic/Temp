@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 using Temp.Database;
 
@@ -27,7 +23,7 @@ namespace Temp.Application.Empolyees
             if(employee.Role == "Admin")
             {
                 var admin = _ctx.Admins.Where(x => x.EmployeeId == request.Id).FirstOrDefault();
-                _ctx.Admins.Remove(admin);            
+                _ctx.Admins.Remove(admin); 
                 message = $"Removed Admin role for Id:{employee.Id} {employee.FirstName} {employee.LastName}";
             }
 
