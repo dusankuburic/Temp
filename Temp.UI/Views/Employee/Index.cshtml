@@ -14,7 +14,7 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>Role</th>
-            <th colspan="2">Options</th>
+            <th colspan="2" class="text-center">Options</th>
         </tr>
         @{
             foreach (var employee in Model)
@@ -42,17 +42,17 @@
                             <span class="badge badge-pill badge-secondary">@employee.Role</span>
                         </td>
                     }
-                    <td><a class="btn btn-primary" asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.Id">Edit</a></td>
+                    <td><a class="btn btn-primary" asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.Id"><i class="far fa-edit"></i></a></td>
                     @if (employee.Role != "Admin" && employee.Role != "User")
                     {
-                        <td><a class="btn btn-info" asp-controller="Employee" asp-action="AssignRole" asp-route-id="@employee.Id">Assign Role</a></td>
+                        <td><a class="btn btn-info" asp-controller="Employee" asp-action="AssignRole" asp-route-id="@employee.Id"><i class="fas fa-sitemap"></i></a></td>
                     }
                     else
                     {
                         <td>
                            <form asp-controller="Employee" asp-action="RemoveRole" method="post" asp-antiforgery="true">
                                <input type="hidden" name="Id" value="@employee.Id" />
-                               <input type="submit" class="btn btn-dark" value="Remove"/>
+                               <button type="submit" class="btn btn-dark"><i class="fas fa-user-times"></i></button>
                            </form>
                         </td>
                     }
