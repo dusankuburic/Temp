@@ -16,10 +16,8 @@ namespace Temp.Application.Empolyees
 
         public async Task<bool> Do(string RoleName, int EmployeeId)
         {
-            var empolyee = _ctx.Employees.FirstOrDefault(x => x.Id == EmployeeId);
-            
+            var empolyee = _ctx.Employees.FirstOrDefault(x => x.Id == EmployeeId);    
             empolyee.Role = RoleName;
-
             await _ctx.SaveChangesAsync();
 
             return true;    
