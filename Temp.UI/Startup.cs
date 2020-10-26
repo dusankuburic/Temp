@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,8 +43,8 @@ namespace Temp.UI
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
-            app.UseStatusCodePagesWithRedirects("/Error/Index");
+            app.UseStatusCodePagesWithRedirects("/Error/Index");  
+            
 
             if (env.IsDevelopment())
             {
@@ -57,6 +53,7 @@ namespace Temp.UI
             else
             {
                 app.UseHsts();
+                            
             }
 
             app.UseHttpsRedirection();

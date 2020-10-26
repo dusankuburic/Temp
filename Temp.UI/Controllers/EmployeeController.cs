@@ -47,7 +47,14 @@ namespace Temp.UI.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            return View(new GetEmployee(_ctx).Do(id));
+            var response = new GetEmployee(_ctx).Do(id);
+
+            if (response == null)
+            {
+                return RedirectToAction("Index","Error");
+            }
+
+            return View(response);
         }
 
         [HttpPost]
@@ -62,7 +69,6 @@ namespace Temp.UI.Controllers
                     TempData["success_message"] = response.Message;
                     return RedirectToAction("Edit", response.Id);
                 }
- 
             }
 
             return View("Edit", request.Id);
@@ -92,7 +98,6 @@ namespace Temp.UI.Controllers
                     TempData["message"] = response.Message;
                     return RedirectToAction("AssignRole", request.Id);
                 }
-
             }
 
              return View("AssignRole", request.Id);

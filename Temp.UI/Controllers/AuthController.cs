@@ -35,6 +35,7 @@ namespace Temp.UI.Controllers
             if (ModelState.IsValid)
             {
                 var response = await new RegisterAdmin(_ctx).Do(request);
+               
 
                 if (response.Status)
                 {

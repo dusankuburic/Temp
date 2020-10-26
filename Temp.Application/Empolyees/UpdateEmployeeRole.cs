@@ -8,7 +8,6 @@ namespace Temp.Application.Empolyees
     {
         private readonly ApplicationDbContext _ctx;
 
-
         public UpdateEmployeeRole(ApplicationDbContext ctx)
         {
             _ctx = ctx;
@@ -16,14 +15,16 @@ namespace Temp.Application.Empolyees
 
         public async Task<bool> Do(string RoleName, int EmployeeId)
         {
-            var empolyee = _ctx.Employees.FirstOrDefault(x => x.Id == EmployeeId);    
+            var empolyee = _ctx.Employees.Where(x => x.Id == EmployeeId).First();    
             empolyee.Role = RoleName;
             await _ctx.SaveChangesAsync();
 
+            if(empolyee.Role != RoleName)
+            {
+               return false;
+            }
+
             return true;    
         }
-
-
-
     }
 }

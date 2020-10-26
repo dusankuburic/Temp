@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -67,20 +66,17 @@ namespace Temp.Application.Auth.Admins
 
             var result = new UpdateEmployeeRole(_ctx).Do("Admin",request.EmpoyeeId);
             
-
             return new Response
             {
                 Message = "Successful registration",
                 Username = admin.Username,
                 Status = true
             };
-
         }
 
         public class Request
         {
             public int EmpoyeeId {get; set;}
-
             [Required]
             [MinLength(5)]
             public string Username { get; set; }
