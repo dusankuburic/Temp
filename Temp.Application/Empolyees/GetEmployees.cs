@@ -22,7 +22,6 @@ namespace Temp.Application.Empolyees
                 Role = x.Role
             });
 
-
         public class EmployeeViewModel
         {
             public int Id {get; set;}

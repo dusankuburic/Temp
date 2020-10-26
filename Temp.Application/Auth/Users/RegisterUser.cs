@@ -13,7 +13,6 @@ namespace Temp.Application.Auth.Users
     {
 
         private readonly ApplicationDbContext _ctx;
-
         public RegisterUser(ApplicationDbContext ctx)
         {
             _ctx = ctx;
@@ -74,7 +73,6 @@ namespace Temp.Application.Auth.Users
                 Username = user.Username,
                 Status = true
             };
-
         }
 
         public class Request

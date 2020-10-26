@@ -9,7 +9,6 @@ namespace Temp.Application.Empolyees
     {
 
         private readonly ApplicationDbContext _ctx;
-
         public UpdateEmployee(ApplicationDbContext ctx)
         {
             _ctx = ctx;
@@ -33,8 +32,7 @@ namespace Temp.Application.Empolyees
                 Status = true
             };
         }
-
-        
+     
         public class Request
         {
             [Required]

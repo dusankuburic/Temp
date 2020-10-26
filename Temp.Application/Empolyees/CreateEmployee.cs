@@ -14,8 +14,6 @@ namespace Temp.Application.Empolyees
             _ctx = ctx;
         }
 
-
-
         public async Task<Response> Do(Request request)
         {
             var empolyee = new Employee
@@ -25,7 +23,6 @@ namespace Temp.Application.Empolyees
             };
 
             _ctx.Employees.Add(empolyee);
-
             await _ctx.SaveChangesAsync();
 
             return new Response
@@ -34,7 +31,6 @@ namespace Temp.Application.Empolyees
                 Status = true
             };
         }
-
 
         public class Request
         {
@@ -51,6 +47,5 @@ namespace Temp.Application.Empolyees
             public string Message {get; set;}
             public bool Status {get; set;}
         }
-
     }
 }

@@ -62,7 +62,6 @@ namespace Temp.Application.Auth.Users
             };
         }
 
-
         public class Request
         {
             [Required]

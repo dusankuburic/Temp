@@ -8,7 +8,6 @@ namespace Temp.Application.Empolyees
     {
         private readonly ApplicationDbContext _ctx;
 
-
         public UpdateEmployeeRole(ApplicationDbContext ctx)
         {
             _ctx = ctx;
@@ -22,8 +21,5 @@ namespace Temp.Application.Empolyees
 
             return true;    
         }
-
-
-
     }
 }

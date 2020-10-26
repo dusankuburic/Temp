@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Temp.Application.Empolyees;
 using Temp.Database;
@@ -70,7 +69,6 @@ namespace Temp.UI.Controllers
                     TempData["success_message"] = response.Message;
                     return RedirectToAction("Edit", response.Id);
                 }
- 
             }
 
             return View("Edit", request.Id);
@@ -100,7 +98,6 @@ namespace Temp.UI.Controllers
                     TempData["message"] = response.Message;
                     return RedirectToAction("AssignRole", request.Id);
                 }
-
             }
 
              return View("AssignRole", request.Id);

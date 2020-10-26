@@ -14,7 +14,6 @@ namespace Temp.Application.Empolyees
             _ctx = ctx;
         }
 
-
         public async Task<Response> Do(Request request)
         {
             var employee = _ctx.Employees.FirstOrDefault(x => x.Id == request.Id);         
@@ -34,7 +33,6 @@ namespace Temp.Application.Empolyees
                 message = $"Removed User role for Id:{employee.Id} {employee.FirstName} {employee.LastName}";
             }
 
-
             employee.Role = "None";
             await _ctx.SaveChangesAsync();
 
@@ -42,8 +40,7 @@ namespace Temp.Application.Empolyees
             {
                 Message = message,
                 Status = true
-            };
-            
+            };         
         }
 
         public class Request
