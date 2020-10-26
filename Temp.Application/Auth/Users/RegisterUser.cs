@@ -13,7 +13,6 @@ namespace Temp.Application.Auth.Users
     {
 
         private readonly ApplicationDbContext _ctx;
-
         public RegisterUser(ApplicationDbContext ctx)
         {
             _ctx = ctx;
@@ -28,7 +27,7 @@ namespace Temp.Application.Auth.Users
             }
         }
 
-        private async ValueTask<bool> UserExists(string username)
+        private async Task<bool> UserExists(string username)
         {
             if(await _ctx.Users.AnyAsync(x => x.Username == username))
             {
@@ -38,7 +37,7 @@ namespace Temp.Application.Auth.Users
             return false;
         }
 
-        public async ValueTask<Response> Do(Request request)
+        public async Task<Response> Do(Request request)
         {
             var userExists = await UserExists(request.Username);
 
@@ -66,7 +65,7 @@ namespace Temp.Application.Auth.Users
             _ctx.Users.Add(user);
             await _ctx.SaveChangesAsync();
 
-            var result = new UpdateEmployeeRole(_ctx).Do("User",request.EmpoyeeId);
+            var result = await new UpdateEmployeeRole(_ctx).Do("User",request.EmpoyeeId);
 
             return new Response
             {
@@ -74,7 +73,6 @@ namespace Temp.Application.Auth.Users
                 Username = user.Username,
                 Status = true
             };
-
         }
 
         public class Request

@@ -21,7 +21,6 @@ namespace Temp.Application.Empolyees
             })
             .FirstOrDefault();
 
-
         public class EmployeeViewModel
         {
             public int Id {get; set;}

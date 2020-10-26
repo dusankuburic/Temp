@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 using Temp.Database;
 
@@ -18,7 +14,6 @@ namespace Temp.Application.Empolyees
             _ctx = ctx;
         }
 
-
         public async Task<Response> Do(Request request)
         {
             var employee = _ctx.Employees.FirstOrDefault(x => x.Id == request.Id);         
@@ -27,7 +22,7 @@ namespace Temp.Application.Empolyees
             if(employee.Role == "Admin")
             {
                 var admin = _ctx.Admins.Where(x => x.EmployeeId == request.Id).FirstOrDefault();
-                _ctx.Admins.Remove(admin);            
+                _ctx.Admins.Remove(admin); 
                 message = $"Removed Admin role for Id:{employee.Id} {employee.FirstName} {employee.LastName}";
             }
 
@@ -38,7 +33,6 @@ namespace Temp.Application.Empolyees
                 message = $"Removed User role for Id:{employee.Id} {employee.FirstName} {employee.LastName}";
             }
 
-
             employee.Role = "None";
             await _ctx.SaveChangesAsync();
 
@@ -46,8 +40,7 @@ namespace Temp.Application.Empolyees
             {
                 Message = message,
                 Status = true
-            };
-            
+            };         
         }
 
         public class Request

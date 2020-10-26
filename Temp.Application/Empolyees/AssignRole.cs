@@ -4,7 +4,6 @@ using Temp.Application.Auth.Admins;
 using Temp.Application.Auth.Users;
 using Temp.Database;
 
-
 namespace Temp.Application.Empolyees
 {
     public class AssignRole
@@ -63,8 +62,7 @@ namespace Temp.Application.Empolyees
                     Status = false,
                     Message = "Wrong role!!!!"
                 };
-            }
-            
+            }        
         }
 
         public class Request
