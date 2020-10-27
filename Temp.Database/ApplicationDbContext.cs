@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 using Temp.Domain.Models;
 
 namespace Temp.Database
@@ -14,11 +15,22 @@ namespace Temp.Database
         public DbSet<User> Users { get; set; }
         public DbSet<Employee> Employees {get; set;}
 
+        public DbSet<EmploymentStatus> EmploymentStatuses {get; set;}
+        public DbSet<Workplace> Workplaces {get; set;}
+        public DbSet<Engagement> Engagements {get; set;}
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Engagement>()
+                .HasKey(x => new {x.Id, x.EmployeeId, x.WorkplaceId});
+
             modelBuilder.Entity<Employee>()
                 .Property(x => x.Role)
                 .HasDefaultValue("None");
+
+            
         }
     }
 }

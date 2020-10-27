@@ -27,7 +27,7 @@ namespace Temp.Application.Auth.Admins
             }
         }
 
-        private async ValueTask<bool> AdminExists(string username)
+        private async Task<bool> AdminExists(string username)
         {
             if (await _ctx.Admins.AnyAsync(x => x.Username == username))
             {
@@ -36,7 +36,7 @@ namespace Temp.Application.Auth.Admins
             return false;
         }
 
-        public async ValueTask<Response> Do(Request request)
+        public async Task<Response> Do(Request request)
         {
             var adminExists = await AdminExists(request.Username);
 
@@ -64,7 +64,7 @@ namespace Temp.Application.Auth.Admins
             _ctx.Admins.Add(admin);
             await _ctx.SaveChangesAsync();
 
-            var result = new UpdateEmployeeRole(_ctx).Do("Admin",request.EmpoyeeId);
+            var result = await new UpdateEmployeeRole(_ctx).Do("Admin",request.EmpoyeeId);
             
             return new Response
             {
