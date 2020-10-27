@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Temp.Domain.Models
 {
@@ -18,9 +14,6 @@ namespace Temp.Domain.Models
 
         public int EmploymentStatusId {get; set;}
         public EmploymentStatus EmploymentStatus {get; set;}
-
-
-
        
         public DateTime DateFrom {get; set;}
         public DateTime DateTo {get; set;}

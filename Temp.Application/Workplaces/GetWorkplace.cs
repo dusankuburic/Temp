@@ -5,7 +5,7 @@ namespace Temp.Application.Workplaces
 {
     public class GetWorkplace
     {
-        private ApplicationDbContext _ctx;
+        readonly private ApplicationDbContext _ctx;
 
         public GetWorkplace(ApplicationDbContext ctx)
         {
