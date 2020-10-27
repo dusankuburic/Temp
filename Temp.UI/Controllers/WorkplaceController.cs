@@ -43,5 +43,37 @@ namespace Temp.UI.Controllers
             }
             return RedirectToAction("Create");
         }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var response = new GetWorkplace(_ctx).Do(id);
+
+            if(response == null)
+            {
+                return RedirectToAction("Index","Error");
+            }
+
+            return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(UpdateWorkplace.Request request)
+        {
+
+            if(ModelState.IsValid)
+            {
+                var response = await new UpdateWorkplace(_ctx).Do(request);
+
+                if(response.Status)
+                {
+                    TempData["success_message"] = response.Message;
+                    return RedirectToAction("Edit", response.Id);
+                }
+            }
+            return View("Edit", request.Id);
+        }
+
+       
     }
 }

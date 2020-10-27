@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Temp.Database;
 
 namespace Temp.Application.Workplaces
@@ -18,7 +14,8 @@ namespace Temp.Application.Workplaces
 
         public WorkplaceViewModel Do(int id) =>
             _ctx.Workplaces.Where(x => x.Id == id).Select(x => new WorkplaceViewModel{ 
-                
+                Id = x.Id,
+                Name = x.Name
             })
             .FirstOrDefault();
 
