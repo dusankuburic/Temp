@@ -78,7 +78,6 @@ namespace Temp.Application.Auth.Users
         public class Request
         {
             public int EmpoyeeId {get; set;}
-
             [Required]
             public string Username { get; set; }
             [Required]
