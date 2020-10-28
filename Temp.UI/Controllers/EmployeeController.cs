@@ -49,7 +49,7 @@ namespace Temp.UI.Controllers
         {
             var response = new GetEmployee(_ctx).Do(id);
 
-            if (response == null)
+            if (response is null)
             {
                 return RedirectToAction("Index","Error");
             }
