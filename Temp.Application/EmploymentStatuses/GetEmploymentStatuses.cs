@@ -13,15 +13,12 @@ namespace Temp.Application.EmploymentStatuses
             _ctx = ctx;
         }
 
-
         public IEnumerable<EmploymentStatusViewModel> Do() =>
             _ctx.EmploymentStatuses.ToList().Select(x => new EmploymentStatusViewModel
             {
                 Id = x.Id,
                 Name = x.Name
             });
-
-
 
         public class EmploymentStatusViewModel
         {

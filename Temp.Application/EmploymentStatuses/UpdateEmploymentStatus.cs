@@ -1,40 +1,48 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 using Temp.Database;
-using Temp.Domain.Models;
 
 namespace Temp.Application.EmploymentStatuses
 {
-    public class CreateEmploymentStatus
+    public class UpdateEmploymentStatus
     {
         private readonly ApplicationDbContext _ctx;
 
-
-        public CreateEmploymentStatus(ApplicationDbContext ctx)
+        public UpdateEmploymentStatus(ApplicationDbContext ctx)
         {
             _ctx = ctx;
         }
 
+
         public async Task<Response> Do(Request request)
         {
-            var employmentStatus = new EmploymentStatus
-            {
-                Name = request.Name
-            };
+            var employmentStatus = _ctx.EmploymentStatuses.FirstOrDefault(x => x.Id == request.Id);
+            
+            employmentStatus.Name = request.Name;
 
-            _ctx.EmploymentStatuses.Add(employmentStatus);
             await _ctx.SaveChangesAsync();
 
             return new Response
             {
-                Message = $"Success {request.Name} is added",
+                Id = employmentStatus.Id,
+                Name = employmentStatus.Name,
+                Message = "Success",
                 Status = true
             };
         }
 
+
+
         public class Request
         {
-         
+            [Required]
+            public int Id {get; set;}
+
             [Required]
             [MaxLength(30)]
             public string Name {get; set;}
@@ -42,10 +50,11 @@ namespace Temp.Application.EmploymentStatuses
 
         public class Response
         {
+            public int Id {get; set;}
+            public string Name {get; set;}
             public string Message {get; set;}
+
             public bool Status {get; set;}
         }
-
-
     }
 }

@@ -12,7 +12,6 @@ namespace Temp.Application.EmploymentStatuses
             _ctx = ctx;
         }
 
-
         public EmploymentStatusViewModel Do(int id) =>
             _ctx.EmploymentStatuses.Where(x => x.Id == id).Select(x => new EmploymentStatusViewModel
             {
@@ -21,7 +20,6 @@ namespace Temp.Application.EmploymentStatuses
             })
             .FirstOrDefault();
         
-
         public class EmploymentStatusViewModel
         {
             public int Id {get; set;}
