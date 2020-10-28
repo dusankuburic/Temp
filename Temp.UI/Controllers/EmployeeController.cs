@@ -39,6 +39,11 @@ namespace Temp.UI.Controllers
                     TempData["success_message"] = response.Message;
                     return RedirectToAction("Create");
                 }
+                else
+                {
+                    TempData["message"] = response.Message;
+                    return RedirectToAction("Create");
+                }
             }
             return RedirectToAction("Create");
         }

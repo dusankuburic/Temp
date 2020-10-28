@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Data.SqlClient;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Temp.Database;
 using Temp.Domain.Models;
@@ -16,20 +18,37 @@ namespace Temp.Application.Empolyees
 
         public async Task<Response> Do(Request request)
         {
-            var empolyee = new Employee
+            try
             {
-                FirstName = request.FirstName,
-                LastName = request.LastName
-            };
+                //var empolyee = new Employee
+                //{
+                //    FirstName = request.FirstName,
+                //    LastName = request.LastName
+                //};
+                Employee empolyee = null;
 
-            _ctx.Employees.Add(empolyee);
-            await _ctx.SaveChangesAsync();
 
-            return new Response
+
+                _ctx.Employees.Add(empolyee);
+                await _ctx.SaveChangesAsync();
+
+                return new Response
+                {
+                    Message = $"Success {empolyee.FirstName} {empolyee.LastName} is added",
+                    Status = true
+                };
+
+            }
+            catch(Exception ex)
             {
-                Message = $"Success {empolyee.FirstName} {empolyee.LastName} is added",
-                Status = true
-            };
+                return new Response
+                {
+                    Message = $"{ex}",
+                    Status = false
+
+                };
+            }
+
         }
 
         public class Request

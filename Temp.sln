@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8933A97D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{171724C4-F280-497C-8492-C45D33735A86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.UnitTests", "Application.UnitTests\Application.UnitTests.csproj", "{D2DCAA27-83A5-4436-8E79-E8EE83F68197}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,10 +37,6 @@ Global
 		{8637FC83-5213-4848-A77C-72C3E15EEA93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8637FC83-5213-4848-A77C-72C3E15EEA93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8637FC83-5213-4848-A77C-72C3E15EEA93}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D2DCAA27-83A5-4436-8E79-E8EE83F68197}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D2DCAA27-83A5-4436-8E79-E8EE83F68197}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D2DCAA27-83A5-4436-8E79-E8EE83F68197}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D2DCAA27-83A5-4436-8E79-E8EE83F68197}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,7 +46,6 @@ Global
 		{EC33EC32-9E37-4F86-A2C4-14968F3A2AF9} = {171724C4-F280-497C-8492-C45D33735A86}
 		{99514A95-1E60-4F64-BFFC-F51673C138AC} = {171724C4-F280-497C-8492-C45D33735A86}
 		{8637FC83-5213-4848-A77C-72C3E15EEA93} = {171724C4-F280-497C-8492-C45D33735A86}
-		{D2DCAA27-83A5-4436-8E79-E8EE83F68197} = {8933A97D-0FB5-4936-BCD1-3108504BCBCE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0981D757-B5F9-4C86-A932-44E9DB272055}
