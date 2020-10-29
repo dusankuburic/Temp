@@ -44,11 +44,10 @@ namespace Temp.UI.Controllers
                         return RedirectToAction("Create");
                     }
   
-
                 }
                 catch(EmployeeValidationException employeeValidationException)
                 {
-                     TempData["message"] = GetIneerMessage(employeeValidationException);
+                     TempData["message"] = GetInnerMessage(employeeValidationException);
                      return RedirectToAction("Create");
                 }
 
@@ -140,7 +139,7 @@ namespace Temp.UI.Controllers
         }
 
 
-        private static string GetIneerMessage(Exception exception) =>
+        private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
 
     }

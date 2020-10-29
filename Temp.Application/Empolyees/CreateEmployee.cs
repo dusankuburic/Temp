@@ -5,13 +5,15 @@ using Temp.Domain.Models;
 
 namespace Temp.Application.Empolyees
 {
-    public partial class CreateEmployee
+    public class CreateEmployee: EmployeeService
     {
         private readonly ApplicationDbContext _ctx;
+ 
        
         public CreateEmployee(ApplicationDbContext ctx)
         {
             _ctx = ctx;
+  
         }
 
         public Task<Response> Do(Request request) =>
@@ -21,8 +23,9 @@ namespace Temp.Application.Empolyees
             var employee = new Employee
             {
                 FirstName = request.FirstName,
-                LastName = request.LastName
+                LastName = null
             };
+
 
             ValidateEmployeeOnCreate(employee);
 

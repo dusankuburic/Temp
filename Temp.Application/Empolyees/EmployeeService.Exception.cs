@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Temp.Domain.Models.Employees.Exceptions;
 
 namespace Temp.Application.Empolyees
 {
-    public partial class CreateEmployee
+    public partial class EmployeeService
     {
-        private delegate Task<CreateEmployee.Response> ReturningStudentFunction();
+        public delegate Task<CreateEmployee.Response> ReturningStudentFunction();
 
-        private async Task<CreateEmployee.Response> TryCatch(ReturningStudentFunction returningStudentFunction)
+        public async Task<CreateEmployee.Response> TryCatch(ReturningStudentFunction returningStudentFunction)
         {
             try
             {
@@ -20,6 +17,10 @@ namespace Temp.Application.Empolyees
             catch(NullEmployeeException nullEmployeeException)
             {
                 throw CreateAndLogValidationException(nullEmployeeException);
+            }
+            catch(InvalidEmployeeException invalidEmployeeException)
+            {
+                throw CreateAndLogValidationException(invalidEmployeeException);
             }
         }
 
