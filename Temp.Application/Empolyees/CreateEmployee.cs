@@ -1,55 +1,43 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Temp.Database;
 using Temp.Domain.Models;
 
 namespace Temp.Application.Empolyees
 {
-    public class CreateEmployee
+    public partial class CreateEmployee
     {
         private readonly ApplicationDbContext _ctx;
-
+       
         public CreateEmployee(ApplicationDbContext ctx)
         {
             _ctx = ctx;
         }
 
-        public async Task<Response> Do(Request request)
+        public Task<Response> Do(Request request) =>
+        TryCatch(async () =>
         {
-            try
+
+            var employee = new Employee
             {
-                //var empolyee = new Employee
-                //{
-                //    FirstName = request.FirstName,
-                //    LastName = request.LastName
-                //};
-                Employee empolyee = null;
+                FirstName = request.FirstName,
+                LastName = request.LastName
+            };
 
+            ValidateEmployeeOnCreate(employee);
 
+            _ctx.Employees.Add(employee);
+            await _ctx.SaveChangesAsync();
 
-                _ctx.Employees.Add(empolyee);
-                await _ctx.SaveChangesAsync();
-
-                return new Response
-                {
-                    Message = $"Success {empolyee.FirstName} {empolyee.LastName} is added",
-                    Status = true
-                };
-
-            }
-            catch(Exception ex)
+            return new Response
             {
-                return new Response
-                {
-                    Message = $"{ex}",
-                    Status = false
+                Message = $"Success {employee.FirstName} {employee.LastName} is added",
+                Status = true
+            };
+      
+        });
+        
 
-                };
-            }
-
-        }
 
         public class Request
         {
