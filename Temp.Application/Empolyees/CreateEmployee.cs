@@ -5,32 +5,42 @@ using Temp.Domain.Models;
 
 namespace Temp.Application.Empolyees
 {
-    public class CreateEmployee
+    public class CreateEmployee: EmployeeService
     {
         private readonly ApplicationDbContext _ctx;
-
+ 
+       
         public CreateEmployee(ApplicationDbContext ctx)
         {
             _ctx = ctx;
+  
         }
 
-        public async Task<Response> Do(Request request)
+        public Task<Response> Do(Request request) =>
+        TryCatch(async () =>
         {
-            var empolyee = new Employee
+
+            var employee = new Employee
             {
                 FirstName = request.FirstName,
-                LastName = request.LastName
+                LastName = null
             };
 
-            _ctx.Employees.Add(empolyee);
+
+            ValidateEmployeeOnCreate(employee);
+
+            _ctx.Employees.Add(employee);
             await _ctx.SaveChangesAsync();
 
             return new Response
             {
-                Message = $"Success {empolyee.FirstName} {empolyee.LastName} is added",
+                Message = $"Success {employee.FirstName} {employee.LastName} is added",
                 Status = true
             };
-        }
+      
+        });
+        
+
 
         public class Request
         {

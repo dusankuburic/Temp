@@ -38,10 +38,12 @@ namespace Temp.Application.Auth.Admins
 
         public async Task<Response> Do(Request request)
         {
+        
             var adminExists = await AdminExists(request.Username);
 
             if (adminExists)
             {
+
                 return new Response
                 {
                     Message = $"Admin aready exists with {request.Username} username",
@@ -72,6 +74,7 @@ namespace Temp.Application.Auth.Admins
                 Username = admin.Username,
                 Status = true
             };
+
         }
 
         public class Request

@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Temp.Application.Empolyees;
 using Temp.Database;
+using Temp.Domain.Models.Employees.Exceptions;
 
 namespace Temp.UI.Controllers
 {
@@ -32,13 +34,23 @@ namespace Temp.UI.Controllers
         {
             if(ModelState.IsValid)
             {
-                var response = await new CreateEmployee(_ctx).Do(request);
-
-                if(response.Status)
+                try
                 {
-                    TempData["success_message"] = response.Message;
-                    return RedirectToAction("Create");
+                    var response = await new CreateEmployee(_ctx).Do(request);
+
+                    if(response.Status)
+                    {
+                        TempData["success_message"] = response.Message;
+                        return RedirectToAction("Create");
+                    }
+  
                 }
+                catch(EmployeeValidationException employeeValidationException)
+                {
+                     TempData["message"] = GetInnerMessage(employeeValidationException);
+                     return RedirectToAction("Create");
+                }
+
             }
             return RedirectToAction("Create");
         }
@@ -49,7 +61,7 @@ namespace Temp.UI.Controllers
         {
             var response = new GetEmployee(_ctx).Do(id);
 
-            if (response == null)
+            if (response is null)
             {
                 return RedirectToAction("Index","Error");
             }
@@ -125,6 +137,10 @@ namespace Temp.UI.Controllers
 
             return View("Index");
         }
+
+
+        private static string GetInnerMessage(Exception exception) =>
+            exception.InnerException.Message;
 
     }
 }
