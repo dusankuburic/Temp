@@ -6,13 +6,13 @@ namespace Temp.Application.Empolyees
 {
     public partial class EmployeeService
     {
-        public delegate Task<CreateEmployee.Response> ReturningStudentFunction();
+        public delegate Task<CreateEmployee.Response> ReturningEmployeeFunction();
 
-        public async Task<CreateEmployee.Response> TryCatch(ReturningStudentFunction returningStudentFunction)
+        public async Task<CreateEmployee.Response> TryCatch(ReturningEmployeeFunction returningEmployeeFunction)
         {
             try
             {
-                return await returningStudentFunction();
+                return await returningEmployeeFunction();
             }
             catch(NullEmployeeException nullEmployeeException)
             {
