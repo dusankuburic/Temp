@@ -9,7 +9,8 @@ namespace Temp.Application.EmploymentStatuses.Service
     {
         public void ValidateEmploymentStatusOnCreate(EmploymentStatus employmentStatus)
         {
-
+            ValidateEmploymentStatus(employmentStatus);
+            ValidateEmploymentStatusStrings(employmentStatus);
         }
 
 
@@ -17,7 +18,7 @@ namespace Temp.Application.EmploymentStatuses.Service
         {
             if(employmentStatus is null)
             {
-                throw new NullWorkplaceException();
+                throw new NullEmploymentStatusException();
             }
         }
 
