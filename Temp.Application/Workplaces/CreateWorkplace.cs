@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Temp.Application.Workplaces.Service;
 using Temp.Database;
 using Temp.Domain.Models;
 
 namespace Temp.Application.Workplaces
 {
-    public class CreateWorkplace
+    public class CreateWorkplace : WorkplaceService
     {
         private readonly ApplicationDbContext _ctx;
         public CreateWorkplace(ApplicationDbContext ctx)
@@ -13,12 +14,15 @@ namespace Temp.Application.Workplaces
             _ctx = ctx;
         }
 
-        public async Task<Response> Do(Request request)
+        public Task<Response> Do(Request request) =>
+        TryCatch(async () =>
         {
             var workplace = new Workplace
             {
                 Name = request.Name
             };
+
+            ValidateWorkplaceOnCreate(workplace);
 
             _ctx.Workplaces.Add(workplace);
             await _ctx.SaveChangesAsync();
@@ -28,7 +32,7 @@ namespace Temp.Application.Workplaces
                 Message = $"Success {request.Name} is added",
                 Status = true
             };
-        }
+        });
 
         public class Request
         {
