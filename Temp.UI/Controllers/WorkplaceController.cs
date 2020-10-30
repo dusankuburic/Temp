@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Temp.Application.Workplaces;
 using Temp.Database;
+using Temp.Domain.Models.Workplaces.Exceptions;
 
 namespace Temp.UI.Controllers
 {
@@ -32,16 +34,24 @@ namespace Temp.UI.Controllers
         public async Task<IActionResult> Create(CreateWorkplace.Request request)
         {
             if (ModelState.IsValid)
-            {
-                var response = await new CreateWorkplace(_ctx).Do(request);
-
-                if(response.Status)
+            {         
+                try
                 {
-                    TempData["success_message"] = response.Message;
-                    return RedirectToAction("Create");
+                    var response = await new CreateWorkplace(_ctx).Do(request);
+
+                    if(response.Status)
+                    {
+                        TempData["success_message"] = response.Message;
+                        return RedirectToAction("Create");
+                    }
                 }
+                catch(WorkplaceValidationException workplceValidationException)
+                {
+                    TempData["message"] = GetInnerMessage(workplceValidationException);
+                    return RedirectToAction("Create");
+                }         
             }
-            return RedirectToAction("Create");
+            return View("Create");
         }
 
         [HttpGet]
@@ -75,5 +85,7 @@ namespace Temp.UI.Controllers
         }
 
        
+        private static string GetInnerMessage(Exception exception) =>
+            exception.InnerException.Message;
     }
 }

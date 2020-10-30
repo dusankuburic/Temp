@@ -31,9 +31,7 @@ namespace Temp.Application.Workplaces.Service
                         parameterValue: workplace.Name);
             }
         }
-
-        
-        public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
-        
+      
+        public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);        
     }
 }
