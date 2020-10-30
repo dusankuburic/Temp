@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Temp.Application.EmploymentStatuses;
 using Temp.Database;
+using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 
 namespace Temp.UI.Controllers
 {
@@ -31,16 +33,24 @@ namespace Temp.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await new CreateEmploymentStatus(_ctx).Do(request); 
+                try
+                {               
+                    var response = await new CreateEmploymentStatus(_ctx).Do(request); 
                 
-                if(response.Status)
+                    if(response.Status)
+                    {
+                        TempData["success_message"] = response.Message;
+                        return RedirectToAction("Create");
+                    }
+                }
+                catch(EmploymentStatusValidationException employmentStatusValidationException)
                 {
-                    TempData["success_message"] = response.Message;
+                    TempData["message"] = GetInnerMesage(employmentStatusValidationException);
                     return RedirectToAction("Create");
                 }
             }
 
-            return RedirectToAction("Create");
+            return View("Create");
         }
 
 
@@ -75,5 +85,7 @@ namespace Temp.UI.Controllers
 
         }
 
+        private static string GetInnerMesage(Exception exception) =>
+            exception.InnerException.Message;
     }
 }
