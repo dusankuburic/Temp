@@ -16,6 +16,14 @@ namespace Temp.Application.Empolyees
         }
 
 
+        public void ValidateEmployeeOnUpdate(Employee employee)
+        {
+            ValidateEmployee(employee);
+            ValidateEmployeeStrings(employee);
+        }
+
+
+
         public void ValidateEmployee(Employee employee)
         {
             if(employee is null)
@@ -44,10 +52,7 @@ namespace Temp.Application.Empolyees
                     throw new InvalidEmployeeException(
                         parameterName: nameof(employee.LastName),
                         parameterValue: employee.LastName);
-
-                
             }
-
         }
 
         public void ValidateStorageEmployees(IEnumerable<GetEmployees.EmployeeViewModel> storageEmployees)

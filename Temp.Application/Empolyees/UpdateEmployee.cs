@@ -5,7 +5,7 @@ using Temp.Database;
 
 namespace Temp.Application.Empolyees
 {
-    public class UpdateEmployee
+    public class UpdateEmployee : EmployeeService
     {
 
         private readonly ApplicationDbContext _ctx;
@@ -14,12 +14,15 @@ namespace Temp.Application.Empolyees
             _ctx = ctx;
         }
 
-        public async Task<Response> Do(Request request)
+        public Task<Response> Do(Request request) =>
+        TryCatch(async () => 
         {
             var employee = _ctx.Employees.FirstOrDefault(x => x.Id == request.Id);
 
             employee.FirstName = request.FirstName;
             employee.LastName = request.LastName;
+
+            ValidateEmployeeOnUpdate(employee);
 
             await _ctx.SaveChangesAsync();
 
@@ -31,7 +34,8 @@ namespace Temp.Application.Empolyees
                 Message = "Success",
                 Status = true
             };
-        }
+        });
+
      
         public class Request
         {

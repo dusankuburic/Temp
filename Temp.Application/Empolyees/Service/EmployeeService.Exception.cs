@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace Temp.Application.Empolyees
         public delegate Task<CreateEmployee.Response> ReturningCreateEmployeeFunction();
         public delegate IEnumerable<GetEmployees.EmployeeViewModel> ReturningGetEmloyeesFunction();
         public delegate GetEmployee.EmployeeViewModel ReturningGetEmployeeFunction();
+        public delegate Task<UpdateEmployee.Response> ReturningUpdateEmployeeFunction();
 
         public async Task<CreateEmployee.Response> TryCatch(ReturningCreateEmployeeFunction returningCreateEmployeeFunction)
         {
@@ -51,6 +53,23 @@ namespace Temp.Application.Empolyees
                 throw CreateAndLogValidationException(nullEmployeeException);
             }
         }
+
+        public async Task<UpdateEmployee.Response> TryCatch(ReturningUpdateEmployeeFunction returningUpdateEmployeeFunction)
+        {
+            try
+            {
+                return await returningUpdateEmployeeFunction();
+            }
+            catch(NullEmployeeException nullEmployeeException)
+            {
+                throw CreateAndLogValidationException(nullEmployeeException);
+            }
+            catch(InvalidEmployeeException invalidEmployeeException)
+            {
+                throw CreateAndLogValidationException(invalidEmployeeException);
+            }
+        }
+
  
 
 
