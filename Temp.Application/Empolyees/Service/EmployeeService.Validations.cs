@@ -24,6 +24,14 @@ namespace Temp.Application.Empolyees
             }
         }
 
+        public void ValidateGetEmployeViewModel(GetEmployee.EmployeeViewModel employee)
+        {
+            if(employee is null)
+            {
+               throw new NullEmployeeException();
+            }
+        }
+
         public void ValidateEmployeeStrings(Employee employee)
         {
             switch (employee)

@@ -26,9 +26,9 @@ namespace Temp.UI.Controllers
                 return View(employees);
 
             }
-            catch(EmployeeEmptyStorageException employeeEmptyStorageException)
+            catch(EmployeeValidationException employeeValidationException)
             {
-                TempData["message"] = employeeEmptyStorageException.Message;
+                TempData["message"] = GetInnerMessage(employeeValidationException);
                 return View();
             }                                   
         }
@@ -69,14 +69,16 @@ namespace Temp.UI.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var response = new GetEmployee(_ctx).Do(id);
-
-            if (response is null)
+            try
             {
-                return RedirectToAction("Index","Error");
+                var response = new GetEmployee(_ctx).Do(id);
+                return View(response);
             }
-
-            return View(response);
+            catch(EmployeeValidationException employeeValidationException)
+            {
+                TempData["message"] = GetInnerMessage(employeeValidationException);
+                return View("Index");
+            }
         }
 
         [HttpPost]

@@ -3,7 +3,7 @@ using Temp.Database;
 
 namespace Temp.Application.Empolyees
 {
-    public class GetEmployee
+    public class GetEmployee : EmployeeService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -13,7 +13,9 @@ namespace Temp.Application.Empolyees
         }
 
         public EmployeeViewModel Do(int id) => 
-            _ctx.Employees.Where(x => x.Id == id)
+        TryCatch(() =>
+        {
+             var employee = _ctx.Employees.Where(x => x.Id == id)
             .Select(x => new EmployeeViewModel
             {
                 Id = x.Id,
@@ -21,6 +23,13 @@ namespace Temp.Application.Empolyees
                 LastName = x.LastName
             })
             .FirstOrDefault();
+
+            ValidateGetEmployeViewModel(employee);
+
+            return employee;
+
+        });
+
 
         public class EmployeeViewModel
         {

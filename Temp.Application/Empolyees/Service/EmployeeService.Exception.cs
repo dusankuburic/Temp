@@ -10,6 +10,7 @@ namespace Temp.Application.Empolyees
     {
         public delegate Task<CreateEmployee.Response> ReturningCreateEmployeeFunction();
         public delegate IEnumerable<GetEmployees.EmployeeViewModel> ReturningGetEmloyeesFunction();
+        public delegate GetEmployee.EmployeeViewModel ReturningGetEmployeeFunction();
 
         public async Task<CreateEmployee.Response> TryCatch(ReturningCreateEmployeeFunction returningCreateEmployeeFunction)
         {
@@ -33,9 +34,21 @@ namespace Temp.Application.Empolyees
             {
                 return returningGetEmloyeesFunction();
             }
-            catch(EmployeeEmptyStorageException) 
+            catch(EmployeeEmptyStorageException employeeEmptyStorageException) 
             {
-                throw new EmployeeEmptyStorageException();
+                throw CreateAndLogValidationException(employeeEmptyStorageException);
+            }
+        }
+
+        public GetEmployee.EmployeeViewModel TryCatch(ReturningGetEmployeeFunction returningGetEmployeeFunction)
+        {
+            try
+            {
+                return returningGetEmployeeFunction();
+            }
+            catch(NullEmployeeException nullEmployeeException)
+            {
+                throw CreateAndLogValidationException(nullEmployeeException);
             }
         }
  
