@@ -13,7 +13,8 @@ namespace Temp.Application.Empolyees
         }
 
         public EmployeeViewModel Do(int id) => 
-            _ctx.Employees.Where(x => x.Id == id).Select(x => new EmployeeViewModel
+            _ctx.Employees.Where(x => x.Id == id)
+            .Select(x => new EmployeeViewModel
             {
                 Id = x.Id,
                 FirstName = x.FirstName,

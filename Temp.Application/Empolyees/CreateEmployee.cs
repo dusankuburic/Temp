@@ -23,7 +23,7 @@ namespace Temp.Application.Empolyees
             var employee = new Employee
             {
                 FirstName = request.FirstName,
-                LastName = request.LastName
+                LastName =  request.LastName
             };
 
 

@@ -14,7 +14,8 @@ namespace Temp.Application.Empolyees
         }
 
         public IEnumerable<EmployeeViewModel> Do() => 
-            _ctx.Employees.ToList().Select(x => new EmployeeViewModel
+            _ctx.Employees.ToList()
+            .Select(x => new EmployeeViewModel
             {
                 Id = x.Id,
                 FirstName = x.FirstName,

@@ -6,13 +6,13 @@ namespace Temp.Application.Empolyees
 {
     public partial class EmployeeService
     {
-        public delegate Task<CreateEmployee.Response> ReturningEmployeeFunction();
+        public delegate Task<CreateEmployee.Response> ReturningCreateEmployeeResponseFunction();
 
-        public async Task<CreateEmployee.Response> TryCatch(ReturningEmployeeFunction returningEmployeeFunction)
+        public async Task<CreateEmployee.Response> TryCatch(ReturningCreateEmployeeResponseFunction returningCreateEmployeeResponseFunction)
         {
             try
             {
-                return await returningEmployeeFunction();
+                return await returningCreateEmployeeResponseFunction();
             }
             catch(NullEmployeeException nullEmployeeException)
             {
@@ -23,6 +23,7 @@ namespace Temp.Application.Empolyees
                 throw CreateAndLogValidationException(invalidEmployeeException);
             }
         }
+ 
 
 
         private EmployeeValidationException CreateAndLogValidationException(Exception exception)
