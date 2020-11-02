@@ -9,9 +9,9 @@ namespace Temp.Domain.Models
         public string LastName {get; set;}
         public string Role {get; set;}
 
-        public ICollection<User> Users {get; set; }
+        public User User {get; set; }
 
-        public ICollection<Admin> Admins {get; set;}
+        public Admin Admin {get; set;}
 
         public ICollection<Engagement> Engagements {get; set;}
     }

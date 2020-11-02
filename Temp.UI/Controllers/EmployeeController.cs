@@ -19,8 +19,18 @@ namespace Temp.UI.Controllers
         }
 
         public IActionResult Index()
-        {
-            return View(new GetEmployees(_ctx).Do());
+        {       
+            try
+            {
+                var employees = new GetEmployees(_ctx).Do();
+                return View(employees);
+
+            }
+            catch(EmployeeValidationException employeeValidationException)
+            {
+                TempData["message"] = GetInnerMessage(employeeValidationException);
+                return View();
+            }                                   
         }
 
         [HttpGet]
@@ -50,7 +60,6 @@ namespace Temp.UI.Controllers
                      TempData["message"] = GetInnerMessage(employeeValidationException);
                      return RedirectToAction("Create");
                 }
-
             }
             return RedirectToAction("Create");
         }
@@ -59,30 +68,38 @@ namespace Temp.UI.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var response = new GetEmployee(_ctx).Do(id);
-
-            if (response is null)
+            try
             {
-                return RedirectToAction("Index","Error");
+                var response = new GetEmployee(_ctx).Do(id);
+                return View(response);
             }
-
-            return View(response);
+            catch(EmployeeValidationException employeeValidationException)
+            {
+                TempData["message"] = GetInnerMessage(employeeValidationException);
+                return View("Index");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(UpdateEmployee.Request request)
-        {
+        {       
             if(ModelState.IsValid)
             {
-                var response = await new UpdateEmployee(_ctx).Do(request);
-
-                if(response.Status)
+                try
                 {
-                    TempData["success_message"] = response.Message;
-                    return RedirectToAction("Edit", response.Id);
+                    var response = await new UpdateEmployee(_ctx).Do(request);
+                    if(response.Status)
+                    {
+                        TempData["success_message"] = response.Message;
+                        return RedirectToAction("Edit", response.Id);
+                    }
                 }
+                catch(EmployeeValidationException employeeValidationException)
+                {
+                    TempData["message"] = GetInnerMessage(employeeValidationException);
+                    return RedirectToAction("Edit", request.Id);
+                }    
             }
-
             return View("Edit", request.Id);
         }
 
@@ -111,7 +128,6 @@ namespace Temp.UI.Controllers
                     return RedirectToAction("AssignRole", request.Id);
                 }
             }
-
              return View("AssignRole", request.Id);
         }
 
@@ -131,10 +147,8 @@ namespace Temp.UI.Controllers
                 {
                     TempData["message"] = response.Message;
                 }
-
                  return RedirectToAction("Index");
             }
-
             return View("Index");
         }
 
