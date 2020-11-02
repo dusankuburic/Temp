@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace Temp.Domain.Models.Employees.Exceptions
 {
     public class EmployeeEmptyStorageException : Exception

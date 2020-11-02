@@ -1,8 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Temp.Domain.Models.Employees.Exceptions;
 
