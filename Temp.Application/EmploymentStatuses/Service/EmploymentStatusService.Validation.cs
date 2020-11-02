@@ -1,7 +1,6 @@
 ﻿using System;
 using Temp.Domain.Models;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
-using Temp.Domain.Models.Workplaces.Exceptions;
 
 namespace Temp.Application.EmploymentStatuses.Service
 {
