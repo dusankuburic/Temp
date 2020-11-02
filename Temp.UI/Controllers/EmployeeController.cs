@@ -60,7 +60,6 @@ namespace Temp.UI.Controllers
                      TempData["message"] = GetInnerMessage(employeeValidationException);
                      return RedirectToAction("Create");
                 }
-
             }
             return RedirectToAction("Create");
         }
@@ -83,8 +82,7 @@ namespace Temp.UI.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Edit(UpdateEmployee.Request request)
-        {
-            
+        {       
             if(ModelState.IsValid)
             {
                 try
@@ -102,7 +100,6 @@ namespace Temp.UI.Controllers
                     return RedirectToAction("Edit", request.Id);
                 }    
             }
-
             return View("Edit", request.Id);
         }
 
@@ -131,7 +128,6 @@ namespace Temp.UI.Controllers
                     return RedirectToAction("AssignRole", request.Id);
                 }
             }
-
              return View("AssignRole", request.Id);
         }
 
@@ -151,10 +147,8 @@ namespace Temp.UI.Controllers
                 {
                     TempData["message"] = response.Message;
                 }
-
                  return RedirectToAction("Index");
             }
-
             return View("Index");
         }
 

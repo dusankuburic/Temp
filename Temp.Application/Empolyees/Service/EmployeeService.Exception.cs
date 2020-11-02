@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -28,6 +29,14 @@ namespace Temp.Application.Empolyees
             {
                 throw CreateAndLogValidationException(invalidEmployeeException);
             }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
         }
 
         public IEnumerable<GetEmployees.EmployeeViewModel> TryCatch(ReturningGetEmloyeesFunction returningGetEmloyeesFunction)
@@ -40,6 +49,14 @@ namespace Temp.Application.Empolyees
             {
                 throw CreateAndLogValidationException(employeeEmptyStorageException);
             }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
         }
 
         public GetEmployee.EmployeeViewModel TryCatch(ReturningGetEmployeeFunction returningGetEmployeeFunction)
@@ -51,6 +68,14 @@ namespace Temp.Application.Empolyees
             catch(NullEmployeeException nullEmployeeException)
             {
                 throw CreateAndLogValidationException(nullEmployeeException);
+            }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
             }
         }
 
@@ -68,17 +93,38 @@ namespace Temp.Application.Empolyees
             {
                 throw CreateAndLogValidationException(invalidEmployeeException);
             }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
         }
 
  
+
+        private EmployeeServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var employeeServiceException = new EmployeeServiceException(exception);
+            //LOG
+            return employeeServiceException;
+        }
 
 
         private EmployeeValidationException CreateAndLogValidationException(Exception exception)
         {
             var employeeValidationException = new EmployeeValidationException(exception);
-
+            //LOG
             return employeeValidationException;
         }
 
+        private StudentDependencyException CreateAndLogCriticalDependencyException(Exception exception)
+        {
+            var studentDependencyException = new StudentDependencyException(exception);
+            //LOG
+            return studentDependencyException;
+        }
     }
 }

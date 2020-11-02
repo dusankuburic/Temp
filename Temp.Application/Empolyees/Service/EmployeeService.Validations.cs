@@ -15,14 +15,11 @@ namespace Temp.Application.Empolyees
             ValidateEmployeeStrings(employee);
         }
 
-
         public void ValidateEmployeeOnUpdate(Employee employee)
         {
             ValidateEmployee(employee);
             ValidateEmployeeStrings(employee);
         }
-
-
 
         public void ValidateEmployee(Employee employee)
         {
