@@ -19,8 +19,18 @@ namespace Temp.UI.Controllers
         }
 
         public IActionResult Index()
-        {
-            return View(new GetEmployees(_ctx).Do());
+        {       
+            try
+            {
+                var employees = new GetEmployees(_ctx).Do();
+                return View(employees);
+
+            }
+            catch(EmployeeEmptyStorageException employeeEmptyStorageException)
+            {
+                TempData["message"] = employeeEmptyStorageException.Message;
+                return View();
+            }                                   
         }
 
         [HttpGet]

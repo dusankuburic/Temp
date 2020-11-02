@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Temp.Domain.Models.Employees.Exceptions;
 
@@ -6,13 +8,14 @@ namespace Temp.Application.Empolyees
 {
     public partial class EmployeeService
     {
-        public delegate Task<CreateEmployee.Response> ReturningCreateEmployeeResponseFunction();
+        public delegate Task<CreateEmployee.Response> ReturningCreateEmployeeFunction();
+        public delegate IEnumerable<GetEmployees.EmployeeViewModel> ReturningGetEmloyeesFunction();
 
-        public async Task<CreateEmployee.Response> TryCatch(ReturningCreateEmployeeResponseFunction returningCreateEmployeeResponseFunction)
+        public async Task<CreateEmployee.Response> TryCatch(ReturningCreateEmployeeFunction returningCreateEmployeeFunction)
         {
             try
             {
-                return await returningCreateEmployeeResponseFunction();
+                return await returningCreateEmployeeFunction();
             }
             catch(NullEmployeeException nullEmployeeException)
             {
@@ -21,6 +24,18 @@ namespace Temp.Application.Empolyees
             catch(InvalidEmployeeException invalidEmployeeException)
             {
                 throw CreateAndLogValidationException(invalidEmployeeException);
+            }
+        }
+
+        public IEnumerable<GetEmployees.EmployeeViewModel> TryCatch(ReturningGetEmloyeesFunction returningGetEmloyeesFunction)
+        {
+            try
+            {
+                return returningGetEmloyeesFunction();
+            }
+            catch(EmployeeEmptyStorageException) 
+            {
+                throw new EmployeeEmptyStorageException();
             }
         }
  
@@ -32,5 +47,6 @@ namespace Temp.Application.Empolyees
 
             return employeeValidationException;
         }
+
     }
 }

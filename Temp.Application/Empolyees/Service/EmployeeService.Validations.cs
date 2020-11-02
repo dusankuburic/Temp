@@ -1,6 +1,8 @@
 ﻿using Temp.Domain.Models.Employees.Exceptions;
 using Temp.Domain.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Temp.Application.Empolyees
 {
@@ -38,6 +40,14 @@ namespace Temp.Application.Empolyees
                 
             }
 
+        }
+
+        public void ValidateStorageEmployees(IEnumerable<GetEmployees.EmployeeViewModel> storageEmployees)
+        {
+            if(storageEmployees.Count() == 0)
+            {
+                throw new EmployeeEmptyStorageException();
+            }
         }
 
         public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);

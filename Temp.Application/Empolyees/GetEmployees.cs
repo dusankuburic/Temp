@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Temp.Database;
 
 namespace Temp.Application.Empolyees
 {
-    public class GetEmployees
+    public class GetEmployees : EmployeeService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -14,7 +16,9 @@ namespace Temp.Application.Empolyees
         }
 
         public IEnumerable<EmployeeViewModel> Do() => 
-            _ctx.Employees.ToList()
+        TryCatch(() => 
+        {
+            var employees = _ctx.Employees.ToList()
             .Select(x => new EmployeeViewModel
             {
                 Id = x.Id,
@@ -23,6 +27,13 @@ namespace Temp.Application.Empolyees
                 Role = x.Role
             });
 
+
+            ValidateStorageEmployees(employees);
+
+            return employees;
+            
+        });
+            
         public class EmployeeViewModel
         {
             public int Id {get; set;}
