@@ -83,15 +83,21 @@ namespace Temp.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(UpdateWorkplace.Request request)
         {
-
             if(ModelState.IsValid)
             {
-                var response = await new UpdateWorkplace(_ctx).Do(request);
-
-                if(response.Status)
-                {
-                    TempData["success_message"] = response.Message;
-                    return RedirectToAction("Edit", response.Id);
+                try
+                {                
+                    var response = await new UpdateWorkplace(_ctx).Do(request);
+                    if(response.Status)
+                    {
+                        TempData["success_message"] = response.Message;
+                        return RedirectToAction("Edit", response.Id);
+                    }
+                }
+                catch (WorkplaceValidationException workplaceValidationException)
+                { 
+                    TempData["message"] = GetInnerMessage(workplaceValidationException);
+                    return RedirectToAction("Edit", request.Id);
                 }
             }
             return View("Edit", request.Id);

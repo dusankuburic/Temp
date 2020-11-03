@@ -41,7 +41,7 @@ namespace Temp.Application.Empolyees
         {
             switch (employee)
             {
-                case { } when IsInvalid(employee.FirstName):
+                case {} when IsInvalid(employee.FirstName):
                     throw new InvalidEmployeeException(
                         parameterName: nameof(employee.FirstName),
                         parameterValue: employee.FirstName);

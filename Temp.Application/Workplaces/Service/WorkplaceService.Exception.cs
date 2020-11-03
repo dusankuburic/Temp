@@ -11,6 +11,7 @@ namespace Temp.Application.Workplaces.Service
         public delegate Task<CreateWorkplace.Response> ReturningWorkplaceFunction();
         public delegate IEnumerable<GetWorkplaces.WorkplacesViewModel> ReturningGetWorkplacesFunction();
         public delegate GetWorkplace.WorkplaceViewModel ReturningGetWorkplaceFunction();
+        public delegate Task<UpdateWorkplace.Response> ReturningUpdateWorkplaceFunction();
 
         public async Task<CreateWorkplace.Response> TryCatch(ReturningWorkplaceFunction returningWorkplaceFunction)
         {
@@ -26,8 +27,15 @@ namespace Temp.Application.Workplaces.Service
             {
                 throw CreateAndLogValidationException(invalidWorkplaceException);
             }
+            catch(SqlException sqlExcepton)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
         }
-
 
         public IEnumerable<GetWorkplaces.WorkplacesViewModel> TryCatch(ReturningGetWorkplacesFunction returningGetWorkplacesFunction)
         {
@@ -51,7 +59,6 @@ namespace Temp.Application.Workplaces.Service
                
         }
 
-
         public GetWorkplace.WorkplaceViewModel TryCatch(ReturningGetWorkplaceFunction returningGetWorkplaceFunction)
         {
             try
@@ -71,6 +78,30 @@ namespace Temp.Application.Workplaces.Service
                 throw CreateAndLogServiceException(exception);
             }
             
+        }
+
+        public async Task<UpdateWorkplace.Response> TryCatch(ReturningUpdateWorkplaceFunction returningUpdateWorkplaceFunction)
+        {
+            try
+            {
+                return await returningUpdateWorkplaceFunction();
+            }
+            catch(NullWorkplaceException nullWorkplaceException)
+            {
+                throw CreateAndLogValidationException(nullWorkplaceException);
+            }
+            catch(InvalidWorkplaceException invalidWorkplaceException)
+            {
+                throw CreateAndLogValidationException(invalidWorkplaceException);
+            }
+            catch(SqlException sqlExcepton)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
         }
 
         private WorkplaceValidationException CreateAndLogValidationException(Exception exception)
