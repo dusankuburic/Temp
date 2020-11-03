@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Temp.Application.Workplaces.Service;
 using Temp.Database;
 
 namespace Temp.Application.Workplaces
 {
-    public class UpdateWorkplace
+    public class UpdateWorkplace : WorkplaceService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -14,11 +15,14 @@ namespace Temp.Application.Workplaces
             _ctx = ctx;
         }
 
-        public async Task<Response> Do(Request request)
+        public Task<Response> Do(Request request) =>
+        TryCatch(async () => 
         {
             var workplace = _ctx.Workplaces.FirstOrDefault(x => x.Id == request.Id);
 
             workplace.Name = request.Name;
+
+            ValidateWorkplaceOnUpdate(workplace);
 
             await _ctx.SaveChangesAsync();
 
@@ -29,7 +33,7 @@ namespace Temp.Application.Workplaces
                 Message = "Success",
                 Status = true
             };
-        }
+        });
 
 
         public class Request

@@ -118,11 +118,11 @@ namespace Temp.Application.Empolyees
             return employeeValidationException;
         }
 
-        private StudentDependencyException CreateAndLogCriticalDependencyException(Exception exception)
+        private EmployeeDependencyException CreateAndLogCriticalDependencyException(Exception exception)
         {
-            var studentDependencyException = new StudentDependencyException(exception);
+            var employeeDependencyException = new EmployeeDependencyException(exception);
             //LOG
-            return studentDependencyException;
+            return employeeDependencyException;
         }
     }
 }
