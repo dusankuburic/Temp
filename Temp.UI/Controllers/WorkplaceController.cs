@@ -98,6 +98,11 @@ namespace Temp.UI.Controllers
                         TempData["success_message"] = response.Message;
                         return RedirectToAction("Edit", response.Id);
                     }
+                    else
+                    {
+                        TempData["message"] = response.Message;
+                        return RedirectToAction("Edit", response.Id);
+                    }
                 }
                 catch (WorkplaceValidationException workplaceValidationException)
                 { 

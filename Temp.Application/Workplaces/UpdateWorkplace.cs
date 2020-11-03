@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Temp.Application.Workplaces.Service;
@@ -15,10 +16,43 @@ namespace Temp.Application.Workplaces
             _ctx = ctx;
         }
 
+        private async Task<bool> WorkplaceExists(string name)
+        {
+            if (await _ctx.Workplaces.AnyAsync(x => x.Name == name))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public Task<Response> Do(Request request) =>
         TryCatch(async () => 
         {
             var workplace = _ctx.Workplaces.FirstOrDefault(x => x.Id == request.Id);
+
+            if(workplace.Name.Equals(request.Name))
+            {
+                return new Response
+                {
+                    Id = workplace.Id,
+                    Name = workplace.Name,
+                    Message = "Workplace name is same",
+                    Status = true
+                };
+            }
+
+            var workplaceExists = await WorkplaceExists(request.Name);
+
+            if(workplaceExists)
+            {
+                return new Response
+                {
+                    Id = workplace.Id,
+                    Name = workplace.Name,
+                    Message = $"Workplace already exists with {request.Name} name",
+                    Status = false
+                };
+            }
 
             workplace.Name = request.Name;
 
@@ -44,6 +78,7 @@ namespace Temp.Application.Workplaces
             [MinLength(2)]
             [MaxLength(50)]
             public string Name {get; set;}
+
         }
 
         public class Response
