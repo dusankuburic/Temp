@@ -20,7 +20,6 @@ namespace Temp.UI.Controllers
 
         public IActionResult Index()
         {
-
             try
             {
                 var workplaces = new GetWorkplaces(_ctx).Do();
@@ -32,8 +31,6 @@ namespace Temp.UI.Controllers
                 TempData["message"] = GetInnerMessage(workplaceValidationException);
                 return View();
             }
-
-            
         }
 
         [HttpGet]
@@ -70,14 +67,17 @@ namespace Temp.UI.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var response = new GetWorkplace(_ctx).Do(id);
-
-            if(response is null)
+            try
             {
-                return RedirectToAction("Index","Error");
-            }
+                var response = new GetWorkplace(_ctx).Do(id);
+                return View(response);
 
-            return View(response);
+            }
+            catch(WorkplaceValidationException workplaceValidationException)
+            {
+                TempData["message"] = GetInnerMessage(workplaceValidationException);
+                return View("Index");
+            }
         }
 
         [HttpPost]

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Temp.Domain.Models;
+using Temp.Domain.Models.Employees.Exceptions;
 using Temp.Domain.Models.Workplaces.Exceptions;
 
 namespace Temp.Application.Workplaces.Service
@@ -18,6 +19,14 @@ namespace Temp.Application.Workplaces.Service
         public void ValidateWorkplace(Workplace workplace)
         {
             if (workplace is null)
+            {
+                throw new NullWorkplaceException();
+            }
+        }
+
+        public void ValidateGetWorkplaceViewModel(GetWorkplace.WorkplaceViewModel workplace)
+        {
+            if(workplace is null)
             {
                 throw new NullWorkplaceException();
             }

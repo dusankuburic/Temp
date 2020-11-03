@@ -10,6 +10,7 @@ namespace Temp.Application.Workplaces.Service
     {
         public delegate Task<CreateWorkplace.Response> ReturningWorkplaceFunction();
         public delegate IEnumerable<GetWorkplaces.WorkplacesViewModel> ReturningGetWorkplacesFunction();
+        public delegate GetWorkplace.WorkplaceViewModel ReturningGetWorkplaceFunction();
 
         public async Task<CreateWorkplace.Response> TryCatch(ReturningWorkplaceFunction returningWorkplaceFunction)
         {
@@ -48,6 +49,28 @@ namespace Temp.Application.Workplaces.Service
             }
 
                
+        }
+
+
+        public GetWorkplace.WorkplaceViewModel TryCatch(ReturningGetWorkplaceFunction returningGetWorkplaceFunction)
+        {
+            try
+            {
+                return returningGetWorkplaceFunction();
+            }
+            catch(NullWorkplaceException nullWorkplaceException)
+            {
+                throw CreateAndLogValidationException(nullWorkplaceException);
+            }
+            catch(SqlException sqlExcepton)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+            
         }
 
         private WorkplaceValidationException CreateAndLogValidationException(Exception exception)
