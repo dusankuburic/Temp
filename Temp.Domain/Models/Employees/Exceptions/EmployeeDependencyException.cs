@@ -2,9 +2,9 @@
 
 namespace Temp.Domain.Models.Employees.Exceptions
 {
-    public class StudentDependencyException : Exception
+    public class EmployeeDependencyException : Exception
     {
-        public StudentDependencyException(Exception innerException)
+        public EmployeeDependencyException(Exception innerException)
             : base("Service dependency error occurred, contact support", innerException)
         {
 

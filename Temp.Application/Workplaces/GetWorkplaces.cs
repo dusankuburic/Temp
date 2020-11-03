@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Temp.Application.Workplaces.Service;
 using Temp.Database;
 
 namespace Temp.Application.Workplaces
 {
-    public class GetWorkplaces
+    public class GetWorkplaces : WorkplaceService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -14,11 +15,20 @@ namespace Temp.Application.Workplaces
         }
 
         public IEnumerable<WorkplacesViewModel> Do() =>
-            _ctx.Workplaces.ToList().Select(x =>  new WorkplacesViewModel
+        TryCatch(() => 
+        { 
+            var workplaces =_ctx.Workplaces.ToList()
+            .Select(x =>  new WorkplacesViewModel
             {
                 Id = x.Id,
                 Name = x.Name
             });
+            
+            ValidateStorageWorkplaces(workplaces);        
+
+            return workplaces;
+        });
+
 
 
         public class WorkplacesViewModel

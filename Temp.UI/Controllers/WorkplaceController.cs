@@ -20,7 +20,17 @@ namespace Temp.UI.Controllers
 
         public IActionResult Index()
         {
-            return View(new GetWorkplaces(_ctx).Do());
+            try
+            {
+                var workplaces = new GetWorkplaces(_ctx).Do();
+                return View(workplaces);
+
+            }
+            catch(WorkplaceValidationException workplaceValidationException)
+            {
+                TempData["message"] = GetInnerMessage(workplaceValidationException);
+                return View();
+            }
         }
 
         [HttpGet]
@@ -57,28 +67,37 @@ namespace Temp.UI.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var response = new GetWorkplace(_ctx).Do(id);
-
-            if(response is null)
+            try
             {
-                return RedirectToAction("Index","Error");
-            }
+                var response = new GetWorkplace(_ctx).Do(id);
+                return View(response);
 
-            return View(response);
+            }
+            catch(WorkplaceValidationException workplaceValidationException)
+            {
+                TempData["message"] = GetInnerMessage(workplaceValidationException);
+                return View("Index");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(UpdateWorkplace.Request request)
         {
-
             if(ModelState.IsValid)
             {
-                var response = await new UpdateWorkplace(_ctx).Do(request);
-
-                if(response.Status)
-                {
-                    TempData["success_message"] = response.Message;
-                    return RedirectToAction("Edit", response.Id);
+                try
+                {                
+                    var response = await new UpdateWorkplace(_ctx).Do(request);
+                    if(response.Status)
+                    {
+                        TempData["success_message"] = response.Message;
+                        return RedirectToAction("Edit", response.Id);
+                    }
+                }
+                catch (WorkplaceValidationException workplaceValidationException)
+                { 
+                    TempData["message"] = GetInnerMessage(workplaceValidationException);
+                    return RedirectToAction("Edit", request.Id);
                 }
             }
             return View("Edit", request.Id);
