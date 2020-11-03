@@ -20,7 +20,20 @@ namespace Temp.UI.Controllers
 
         public IActionResult Index()
         {
-            return View(new GetWorkplaces(_ctx).Do());
+
+            try
+            {
+                var workplaces = new GetWorkplaces(_ctx).Do();
+                return View(workplaces);
+
+            }
+            catch(WorkplaceValidationException workplaceValidationException)
+            {
+                TempData["message"] = GetInnerMessage(workplaceValidationException);
+                return View();
+            }
+
+            
         }
 
         [HttpGet]
