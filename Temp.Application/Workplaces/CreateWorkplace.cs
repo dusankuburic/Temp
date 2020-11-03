@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Temp.Application.Workplaces.Service;
 using Temp.Database;
@@ -14,9 +15,30 @@ namespace Temp.Application.Workplaces
             _ctx = ctx;
         }
 
+        private async Task<bool> WorkplaceExists(string name)
+        {
+            if (await _ctx.Workplaces.AnyAsync(x => x.Name == name))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public Task<Response> Do(Request request) =>
         TryCatch(async () =>
         {
+            var workplaceExists = await WorkplaceExists(request.Name);
+
+            if(workplaceExists)
+            {
+                return new Response
+                {
+                    Message = $"Error {request.Name} already exists",
+                    Status = false
+                };
+            }
+
+
             var workplace = new Workplace
             {
                 Name = request.Name
