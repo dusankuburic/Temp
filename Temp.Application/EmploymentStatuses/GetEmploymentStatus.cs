@@ -30,7 +30,6 @@ namespace Temp.Application.EmploymentStatuses
             return employmentStatus;
         });
 
-        
         public class EmploymentStatusViewModel
         {
             public int Id {get; set;}

@@ -11,8 +11,7 @@ namespace Temp.Application.EmploymentStatuses.Service
         public delegate Task<CreateEmploymentStatus.Response> ReturningEmploymentStatusFunction();
         public delegate IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> ReturningEmploymentStatusesFunction();
         public delegate GetEmploymentStatus.EmploymentStatusViewModel ReturningGetEmploymentStatusFunction();
-        
-
+        public delegate Task<UpdateEmploymentStatus.Response> ReturningUpdateEmploymentStatusFunction();
 
         public async Task<CreateEmploymentStatus.Response> TryCatch(ReturningEmploymentStatusFunction returningEmploymentStatusFunction)
         {
@@ -79,7 +78,30 @@ namespace Temp.Application.EmploymentStatuses.Service
             }
         }
 
-        
+        public async Task<UpdateEmploymentStatus.Response> TryCatch(ReturningUpdateEmploymentStatusFunction returningUpdateEmploymentStatusFunction)
+        {
+            try
+            {
+                return await returningUpdateEmploymentStatusFunction();
+            }
+            catch(NullEmploymentStatusException nullEmploymentStatusException)
+            {
+                throw CreateAndLogValidationException(nullEmploymentStatusException);
+            }
+            catch(InvalidEmploymentStatusException invalidEmploymentStatusException)
+            {
+                throw CreateAndLogValidationException(invalidEmploymentStatusException);
+            }
+            catch (SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
         private EmploymentStatusServiceException CreateAndLogServiceException(Exception exception)
         {
             var employmentStatusServiceException = new EmploymentStatusServiceException(exception);

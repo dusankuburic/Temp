@@ -10,7 +10,6 @@ namespace Temp.Application.EmploymentStatuses
     {
         private readonly ApplicationDbContext _ctx;
 
-
         public CreateEmploymentStatus(ApplicationDbContext ctx)
         {
             _ctx = ctx;
@@ -50,7 +49,5 @@ namespace Temp.Application.EmploymentStatuses
             public string Message {get; set;}
             public bool Status {get; set;}
         }
-
-
     }
 }

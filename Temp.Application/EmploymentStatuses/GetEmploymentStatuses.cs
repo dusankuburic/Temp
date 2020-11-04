@@ -24,11 +24,10 @@ namespace Temp.Application.EmploymentStatuses
                 Name = x.Name
             });
 
-            ValidateEmployeeStatuses(employmentStatuses);
+            ValidateEmploymentStatuses(employmentStatuses);
 
             return employmentStatuses;
         });
-
 
         public class EmploymentStatusViewModel
         {

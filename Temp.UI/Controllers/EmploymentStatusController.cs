@@ -84,12 +84,20 @@ namespace Temp.UI.Controllers
         {
             if(ModelState.IsValid)
             {
-                var response = await new UpdateEmploymentStatus(_ctx).Do(request);
-
-                if(response.Status)
+                try
                 {
-                    TempData["success_message"] = response.Message;
-                    return RedirectToAction("Edit", response.Id);
+                    var response = await new UpdateEmploymentStatus(_ctx).Do(request);
+
+                    if(response.Status)
+                    {
+                        TempData["success_message"] = response.Message;
+                        return RedirectToAction("Edit", response.Id);
+                    }
+                }
+                catch(EmploymentStatusValidationException employmentStatusValidationException)
+                {
+                    TempData["message"] = GetInnerMesage(employmentStatusValidationException);
+                    return RedirectToAction("Edit", request.Id);
                 }
             }
             return View("Edit", request.Id);

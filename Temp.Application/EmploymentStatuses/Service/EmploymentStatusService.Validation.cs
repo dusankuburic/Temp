@@ -14,6 +14,12 @@ namespace Temp.Application.EmploymentStatuses.Service
             ValidateEmploymentStatusStrings(employmentStatus);
         }
 
+        public void ValidateEmploymentStatusOnUpdate(EmploymentStatus employmentStatus)
+        {
+            ValidateEmploymentStatus(employmentStatus);
+            ValidateEmploymentStatusStrings(employmentStatus);
+        }
+
         public void ValidateEmploymentStatus(EmploymentStatus employmentStatus)
         {
             if(employmentStatus is null)
@@ -41,9 +47,9 @@ namespace Temp.Application.EmploymentStatuses.Service
             }
         }
 
-        public void ValidateEmployeeStatuses(IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> storageEmployeeStatuses)
+        public void ValidateEmploymentStatuses(IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> storageEmploymentStatuses)
         {
-            if(storageEmployeeStatuses.Count() == 0)
+            if(storageEmploymentStatuses.Count() == 0)
             {
                 throw new EmploymentStatusEmptyStorageException();
             }
