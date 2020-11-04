@@ -19,7 +19,16 @@ namespace Temp.UI.Controllers
 
         public IActionResult Index()
         {
-            return View(new GetEmploymentStatuses(_ctx).Do());
+            try
+            {
+                var employmentStatuses = new GetEmploymentStatuses(_ctx).Do();
+                return View(employmentStatuses);
+            }
+            catch(EmploymentStatusValidationException employmentStatusValidationException)
+            {
+                TempData["message"] = GetInnerMesage(employmentStatusValidationException);
+                return View();
+            }
         }
 
         [HttpGet]
@@ -57,14 +66,16 @@ namespace Temp.UI.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var response = new GetEmploymentStatus(_ctx).Do(id);
-
-            if(response is null)
+            try
             {
-                return RedirectToAction("Index","Error");
+                var response = new GetEmploymentStatus(_ctx).Do(id);
+                return View(response);
             }
-
-            return View(response);
+            catch(EmploymentStatusValidationException employmentStatusValidationException)
+            {
+                TempData["message"] = GetInnerMesage(employmentStatusValidationException);
+                return View("Index");
+            }            
         }
 
 
@@ -73,12 +84,20 @@ namespace Temp.UI.Controllers
         {
             if(ModelState.IsValid)
             {
-                var response = await new UpdateEmploymentStatus(_ctx).Do(request);
-
-                if(response.Status)
+                try
                 {
-                    TempData["success_message"] = response.Message;
-                    return RedirectToAction("Edit", response.Id);
+                    var response = await new UpdateEmploymentStatus(_ctx).Do(request);
+
+                    if(response.Status)
+                    {
+                        TempData["success_message"] = response.Message;
+                        return RedirectToAction("Edit", response.Id);
+                    }
+                }
+                catch(EmploymentStatusValidationException employmentStatusValidationException)
+                {
+                    TempData["message"] = GetInnerMesage(employmentStatusValidationException);
+                    return RedirectToAction("Edit", request.Id);
                 }
             }
             return View("Edit", request.Id);

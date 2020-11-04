@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Schema;
+using Temp.Application.EmploymentStatuses.Service;
 using Temp.Database;
 
 namespace Temp.Application.EmploymentStatuses
 {
-    public class UpdateEmploymentStatus
+    public class UpdateEmploymentStatus : EmploymentStatusService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -18,12 +15,14 @@ namespace Temp.Application.EmploymentStatuses
             _ctx = ctx;
         }
 
-
-        public async Task<Response> Do(Request request)
+        public Task<Response> Do(Request request) =>
+        TryCatch(async() =>
         {
             var employmentStatus = _ctx.EmploymentStatuses.FirstOrDefault(x => x.Id == request.Id);
             
             employmentStatus.Name = request.Name;
+
+            ValidateEmploymentStatusOnUpdate(employmentStatus);
 
             await _ctx.SaveChangesAsync();
 
@@ -34,9 +33,7 @@ namespace Temp.Application.EmploymentStatuses
                 Message = "Success",
                 Status = true
             };
-        }
-
-
+        });
 
         public class Request
         {
