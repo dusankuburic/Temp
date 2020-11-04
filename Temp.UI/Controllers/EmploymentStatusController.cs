@@ -51,6 +51,11 @@ namespace Temp.UI.Controllers
                         TempData["success_message"] = response.Message;
                         return RedirectToAction("Create");
                     }
+                    else
+                    {
+                        TempData["message"] = response.Message;
+                        return RedirectToAction("Create");
+                    }
                 }
                 catch(EmploymentStatusValidationException employmentStatusValidationException)
                 {
@@ -91,6 +96,11 @@ namespace Temp.UI.Controllers
                     if(response.Status)
                     {
                         TempData["success_message"] = response.Message;
+                        return RedirectToAction("Edit", response.Id);
+                    }
+                    else
+                    {
+                        TempData["message"] = response.Message;
                         return RedirectToAction("Edit", response.Id);
                     }
                 }
