@@ -10,6 +10,7 @@ namespace Temp.Application.EmploymentStatuses.Service
     {
         public delegate Task<CreateEmploymentStatus.Response> ReturningEmploymentStatusFunction();
         public delegate IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> ReturningEmploymentStatusesFunction();
+        public delegate GetEmploymentStatus.EmploymentStatusViewModel ReturningGetEmploymentStatusFunction();
         
 
 
@@ -37,7 +38,6 @@ namespace Temp.Application.EmploymentStatuses.Service
             }
         }
 
-
         public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> TryCatch(ReturningEmploymentStatusesFunction returningEmploymentStatusesFunction)
         {
             try
@@ -59,6 +59,25 @@ namespace Temp.Application.EmploymentStatuses.Service
 
         }
 
+        public  GetEmploymentStatus.EmploymentStatusViewModel TryCatch(ReturningGetEmploymentStatusFunction returningGetEmploymentStatusFunction)
+        {
+            try
+            {
+                return returningGetEmploymentStatusFunction();
+            }
+            catch (NullEmploymentStatusException nullEmploymentStatusException)
+            {
+                throw CreateAndLogValidationException(nullEmploymentStatusException);
+            }
+            catch (SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
 
         
         private EmploymentStatusServiceException CreateAndLogServiceException(Exception exception)

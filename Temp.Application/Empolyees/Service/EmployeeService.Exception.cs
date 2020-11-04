@@ -102,7 +102,6 @@ namespace Temp.Application.Empolyees
         }
 
  
-
         private EmployeeServiceException CreateAndLogServiceException(Exception exception)
         {
             var employeeServiceException = new EmployeeServiceException(exception);

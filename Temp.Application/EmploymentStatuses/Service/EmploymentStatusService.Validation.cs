@@ -14,8 +14,15 @@ namespace Temp.Application.EmploymentStatuses.Service
             ValidateEmploymentStatusStrings(employmentStatus);
         }
 
-
         public void ValidateEmploymentStatus(EmploymentStatus employmentStatus)
+        {
+            if(employmentStatus is null)
+            {
+                throw new NullEmploymentStatusException();
+            }
+        }
+
+        public void ValidateGetEmploymentStatus(GetEmploymentStatus.EmploymentStatusViewModel employmentStatus)
         {
             if(employmentStatus is null)
             {

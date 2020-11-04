@@ -19,7 +19,6 @@ namespace Temp.UI.Controllers
 
         public IActionResult Index()
         {
-
             try
             {
                 var employmentStatuses = new GetEmploymentStatuses(_ctx).Do();
@@ -67,14 +66,16 @@ namespace Temp.UI.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var response = new GetEmploymentStatus(_ctx).Do(id);
-
-            if(response is null)
+            try
             {
-                return RedirectToAction("Index","Error");
+                var response = new GetEmploymentStatus(_ctx).Do(id);
+                return View(response);
             }
-
-            return View(response);
+            catch(EmploymentStatusValidationException employmentStatusValidationException)
+            {
+                TempData["message"] = GetInnerMesage(employmentStatusValidationException);
+                return View("Index");
+            }            
         }
 
 
