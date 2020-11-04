@@ -13,7 +13,8 @@ namespace Temp.Application.EmploymentStatuses
         }
 
         public EmploymentStatusViewModel Do(int id) =>
-            _ctx.EmploymentStatuses.Where(x => x.Id == id).Select(x => new EmploymentStatusViewModel
+            _ctx.EmploymentStatuses.Where(x => x.Id == id)
+            .Select(x => new EmploymentStatusViewModel
             {
                 Id = x.Id,
                 Name = x.Name
@@ -27,3 +28,4 @@ namespace Temp.Application.EmploymentStatuses
         }
     }
 }
+ 
