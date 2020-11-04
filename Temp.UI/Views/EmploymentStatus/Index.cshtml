@@ -13,15 +13,19 @@
             <th>Options</th>
         </tr>
         @{
-            foreach (var workplace in Model)
-            {
+            if (Model != null)
+            { 
+
+                foreach (var workplace in Model)
+                {
                 <tr>
                     <td>@workplace.Id</td>
                     <td>@workplace.Name</td>
                     <td><a class="btn btn-primary" asp-controller="EmploymentStatus" asp-action="Edit" asp-route-id="@workplace.Id"><i class="far fa-edit"></i></a></td>
                 </tr>
+                }
             }
-        }
+         }
     </table>
 </div>
 

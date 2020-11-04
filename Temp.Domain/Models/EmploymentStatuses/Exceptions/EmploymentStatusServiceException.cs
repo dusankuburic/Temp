@@ -2,9 +2,9 @@
 
 namespace Temp.Domain.Models.EmploymentStatuses.Exceptions
 {
-    public class EmployeeStatusServiceException : Exception
+    public class EmploymentStatusServiceException : Exception
     {
-        public EmployeeStatusServiceException(Exception innerException)
+        public EmploymentStatusServiceException(Exception innerException)
             : base("Service error, contact support", innerException)
         {
 

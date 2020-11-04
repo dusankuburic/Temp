@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Temp.Application.EmploymentStatuses.Service;
 using Temp.Database;
 
 namespace Temp.Application.EmploymentStatuses
 {
-    public class GetEmploymentStatuses
+    public class GetEmploymentStatuses : EmploymentStatusService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -14,11 +15,20 @@ namespace Temp.Application.EmploymentStatuses
         }
 
         public IEnumerable<EmploymentStatusViewModel> Do() =>
-            _ctx.EmploymentStatuses.ToList().Select(x => new EmploymentStatusViewModel
+        TryCatch(() =>
+        {
+            var employmentStatuses = _ctx.EmploymentStatuses.ToList()
+            .Select(x => new EmploymentStatusViewModel
             {
                 Id = x.Id,
                 Name = x.Name
             });
+
+            ValidateEmployeeStatuses(employmentStatuses);
+
+            return employmentStatuses;
+        });
+
 
         public class EmploymentStatusViewModel
         {

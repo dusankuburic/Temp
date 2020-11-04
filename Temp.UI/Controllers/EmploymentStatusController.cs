@@ -19,7 +19,17 @@ namespace Temp.UI.Controllers
 
         public IActionResult Index()
         {
-            return View(new GetEmploymentStatuses(_ctx).Do());
+
+            try
+            {
+                var employmentStatuses = new GetEmploymentStatuses(_ctx).Do();
+                return View(employmentStatuses);
+            }
+            catch(EmploymentStatusValidationException employmentStatusValidationException)
+            {
+                TempData["message"] = GetInnerMesage(employmentStatusValidationException);
+                return View();
+            }
         }
 
         [HttpGet]
