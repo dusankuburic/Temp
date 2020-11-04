@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Temp.Application.EmploymentStatuses.Service;
 using Temp.Database;
@@ -15,9 +16,30 @@ namespace Temp.Application.EmploymentStatuses
             _ctx = ctx;
         }
 
+        private async Task<bool> EmploymentStatusExists(string name)
+        {
+            if(await _ctx.EmploymentStatuses.AnyAsync(x => x.Name == name))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public Task<Response> Do(Request request) =>
         TryCatch(async () => 
         {
+
+            var employmentStatusExists = await EmploymentStatusExists(request.Name);
+
+            if(employmentStatusExists)
+            {
+                return new Response
+                {
+                    Message = $"Error {request.Name} already exists",
+                    Status = false
+                };
+            }
+
             var employmentStatus = new EmploymentStatus
             {
                 Name = request.Name
