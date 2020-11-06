@@ -4,13 +4,13 @@ using Temp.Application.Empolyees;
 using Temp.Application.Workplaces;
 using Temp.Database;
 
-namespace Temp.Application.Engagement
+namespace Temp.Application.Engagements
 {
-    public class GetCreateEngagementModel
+    public class GetCreateEngagementViewModel
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetCreateEngagementModel(ApplicationDbContext ctx)
+        public GetCreateEngagementViewModel(ApplicationDbContext ctx)
         {
             _ctx = ctx;
         }
@@ -20,7 +20,7 @@ namespace Temp.Application.Engagement
             {
                 Employee = new GetEmployee(_ctx).Do(id),
                 Workplaces = new GetWorkplaces(_ctx).Do(),
-                EmploymentStatues = new GetEmploymentStatuses(_ctx).Do()
+                EmploymentStatuses = new GetEmploymentStatuses(_ctx).Do()
             };
 
 
@@ -28,7 +28,7 @@ namespace Temp.Application.Engagement
         {
             public GetEmployee.EmployeeViewModel Employee;
             public IEnumerable<GetWorkplaces.WorkplacesViewModel> Workplaces;
-            public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> EmploymentStatues;
+            public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> EmploymentStatuses;
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Temp.Application.Empolyees;
-using Temp.Application.Engagement;
+using Temp.Application.Engagements;
 using Temp.Database;
 using Temp.Domain.Models.Employees.Exceptions;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
@@ -41,7 +42,7 @@ namespace Temp.UI.Controllers
         {
             try
             {
-                var employeesWithoutEngagement = new GetCreateEngagementModel(_ctx).Do(id);
+                var employeesWithoutEngagement = new GetCreateEngagementViewModel(_ctx).Do(id);
 
                 return View(employeesWithoutEngagement);
             }
@@ -60,6 +61,17 @@ namespace Temp.UI.Controllers
                 TempData["message"] += GetInnerMessage(employmentStatusValidationException);
                 return View("Index");
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateEngagement.Request request)
+        {
+            if(ModelState.IsValid)
+            {
+                var response = await new CreateEngagement(_ctx).Do(request);
+            }
+
+            return View("Index");
         }
         
 
