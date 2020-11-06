@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Temp.Application.Empolyees;
+using Temp.Application.Engagement;
 using Temp.Database;
 using Temp.Domain.Models.Employees.Exceptions;
+using Temp.Domain.Models.EmploymentStatuses.Exceptions;
+using Temp.Domain.Models.Workplaces.Exceptions;
 
 namespace Temp.UI.Controllers
 {
@@ -17,6 +20,7 @@ namespace Temp.UI.Controllers
             _ctx = ctx;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             try
@@ -30,6 +34,34 @@ namespace Temp.UI.Controllers
                 return View();
             }
         }
+
+
+        [HttpGet]
+        public IActionResult Create(int id)
+        {
+            try
+            {
+                var employeesWithoutEngagement = new GetCreateEngagementModel(_ctx).Do(id);
+
+                return View(employeesWithoutEngagement);
+            }
+            catch(EmployeeValidationException employeeValidationException)
+            {
+                TempData["message"] += GetInnerMessage(employeeValidationException);
+                return View("Index");
+            }
+            catch(WorkplaceValidationException workplaceValidationException)
+            {
+                TempData["message"] += GetInnerMessage(workplaceValidationException);
+                return View("Index");
+            }
+            catch(EmploymentStatusValidationException employmentStatusValidationException)
+            {
+                TempData["message"] += GetInnerMessage(employmentStatusValidationException);
+                return View("Index");
+            }
+        }
+        
 
 
         private static string GetInnerMessage(Exception exception) =>

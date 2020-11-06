@@ -1,3 +1,32 @@
-﻿@{
+﻿@model Temp.Application.Engagement.GetCreateEngagementModel.Response
+@{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
+
+
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <h1 class="text-center">Create Employee Engagement</h1>
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <form asp-controller="Employee" asp-action="Create" method="post" asp-antiforgery="true">
+                    <div class="alert alert-info text-center" role="alert">
+                        <h4>Id: @Model.Employee.Id Name: @Model.Employee.FirstName  @Model.Employee.LastName</h4>
+                    </div>
+                    <div class="form-group">
+                        <h4>Workplaces</h4>
+                        <select asp-items="@(new SelectList(Model.Workplaces, "Id", "Name"))" class="form-control">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <h4>Employment statuses</h4>
+                        <select asp-items="@(new SelectList(Model.EmploymentStatues, "Id","Name"))" class="form-control">
+                        </select>
+                    </div>
+
+                    <input type="submit" class="btn btn-success float-right" value="Add" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

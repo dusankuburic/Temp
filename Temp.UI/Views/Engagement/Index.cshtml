@@ -43,6 +43,7 @@
                                 <span class="badge badge-pill badge-secondary">@employee.Role</span>
                             </td>
                         }
+                        <td><a class="btn btn-primary" asp-controller="Engagement" asp-action="Create" asp-route-id="@employee.Id"><i class="fas fa-code-branch"></i></a></td>
                     </tr>
                 }
             }
