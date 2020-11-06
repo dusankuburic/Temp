@@ -12,6 +12,7 @@ namespace Temp.Application.Empolyees
         public delegate IEnumerable<GetEmployees.EmployeeViewModel> ReturningGetEmloyeesFunction();
         public delegate GetEmployee.EmployeeViewModel ReturningGetEmployeeFunction();
         public delegate Task<UpdateEmployee.Response> ReturningUpdateEmployeeFunction();
+        public delegate IEnumerable<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel> ReturningEmployeesWithoutEngagement();
 
         public async Task<CreateEmployee.Response> TryCatch(ReturningCreateEmployeeFunction returningCreateEmployeeFunction)
         {
@@ -100,6 +101,28 @@ namespace Temp.Application.Empolyees
                 throw CreateAndLogServiceException(exception);
             }
         }
+
+
+        public IEnumerable<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel> TryCatch(ReturningEmployeesWithoutEngagement returningEmployeesWithoutEngagement)
+        {
+            try
+            {
+                return returningEmployeesWithoutEngagement();
+            }
+            catch(EmployeeEmptyStorageException employeeEmptyStorageException) 
+            {
+                throw CreateAndLogValidationException(employeeEmptyStorageException);
+            }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
 
  
         private EmployeeServiceException CreateAndLogServiceException(Exception exception)

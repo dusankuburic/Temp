@@ -37,6 +37,16 @@ namespace Temp.Application.Empolyees
             }
         }
 
+        public void ValidateGetEmployeeWithoutEngagementViewModel
+            (IEnumerable<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel> employeeWithoutEngagement)
+        {
+            if(employeeWithoutEngagement.Count() == 0)
+            {
+               throw new NullEmployeeException();
+            }
+        }
+
+
         public void ValidateEmployeeStrings(Employee employee)
         {
             switch (employee)
