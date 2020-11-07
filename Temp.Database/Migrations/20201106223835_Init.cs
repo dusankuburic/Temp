@@ -96,7 +96,8 @@ namespace Temp.Database.Migrations
                 name: "Engagements",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<int>(nullable: false),
                     WorkplaceId = table.Column<int>(nullable: false),
                     EmploymentStatusId = table.Column<int>(nullable: false),
@@ -129,7 +130,9 @@ namespace Temp.Database.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Admins_EmployeeId",
                 table: "Admins",
-                column: "EmployeeId");
+                column: "EmployeeId",
+                unique: true,
+                filter: "[EmployeeId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Engagements_EmployeeId",
@@ -149,7 +152,9 @@ namespace Temp.Database.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Users_EmployeeId",
                 table: "Users",
-                column: "EmployeeId");
+                column: "EmployeeId",
+                unique: true,
+                filter: "[EmployeeId] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -10,7 +10,7 @@ using Temp.Database;
 namespace Temp.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201027184953_Init")]
+    [Migration("20201106223835_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,7 +42,9 @@ namespace Temp.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmployeeId")
+                        .IsUnique()
+                        .HasFilter("[EmployeeId] IS NOT NULL");
 
                     b.ToTable("Admins");
                 });
@@ -88,7 +90,9 @@ namespace Temp.Database.Migrations
             modelBuilder.Entity("Temp.Domain.Models.Engagement", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -137,7 +141,9 @@ namespace Temp.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmployeeId")
+                        .IsUnique()
+                        .HasFilter("[EmployeeId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -160,8 +166,8 @@ namespace Temp.Database.Migrations
             modelBuilder.Entity("Temp.Domain.Models.Admin", b =>
                 {
                     b.HasOne("Temp.Domain.Models.Employee", "Employee")
-                        .WithMany("Admins")
-                        .HasForeignKey("EmployeeId");
+                        .WithOne("Admin")
+                        .HasForeignKey("Temp.Domain.Models.Admin", "EmployeeId");
                 });
 
             modelBuilder.Entity("Temp.Domain.Models.Engagement", b =>
@@ -188,8 +194,8 @@ namespace Temp.Database.Migrations
             modelBuilder.Entity("Temp.Domain.Models.User", b =>
                 {
                     b.HasOne("Temp.Domain.Models.Employee", "Employee")
-                        .WithMany("Users")
-                        .HasForeignKey("EmployeeId");
+                        .WithOne("User")
+                        .HasForeignKey("Temp.Domain.Models.User", "EmployeeId");
                 });
 #pragma warning restore 612, 618
         }
