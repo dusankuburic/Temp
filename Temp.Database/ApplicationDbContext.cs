@@ -25,6 +25,10 @@ namespace Temp.Database
             modelBuilder.Entity<Engagement>()
                 .HasKey(x => new {x.Id, x.EmployeeId, x.WorkplaceId});
 
+            modelBuilder.Entity<Engagement>()
+                .Property(x => x.Id)
+                .ValueGeneratedOnAdd();
+
             modelBuilder.Entity<Employee>()
                 .Property(x => x.Role)
                 .HasDefaultValue("None");

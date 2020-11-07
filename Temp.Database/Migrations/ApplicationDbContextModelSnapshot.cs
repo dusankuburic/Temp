@@ -88,7 +88,9 @@ namespace Temp.Database.Migrations
             modelBuilder.Entity("Temp.Domain.Models.Engagement", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
