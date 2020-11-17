@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using Temp.Database;
 using Temp.Domain.Models;
 
 namespace Temp.Application.Engagements
 {
-    public class CreateEngagement
+    public class CreateEngagement : EngagementService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -20,8 +16,9 @@ namespace Temp.Application.Engagements
         }
         
 
-        public async Task<Response> Do(Request request)
-        {
+        public Task<Response> Do(Request request) =>
+        TryCatch(async () =>
+        { 
             var engagement = new Engagement
             {
                 EmployeeId = request.EmployeeId,
@@ -31,8 +28,7 @@ namespace Temp.Application.Engagements
                 DateTo = request.DateTo
             };
 
-
-            //ValidateEngagementOnCreate(engagement);
+            ValidateEngagementOnCreate(engagement);
 
             _ctx.Engagements.Add(engagement);
             await _ctx.SaveChangesAsync();
@@ -42,9 +38,10 @@ namespace Temp.Application.Engagements
                 Message = $"Success",
                 Status = true
             };
-        }
+        });
         
 
+       
         public class Request
         {
             [Required]

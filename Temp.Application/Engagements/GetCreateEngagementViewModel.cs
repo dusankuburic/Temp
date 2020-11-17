@@ -6,7 +6,7 @@ using Temp.Database;
 
 namespace Temp.Application.Engagements
 {
-    public class GetCreateEngagementViewModel
+    public class GetCreateEngagementViewModel : EngagementService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -16,12 +16,21 @@ namespace Temp.Application.Engagements
         }
        
         public Response Do(int id) =>
-            new Response
+        TryCatch(() => 
+        { 
+            var response = new Response
             {
                 Employee = new GetEmployee(_ctx).Do(id),
                 Workplaces = new GetWorkplaces(_ctx).Do(),
                 EmploymentStatuses = new GetEmploymentStatuses(_ctx).Do()
             };
+
+            ValidateCreateEngagementViewModel(response);
+
+            return response;
+        });
+            
+
 
 
         public class Response

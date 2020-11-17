@@ -37,7 +37,6 @@ namespace Temp.Application.Empolyees
                 Message = $"Success {employee.FirstName} {employee.LastName} is added",
                 Status = true
             };
-      
         });
         
 
