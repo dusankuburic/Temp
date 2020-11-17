@@ -13,6 +13,7 @@ using Temp.Domain.Models.Engagements.Exceptions;
 namespace Temp.UI.Controllers
 {
     [Authorize(Roles = "Admin")]
+    [System.Runtime.InteropServices.Guid("C1D17A7A-C87A-475A-8553-59A30051075C")]
     public class EngagementController : Controller
     {
         public readonly ApplicationDbContext _ctx;
@@ -88,19 +89,18 @@ namespace Temp.UI.Controllers
             }
             catch(EmployeeValidationException employeeValidationException)
             {
-                TempData["message"] += GetInnerMessage(employeeValidationException);
-                return View("WithoutEngagements");
+                TempData["message"] += GetInnerMessage(employeeValidationException);             
             }
             catch(WorkplaceValidationException workplaceValidationException)
             {
-                TempData["message"] += GetInnerMessage(workplaceValidationException);
-                return View("WithoutEngagements");
+                TempData["message"] += GetInnerMessage(workplaceValidationException);                    
             }
             catch(EmploymentStatusValidationException employmentStatusValidationException)
             {
-                TempData["message"] += GetInnerMessage(employmentStatusValidationException);
-                return View("WithoutEngagements");
+                TempData["message"] += GetInnerMessage(employmentStatusValidationException);             
             }
+         
+            return View("Create");
         }
 
         [HttpPost]
@@ -122,7 +122,8 @@ namespace Temp.UI.Controllers
                 {
                     TempData["message"] = GetInnerMessage(engagementValidationException);
                     return RedirectToAction("Create");
-                }           
+                }
+                
             }
 
             return RedirectToAction("Create");

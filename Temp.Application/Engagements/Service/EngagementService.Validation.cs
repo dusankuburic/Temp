@@ -1,4 +1,7 @@
 ﻿using Temp.Domain.Models.Engagements.Exceptions;
+using Temp.Domain.Models.Employees.Exceptions;
+using Temp.Domain.Models.Workplaces.Exceptions;
+using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 using System;
 using Temp.Domain.Models;
 
@@ -13,6 +16,8 @@ namespace Temp.Application.Engagements
             ValidateEngagementDates(engagement);
             ValidateDateRange(engagement);
         }
+
+
 
         public void ValidateEngagement(Engagement engagement)
         {
@@ -55,7 +60,47 @@ namespace Temp.Application.Engagements
                         parameterValue: engagement.DateTo);
             }
         }
-      
+
+        public void ValidateDateRange(Engagement engagement)
+        {
+            if(engagement.DateFrom > engagement.DateTo)
+            {
+                throw new DateRangeEngagementException();
+            }
+        }
+
+        public void ValidateCreateEngagementViewModel(GetCreateEngagementViewModel.Response response)
+        {
+            VaildateEmployee(response);
+            ValidateWorkplace(response);
+            ValidateEmploymentStatuses(response);
+        }
+
+
+        public void VaildateEmployee(GetCreateEngagementViewModel.Response response)
+        {
+            if(response.Employee is null)
+            {
+                throw new NullEmployeeException();
+            }
+        }
+
+        public void ValidateWorkplace(GetCreateEngagementViewModel.Response response)
+        {
+            if(response.Workplaces is null)
+            {
+                throw new NullWorkplaceException();
+            }
+        }
+       
+        public void ValidateEmploymentStatuses(GetCreateEngagementViewModel.Response response)
+        {
+            if(response.EmploymentStatuses is null)
+            {
+                throw new NullEmploymentStatusException();
+            }
+        }
+
         public static bool IsInvalidInt(int input)
         {
             if(input > 0 && input <= int.MaxValue)
@@ -74,12 +119,6 @@ namespace Temp.Application.Engagements
             return true;
         }
 
-        public void ValidateDateRange(Engagement engagement)
-        {
-            if(engagement.DateFrom > engagement.DateTo)
-            {
-                throw new DateRangeEngagementException();
-            }
-        }
+
     }
 }
