@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using Temp.Database;
 
@@ -17,8 +18,10 @@ namespace Temp.Application.Empolyees
         public IEnumerable<EmployeesWithoutEngagementViewModel> Do() =>
         TryCatch(() =>
         {
-             var employeesWithoutEngagement = _ctx.Employees.ToList()
-            .Where(x => x.Engagements is null)
+
+             var employeesWithoutEngagement = _ctx.Employees
+            .Include(x => x.Engagements)
+            .Where(x => x.Engagements.Count == 0)
             .OrderByDescending(x => x.Id)
             .Select(x => new EmployeesWithoutEngagementViewModel
             {
@@ -26,7 +29,8 @@ namespace Temp.Application.Empolyees
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Role = x.Role
-            });
+            })
+            .ToList();
 
             ValidateGetEmployeeWithoutEngagementViewModel(employeesWithoutEngagement);
 
