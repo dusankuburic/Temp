@@ -42,7 +42,16 @@ namespace Temp.Application.Empolyees
         {
             if(employeeWithoutEngagement.Count() == 0)
             {
-               throw new NullEmployeeException();
+               throw new EmployeeWithoutEngagementStorageException();
+            }
+        }
+
+        public void ValidateGetEmployeeWithEngagementViewModel
+            (IEnumerable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> employeeWithEngagement)
+        {
+            if(employeeWithEngagement.Count() == 0)
+            {
+               throw new EmployeeWithEngagementStorageException();
             }
         }
 
@@ -72,5 +81,6 @@ namespace Temp.Application.Empolyees
 
         public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
 
+        
     }
 }

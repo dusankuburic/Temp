@@ -5,25 +5,25 @@ using Temp.Database;
 
 namespace Temp.Application.Empolyees
 {
-    public class GetEmployeesWithoutEngagement : EmployeeService
+    public class GetEmployeesWithEngagement : EmployeeService
     {
         
         private readonly ApplicationDbContext _ctx;
 
-        public GetEmployeesWithoutEngagement(ApplicationDbContext ctx)
+        public GetEmployeesWithEngagement(ApplicationDbContext ctx)
         {
             _ctx = ctx;
         }
 
-        public IEnumerable<EmployeesWithoutEngagementViewModel> Do() =>
+        public IEnumerable<EmployeesWithEngagementViewModel> Do() =>
         TryCatch(() =>
         {
 
-             var employeesWithoutEngagement = _ctx.Employees
+             var employeesWithEngagement = _ctx.Employees
             .Include(x => x.Engagements)
-            .Where(x => x.Engagements.Count == 0)
+            .Where(x => x.Engagements.Count != 0)
             .OrderByDescending(x => x.Id)
-            .Select(x => new EmployeesWithoutEngagementViewModel
+            .Select(x => new EmployeesWithEngagementViewModel
             {
                 Id = x.Id,
                 FirstName = x.FirstName,
@@ -32,14 +32,14 @@ namespace Temp.Application.Empolyees
             })
             .ToList();
 
-            ValidateGetEmployeeWithoutEngagementViewModel(employeesWithoutEngagement);
+            ValidateGetEmployeeWithEngagementViewModel(employeesWithEngagement);
 
-            return employeesWithoutEngagement;
+            return employeesWithEngagement;
         });
 
 
 
-        public class EmployeesWithoutEngagementViewModel
+        public class EmployeesWithEngagementViewModel
         {
             public int Id {get; set;}
             public string FirstName {get; set;}
