@@ -8,6 +8,7 @@ using Temp.Database;
 using Temp.Domain.Models.Employees.Exceptions;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 using Temp.Domain.Models.Workplaces.Exceptions;
+using Temp.Domain.Models.Engagements.Exceptions;
 
 namespace Temp.UI.Controllers
 {
@@ -26,7 +27,6 @@ namespace Temp.UI.Controllers
         {
             return View("Index");
         }
-
 
         [HttpGet]
         public IActionResult WithoutEngagements()
@@ -52,7 +52,6 @@ namespace Temp.UI.Controllers
                 return View("WithoutEngagements");
             }
         }
-
 
         [HttpGet]
         public IActionResult WithEngagements()
@@ -109,10 +108,24 @@ namespace Temp.UI.Controllers
         {
             if(ModelState.IsValid)
             {
-                var response = await new CreateEngagement(_ctx).Do(request);
+                try
+                {
+                    var response = await new CreateEngagement(_ctx).Do(request);
+                    
+                    if(response.Status)
+                    {
+                        TempData["success_message"] = response.Message;
+                        return RedirectToAction("Create");
+                    }
+                }
+                catch(EngagementValidationException engagementValidationException)
+                {
+                    TempData["message"] = GetInnerMessage(engagementValidationException);
+                    return RedirectToAction("Create");
+                }           
             }
 
-            return RedirectToAction("WithEngagements");
+            return RedirectToAction("Create");
         }
         
 

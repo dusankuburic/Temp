@@ -10,7 +10,7 @@ using Temp.Domain.Models;
 
 namespace Temp.Application.Engagements
 {
-    public class CreateEngagement
+    public class CreateEngagement : EngagementService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -20,8 +20,9 @@ namespace Temp.Application.Engagements
         }
         
 
-        public async Task<Response> Do(Request request)
-        {
+        public Task<Response> Do(Request request) =>
+        TryCatch(async () =>
+        { 
             var engagement = new Engagement
             {
                 EmployeeId = request.EmployeeId,
@@ -31,8 +32,7 @@ namespace Temp.Application.Engagements
                 DateTo = request.DateTo
             };
 
-
-            //ValidateEngagementOnCreate(engagement);
+            ValidateEngagementOnCreate(engagement);
 
             _ctx.Engagements.Add(engagement);
             await _ctx.SaveChangesAsync();
@@ -42,7 +42,10 @@ namespace Temp.Application.Engagements
                 Message = $"Success",
                 Status = true
             };
-        }
+        });
+        
+
+        
         
 
         public class Request

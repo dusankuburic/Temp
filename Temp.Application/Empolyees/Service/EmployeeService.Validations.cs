@@ -80,5 +80,7 @@ namespace Temp.Application.Empolyees
         }
 
         public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
+
+        
     }
 }
