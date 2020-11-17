@@ -13,6 +13,7 @@ namespace Temp.Application.Empolyees
         public delegate GetEmployee.EmployeeViewModel ReturningGetEmployeeFunction();
         public delegate Task<UpdateEmployee.Response> ReturningUpdateEmployeeFunction();
         public delegate IEnumerable<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel> ReturningEmployeesWithoutEngagement();
+        public delegate IEnumerable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> ReturningEmployeesWithEngagement();
 
         public async Task<CreateEmployee.Response> TryCatch(ReturningCreateEmployeeFunction returningCreateEmployeeFunction)
         {
@@ -102,7 +103,6 @@ namespace Temp.Application.Empolyees
             }
         }
 
-
         public IEnumerable<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel> TryCatch(ReturningEmployeesWithoutEngagement returningEmployeesWithoutEngagement)
         {
             try
@@ -123,15 +123,32 @@ namespace Temp.Application.Empolyees
             }
         }
 
+        public IEnumerable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> TryCatch(ReturningEmployeesWithEngagement returningEmployeesWithEngagement)
+        {
+            try
+            {
+                return returningEmployeesWithEngagement();
+            }
+            catch(EmployeeEmptyStorageException employeeEmptyStorageException) 
+            {
+                throw CreateAndLogValidationException(employeeEmptyStorageException);
+            }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
 
- 
         private EmployeeServiceException CreateAndLogServiceException(Exception exception)
         {
             var employeeServiceException = new EmployeeServiceException(exception);
             //LOG
             return employeeServiceException;
         }
-
 
         private EmployeeValidationException CreateAndLogValidationException(Exception exception)
         {

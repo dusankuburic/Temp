@@ -46,6 +46,15 @@ namespace Temp.Application.Empolyees
             }
         }
 
+        public void ValidateGetEmployeeWithEngagementViewModel
+            (IEnumerable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> employeeWithEngagement)
+        {
+            if(employeeWithEngagement.Count() == 0)
+            {
+               throw new NullEmployeeException();
+            }
+        }
+
 
         public void ValidateEmployeeStrings(Employee employee)
         {
@@ -71,6 +80,5 @@ namespace Temp.Application.Empolyees
         }
 
         public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
-
     }
 }

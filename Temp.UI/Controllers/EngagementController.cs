@@ -24,18 +24,60 @@ namespace Temp.UI.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            return View("Index");
+        }
+
+
+        [HttpGet]
+        public IActionResult WithoutEngagements()
+        {
             try
             {
-                var employees = new GetEmployeesWithoutEngagement(_ctx).Do();
-                return View(employees);
+                var employeesWithoutEngagement = new GetEmployeesWithoutEngagement(_ctx).Do();
+                return View(employeesWithoutEngagement);
             }
-            catch (EmployeeValidationException employeeValidationException)
+            catch(EmployeeValidationException employeeValidationException)
             {
-                TempData["message"] = GetInnerMessage(employeeValidationException);
-                return View();
+                TempData["message"] += GetInnerMessage(employeeValidationException);
+                return View("WithoutEngagements");
+            }
+            catch(WorkplaceValidationException workplaceValidationException)
+            {
+                TempData["message"] += GetInnerMessage(workplaceValidationException);
+                return View("WithoutEngagements");
+            }
+            catch(EmploymentStatusValidationException employmentStatusValidationException)
+            {
+                TempData["message"] += GetInnerMessage(employmentStatusValidationException);
+                return View("WithoutEngagements");
             }
         }
 
+
+        [HttpGet]
+        public IActionResult WithEngagements()
+        {
+            try
+            {
+                var employeesWithEngagement = new GetEmployeesWithEngagement(_ctx).Do();
+                return View(employeesWithEngagement);
+            }
+            catch(EmployeeValidationException employeeValidationException)
+            {
+                TempData["message"] += GetInnerMessage(employeeValidationException);
+                return View("WithEngagements");
+            }
+            catch(WorkplaceValidationException workplaceValidationException)
+            {
+                TempData["message"] += GetInnerMessage(workplaceValidationException);
+                return View("WithEngagements");
+            }
+            catch(EmploymentStatusValidationException employmentStatusValidationException)
+            {
+                TempData["message"] += GetInnerMessage(employmentStatusValidationException);
+                return View("WithEngagements");
+            }
+        }
 
         [HttpGet]
         public IActionResult Create(int id)
@@ -43,23 +85,22 @@ namespace Temp.UI.Controllers
             try
             {
                 var employeesWithoutEngagement = new GetCreateEngagementViewModel(_ctx).Do(id);
-
                 return View(employeesWithoutEngagement);
             }
             catch(EmployeeValidationException employeeValidationException)
             {
                 TempData["message"] += GetInnerMessage(employeeValidationException);
-                return View("Index");
+                return View("WithoutEngagements");
             }
             catch(WorkplaceValidationException workplaceValidationException)
             {
                 TempData["message"] += GetInnerMessage(workplaceValidationException);
-                return View("Index");
+                return View("WithoutEngagements");
             }
             catch(EmploymentStatusValidationException employmentStatusValidationException)
             {
                 TempData["message"] += GetInnerMessage(employmentStatusValidationException);
-                return View("Index");
+                return View("WithoutEngagements");
             }
         }
 
@@ -71,7 +112,7 @@ namespace Temp.UI.Controllers
                 var response = await new CreateEngagement(_ctx).Do(request);
             }
 
-            return View("Index");
+            return RedirectToAction("WithEngagements");
         }
         
 
