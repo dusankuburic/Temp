@@ -42,7 +42,7 @@ namespace Temp.Application.Empolyees
         {
             if(employeeWithoutEngagement.Count() == 0)
             {
-               throw new NullEmployeeException();
+               throw new EmployeeWithoutEngagementStorageException();
             }
         }
 
@@ -51,7 +51,7 @@ namespace Temp.Application.Empolyees
         {
             if(employeeWithEngagement.Count() == 0)
             {
-               throw new NullEmployeeException();
+               throw new EmployeeWithEngagementStorageException();
             }
         }
 

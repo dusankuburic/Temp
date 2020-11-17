@@ -109,9 +109,9 @@ namespace Temp.Application.Empolyees
             {
                 return returningEmployeesWithoutEngagement();
             }
-            catch(EmployeeEmptyStorageException employeeEmptyStorageException) 
+            catch(EmployeeWithoutEngagementStorageException employeeWithoutEngagementStorageException) 
             {
-                throw CreateAndLogValidationException(employeeEmptyStorageException);
+                throw CreateAndLogValidationException(employeeWithoutEngagementStorageException);
             }
             catch(SqlException sqlException)
             {
@@ -129,9 +129,9 @@ namespace Temp.Application.Empolyees
             {
                 return returningEmployeesWithEngagement();
             }
-            catch(EmployeeEmptyStorageException employeeEmptyStorageException) 
+            catch(EmployeeWithEngagementStorageException employeeWithEngagementStorageException) 
             {
-                throw CreateAndLogValidationException(employeeEmptyStorageException);
+                throw CreateAndLogValidationException(employeeWithEngagementStorageException);
             }
             catch(SqlException sqlException)
             {
