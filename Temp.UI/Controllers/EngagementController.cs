@@ -84,8 +84,8 @@ namespace Temp.UI.Controllers
         {
             try
             {
-                var employeesWithoutEngagement = new GetCreateEngagementViewModel(_ctx).Do(id);
-                return View(employeesWithoutEngagement);
+                var employees = new GetCreateEngagementViewModel(_ctx).Do(id);
+                return View(employees);
             }
             catch(EmployeeValidationException employeeValidationException)
             {

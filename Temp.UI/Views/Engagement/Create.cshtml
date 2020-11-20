@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <h1 class="text-center">Create Employee Engagement</h1>
         <div class="row justify-content-center">
-            <div class="col-lg-6">
+            <div class="col-lg-5 pt-3">
 
                 @if(Model != null)
                 {
@@ -37,8 +37,41 @@
                         </div>
                         <input type="submit" class="btn btn-success float-right" value="Add" />
                     </form>
-                }
+                }              
+            </div>
 
+            <div class="col-lg-7 pt-3">
+                @if (Model.Engagements != null)
+                 {
+                    @if (Model.Engagements.Count() != 0)
+                    {
+                        <table class="table table-striped text-center">
+                            <tr>
+                                <th>Workplace</th>
+                                <th>Employment status</th>
+                                <th>From</th>
+                                <th>To</th>
+                            </tr>
+
+                            @foreach (var engagement in Model.Engagements)
+                            {
+                                <tr>
+                                    <td>@engagement.Workplace.Name</td>
+                                    <td>@engagement.EmploymentStatus.Name</td>
+                                    <td>@engagement.DateFrom</td>
+                                    <td>@engagement.DateTo</td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger text-center" role="alert">
+                            Employee doesn't have assigned engagement
+                        </div>
+                    }
+
+                }
             </div>
         </div>
     </div>
