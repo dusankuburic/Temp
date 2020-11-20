@@ -3,6 +3,8 @@ using Temp.Application.EmploymentStatuses;
 using Temp.Application.Empolyees;
 using Temp.Application.Workplaces;
 using Temp.Database;
+using Temp.Domain.Models;
+using System.Linq;
 
 namespace Temp.Application.Engagements
 {
@@ -22,7 +24,8 @@ namespace Temp.Application.Engagements
             {
                 Employee = new GetEmployee(_ctx).Do(id),
                 Workplaces = new GetWorkplaces(_ctx).Do(),
-                EmploymentStatuses = new GetEmploymentStatuses(_ctx).Do()
+                EmploymentStatuses = new GetEmploymentStatuses(_ctx).Do(),
+                Engagements = _ctx.Engagements.Where(x => x.Employee.Id == id).ToList()
             };
 
             ValidateCreateEngagementViewModel(response);
@@ -30,14 +33,12 @@ namespace Temp.Application.Engagements
             return response;
         });
             
-
-
-
         public class Response
         {
             public GetEmployee.EmployeeViewModel Employee;
             public IEnumerable<GetWorkplaces.WorkplacesViewModel> Workplaces;
             public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> EmploymentStatuses;
+            public IEnumerable<Engagement> Engagements; 
         }
     }
 }
