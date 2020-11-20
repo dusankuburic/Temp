@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <h1 class="text-center">Create Employee Engagement</h1>
         <div class="row justify-content-center">
-            <div class="col-lg-6">
+            <div class="col-lg-5">
 
                 @if(Model != null)
                 {
@@ -39,6 +39,29 @@
                     </form>
                 }
 
+            </div>
+
+            <div class="col-lg-7">
+                <table class="table table-striped text-center">
+                    <tr>
+                        <th>Workplace</th>
+                        <th>Employment status</th>
+                        <th>From</th>
+                        <th>To</th>
+                    </tr>
+                    @if(Model != null)
+                    {
+                        foreach(var engagement in Model.Engagements)
+                        {
+                            <tr>
+                                <td>@engagement.Workplace.Name</td>
+                                <td>@engagement.EmploymentStatus.Name</td>
+                                <td>@engagement.DateFrom</td>
+                                <td>@engagement.DateTo</td>
+                            </tr>
+                        }
+                    }
+                </table>
             </div>
         </div>
     </div>
