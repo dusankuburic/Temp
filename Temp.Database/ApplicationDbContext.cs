@@ -17,6 +17,8 @@ namespace Temp.Database
         public DbSet<EmploymentStatus> EmploymentStatuses {get; set;}
         public DbSet<Workplace> Workplaces {get; set;}
         public DbSet<Engagement> Engagements {get; set;}
+        public DbSet<Organization> Organizations { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

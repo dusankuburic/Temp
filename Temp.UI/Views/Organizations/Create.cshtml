@@ -1,0 +1,22 @@
+﻿@{ 
+    Layout = "~/Views/Shared/_LayoutAdmin.cshmtl";
+}
+
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <h1 class="text-center">Create Organization</h1>
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <form asp-controller="Organization" asp-action="Create" method="post" asp-antiforgery="true">
+                    <div class="form-group">
+                        <h4>Name</h4>
+                        <input  required class="form-control" />
+                        <span class="text-danger"></span>
+                    </div>
+       
+                    <input type="submit" class="btn btn-success float-right" value="Add" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
