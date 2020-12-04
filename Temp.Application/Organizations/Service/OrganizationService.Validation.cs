@@ -10,6 +10,7 @@ namespace Temp.Application.Organizations.Service
         public void ValidateOrganizationOnCreate(Organization organization)
         {
             ValidateOrganization(organization);
+            ValidateOrganizationString(organization);
         }
 
         public void ValidateOrganization(Organization organization)

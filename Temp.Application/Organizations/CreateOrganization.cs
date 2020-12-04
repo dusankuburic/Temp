@@ -45,7 +45,7 @@ namespace Temp.Application.Organizations
                 Name = request.Name
             };
 
-            ValidateOrganization(organization);
+            ValidateOrganizationOnCreate(organization);
 
             _ctx.Organizations.Add(organization);
             await _ctx.SaveChangesAsync();
