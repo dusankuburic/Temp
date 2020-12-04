@@ -1,15 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+using Temp.Application.Organizations.Service;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 using System.Threading.Tasks;
 using Temp.Database;
 using Temp.Domain.Models;
 
 namespace Temp.Application.Organizations
 {
-    public class CreateOrganization
+    public class CreateOrganization :  OrganizationService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -27,8 +25,10 @@ namespace Temp.Application.Organizations
             return false;
         }
 
-        public async Task<Response> Do(Request request)
+        public Task<Response> Do(Request request) =>
+        TryCatch(async () =>
         {
+
             var organizationExists = await OrganizationExists(request.Name);
 
             if (organizationExists)
@@ -45,12 +45,20 @@ namespace Temp.Application.Organizations
                 Name = request.Name
             };
 
+            ValidateOrganization(organization);
+
+            _ctx.Organizations.Add(organization);
+            await _ctx.SaveChangesAsync();
+
             return new Response
             {
                 Message = $"Success {request.Name} is added",
                 Status = true
             };
-        }
+        });
+       
+
+        
 
         public class Request
         {
