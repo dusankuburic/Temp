@@ -69,7 +69,6 @@ namespace Temp.Application.Workplaces
             };
         });
 
-
         public class Request
         {
             [Required]
