@@ -6,7 +6,6 @@ using Temp.Domain.Models.Organizations.Exceptions;
 using System.Threading.Tasks;
 using Temp.Database;
 
-
 namespace Temp.UI.Controllers
 {
     [Authorize(Roles = "Admin")]
@@ -22,9 +21,17 @@ namespace Temp.UI.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            try
+            {
+                var organizations = new GetOrganizations(_ctx).Do();
+                return View(organizations);
+            }
+            catch(OrganizationValidationException organizationValidationException)
+            {
+                TempData["message"] = GetInnerMessage(organizationValidationException);
+                return View();
+            }
         }
-
 
         [HttpGet]
         public IActionResult Create()

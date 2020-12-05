@@ -29,8 +29,6 @@ namespace Temp.Application.Workplaces
             return workplaces;
         });
 
-
-
         public class WorkplacesViewModel
         {
             public int Id {get; set;}

@@ -39,7 +39,6 @@ namespace Temp.UI.Controllers
             return View();
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Create(CreateWorkplace.Request request)
         {

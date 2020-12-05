@@ -58,7 +58,6 @@ namespace Temp.Application.Organizations
         });
        
 
-        
 
         public class Request
         {
