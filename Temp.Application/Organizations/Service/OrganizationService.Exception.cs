@@ -10,6 +10,8 @@ namespace Temp.Application.Organizations.Service
     {
         public delegate Task<CreateOrganization.Response> ReturningCreateOrganizationFunction();
         public delegate IEnumerable<GetOrganizations.OrganizationViewModel> ReturningGetOrganizationsFunction();
+        public delegate GetOrganization.OrganizationViewModel ReturningGetOrganizationFunction();
+        public delegate Task<UpdateOrganization.Response> ReturningUpdateOrganizationFunction();
 
         public async Task<CreateOrganization.Response> TryCatch(ReturningCreateOrganizationFunction returningCreateOrganizationFunction)
         {
@@ -55,8 +57,51 @@ namespace Temp.Application.Organizations.Service
             }
         }
 
+        public GetOrganization.OrganizationViewModel TryCatch(ReturningGetOrganizationFunction returningGetOrganizationFunction)
+        {
+            try
+            {
+                return returningGetOrganizationFunction();
+            }
+            catch (NullOrganizationException nullOrganizationException)
+            {
+                throw CreateAndLogServiceException(nullOrganizationException);
+            }
+            catch (SqlException sqlExcepton)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+          
+        public async Task<UpdateOrganization.Response> TryCatch(ReturningUpdateOrganizationFunction returningUpdateOrganizationFunction)
+        {
+            try
+            {
+                return await returningUpdateOrganizationFunction();
+            }
+            catch(NullOrganizationException nullOrganizationException)
+            {
+                throw CreateAndLogValidationException(nullOrganizationException);
+            }
+            catch(InvalidOrganizationException invalidOrganizationException)
+            {
+                throw CreateAndLogValidationException(invalidOrganizationException);
+            }
+            catch (SqlException sqlExcepton)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
 
-        
+
         private OrganizationValidationException CreateAndLogValidationException(Exception exception)
         {
             var organizationValidationException = new OrganizationValidationException(exception);

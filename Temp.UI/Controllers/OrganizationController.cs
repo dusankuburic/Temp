@@ -68,6 +68,51 @@ namespace Temp.UI.Controllers
             return View("Create");
         }
 
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            try
+            {
+                var response = new GetOrganization(_ctx).Do(id);
+                return View(response);
+            }
+            catch(OrganizationValidationException organizationValidationException)
+            {
+                TempData["message"] = GetInnerMessage(organizationValidationException);
+                return View("Index");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(UpdateOrganization.Request request)
+        {
+            if(ModelState.IsValid)
+            {
+                try
+                {
+                    var response = await new UpdateOrganization(_ctx).Do(request);
+                    if(response.Status)
+                    {
+                        TempData["success_message"] = response.Message;
+                        return RedirectToAction("Edit", response.Id);
+                    }
+                    else
+                    {
+                        TempData["message"] = response.Message;
+                        return RedirectToAction("Edit", response.Id);
+                    }
+
+                }
+                catch(OrganizationValidationException organizationValidationException)
+                {
+                    TempData["message"] = GetInnerMessage(organizationValidationException);
+                    return RedirectToAction("Edit", request.Id);
+                }
+            }
+
+            return View("Edit", request.Id);
+        }
+
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
     }

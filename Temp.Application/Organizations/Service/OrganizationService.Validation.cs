@@ -15,6 +15,12 @@ namespace Temp.Application.Organizations.Service
             ValidateOrganizationString(organization);
         }
 
+        public void ValidateOrganizationOnUpdate(Organization organization)
+        {
+            ValidateOrganization(organization);
+            ValidateOrganizationString(organization);
+        }
+
         public void ValidateOrganization(Organization organization)
         {
             if(organization is null)
@@ -23,13 +29,13 @@ namespace Temp.Application.Organizations.Service
             }
         }
 
-        //public void ValidateGetOrganizationViewModel(GetOrganization.OrganizationViewModel organization)
-        //{
-        //    if(organization is null)
-        //    {
-        //        throw new NullOrganizationException();
-        //    }
-        //}
+        public void ValidateGetOrganizationViewModel(GetOrganization.OrganizationViewModel organization)
+        {
+            if (organization is null)
+            {
+                throw new NullOrganizationException();
+            }
+        }
 
         public void ValidateOrganizationString(Organization organization)
         {
