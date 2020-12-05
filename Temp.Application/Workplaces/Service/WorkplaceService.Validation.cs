@@ -15,7 +15,6 @@ namespace Temp.Application.Workplaces.Service
             ValidateWorkplaceStrings(workplace);
         }
 
-
         public void ValidateWorkplaceOnUpdate(Workplace workplace)
         {
             ValidateWorkplace(workplace);
@@ -48,7 +47,6 @@ namespace Temp.Application.Workplaces.Service
                         parameterValue: workplace.Name);
             }
         }
-      
 
         public void ValidateStorageWorkplaces(IEnumerable<GetWorkplaces.WorkplacesViewModel> storageWorkplaces)
         {

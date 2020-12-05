@@ -54,9 +54,7 @@ namespace Temp.Application.Workplaces.Service
             catch(Exception exception)
             {
                 throw CreateAndLogServiceException(exception);
-            }
-
-               
+            }           
         }
 
         public GetWorkplace.WorkplaceViewModel TryCatch(ReturningGetWorkplaceFunction returningGetWorkplaceFunction)

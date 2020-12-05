@@ -1,34 +1,34 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Temp.Application.Workplaces;
+using System;
+using Temp.Application.Organizations;
+using Temp.Domain.Models.Organizations.Exceptions;
+using System.Threading.Tasks;
 using Temp.Database;
-using Temp.Domain.Models.Workplaces.Exceptions;
 
 namespace Temp.UI.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class WorkplaceController : Controller
+    public class OrganizationController : Controller
     {
-        public readonly ApplicationDbContext _ctx;
+        private readonly ApplicationDbContext _ctx;
 
-        public WorkplaceController(ApplicationDbContext ctx)
+        public OrganizationController(ApplicationDbContext ctx)
         {
             _ctx = ctx;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             try
             {
-                var workplaces = new GetWorkplaces(_ctx).Do();
-                return View(workplaces);
-
+                var organizations = new GetOrganizations(_ctx).Do();
+                return View(organizations);
             }
-            catch(WorkplaceValidationException workplaceValidationException)
+            catch(OrganizationValidationException organizationValidationException)
             {
-                TempData["message"] = GetInnerMessage(workplaceValidationException);
+                TempData["message"] = GetInnerMessage(organizationValidationException);
                 return View();
             }
         }
@@ -40,13 +40,13 @@ namespace Temp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateWorkplace.Request request)
+        public async Task<IActionResult> Create(CreateOrganization.Request request)
         {
-            if (ModelState.IsValid)
-            {         
+            if(ModelState.IsValid)
+            {
                 try
                 {
-                    var response = await new CreateWorkplace(_ctx).Do(request);
+                    var response = await new CreateOrganization(_ctx).Do(request);
 
                     if(response.Status)
                     {
@@ -59,11 +59,11 @@ namespace Temp.UI.Controllers
                         return RedirectToAction("Create");
                     }
                 }
-                catch(WorkplaceValidationException workplceValidationException)
+                catch(OrganizationValidationException organizationValidationException)
                 {
-                    TempData["message"] = GetInnerMessage(workplceValidationException);
+                    TempData["message"] = GetInnerMessage(organizationValidationException);
                     return RedirectToAction("Create");
-                }         
+                }
             }
             return View("Create");
         }
@@ -73,25 +73,24 @@ namespace Temp.UI.Controllers
         {
             try
             {
-                var response = new GetWorkplace(_ctx).Do(id);
+                var response = new GetOrganization(_ctx).Do(id);
                 return View(response);
-
             }
-            catch(WorkplaceValidationException workplaceValidationException)
+            catch(OrganizationValidationException organizationValidationException)
             {
-                TempData["message"] = GetInnerMessage(workplaceValidationException);
+                TempData["message"] = GetInnerMessage(organizationValidationException);
                 return View("Index");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UpdateWorkplace.Request request)
+        public async Task<IActionResult> Edit(UpdateOrganization.Request request)
         {
             if(ModelState.IsValid)
             {
                 try
-                {                
-                    var response = await new UpdateWorkplace(_ctx).Do(request);
+                {
+                    var response = await new UpdateOrganization(_ctx).Do(request);
                     if(response.Status)
                     {
                         TempData["success_message"] = response.Message;
@@ -102,17 +101,18 @@ namespace Temp.UI.Controllers
                         TempData["message"] = response.Message;
                         return RedirectToAction("Edit", response.Id);
                     }
+
                 }
-                catch (WorkplaceValidationException workplaceValidationException)
-                { 
-                    TempData["message"] = GetInnerMessage(workplaceValidationException);
+                catch(OrganizationValidationException organizationValidationException)
+                {
+                    TempData["message"] = GetInnerMessage(organizationValidationException);
                     return RedirectToAction("Edit", request.Id);
                 }
             }
+
             return View("Edit", request.Id);
         }
 
-       
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
     }
