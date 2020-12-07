@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Temp.Application.Organizations;
 using Temp.Application.Groups;
 using Temp.Database;
+using Temp.Domain.Models.Groups.Exceptions;
 
 namespace Temp.UI.Controllers
 {
@@ -36,21 +37,33 @@ namespace Temp.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await new CreateGroup(_ctx).Do(request);
+                try
+                {
+                    var response = await new CreateGroup(_ctx).Do(request);
 
-                if (response.Status)
-                {
-                    TempData["success_message"] = response.Message;
+                    if (response.Status)
+                    {
+                        TempData["success_message"] = response.Message;
+                    }
+                    else
+                    {
+                        TempData["message"] = response.Message;                  
+                    }
+
                     return RedirectToAction("Create");
+
                 }
-                else
+                catch(GroupValidationException groupValidationException)
                 {
-                    TempData["message"] = response.Message;
+                    TempData["message"] = GetInnerMessage(groupValidationException);
                     return RedirectToAction("Create");
                 }
             }
             return RedirectToAction("Create");
         }
+
+        private static string GetInnerMessage(Exception exception) =>
+            exception.InnerException.Message;
 
     }
 }

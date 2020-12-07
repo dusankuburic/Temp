@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Temp.Application.Groups.Service;
 using Temp.Database;
 using Temp.Domain.Models;
 
 namespace Temp.Application.Groups
 {
-    public class CreateGroup
+    public class CreateGroup : GroupService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -19,18 +18,19 @@ namespace Temp.Application.Groups
 
         private async Task<bool> GroupExists(string name, int organizationId)
         {
-            if(await _ctx.Groups.AnyAsync(x => x.Name == name && x.OrganizationId == organizationId))
+            if (await _ctx.Groups.AnyAsync(x => x.Name == name && x.OrganizationId == organizationId))
             {
                 return true;
             }
             return false;
         }
 
-        public async Task<Response> Do(Request request)
+        public Task<Response> Do(Request request) =>
+        TryCatch(async () =>
         {
             var groupExists = await GroupExists(request.Name, request.OrganizationId);
 
-            if(groupExists)
+            if (groupExists)
             {
                 return new Response
                 {
@@ -45,7 +45,7 @@ namespace Temp.Application.Groups
                 OrganizationId = request.OrganizationId
             };
 
-            //VALIDATE
+            ValidateGroupOnCreate(group);
 
             _ctx.Groups.Add(group);
             await _ctx.SaveChangesAsync();
@@ -55,7 +55,7 @@ namespace Temp.Application.Groups
                 Message = $"Success {request.Name} is added",
                 Status = true
             };
-        }
+        });
 
 
         public class Request
