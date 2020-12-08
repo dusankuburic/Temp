@@ -113,6 +113,13 @@ namespace Temp.UI.Controllers
             return View("Edit", request.Id);
         }
 
+        [HttpGet]
+        public IActionResult InnerGroups(int id)
+        {
+            var innerGroups = new GetInnerGroups(_ctx).Do(id);
+            return View(innerGroups);
+        }
+
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
     }
