@@ -11,19 +11,19 @@
        <tr>
            <th>Id</th>
            <th>Name</th>
-           <th>Options</th>
+           <th colspan="3">Options</th>
        </tr>
        @{ 
            if(Model != null)
            {
-
-
                foreach(var organization in Model)
                {
                    <tr>
                        <td>@organization.Id</td>
                        <td>@organization.Name</td>
                        <td><a class="btn btn-primary" asp-controller="Organization" asp-action="Edit" asp-route-id="@organization.Id"><i class="far fa-edit"></i></a></td>
+                       <td><a class="btn btn-warning" asp-controller="Organization" asp-action="InnerGroups" asp-route-id="@organization.Id"><i class="fas fa-users"></i></a></td>
+                       <td><a class="btn btn-info" asp-controller="Group" asp-action="Create" asp-route-id="@organization.Id"><i class="fas fa-project-diagram"></i></a></td>
                    </tr>
                }
            }

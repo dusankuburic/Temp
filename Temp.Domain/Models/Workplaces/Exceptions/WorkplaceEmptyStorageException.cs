@@ -7,7 +7,6 @@ namespace Temp.Domain.Models.Workplaces.Exceptions
         public WorkplaceEmptyStorageException() : base("No workplaces found in storage")
         {
 
-        }
-        
+        }      
     }
 }

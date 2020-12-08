@@ -11,13 +11,20 @@ namespace Temp.Database
         }
 
         public DbSet<Admin> Admins { get; set; }
+
         public DbSet<User> Users { get; set; }
+
         public DbSet<Employee> Employees {get; set;}
 
         public DbSet<EmploymentStatus> EmploymentStatuses {get; set;}
+
         public DbSet<Workplace> Workplaces {get; set;}
+
         public DbSet<Engagement> Engagements {get; set;}
+
         public DbSet<Organization> Organizations { get; set; }
+
+        public DbSet<Group> Groups { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,10 +41,7 @@ namespace Temp.Database
             modelBuilder.Entity<Employee>()
                 .Property(x => x.Role)
                 .HasDefaultValue("None");
-
-        
-
-            
+         
         }
     }
 }

@@ -75,7 +75,6 @@ namespace Temp.UI.Controllers
             {
                 var response = new GetWorkplace(_ctx).Do(id);
                 return View(response);
-
             }
             catch(WorkplaceValidationException workplaceValidationException)
             {
@@ -112,7 +111,6 @@ namespace Temp.UI.Controllers
             return View("Edit", request.Id);
         }
 
-       
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
     }
