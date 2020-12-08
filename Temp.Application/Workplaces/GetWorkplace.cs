@@ -17,7 +17,8 @@ namespace Temp.Application.Workplaces
         TryCatch(() => 
         { 
              var workplace = _ctx.Workplaces.Where(x => x.Id == id)
-            .Select(x => new WorkplaceViewModel{ 
+            .Select(x => new WorkplaceViewModel
+            { 
                 Id = x.Id,
                 Name = x.Name
             })

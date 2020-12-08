@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Temp.Domain.Models.Groups.Exceptions;
 
@@ -9,6 +8,8 @@ namespace Temp.Application.Groups.Service
     public partial class GroupService
     {
         public delegate Task<CreateGroup.Response> ReturningCreateGroupFunction();
+        public delegate GetGroup.GroupViewModel ReturningGetGroupFunction();
+        public delegate Task<UpdateGroup.Response> ReturningUpdateGroupFunction();
 
 
         public async Task<CreateGroup.Response> TryCatch(ReturningCreateGroupFunction returningCreateGroupFunction)
@@ -35,6 +36,50 @@ namespace Temp.Application.Groups.Service
             }
         }
 
+        public GetGroup.GroupViewModel TryCatch(ReturningGetGroupFunction returningGetGroupFunction)
+        {
+            try
+            {
+                return returningGetGroupFunction();
+            }
+            catch(NullGroupException nullGroupException)
+            {
+                throw CreateAndLogServiceException(nullGroupException);
+            }
+            catch (SqlException sqlExcepton)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
+        public async Task<UpdateGroup.Response> TryCatch(ReturningUpdateGroupFunction returningUpdateGroupFunction)
+        {
+            try
+            {
+                return await returningUpdateGroupFunction();
+            }
+            catch (NullGroupException nullGroupException)
+            {
+                throw CreateAndLogServiceException(nullGroupException);
+            }
+            catch(InvalidGroupException invalidGroupException)
+            {
+                throw CreateAndLogValidationException(invalidGroupException);
+            }
+            catch (SqlException sqlExcepton)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+
+        }
 
         private GroupValidationException CreateAndLogValidationException(Exception exception)
         {

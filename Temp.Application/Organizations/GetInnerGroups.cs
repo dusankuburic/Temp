@@ -35,7 +35,6 @@ namespace Temp.Application.Organizations
                 })
                 .FirstOrDefault();
                
-
             //Validate
 
             return innerGroups;

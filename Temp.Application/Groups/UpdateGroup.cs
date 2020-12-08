@@ -2,23 +2,23 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Temp.Application.Organizations.Service;
+using Temp.Application.Groups.Service;
 using Temp.Database;
 
-namespace Temp.Application.Organizations
+namespace Temp.Application.Groups
 {
-    public class UpdateOrganization : OrganizationService
+    public class UpdateGroup : GroupService
     {
-        private readonly ApplicationDbContext _ctx;
-
-        public UpdateOrganization(ApplicationDbContext ctx)
+        readonly private ApplicationDbContext _ctx;
+        
+        public UpdateGroup(ApplicationDbContext ctx)
         {
             _ctx = ctx;
         }
 
-        public async Task<bool> OrganizationExists(string name)
+        private async Task<bool> GroupExists(string name, int organizationId)
         {
-            if(await _ctx.Organizations.AnyAsync(x => x.Name == name))
+            if (await _ctx.Groups.AnyAsync(x => x.Name == name && x.OrganizationId == organizationId))
             {
                 return true;
             }
@@ -28,53 +28,53 @@ namespace Temp.Application.Organizations
         public Task<Response> Do(Request request) =>
         TryCatch(async () =>
         {
-            var organization = _ctx.Organizations.FirstOrDefault(x => x.Id == request.Id);
+            var group = _ctx.Groups.FirstOrDefault(x => x.Id == request.Id);
 
-            if(organization.Name.Equals(request.Name))
+            if (group.Name.Equals(request.Name))
             {
                 return new Response
                 {
-                    Id = organization.Id,
-                    Name = organization.Name,
-                    Message = "Organization name is same",
+                    Id = group.Id,
+                    Name = group.Name,
+                    Message = "Group name is same",
                     Status = true
                 };
             }
 
-            var organizationExists = await OrganizationExists(request.Name);
+            var groupExists = await GroupExists(request.Name, request.OrganizationId);
 
-            if(organizationExists)
+            if (groupExists)
             {
                 return new Response
                 {
-                    Id = organization.Id,
-                    Name = organization.Name,
-                    Message = $"Message already exists with {request.Name} name",
+                    Message = $"Error {request.Name} already exists",
                     Status = false
                 };
             }
 
-            organization.Name = request.Name;
+            group.Name = request.Name;
 
-            ValidateOrganizationOnUpdate(organization);
+            ValidateGroupOnUpdate(group);
 
             await _ctx.SaveChangesAsync();
 
             return new Response
             {
-                Id = organization.Id,
-                Name = organization.Name,
+                Id = group.Id,
+                Name = group.Name,
                 Message = "Success",
                 Status = true
             };
-
         });
-      
+
         public class Request
         {
             [Required]
             public int Id { get; set; }
-                
+
+            [Required]
+            public int OrganizationId { get; set; }
+
             [MinLength(2)]
             [MaxLength(50)]
             public string Name { get; set; }
@@ -86,7 +86,7 @@ namespace Temp.Application.Organizations
             public string Name { get; set; }
             public string Message { get; set; }
             public bool Status { get; set; }
+           
         }
-
     }
 }
