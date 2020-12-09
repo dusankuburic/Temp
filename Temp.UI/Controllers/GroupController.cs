@@ -20,12 +20,6 @@ namespace Temp.UI.Controllers
             _ctx = ctx;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-
         [HttpGet]
         public IActionResult Create(int id)
         {

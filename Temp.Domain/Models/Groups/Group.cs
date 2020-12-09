@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Temp.Domain.Models
 {
@@ -13,5 +9,7 @@ namespace Temp.Domain.Models
 
         public int OrganizationId { get; set; }
         public Organization Organization { get; set; }
+
+        public ICollection<Team> Teams { get; set; }
     }
 }
