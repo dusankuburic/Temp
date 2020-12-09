@@ -27,6 +27,8 @@
                     <td>@group.Id</td>
                     <td>@group.Name</td>
                     <td><a class="btn btn-primary" asp-controller="Group" asp-action="Edit" asp-route-id="@group.Id"><i class="far fa-edit"></i></a></td>
+                    <td><a class="btn btn-success" asp-controller="Team" asp-action="Index"><i class="fas fa-users"></i> </a></td>
+                    <td><a class="btn btn-info" asp-controller="Team" asp-action="Create" asp-route-id="@group.Id"><i class="fas fa-project-diagram"></i></a></td>
                 </tr>
             }
         </table>
