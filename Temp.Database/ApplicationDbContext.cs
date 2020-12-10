@@ -26,6 +26,8 @@ namespace Temp.Database
 
         public DbSet<Group> Groups { get; set; }
 
+        public DbSet<Team> Teams { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
