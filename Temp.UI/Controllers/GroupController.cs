@@ -135,6 +135,13 @@ namespace Temp.UI.Controllers
             return View("Edit", request.Id);
         }
 
+        [HttpGet]
+        public IActionResult InnerTeams(int id)
+        {
+            var innerTeams = new GetInnerTeams(_ctx).Do(id);
+            return View(innerTeams);
+        }
+
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
 

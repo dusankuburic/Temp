@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Temp.Application.Teams.Service;
 using Temp.Database;
 using Temp.Domain.Models;
 
 namespace Temp.Application.Teams
 {
-    public class CreateTeam
+    public class CreateTeam : TeamService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -24,11 +25,12 @@ namespace Temp.Application.Teams
             return false;
         }
 
-        public async Task<Response> Do(Request request)
+        public Task<Response> Do(Request request) =>
+        TryCatch(async () =>
         {
             var teamExists = await TeamExists(request.Name, request.GroupId);
 
-            if(teamExists)
+            if (teamExists)
             {
                 return new Response
                 {
@@ -43,7 +45,7 @@ namespace Temp.Application.Teams
                 GroupId = request.GroupId
             };
 
-            //Validate
+            ValidateTeamOnCreate(team);
 
             _ctx.Teams.Add(team);
             await _ctx.SaveChangesAsync();
@@ -53,7 +55,8 @@ namespace Temp.Application.Teams
                 Message = $"Success {request.Name} is added",
                 Status = true
             };
-        }
+        });
+     
 
 
         public class Request

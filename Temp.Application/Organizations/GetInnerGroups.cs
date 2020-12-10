@@ -8,7 +8,6 @@ namespace Temp.Application.Organizations
 {
     public class GetInnerGroups
     {
-
         private readonly ApplicationDbContext _ctx;
 
         public GetInnerGroups(ApplicationDbContext ctx)
@@ -18,14 +17,6 @@ namespace Temp.Application.Organizations
 
         public Response Do(int id)
         {
-            //var innerGroups = _ctx.Groups.Where(x => x.OrganizationId == id)
-            //    .Select(x => new InnerGruopViewModel
-            //    {
-            //        Id = x.Id,
-            //        Name = x.Name
-            //    })
-            //    .ToList();
-
             var innerGroups = _ctx.Organizations.Include(x => x.Groups)
                 .Where(x => x.Id == id)
                 .Select(x => new Response
@@ -51,7 +42,6 @@ namespace Temp.Application.Organizations
         {
             public int Id { get; set; }
             public string Name { get; set; }
-
         }
     }
 }

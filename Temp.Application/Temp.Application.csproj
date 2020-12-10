@@ -8,8 +8,4 @@
     <ProjectReference Include="..\Temp.Database\Temp.Database.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Teams\Service\" />
-  </ItemGroup>
-
 </Project>
