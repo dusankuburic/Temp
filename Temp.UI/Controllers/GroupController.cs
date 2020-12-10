@@ -20,12 +20,6 @@ namespace Temp.UI.Controllers
             _ctx = ctx;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-
         [HttpGet]
         public IActionResult Create(int id)
         {
@@ -38,17 +32,17 @@ namespace Temp.UI.Controllers
             catch (OrganizationValidationException organizationValidationException)
             {
                 TempData["message"] = GetInnerMessage(organizationValidationException);
-                return View("Edit");
+                return View("Create");
             }
             catch (NullOrganizationException nullOrganizationException)
             {
                 TempData["message"] = GetInnerMessage(nullOrganizationException);
-                return View("Edit");
+                return View("Create");
             }
             catch (OrganizationServiceException organizationServiceException)
             {
                 TempData["message"] = GetInnerMessage(organizationServiceException);
-                return View("Edit");
+                return View("Create");
             }
         }
 
@@ -139,6 +133,13 @@ namespace Temp.UI.Controllers
                 }
             }
             return View("Edit", request.Id);
+        }
+
+        [HttpGet]
+        public IActionResult InnerTeams(int id)
+        {
+            var innerTeams = new GetInnerTeams(_ctx).Do(id);
+            return View(innerTeams);
         }
 
         private static string GetInnerMessage(Exception exception) =>
