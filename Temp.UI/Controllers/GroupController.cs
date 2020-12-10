@@ -32,17 +32,17 @@ namespace Temp.UI.Controllers
             catch (OrganizationValidationException organizationValidationException)
             {
                 TempData["message"] = GetInnerMessage(organizationValidationException);
-                return View("Edit");
+                return View("Create");
             }
             catch (NullOrganizationException nullOrganizationException)
             {
                 TempData["message"] = GetInnerMessage(nullOrganizationException);
-                return View("Edit");
+                return View("Create");
             }
             catch (OrganizationServiceException organizationServiceException)
             {
                 TempData["message"] = GetInnerMessage(organizationServiceException);
-                return View("Edit");
+                return View("Create");
             }
         }
 
