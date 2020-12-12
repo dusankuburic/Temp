@@ -8,6 +8,7 @@ namespace Temp.Application.Teams.Service
     public partial class TeamService
     {
         public delegate Task<CreateTeam.Response> ReturningCreateTeamFunction();
+        public delegate GetTeam.TeamViewModel ReturningGetTeamFunction();
         public delegate Task<UpdateTeam.Response> ReturningUpateFunction();
 
 
@@ -24,6 +25,27 @@ namespace Temp.Application.Teams.Service
             catch (InvalidTeamException invalidTeamException)
             {
                 throw CreateAndLogValidationException(invalidTeamException);
+            }
+            catch (SqlException sqlExcepton)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
+
+        public GetTeam.TeamViewModel TryCatch(ReturningGetTeamFunction returningGetTeamFunction)
+        {
+            try
+            {
+                return returningGetTeamFunction();
+            }
+            catch(NullTeamException nullTeamException)
+            {
+                throw CreateAndLogServiceException(nullTeamException);
             }
             catch (SqlException sqlExcepton)
             {

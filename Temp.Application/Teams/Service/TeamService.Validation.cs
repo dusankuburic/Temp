@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Temp.Domain.Models;
 using Temp.Domain.Models.Teams.Exceptions;
 
@@ -23,6 +19,15 @@ namespace Temp.Application.Teams.Service
         }
 
         public void ValidateTeam(Team team)
+        {
+            if(team is null)
+            {
+                throw new NullTeamException();
+            }
+        }
+
+
+        public void ValidateGetTeamViewModel(GetTeam.TeamViewModel team)
         {
             if(team is null)
             {

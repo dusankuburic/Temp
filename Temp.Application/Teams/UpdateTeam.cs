@@ -25,7 +25,7 @@ namespace Temp.Application.Teams
             return false;
         }
 
-        private Task<Response> Do(Request request) =>
+        public Task<Response> Do(Request request) =>
         TryCatch(async() => 
         {
             var team = _ctx.Teams.FirstOrDefault(x => x.Id == request.Id);
@@ -68,8 +68,6 @@ namespace Temp.Application.Teams
 
         });
         
-     
-
         public class Request
         {
             [Required]

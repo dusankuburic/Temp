@@ -1,3 +1,54 @@
-﻿@{
+﻿@model Temp.Application.Teams.GetTeam.TeamViewModel
+
+@{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
+
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <h1 class="text-center">Edit Team</h1>
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                @{
+                    if (Model != null)
+                    {
+
+                        var group = (Temp.Application.Groups.GetGroup.GroupViewModel)TempData["group"];
+                        var GroupId = group.Id;
+                        <div class="alert alert-info text-center" role="alert">
+                            <h4>Group:@group.Name</h4>
+                        </div>
+
+                        if (group != null)
+                        {
+
+                            <form asp-controller="Team" asp-action="Edit" method="post" asp-antiforgery="true">
+                                <input type="hidden" asp-for="@GroupId" />
+                                <div class="form-group">
+                                    <h4>Name</h4>
+                                    <input asp-for="Name" required class="form-control" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                <input type="submit" class="btn btn-success float-right" value="Save" />
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger text-center" role="alert">
+                                <h4>Can not load group data</h4>
+                            </div>
+                        }
+
+                        TempData.Remove("group");
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger text-center" role="alert">
+                            <h4>Can not load team</h4>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
