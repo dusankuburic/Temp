@@ -131,7 +131,6 @@ namespace Temp.UI.Controllers
              return View("AssignRole", request.Id);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> RemoveRole(RemoveEmployeeRole.Request request)
         {
@@ -152,9 +151,7 @@ namespace Temp.UI.Controllers
             return View("Index");
         }
 
-
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
-
     }
 }
