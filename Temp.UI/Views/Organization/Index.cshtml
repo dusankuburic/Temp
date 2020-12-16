@@ -9,7 +9,6 @@
    <h1 class="text-center">Organizations</h1>
    <table class="table table-striped text-center">
        <tr>
-           <th>Id</th>
            <th>Name</th>
            <th colspan="3">Options</th>
        </tr>
@@ -19,7 +18,6 @@
                foreach(var organization in Model)
                {
                    <tr>
-                       <td>@organization.Id</td>
                        <td>@organization.Name</td>
                        <td><a class="btn btn-primary" asp-controller="Organization" asp-action="Edit" asp-route-id="@organization.Id"><i class="far fa-edit"></i></a></td>
                        <td><a class="btn btn-warning" asp-controller="Organization" asp-action="InnerGroups" asp-route-id="@organization.Id"><i class="fas fa-users"></i> </a></td>
