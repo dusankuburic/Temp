@@ -8,7 +8,6 @@
     <h1 class="text-center">Employment Status search</h1>
     <table class="table table-striped text-center">
         <tr>
-            <th>Id</th>
             <th>Name</th>
             <th>Options</th>
         </tr>
@@ -19,7 +18,6 @@
                 foreach (var workplace in Model)
                 {
                 <tr>
-                    <td>@workplace.Id</td>
                     <td>@workplace.Name</td>
                     <td><a class="btn btn-primary" asp-controller="EmploymentStatus" asp-action="Edit" asp-route-id="@workplace.Id"><i class="far fa-edit"></i></a></td>
                 </tr>
