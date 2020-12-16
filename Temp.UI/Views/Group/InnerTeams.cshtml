@@ -18,16 +18,16 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                <th colspan="3">Options</th>
+                <th colspan="2">Options</th>
             </tr>
 
-            @foreach (var group in Model.Teams)
+            @foreach (var team in Model.Teams)
             {
                 <tr>
-                    <td>@group.Id</td>
-                    <td>@group.Name</td>
-                    <td><a class="btn btn-primary" asp-controller="Group" asp-action="Edit" asp-route-id="@group.Id"><i class="far fa-edit"></i></a></td>
-                    <td><a class="btn btn-info" asp-controller="Team" asp-action="Create" asp-route-id="@group.Id"><i class="fas fa-project-diagram"></i></a></td>
+                    <td>@team.Id</td>
+                    <td>@team.Name</td>
+                    <td><a class="btn btn-primary" asp-controller="Team" asp-action="Edit" asp-route-id="@team.Id"><i class="far fa-edit"></i></a></td>
+                    <td><a class="btn btn-info" asp-controller="Team" asp-action="Create" asp-route-id="@team.Id"><i class="fas fa-project-diagram"></i></a></td>
                 </tr>
             }
         </table>
