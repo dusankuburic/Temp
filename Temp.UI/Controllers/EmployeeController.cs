@@ -20,6 +20,7 @@ namespace Temp.UI.Controllers
 
         public IActionResult Index()
         {       
+ 
             try
             {
                 var employees = new GetEmployees(_ctx).Do();
@@ -30,7 +31,8 @@ namespace Temp.UI.Controllers
             {
                 TempData["message"] = GetInnerMessage(employeeValidationException);
                 return View();
-            }                                   
+            }     
+            
         }
 
         [HttpGet]
@@ -80,6 +82,7 @@ namespace Temp.UI.Controllers
             }
         }
 
+        /*
         [HttpPost]
         public async Task<IActionResult> Edit(UpdateEmployee.Request request)
         {       
@@ -102,6 +105,7 @@ namespace Temp.UI.Controllers
             }
             return View("Edit", request.Id);
         }
+        */
 
         [HttpGet]
         public IActionResult AssignRole(int id)
@@ -110,6 +114,7 @@ namespace Temp.UI.Controllers
             return View();
         }
 
+        /*
         [HttpPost]
         public async Task<IActionResult> AssignRole(AssignRole.Request request)
         {
@@ -131,7 +136,7 @@ namespace Temp.UI.Controllers
              return View("AssignRole", request.Id);
         }
 
-
+*/
         [HttpPost]
         public async Task<IActionResult> RemoveRole(RemoveEmployeeRole.Request request)
         {
@@ -151,6 +156,7 @@ namespace Temp.UI.Controllers
             }
             return View("Index");
         }
+        
 
 
         private static string GetInnerMessage(Exception exception) =>
