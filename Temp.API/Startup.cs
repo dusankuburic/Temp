@@ -1,4 +1,3 @@
-
 using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +29,14 @@ namespace Temp.API
         public void ConfigureServices(IServiceCollection services)
         {
             
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
+                });
+            });
+            
             services.AddControllers();
 
             services.Configure<ApiBehaviorOptions>(opt =>
@@ -38,7 +45,7 @@ namespace Temp.API
                     new BadRequestObjectResult(ctx.ModelState);
             });
             
-            
+             
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -91,6 +98,7 @@ namespace Temp.API
             app.UseAuthentication();
             app.UseAuthorization();
             
+            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {

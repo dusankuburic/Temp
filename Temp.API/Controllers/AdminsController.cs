@@ -9,12 +9,12 @@ namespace Temp.API.Controllers
     
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController : ControllerBase
+    public class AdminsController : ControllerBase
     {
         private readonly ApplicationDbContext _ctx;
         private readonly IConfiguration _config;
 
-        public AdminController(ApplicationDbContext ctx, IConfiguration config)
+        public AdminsController(ApplicationDbContext ctx, IConfiguration config)
         {
             _ctx = ctx;
             _config = config;

@@ -38,7 +38,7 @@ namespace Temp.Application.Auth.Admins
             return true;
         }
 
-        public async ValueTask<Response> Do(Request request)
+        public async Task<Response> Do(Request request)
         {
             var admin = await _ctx.Admins.FirstOrDefaultAsync(x => x.Username == request.Username);
             
@@ -57,9 +57,7 @@ namespace Temp.Application.Auth.Admins
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
             var adminIdentity = new ClaimsIdentity(adminClaims, "Admin_Identity");
-            //var adminPrincipal = new ClaimsPrincipal(adminIdentity);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -70,7 +68,6 @@ namespace Temp.Application.Auth.Admins
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            
             
             return new Response
             {

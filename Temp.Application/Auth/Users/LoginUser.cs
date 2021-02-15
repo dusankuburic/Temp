@@ -1,19 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Temp.Database;
 
 namespace Temp.Application.Auth.Users
 {
     public class LoginUser
     {
-        public readonly ApplicationDbContext _ctx;
+        private readonly ApplicationDbContext _ctx;
+        private readonly IConfiguration _config;
 
-        public LoginUser(ApplicationDbContext ctx)
+        public LoginUser(ApplicationDbContext ctx, IConfiguration config)
         {
             _ctx = ctx;
+            _config = config;
         }
 
         public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
@@ -30,35 +38,41 @@ namespace Temp.Application.Auth.Users
             return true;
         }
 
-        public async ValueTask<Response> Do(Request request)
+        public async Task<Response> Do(Request request)
         {
             var user = await _ctx.Users.FirstOrDefaultAsync(x => x.Username == request.Username);
 
-            if(user == null)
-            {
-                return new Response
-                {
-                    Username = request.Username,
-                    Message = "Error",
-                    Status = false
-                };
-            }
+            if (user is null)
+                return null;
 
-            if(!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
-            {
-                return new Response
-                {
-                    Username = request.Username,
-                    Message = "Password mismatch",
-                    Status = false
-                };
-            }
 
+            if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+                return null;
+
+            var userClaims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name,  user.Username),
+                new Claim(ClaimTypes.Role, "User")
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var userIdentity = new ClaimsIdentity(userClaims, "User_Identity");
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = userIdentity,
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            
             return new Response
             {
                 Username = user.Username,
-                Message = "Success",
-                Status = true
+                Token = tokenHandler.WriteToken(token)
             };
         }
 
@@ -72,9 +86,8 @@ namespace Temp.Application.Auth.Users
 
         public class Response
         {
+            public string Token { get; set; }
             public string Username { get; set; }
-            public string Message { get; set; }
-            public bool Status { get; set; }
         }
     }
 }
