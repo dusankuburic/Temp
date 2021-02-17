@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Temp.Database;
 
-namespace Temp.Application.Empolyees
+namespace Temp.Application.Employees
 {
     public class RemoveEmployeeRole
     {

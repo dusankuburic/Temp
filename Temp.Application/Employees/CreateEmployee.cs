@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Temp.Database;
 using Temp.Domain.Models;
 
-namespace Temp.Application.Empolyees
+namespace Temp.Application.Employees
 {
     public class CreateEmployee: EmployeeService
     {

@@ -49,6 +49,5 @@ namespace Temp.API.Controllers
             
             return Ok(response);
         }
-
     }
 }

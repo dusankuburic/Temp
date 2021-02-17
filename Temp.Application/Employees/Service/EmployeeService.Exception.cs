@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Temp.Domain.Models.Employees.Exceptions;
 
-namespace Temp.Application.Empolyees
+namespace Temp.Application.Employees
 {
     public partial class EmployeeService
     {
         public delegate Task<CreateEmployee.Response> ReturningCreateEmployeeFunction();
-        public delegate IEnumerable<GetEmployees.EmployeeViewModel> ReturningGetEmloyeesFunction();
+        public delegate IEnumerable<GetEmployees.EmployeeViewModel> ReturningGetEmployeesFunction();
         public delegate GetEmployee.EmployeeViewModel ReturningGetEmployeeFunction();
         public delegate Task<UpdateEmployee.Response> ReturningUpdateEmployeeFunction();
         public delegate IEnumerable<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel> ReturningEmployeesWithoutEngagement();
@@ -39,11 +39,11 @@ namespace Temp.Application.Empolyees
             }
         }
 
-        public IEnumerable<GetEmployees.EmployeeViewModel> TryCatch(ReturningGetEmloyeesFunction returningGetEmloyeesFunction)
+        public IEnumerable<GetEmployees.EmployeeViewModel> TryCatch(ReturningGetEmployeesFunction returningGetEmployeesFunction)
         {
             try
             {
-                return returningGetEmloyeesFunction();
+                return returningGetEmployeesFunction();
             }
             catch(EmployeeEmptyStorageException employeeEmptyStorageException) 
             {

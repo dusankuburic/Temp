@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Temp.Application.Empolyees;
+using Temp.Application.Employees;
 using Temp.Database;
 using Temp.Domain.Models.Employees.Exceptions;
 
@@ -50,11 +50,10 @@ namespace Temp.UI.Controllers
                 {
                     var response = await new CreateEmployee(_ctx).Do(request);
 
-                    if(response.Status)
-                    {
+                
                         TempData["success_message"] = response.Message;
                         return RedirectToAction("Create");
-                    }
+                    
   
                 }
                 catch(EmployeeValidationException employeeValidationException)

@@ -2,7 +2,7 @@
 using System.Linq;
 using Temp.Database;
 
-namespace Temp.Application.Empolyees
+namespace Temp.Application.Employees
 {
     public class GetEmployees : EmployeeService
     {

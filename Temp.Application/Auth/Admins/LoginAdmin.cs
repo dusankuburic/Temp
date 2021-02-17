@@ -26,32 +26,33 @@ namespace Temp.Application.Auth.Admins
 
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using(var hmac = new HMACSHA512(passwordSalt))
+            using (var hmac = new HMACSHA512(passwordSalt))
             {
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                for(int i = 0; i < computedHash.Length; i++)
+                for (int i = 0; i < computedHash.Length; i++)
                 {
                     if (computedHash[i] != passwordHash[i])
                         return false;
                 }
             }
+
             return true;
         }
 
         public async Task<Response> Do(Request request)
         {
             var admin = await _ctx.Admins.FirstOrDefaultAsync(x => x.Username == request.Username);
-            
+
             if (admin is null)
                 return null;
 
-            if(!VerifyPasswordHash(request.Password, admin.PasswordHash, admin.PasswordSalt))
+            if (!VerifyPasswordHash(request.Password, admin.PasswordHash, admin.PasswordSalt))
                 return null;
 
-            
+
             var adminClaims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Name,  admin.Username),
+                new Claim(ClaimTypes.Name, admin.Username),
                 new Claim(ClaimTypes.Role, "Admin")
             };
 
@@ -68,15 +69,19 @@ namespace Temp.Application.Auth.Admins
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            
+
             return new Response
             {
-                Username = admin.Username,
+                User = new AdminResponse
+                {
+                    Id = admin.Id,
+                    Username = admin.Username
+                    
+                },
                 Token = tokenHandler.WriteToken(token)
             };
         }
         
-
 
         public class Request
         {
@@ -87,11 +92,17 @@ namespace Temp.Application.Auth.Admins
             [MaxLength(30)]
             public string Password { get; set; }
         }
+        
+        public class AdminResponse
+        {
+            public int Id { get; set; }
+            public string Username { get; set; }
+        }
 
         public class Response
         {
             public string Token { get; set; }
-            public string Username { get; set; }
+            public AdminResponse User { get; set; }
         }
         
     }

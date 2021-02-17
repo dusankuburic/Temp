@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Temp.Database;
 
-namespace Temp.Application.Empolyees
+namespace Temp.Application.Employees
 {
     public class UpdateEmployee : EmployeeService
     {
@@ -14,10 +14,10 @@ namespace Temp.Application.Empolyees
             _ctx = ctx;
         }
 
-        public Task<Response> Do(Request request) =>
+        public Task<Response> Do(int id ,Request request) =>
         TryCatch(async () => 
         {
-            var employee = _ctx.Employees.FirstOrDefault(x => x.Id == request.Id);
+            var employee = _ctx.Employees.FirstOrDefault(x => x.Id == id);
 
             employee.FirstName = request.FirstName;
             employee.LastName = request.LastName;
@@ -31,7 +31,6 @@ namespace Temp.Application.Empolyees
                 Id = employee.Id,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
-                Message = "Success",
                 Status = true
             };
         });
@@ -39,8 +38,6 @@ namespace Temp.Application.Empolyees
      
         public class Request
         {
-            [Required]
-            public int Id {get; set;}
             [Required]
             [MaxLength(30)]
             public string FirstName {get; set;}
@@ -54,7 +51,6 @@ namespace Temp.Application.Empolyees
             public int Id {get; set;}
             public string FirstName {get; set;}
             public string LastName {get; set;}
-            public string Message {get; set;}
             public bool Status {get; set;}
         }
     }

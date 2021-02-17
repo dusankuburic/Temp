@@ -57,6 +57,7 @@ namespace Temp.UI.Controllers
             return View();
         }
 
+        /*
         [HttpPost]
         public async Task<IActionResult> LoginAdmin(LoginAdmin.Request request)
         {
@@ -77,6 +78,7 @@ namespace Temp.UI.Controllers
             
             return View("LoginAdmin");
         }
+        */
 
         [HttpGet]
         public IActionResult RegisterUser()
@@ -84,6 +86,7 @@ namespace Temp.UI.Controllers
             return View();
         }
 
+        /*
         [HttpPost]
         public async Task<IActionResult> RegisterUser(RegisterUser.Request request)
         {
@@ -104,6 +107,7 @@ namespace Temp.UI.Controllers
 
             return View("RegisterUser");
         }
+        */
 
         [HttpGet]
         public IActionResult LoginUser()
@@ -111,6 +115,7 @@ namespace Temp.UI.Controllers
             return View("LoginUser");
         }
 
+        /*
         [HttpPost]
         public async Task<IActionResult> LoginUser(LoginUser.Request request)
         {
@@ -131,7 +136,7 @@ namespace Temp.UI.Controllers
 
             return View("LoginUser");
         }
-
+        */
         [HttpPost]
         public IActionResult Logout()
         {

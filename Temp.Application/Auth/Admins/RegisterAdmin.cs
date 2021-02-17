@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Temp.Application.Empolyees;
+using Temp.Application.Employees;
 using Temp.Database;
 using Temp.Domain.Models;
 

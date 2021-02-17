@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Temp.Application.Empolyees;
+using Temp.Application.Employees;
 using Temp.Database;
 using Temp.Domain.Models;
 
@@ -59,13 +59,13 @@ namespace Temp.Application.Auth.Users
                 Username = request.Username,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                EmployeeId = request.EmpoyeeId
+                EmployeeId = request.EmployeeId
             };
 
             _ctx.Users.Add(user);
             await _ctx.SaveChangesAsync();
 
-            var result = await new UpdateEmployeeRole(_ctx).Do("User",request.EmpoyeeId);
+            var result = await new UpdateEmployeeRole(_ctx).Do("User",request.EmployeeId);
 
             return new Response
             {
@@ -77,7 +77,7 @@ namespace Temp.Application.Auth.Users
 
         public class Request
         {
-            public int EmpoyeeId {get; set;}
+            public int EmployeeId {get; set;}
             [Required]
             public string Username { get; set; }
             [Required]

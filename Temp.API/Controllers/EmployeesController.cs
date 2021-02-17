@@ -12,11 +12,11 @@ namespace Temp.API.Controllers
     [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeeController : ControllerBase
+    public class EmployeesController : ControllerBase
     {
         private readonly ApplicationDbContext _ctx;
 
-        public EmployeeController(ApplicationDbContext ctx)
+        public EmployeesController(ApplicationDbContext ctx)
         {
             _ctx = ctx;
         }
@@ -39,6 +39,12 @@ namespace Temp.API.Controllers
             }
         }
         
+        [HttpGet("{id}")]
+        public GetEmployee.EmployeeViewModel GetEmployee(int id)
+        {
+            return new GetEmployee(_ctx).Do(id);
+        }
+        
         [HttpPost]
         public async Task<ActionResult> Create(CreateEmployee.Request request)
         {
@@ -56,18 +62,15 @@ namespace Temp.API.Controllers
             }      
         }
 
-        [HttpGet("{id}")]
-        public GetEmployee.EmployeeViewModel Edit(int id)
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateEmployee(int id, UpdateEmployee.Request request)
         {
-           return new GetEmployee(_ctx).Do(id);
-        }
-           
-   
-        [HttpPut]
-        public async Task<UpdateEmployee.Response> Edit(UpdateEmployee.Request request)
-        {
-            var response = await new UpdateEmployee(_ctx).Do(request);
-            return response;
+            var response = await new UpdateEmployee(_ctx).Do(id,request);
+            if (response.Status)
+                return NoContent();
+
+            return BadRequest();
         }
 
     /*

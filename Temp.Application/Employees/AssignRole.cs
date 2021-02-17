@@ -4,7 +4,7 @@ using Temp.Application.Auth.Admins;
 using Temp.Application.Auth.Users;
 using Temp.Database;
 
-namespace Temp.Application.Empolyees
+namespace Temp.Application.Employees
 {
     public class AssignRole
     {
@@ -24,7 +24,7 @@ namespace Temp.Application.Empolyees
                 {
                     Username = request.Username,
                     Password = request.Password,
-                    EmpoyeeId = request.Id
+                    EmployeeId = request.Id
                 };
 
                 var response = await new RegisterUser(_ctx).Do(userRequest);

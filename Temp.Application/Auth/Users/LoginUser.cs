@@ -71,7 +71,11 @@ namespace Temp.Application.Auth.Users
             
             return new Response
             {
-                Username = user.Username,
+                User = new UserResponse
+                {
+                  Id = user.Id,
+                  Username = user.Username
+                },
                 Token = tokenHandler.WriteToken(token)
             };
         }
@@ -84,10 +88,16 @@ namespace Temp.Application.Auth.Users
             public string Password { get; set; }
         }
 
+        public class UserResponse
+        {
+            public int Id { get; set; }
+            public string Username { get; set; }
+        }
+
         public class Response
         {
             public string Token { get; set; }
-            public string Username { get; set; }
+            public UserResponse User { get; set; }
         }
     }
 }

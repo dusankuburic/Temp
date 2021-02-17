@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Temp.Application.Empolyees;
+using Temp.Application.Employees;
 using Temp.Application.Engagements;
 using Temp.Database;
 using Temp.Domain.Models.Employees.Exceptions;
