@@ -26,7 +26,6 @@ namespace Temp.Application.Empolyees
                 LastName =  request.LastName
             };
 
-
             ValidateEmployeeOnCreate(employee);
 
             _ctx.Employees.Add(employee);
@@ -34,13 +33,10 @@ namespace Temp.Application.Empolyees
 
             return new Response
             {
-                Message = $"Success {employee.FirstName} {employee.LastName} is added",
-                Status = true
+                Message = $"Success {employee.FirstName} {employee.LastName} is added"
             };
         });
         
-
-
         public class Request
         {
             [Required]
@@ -54,7 +50,6 @@ namespace Temp.Application.Empolyees
         public class Response
         {
             public string Message {get; set;}
-            public bool Status {get; set;}
         }
     }
 }

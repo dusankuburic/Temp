@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Temp.Application.Empolyees;
+using Temp.Application.Employees;
 using Temp.Database;
 using Temp.Domain.Models.Employees.Exceptions;
 
@@ -22,30 +22,39 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<GetEmployees.EmployeeViewModel> GetEmployees()
+        public ActionResult<IEnumerable<GetEmployees.EmployeeViewModel>> GetEmployees()
         {
-            return new GetEmployees(_ctx).Do();
-        }
-        
-        [HttpPost]
-        public async Task<CreateEmployee.Response> Create(CreateEmployee.Request request)
-        {
-            
             try
             {
-                var response = await new CreateEmployee(_ctx).Do(request);
-                return response;
+                var response = new GetEmployees(_ctx).Do();
+                return Ok(response);
 
             }
             catch (EmployeeValidationException employeeValidationException)
             {
-                return new CreateEmployee.Response
+                return BadRequest(new
                 {
                     Message = GetInnerMessage(employeeValidationException)
-                };
+                });
+            }
+        }
+        
+        [HttpPost]
+        public async Task<ActionResult> Create(CreateEmployee.Request request)
+        {
+            try
+            {
+                var response = await new CreateEmployee(_ctx).Do(request);
+                return Ok(response);
+            }
+            catch (EmployeeValidationException employeeValidationException)
+            {
+                return BadRequest(new CreateEmployee.Response
+                {
+                    Message = GetInnerMessage(employeeValidationException)
+                });
             }      
         }
-
 
         [HttpGet("{id}")]
         public GetEmployee.EmployeeViewModel Edit(int id)
@@ -62,14 +71,6 @@ namespace Temp.API.Controllers
         }
 
     /*
-
-    [HttpGet]
-    public IActionResult AssignRole(int id)
-    {
-        TempData["employee"] = new GetEmployee(_ctx).Do(id);
-        return View();
-    }
-
     [HttpPost]
     public async Task<IActionResult> AssignRole(AssignRole.Request request)
     {
@@ -111,8 +112,8 @@ namespace Temp.API.Controllers
         }
         return View("Index");
     }
-
-        */
+    */
+    
     private static string GetInnerMessage(Exception exception) =>
         exception.InnerException.Message;
 
