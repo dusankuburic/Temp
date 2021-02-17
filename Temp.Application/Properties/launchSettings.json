@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Temp.Application": {
+      "commandName": "Project",
+      "remoteDebugEnabled": false,
+      "nativeDebugging": false
+    }
+  }
+}

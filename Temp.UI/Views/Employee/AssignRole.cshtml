@@ -1,4 +1,4 @@
-﻿@model Temp.Application.Empolyees.AssignRole.Request
+﻿@model Temp.Application.Employees.AssignRole.Request
 
 @{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -12,7 +12,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-6">
                 @{
-                    var employee = (Temp.Application.Empolyees.GetEmployee.EmployeeViewModel)TempData["employee"];
+                    var employee = (Temp.Application.Employees.GetEmployee.EmployeeViewModel)TempData["employee"];
 
                     if (employee != null)
                     {

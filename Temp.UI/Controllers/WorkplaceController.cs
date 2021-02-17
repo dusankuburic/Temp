@@ -8,6 +8,7 @@ using Temp.Domain.Models.Workplaces.Exceptions;
 
 namespace Temp.UI.Controllers
 {
+
     [Authorize(Roles = "Admin")]
     public class WorkplaceController : Controller
     {
@@ -16,21 +17,6 @@ namespace Temp.UI.Controllers
         public WorkplaceController(ApplicationDbContext ctx)
         {
             _ctx = ctx;
-        }
-
-        public IActionResult Index()
-        {
-            try
-            {
-                var workplaces = new GetWorkplaces(_ctx).Do();
-                return View(workplaces);
-
-            }
-            catch(WorkplaceValidationException workplaceValidationException)
-            {
-                TempData["message"] = GetInnerMessage(workplaceValidationException);
-                return View();
-            }
         }
 
         [HttpGet]
@@ -110,8 +96,10 @@ namespace Temp.UI.Controllers
             }
             return View("Edit", request.Id);
         }
+  
 
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
     }
+        
 }

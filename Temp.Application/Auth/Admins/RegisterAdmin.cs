@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Temp.Application.Empolyees;
+using Temp.Application.Employees;
 using Temp.Database;
 using Temp.Domain.Models;
 
@@ -16,11 +16,12 @@ namespace Temp.Application.Auth.Admins
         public RegisterAdmin(ApplicationDbContext ctx)
         {
             _ctx = ctx;
+            
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            using(var hmac = new HMACSHA512())
+            using (var hmac = new HMACSHA512())
             {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
@@ -33,20 +34,19 @@ namespace Temp.Application.Auth.Admins
             {
                 return true;
             }
+
             return false;
         }
 
         public async Task<Response> Do(Request request)
         {
-        
             var adminExists = await AdminExists(request.Username);
 
             if (adminExists)
             {
-
                 return new Response
                 {
-                    Message = $"Admin aready exists with {request.Username} username",
+                    Message = $"Admin already exists with {request.Username} username",
                     Username = request.Username,
                     Status = false
                 };
@@ -66,25 +66,25 @@ namespace Temp.Application.Auth.Admins
             _ctx.Admins.Add(admin);
             await _ctx.SaveChangesAsync();
 
-            var result = await new UpdateEmployeeRole(_ctx).Do("Admin",request.EmpoyeeId);
-            
+             var result = await new UpdateEmployeeRole(_ctx).Do("Admin",request.EmpoyeeId);
+
             return new Response
             {
                 Message = "Successful registration",
                 Username = admin.Username,
                 Status = true
             };
-
         }
+
 
         public class Request
         {
-            public int EmpoyeeId {get; set;}
+            public int EmpoyeeId { get; set; }
             [Required]
-            [MinLength(5)]
+            [MinLength(5),MaxLength(30)] 
             public string Username { get; set; }
             [Required]
-            [MinLength(5)]
+            [MinLength(5),MaxLength(30)]
             public string Password { get; set; }
         }
 
