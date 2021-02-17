@@ -85,6 +85,7 @@ namespace Temp.UI.Controllers
             }            
         }
 
+        /*
 
         [HttpPost]
         public async Task<IActionResult> Edit(UpdateEmploymentStatus.Request request)
@@ -115,6 +116,7 @@ namespace Temp.UI.Controllers
             return View("Edit", request.Id);
 
         }
+        */
 
         private static string GetInnerMesage(Exception exception) =>
             exception.InnerException.Message;

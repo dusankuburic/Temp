@@ -1,5 +1,6 @@
 using System;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,13 +23,22 @@ namespace Temp.UI
 
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddAuthentication("CookieAuth")
                 .AddCookie("CookieAuth", config =>
                 {
                     config.Cookie.Name = "Auth.Cookie";
-                    config.ExpireTimeSpan = TimeSpan.FromHours(1);
+                    config.ExpireTimeSpan = TimeSpan.FromHours(7);
                 });
 
+            services.AddAuthorization(config =>
+            {
+                config.AddPolicy("Admin", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "Admin"));
+                config.AddPolicy("User", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "User"));
+            });
+
+
+          
             services.AddAuthorization(config =>
             {
                 config.AddPolicy("Admin", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "Admin"));
@@ -40,6 +50,10 @@ namespace Temp.UI
             services.AddControllersWithViews();
         }
 
+        private void JwtBearerDefaults(AuthenticationOptions obj)
+        {
+            throw new NotImplementedException();
+        }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
