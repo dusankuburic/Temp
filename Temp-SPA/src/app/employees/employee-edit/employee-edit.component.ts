@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Employee } from 'src/app/_models/employee';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { EmployeeService } from 'src/app/_services/employee.service';
@@ -25,11 +25,7 @@ export class EmployeeEditComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.employee = data['employee'];
     });
-
-    console.log(this.employee);
-
     this.createForm();
-
   }
 
   createForm(): void {
@@ -45,6 +41,6 @@ export class EmployeeEditComponent implements OnInit {
       this.alertify.success('Successfully updated');
     }, error => {
       this.alertify.error(error);
-    })
+    });
   }
 }

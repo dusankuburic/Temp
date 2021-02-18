@@ -43,7 +43,7 @@ namespace Temp.Application.Employees
                 {
                     Username = request.Username,
                     Password = request.Password,
-                    EmpoyeeId = request.Id
+                    EmployeeId = request.Id
                 };
 
                 var response = await new RegisterAdmin(_ctx).Do(adminRequest);
@@ -75,9 +75,6 @@ namespace Temp.Application.Employees
             [Required]
             [MaxLength(30)]
             public string Password { get; set; }
-            [Required]
-            [MaxLength(30)]
-            public string ConfirmPassword { get; set; }
             [Required]
             public string Role {get; set;}
         }
