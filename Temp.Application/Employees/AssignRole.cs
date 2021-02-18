@@ -43,7 +43,7 @@ namespace Temp.Application.Employees
                 {
                     Username = request.Username,
                     Password = request.Password,
-                    EmpoyeeId = request.Id
+                    EmployeeId = request.Id
                 };
 
                 var response = await new RegisterAdmin(_ctx).Do(adminRequest);

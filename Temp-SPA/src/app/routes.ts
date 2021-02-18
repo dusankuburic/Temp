@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { EmployeeAssignRoleComponent } from './employees/employee-assign-role/employee-assign-role.component';
 import { EmployeeCreateComponent } from './employees/employee-create/employee-create.component';
 import { EmployeeEditComponent } from './employees/employee-edit/employee-edit.component';
 import { EmployeeListComponent } from './employees/employee-list/employee-list.component';
@@ -20,7 +21,9 @@ export const appRoutes: Routes = [
                 resolve: {employees: EmployeeListResolver}},
             {path: 'employees/:id', component: EmployeeEditComponent,
                 resolve: {employee: EmployeeEditResolver}},
-            {path: 'employee/create', component: EmployeeCreateComponent}
+            {path: 'employee/create', component: EmployeeCreateComponent},
+            {path: 'employee/assign-role/:id', component: EmployeeAssignRoleComponent,
+                resolve: {employee: EmployeeEditResolver}}
         ]
     },
     {

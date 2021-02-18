@@ -23,6 +23,7 @@ import { EmployeeListResolver } from './_resolvers/employee-list.resolver';
 import { EmployeeEditResolver } from './_resolvers/employee-edit.resolver';
 import { EmployeeCreateComponent } from './employees/employee-create/employee-create.component';
 import { EmployeeEditComponent } from './employees/employee-edit/employee-edit.component';
+import { EmployeeAssignRoleComponent } from './employees/employee-assign-role/employee-assign-role.component';
 
 
 export function tokenGetter(): any {
@@ -40,7 +41,8 @@ export function tokenGetter(): any {
     UsersComponent,
     SidebarComponent,
     EmployeeCreateComponent,
-    EmployeeEditComponent
+    EmployeeEditComponent,
+    EmployeeAssignRoleComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),

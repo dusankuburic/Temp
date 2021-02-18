@@ -25,11 +25,7 @@ export class EmployeeEditComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.employee = data['employee'];
     });
-
-    console.log(this.employee);
-
     this.createForm();
-
   }
 
   createForm(): void {
@@ -45,6 +41,6 @@ export class EmployeeEditComponent implements OnInit {
       this.alertify.success('Successfully updated');
     }, error => {
       this.alertify.error(error);
-    })
+    });
   }
 }
