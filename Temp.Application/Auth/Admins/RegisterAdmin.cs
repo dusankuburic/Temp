@@ -60,13 +60,13 @@ namespace Temp.Application.Auth.Admins
                 Username = request.Username,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                EmployeeId = request.EmpoyeeId
+                EmployeeId = request.EmployeeId
             };
 
             _ctx.Admins.Add(admin);
             await _ctx.SaveChangesAsync();
 
-             var result = await new UpdateEmployeeRole(_ctx).Do("Admin",request.EmpoyeeId);
+             var result = await new UpdateEmployeeRole(_ctx).Do("Admin",request.EmployeeId);
 
             return new Response
             {
@@ -79,7 +79,7 @@ namespace Temp.Application.Auth.Admins
 
         public class Request
         {
-            public int EmpoyeeId { get; set; }
+            public int EmployeeId { get; set; }
             [Required]
             [MinLength(5),MaxLength(30)] 
             public string Username { get; set; }

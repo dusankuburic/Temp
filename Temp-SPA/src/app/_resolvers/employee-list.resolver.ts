@@ -12,12 +12,12 @@ export class EmployeeListResolver implements Resolve<Employee[]> {
     constructor(
         private employeeService: EmployeeService,
         private router: Router,
-        private alertyify: AlertifyService){}
+        private alertify: AlertifyService){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<Employee[]> {
         return this.employeeService.getEmployees().pipe(
             catchError(error => {
-                this.alertyify.error('Problem retriving data');
+                this.alertify.error('Problem retriving data');
                 this.router.navigate(['']);
                 return of(null);
             })
