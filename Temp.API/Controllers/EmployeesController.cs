@@ -73,49 +73,39 @@ namespace Temp.API.Controllers
             return BadRequest();
         }
 
-    /*
-    [HttpPost]
-    public async Task<IActionResult> AssignRole(AssignRole.Request request)
-    {
-        if (ModelState.IsValid)
+    
+        [HttpPost("assign")]
+        public async Task<IActionResult> AssignRole(AssignRole.Request request)
         {
             var response = await new AssignRole(_ctx).Do(request);
-
             if (response.Status)
             {
-                TempData["success_message"] = response.Message;
-                return RedirectToAction("Index");
+                return Ok();
             }
             else
             {
-                TempData["message"] = response.Message;
-                return RedirectToAction("AssignRole", request.Id);
+                return BadRequest(response.Message);
             }
         }
-        return View("AssignRole", request.Id);
-    }
-
-
+    
+    
     [HttpPost]
     public async Task<IActionResult> RemoveRole(RemoveEmployeeRole.Request request)
     {
-        if (ModelState.IsValid)
-        {
-            var response = await new RemoveEmployeeRole(_ctx).Do(request);
 
-            if (response.Status)
-            {
-                TempData["success_message"] = response.Message;
-            }
-            else
-            {
-                TempData["message"] = response.Message;
-            }
-            return RedirectToAction("Index");
+        var response = await new RemoveEmployeeRole(_ctx).Do(request);
+
+        if (response.Status)
+        {
+           return Ok(response.Message);
         }
-        return View("Index");
+        else
+        {
+            return BadRequest(response.Message);
+        }
     }
-    */
+    
+    
     
     private static string GetInnerMessage(Exception exception) =>
         exception.InnerException.Message;

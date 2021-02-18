@@ -28,4 +28,8 @@ updateEmployee(id: any, employee: Employee): any {
   return this.http.put(this.baseUrl + 'employees/' + id, employee);
 }
 
+assignRole(entity: any): any {
+  return this.http.post(this.baseUrl + 'employees/assign', entity);
+}
+
 }

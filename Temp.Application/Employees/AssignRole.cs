@@ -76,9 +76,6 @@ namespace Temp.Application.Employees
             [MaxLength(30)]
             public string Password { get; set; }
             [Required]
-            [MaxLength(30)]
-            public string ConfirmPassword { get; set; }
-            [Required]
             public string Role {get; set;}
         }
 

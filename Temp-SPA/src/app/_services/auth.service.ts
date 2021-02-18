@@ -49,7 +49,6 @@ loginAdmin(model: any): any {
 
 
 
-
 registerUser(user: User): any {
   return this.http.post(this.baseUrl + 'users/register', user);
 }
