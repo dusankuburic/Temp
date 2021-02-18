@@ -62,7 +62,6 @@ namespace Temp.API.Controllers
             }      
         }
 
-
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateEmployee(int id, UpdateEmployee.Request request)
         {
@@ -72,44 +71,30 @@ namespace Temp.API.Controllers
 
             return BadRequest();
         }
-
-    
+        
         [HttpPost("assign")]
         public async Task<IActionResult> AssignRole(AssignRole.Request request)
         {
             var response = await new AssignRole(_ctx).Do(request);
             if (response.Status)
-            {
                 return Ok();
-            }
-            else
-            {
-                return BadRequest(response.Message);
-            }
-        }
-    
-    
-    [HttpPost]
-    public async Task<IActionResult> RemoveRole(RemoveEmployeeRole.Request request)
-    {
-
-        var response = await new RemoveEmployeeRole(_ctx).Do(request);
-
-        if (response.Status)
-        {
-           return Ok(response.Message);
-        }
-        else
-        {
+            
             return BadRequest(response.Message);
         }
-    }
-    
-    
-    
-    private static string GetInnerMessage(Exception exception) =>
-        exception.InnerException.Message;
+        
+        [HttpPost("unassign")]
+        public async Task<IActionResult> RemoveRole(RemoveEmployeeRole.Request request)
+        {
+            var response = await new RemoveEmployeeRole(_ctx).Do(request);
+            if (response.Status)
+                return Ok();
+            
+            return BadRequest(response.Message);
+        }
+        
+        private static string GetInnerMessage(Exception exception) =>
+            exception.InnerException.Message;
 
-    }
+        }
     
 }

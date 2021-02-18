@@ -27,10 +27,7 @@
             <a class="btn btn-info" [routerLink]="['/employee/assign-role/', employee.id]" ><i class="fa fa-sitemap"></i></a>
         </td>
         <td *ngIf="employee.role != 'None'">
-            <form asp-controller="Employee" asp-action="RemoveRole" method="post" asp-antiforgery="true">
-                <input type="hidden" name="Id" value="@employee.Id" />
-                <button type="submit" class="btn btn-dark"><i class="fa fa-user-times"></i></button>
-            </form>
+            <button type="submit" (click)="removeRole(employee.id)"  class="btn btn-dark"><i class="fa fa-user-times"></i></button>
         </td>
     </tr>
     </tbody>

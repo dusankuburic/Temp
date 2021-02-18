@@ -55,7 +55,6 @@ export class EmployeeAssignRoleComponent implements OnInit {
 
       if (formData.role === 'Admin'){
         this.employeeService.assignRole(this.assignDto).subscribe(() => {
-          console.log(this.assignDto);
           this.createAssignRoleForm.reset();
           this.router.navigate(['/employees']);
           this.alertify.success('Successfull admin registration');

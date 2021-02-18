@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { AssignRoleDto } from '../_models/assignRoleDto';
 import { Employee } from '../_models/employee';
+import { UnassignRoleDto } from '../_models/unassignRoleDto';
 
 @Injectable({
   providedIn: 'root'
@@ -28,8 +30,12 @@ updateEmployee(id: any, employee: Employee): any {
   return this.http.put(this.baseUrl + 'employees/' + id, employee);
 }
 
-assignRole(entity: any): any {
+assignRole(entity: AssignRoleDto): any {
   return this.http.post(this.baseUrl + 'employees/assign', entity);
+}
+
+unassignRole(entity: any): any {
+  return this.http.post(this.baseUrl + 'employees/unassign', entity);
 }
 
 }
