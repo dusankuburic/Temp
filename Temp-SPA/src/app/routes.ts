@@ -3,6 +3,7 @@ import { EmployeeAssignRoleComponent } from './employee/employee-assign-role/emp
 import { EmployeeCreateComponent } from './employee/employee-create/employee-create.component';
 import { EmployeeEditComponent } from './employee/employee-edit/employee-edit.component';
 import { EmployeeListComponent } from './employee/employee-list/employee-list.component';
+import { EmploymentStatusCreateComponent } from './employment-status/employment-status-create/employment-status-create.component';
 import { EmploymentStatusListComponent } from './employment-status/employment-status-list/employment-status-list.component';
 import { HomeComponent } from './home/home.component';
 import { UsersComponent } from './users/users.component';
@@ -37,7 +38,9 @@ export const appRoutes: Routes = [
                 resolve: {workplace: WorkplaceEditResolver}},
             {path: 'workplace/create', component: WorkplaceCreateComponent},
             {path: 'employment-statuses', component: EmploymentStatusListComponent,
-                resolve: {employmentStatuses: EmploymentStatusResolver}}
+                resolve: {employmentStatuses: EmploymentStatusResolver}},
+                // Edit component
+            {path: 'employment-status/create', component: EmploymentStatusCreateComponent}
         ]
     },
     {

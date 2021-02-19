@@ -44,7 +44,7 @@ namespace Temp.API.Controllers
                 var response = await new CreateEmploymentStatus(_ctx).Do(request);
                 if (response.Status)
                 {
-                    return Ok(response.Message);
+                    return Ok();
                 }
 
                 return BadRequest(response.Message);

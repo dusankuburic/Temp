@@ -19,4 +19,8 @@ getEmploymentStatus(id: number): any {
   return this.http.get<EmploymentStatus>(this.baseUrl + 'employmentStatuses/' + id);
 }
 
+createEmploymentStatus(employmentStatus: EmploymentStatus): any {
+  return this.http.post(this.baseUrl + 'employmentStatuses', employmentStatus);
+}
+
 }
