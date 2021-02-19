@@ -6,11 +6,13 @@ import { EmployeeListComponent } from './employee/employee-list/employee-list.co
 import { HomeComponent } from './home/home.component';
 import { UsersComponent } from './users/users.component';
 import { WorkplaceCreateComponent } from './workplace/workplace-create/workplace-create.component';
+import { WorkplaceEditComponent } from './workplace/workplace-edit/workplace-edit.component';
 import { WorkplaceListComponent } from './workplace/workplace-list/workplace-list.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { UserGuard } from './_guards/user.guard';
 import { EmployeeEditResolver } from './_resolvers/employee-edit.resolver';
 import { EmployeeListResolver } from './_resolvers/employee-list.resolver';
+import { WorkplaceEditResolver } from './_resolvers/workplace-edit.resolver';
 import { WorkplaceListResolver } from './_resolvers/workplace-list.resolver';
 
 export const appRoutes: Routes = [
@@ -29,7 +31,8 @@ export const appRoutes: Routes = [
                 resolve: {employee: EmployeeEditResolver}},
             {path: 'workplaces', component: WorkplaceListComponent,
                 resolve: {workplaces: WorkplaceListResolver}},
-                // Edit Workplace
+            {path: 'workplaces/:id', component: WorkplaceEditComponent,
+                resolve: {workplace: WorkplaceEditResolver}},
             {path: 'workplace/create', component: WorkplaceCreateComponent}
         ]
     },

@@ -28,6 +28,8 @@ import { WorkplaceListComponent } from './workplace/workplace-list/workplace-lis
 import { EmployeeListComponent } from './employee/employee-list/employee-list.component';
 import { WorkplaceListResolver } from './_resolvers/workplace-list.resolver';
 import { WorkplaceCreateComponent } from './workplace/workplace-create/workplace-create.component';
+import { WorkplaceEditComponent } from './workplace/workplace-edit/workplace-edit.component';
+import { WorkplaceEditResolver } from './_resolvers/workplace-edit.resolver';
 
 
 export function tokenGetter(): any {
@@ -47,7 +49,8 @@ export function tokenGetter(): any {
     EmployeeEditComponent,
     EmployeeAssignRoleComponent,
     WorkplaceListComponent,
-    WorkplaceCreateComponent
+    WorkplaceCreateComponent,
+    WorkplaceEditComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -71,7 +74,8 @@ export function tokenGetter(): any {
     AlertifyService,
     EmployeeListResolver,
     EmployeeEditResolver,
-    WorkplaceListResolver
+    WorkplaceListResolver,
+    WorkplaceEditResolver
   ],
   bootstrap: [AppComponent]
 })

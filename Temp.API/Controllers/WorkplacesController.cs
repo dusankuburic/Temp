@@ -72,19 +72,15 @@ namespace Temp.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateWorkplace(UpdateWorkplace.Request request)
+        public async Task<IActionResult> UpdateWorkplace(int id, UpdateWorkplace.Request request)
         {
             try
             {                
-                var response = await new UpdateWorkplace(_ctx).Do(request);
-                if(response.Status)
-                {
-                     return Ok(response.Message);
-                }
-                else
-                {
-                    return BadRequest(response.Message);
-                }
+                var response = await new UpdateWorkplace(_ctx).Do(id, request);
+                if (response.Status)
+                    return NoContent();
+               
+                return BadRequest(response.Message);
             }
             catch (WorkplaceValidationException workplaceValidationException)
             { 

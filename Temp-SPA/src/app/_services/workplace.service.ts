@@ -24,6 +24,10 @@ createWorkplace(workplace: Workplace): any {
   return this.http.post(this.baseUrl + 'workplaces', workplace);
 }
 
+updateWorkplace(id: any, workplace: Workplace): any {
+  return this.http.put(this.baseUrl + 'workplaces/' + id, workplace);
+}
+
 
 
 }
