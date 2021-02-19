@@ -1,14 +1,16 @@
 import { Routes } from '@angular/router';
-import { EmployeeAssignRoleComponent } from './employees/employee-assign-role/employee-assign-role.component';
-import { EmployeeCreateComponent } from './employees/employee-create/employee-create.component';
-import { EmployeeEditComponent } from './employees/employee-edit/employee-edit.component';
-import { EmployeeListComponent } from './employees/employee-list/employee-list.component';
+import { EmployeeAssignRoleComponent } from './employee/employee-assign-role/employee-assign-role.component';
+import { EmployeeCreateComponent } from './employee/employee-create/employee-create.component';
+import { EmployeeEditComponent } from './employee/employee-edit/employee-edit.component';
+import { EmployeeListComponent } from './employee/employee-list/employee-list.component';
 import { HomeComponent } from './home/home.component';
 import { UsersComponent } from './users/users.component';
+import { WorkplaceListComponent } from './workplace/workplace-list/workplace-list.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { UserGuard } from './_guards/user.guard';
 import { EmployeeEditResolver } from './_resolvers/employee-edit.resolver';
 import { EmployeeListResolver } from './_resolvers/employee-list.resolver';
+import { WorkplaceListResolver } from './_resolvers/workplace-list.resolver';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
@@ -23,7 +25,9 @@ export const appRoutes: Routes = [
                 resolve: {employee: EmployeeEditResolver}},
             {path: 'employee/create', component: EmployeeCreateComponent},
             {path: 'employee/assign-role/:id', component: EmployeeAssignRoleComponent,
-                resolve: {employee: EmployeeEditResolver}}
+                resolve: {employee: EmployeeEditResolver}},
+            {path: 'workplaces', component: WorkplaceListComponent,
+                resolve: {workplaces: WorkplaceListResolver}}
         ]
     },
     {

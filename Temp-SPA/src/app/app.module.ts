@@ -16,14 +16,17 @@ import { HomeComponent } from './home/home.component';
 import { appRoutes } from './routes';
 import { LoginComponent } from './login/login.component';
 
-import { EmployeeListComponent } from './employees/employee-list/employee-list.component';
+
 import { UsersComponent } from './users/users.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { EmployeeListResolver } from './_resolvers/employee-list.resolver';
 import { EmployeeEditResolver } from './_resolvers/employee-edit.resolver';
-import { EmployeeCreateComponent } from './employees/employee-create/employee-create.component';
-import { EmployeeEditComponent } from './employees/employee-edit/employee-edit.component';
-import { EmployeeAssignRoleComponent } from './employees/employee-assign-role/employee-assign-role.component';
+import { EmployeeCreateComponent } from './employee/employee-create/employee-create.component';
+import { EmployeeEditComponent } from './employee/employee-edit/employee-edit.component';
+import { EmployeeAssignRoleComponent } from './employee/employee-assign-role/employee-assign-role.component';
+import { WorkplaceListComponent } from './workplace/workplace-list/workplace-list.component';
+import { EmployeeListComponent } from './employee/employee-list/employee-list.component';
+import { WorkplaceListResolver } from './_resolvers/workplace-list.resolver';
 
 
 export function tokenGetter(): any {
@@ -39,10 +42,10 @@ export function tokenGetter(): any {
     SidebarComponent,
     EmployeeListComponent,
     UsersComponent,
-    SidebarComponent,
     EmployeeCreateComponent,
     EmployeeEditComponent,
-    EmployeeAssignRoleComponent
+    EmployeeAssignRoleComponent,
+    WorkplaceListComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -57,7 +60,7 @@ export function tokenGetter(): any {
       config: {
         tokenGetter: tokenGetter,
         allowedDomains: ['localhost:5000'],
-        disallowedRoutes: ['localhost:5000/api/auth']
+        disallowedRoutes: ['localhost:5000/api/admins/register', 'localhost:5000/api/users/register']
       }
     })
   ],
@@ -65,7 +68,8 @@ export function tokenGetter(): any {
     AuthService,
     AlertifyService,
     EmployeeListResolver,
-    EmployeeEditResolver
+    EmployeeEditResolver,
+    WorkplaceListResolver
   ],
   bootstrap: [AppComponent]
 })

@@ -29,6 +29,7 @@ namespace Temp.Application.Teams
         TryCatch(async() => 
         {
             var team = _ctx.Teams.FirstOrDefault(x => x.Id == request.Id);
+            
 
             if (team.Name.Equals(request.Name))
             {
@@ -55,6 +56,7 @@ namespace Temp.Application.Teams
             team.Name = request.Name;
 
             ValidateTeamOnUpdate(team);
+           
 
             await _ctx.SaveChangesAsync();
 

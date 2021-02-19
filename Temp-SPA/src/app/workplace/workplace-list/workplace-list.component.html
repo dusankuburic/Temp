@@ -1,0 +1,15 @@
+
+<h1 class="text-center">Workplace list</h1>
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th colspan="2" class="text-center">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let workplace of workplaces">
+        <td>{{workplace.name}}</td>
+    </tr>
+    </tbody>
+</table>
