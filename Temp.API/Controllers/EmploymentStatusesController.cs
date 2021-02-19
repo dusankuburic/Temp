@@ -34,8 +34,8 @@ namespace Temp.API.Controllers
                 return BadRequest(GetInnerMessage(employmentStatusValidationException));
             }
         }
-        
-        
+
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateEmploymentStatus.Request request)
         {
@@ -70,38 +70,27 @@ namespace Temp.API.Controllers
             }
         }
 
-        /*
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(UpdateEmploymentStatus.Request request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateEmploymentStatus(int id, UpdateEmploymentStatus.Request request)
         {
-            if(ModelState.IsValid)
+            try
             {
-                try
-                {
-                    var response = await new UpdateEmploymentStatus(_ctx).Do(request);
+                var response = await new UpdateEmploymentStatus(_ctx).Do(id, request);
 
-                    if(response.Status)
-                    {
-                        TempData["success_message"] = response.Message;
-                        return RedirectToAction("Edit", response.Id);
-                    }
-                    else
-                    {
-                        TempData["message"] = response.Message;
-                        return RedirectToAction("Edit", response.Id);
-                    }
-                }
-                catch(EmploymentStatusValidationException employmentStatusValidationException)
+                if (response.Status)
                 {
-                    TempData["message"] = GetInnerMesage(employmentStatusValidationException);
-                    return RedirectToAction("Edit", request.Id);
+                    return Ok(response.Message);
                 }
+
+                return BadRequest(response.Message);
             }
-            return View("Edit", request.Id);
-
+            catch (EmploymentStatusValidationException employmentStatusValidationException)
+            {
+                return BadRequest(GetInnerMessage(employmentStatusValidationException));
+            }
         }
-        */
+
 
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;

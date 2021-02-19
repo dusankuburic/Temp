@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Workplace } from 'src/app/_models/workplace';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { WorkplaceService } from 'src/app/_services/workplace.service';
 
 @Component({
   selector: 'app-workplace-list',
@@ -12,10 +10,7 @@ import { WorkplaceService } from 'src/app/_services/workplace.service';
 export class WorkplaceListComponent implements OnInit {
   workplaces: Workplace[];
 
-  constructor(
-    private route: ActivatedRoute,
-    private workplaceService: WorkplaceService,
-    private alertify: AlertifyService) { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {

@@ -25,10 +25,10 @@ namespace Temp.Application.EmploymentStatuses
             return false;
         }
 
-        public Task<Response> Do(Request request) =>
+        public Task<Response> Do(int id, Request request) =>
         TryCatch(async() =>
         {
-            var employmentStatus = _ctx.EmploymentStatuses.FirstOrDefault(x => x.Id == request.Id);
+            var employmentStatus = _ctx.EmploymentStatuses.FirstOrDefault(x => x.Id == id);
 
             if (employmentStatus.Name.Equals(request.Name))
             {

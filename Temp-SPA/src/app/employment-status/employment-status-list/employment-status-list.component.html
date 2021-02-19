@@ -1,0 +1,19 @@
+<h1 class="text-center">Employment status list</h1>
+<table class="table table-striped table-hover text-center">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let employment of employmentStatuses">
+        <td>{{employment.id}}</td>
+        <td>{{employment.name}}</td>
+        <td>
+            <a class="btn btn-primary" [routerLink]="['/employment-statuses/', employment.id]"><i class="fa fa-edit"></i></a>
+        </td>
+    </tr>
+    </tbody>
+</table>
