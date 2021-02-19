@@ -77,10 +77,9 @@ namespace Temp.API.Controllers
             try
             {
                 var response = await new UpdateEmploymentStatus(_ctx).Do(id, request);
-
                 if (response.Status)
                 {
-                    return Ok(response.Message);
+                    return Ok();
                 }
 
                 return BadRequest(response.Message);

@@ -23,4 +23,8 @@ createEmploymentStatus(employmentStatus: EmploymentStatus): any {
   return this.http.post(this.baseUrl + 'employmentStatuses', employmentStatus);
 }
 
+updateEmploymentStatus(id: any, employmentStatus: EmploymentStatus): any {
+  return this.http.put(this.baseUrl + 'employmentStatuses/' + id, employmentStatus);
+}
+
 }
