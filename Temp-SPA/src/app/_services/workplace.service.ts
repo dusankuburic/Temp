@@ -16,6 +16,14 @@ getWorkplaces(): any {
   return this.http.get<Workplace[]>(this.baseUrl + 'workplaces');
 }
 
+getWorkplace(id: number): any {
+  return this.http.get<Workplace>(this.baseUrl + 'workplaces/' + id);
+}
+
+createWorkplace(workplace: Workplace): any {
+  return this.http.post(this.baseUrl + 'workplaces', workplace);
+}
+
 
 
 }

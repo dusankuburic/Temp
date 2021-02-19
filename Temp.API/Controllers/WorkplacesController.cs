@@ -29,7 +29,7 @@ namespace Temp.API.Controllers
                 var response = await new CreateWorkplace(_ctx).Do(request);
                 if(response.Status)
                 {
-                    return Ok(response.Message);
+                    return Ok(response);
                 }
                 else
                 {

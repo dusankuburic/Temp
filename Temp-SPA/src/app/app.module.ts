@@ -27,6 +27,7 @@ import { EmployeeAssignRoleComponent } from './employee/employee-assign-role/emp
 import { WorkplaceListComponent } from './workplace/workplace-list/workplace-list.component';
 import { EmployeeListComponent } from './employee/employee-list/employee-list.component';
 import { WorkplaceListResolver } from './_resolvers/workplace-list.resolver';
+import { WorkplaceCreateComponent } from './workplace/workplace-create/workplace-create.component';
 
 
 export function tokenGetter(): any {
@@ -45,7 +46,8 @@ export function tokenGetter(): any {
     EmployeeCreateComponent,
     EmployeeEditComponent,
     EmployeeAssignRoleComponent,
-    WorkplaceListComponent
+    WorkplaceListComponent,
+    WorkplaceCreateComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),

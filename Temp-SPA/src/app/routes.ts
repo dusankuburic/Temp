@@ -5,6 +5,7 @@ import { EmployeeEditComponent } from './employee/employee-edit/employee-edit.co
 import { EmployeeListComponent } from './employee/employee-list/employee-list.component';
 import { HomeComponent } from './home/home.component';
 import { UsersComponent } from './users/users.component';
+import { WorkplaceCreateComponent } from './workplace/workplace-create/workplace-create.component';
 import { WorkplaceListComponent } from './workplace/workplace-list/workplace-list.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { UserGuard } from './_guards/user.guard';
@@ -27,7 +28,9 @@ export const appRoutes: Routes = [
             {path: 'employee/assign-role/:id', component: EmployeeAssignRoleComponent,
                 resolve: {employee: EmployeeEditResolver}},
             {path: 'workplaces', component: WorkplaceListComponent,
-                resolve: {workplaces: WorkplaceListResolver}}
+                resolve: {workplaces: WorkplaceListResolver}},
+                // Edit Workplace
+            {path: 'workplace/create', component: WorkplaceCreateComponent}
         ]
     },
     {

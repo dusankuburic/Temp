@@ -33,7 +33,7 @@ namespace Temp.Application.Workplaces
             {
                 return new Response
                 {
-                    Message = $"Error {request.Name} already exists",
+                    Message = $"{request.Name} already exists",
                     Status = false
                 };
             }
