@@ -1,0 +1,23 @@
+<div id="page-content-wrapper">
+  <div class="container-fluid">
+    <h1 class="text-center">Create Employment Status</h1>
+      <div class="row justify-content-center">
+          <div class="col-lg-6 col-sm-6 col-8">
+
+            <form [formGroup]="createEmploymentStatusForm" (ngSubmit)="create()">
+              <div class="form-group">
+                <h4>Name</h4>
+                <input [ngClass]="{'is-invalid': createEmploymentStatusForm.get('name').errors
+                 && createEmploymentStatusForm.get('name').touched}"
+                 type="text"
+                 class="form-control"
+                 formControlName="name">
+                 <div class="invalid-feedback">Please enter a Name</div>
+              </div>
+              <button type="submit" [disabled]="!createEmploymentStatusForm.valid" class="btn btn-success float-right">Create</button>
+            </form>
+
+          </div>
+      </div>
+  </div>
+</div>

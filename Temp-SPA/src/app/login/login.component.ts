@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/home']);
           this.alertify.success('Login successful');
         }, error => {
-          this.alertify.error(error);
+          this.alertify.error('Can not login');
         });
       }
 
@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/home']);
           this.alertify.success('Login successful');
         }, error => {
-          this.alertify.error(error);
+          this.alertify.error('Can not login');
         });
       }
 

@@ -35,7 +35,7 @@ export class WorkplaceCreateComponent implements OnInit {
       this.createWorkplaceForm.reset();
     }, error => {
       this.alertify.error(error.error);
-    })
+    });
   }
 
 }
