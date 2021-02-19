@@ -25,10 +25,10 @@ namespace Temp.Application.Workplaces
             return false;
         }
 
-        public Task<Response> Do(Request request) =>
+        public Task<Response> Do(int id, Request request) =>
         TryCatch(async () => 
         {
-            var workplace = _ctx.Workplaces.FirstOrDefault(x => x.Id == request.Id);
+            var workplace = _ctx.Workplaces.FirstOrDefault(x => x.Id == id);
 
             if(workplace.Name.Equals(request.Name))
             {
@@ -71,8 +71,6 @@ namespace Temp.Application.Workplaces
 
         public class Request
         {
-            [Required]
-            public int Id {get; set;}
 
             [MinLength(2)]
             [MaxLength(50)]
