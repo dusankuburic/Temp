@@ -3,6 +3,9 @@ import { EmployeeAssignRoleComponent } from './employee/employee-assign-role/emp
 import { EmployeeCreateComponent } from './employee/employee-create/employee-create.component';
 import { EmployeeEditComponent } from './employee/employee-edit/employee-edit.component';
 import { EmployeeListComponent } from './employee/employee-list/employee-list.component';
+import { EmploymentStatusCreateComponent } from './employment-status/employment-status-create/employment-status-create.component';
+import { EmploymentStatusEditComponent } from './employment-status/employment-status-edit/employment-status-edit.component';
+import { EmploymentStatusListComponent } from './employment-status/employment-status-list/employment-status-list.component';
 import { HomeComponent } from './home/home.component';
 import { UsersComponent } from './users/users.component';
 import { WorkplaceCreateComponent } from './workplace/workplace-create/workplace-create.component';
@@ -12,6 +15,8 @@ import { AuthGuard } from './_guards/auth.guard';
 import { UserGuard } from './_guards/user.guard';
 import { EmployeeEditResolver } from './_resolvers/employee-edit.resolver';
 import { EmployeeListResolver } from './_resolvers/employee-list.resolver';
+import { EmploymentStatusEditResolver } from './_resolvers/employment-status-edit.resolver';
+import { EmploymentStatusListResolver } from './_resolvers/employment-status-list.resolver';
 import { WorkplaceEditResolver } from './_resolvers/workplace-edit.resolver';
 import { WorkplaceListResolver } from './_resolvers/workplace-list.resolver';
 
@@ -29,11 +34,18 @@ export const appRoutes: Routes = [
             {path: 'employee/create', component: EmployeeCreateComponent},
             {path: 'employee/assign-role/:id', component: EmployeeAssignRoleComponent,
                 resolve: {employee: EmployeeEditResolver}},
+
             {path: 'workplaces', component: WorkplaceListComponent,
                 resolve: {workplaces: WorkplaceListResolver}},
             {path: 'workplaces/:id', component: WorkplaceEditComponent,
                 resolve: {workplace: WorkplaceEditResolver}},
-            {path: 'workplace/create', component: WorkplaceCreateComponent}
+            {path: 'workplace/create', component: WorkplaceCreateComponent},
+
+            {path: 'employment-statuses', component: EmploymentStatusListComponent,
+                resolve: {employmentStatuses: EmploymentStatusListResolver}},
+            {path: 'employment-statuses/:id', component: EmploymentStatusEditComponent,
+                resolve: {employmentStatus: EmploymentStatusEditResolver}},
+            {path: 'employment-status/create', component: EmploymentStatusCreateComponent}
         ]
     },
     {
