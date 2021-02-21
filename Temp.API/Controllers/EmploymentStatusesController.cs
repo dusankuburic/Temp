@@ -12,7 +12,7 @@ namespace Temp.API.Controllers
     [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class EmploymentStatusesController : Controller
+    public class EmploymentStatusesController : ControllerBase
     {
         private readonly ApplicationDbContext _ctx;
 

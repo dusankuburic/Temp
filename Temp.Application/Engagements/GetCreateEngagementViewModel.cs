@@ -38,7 +38,7 @@ namespace Temp.Application.Engagements
             public GetEmployee.EmployeeViewModel Employee;
             public IEnumerable<GetWorkplaces.WorkplacesViewModel> Workplaces;
             public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> EmploymentStatuses;
-            public IEnumerable<Engagement> Engagements; 
+            public IEnumerable<Engagement> Engagements;
         }
     }
 }
