@@ -71,13 +71,13 @@ namespace Temp.Application.Engagements
 
         public void ValidateCreateEngagementViewModel(GetCreateEngagementViewModel.Response response)
         {
-            VaildateEmployee(response);
-            //ValidateWorkplace(response);
-           // ValidateEmploymentStatuses(response);
+            ValidateEmployee(response);
+            ValidateWorkplace(response);
+            ValidateEmploymentStatuses(response);
         }
 
 
-        public void VaildateEmployee(GetCreateEngagementViewModel.Response response)
+        public void ValidateEmployee(GetCreateEngagementViewModel.Response response)
         {
             if(response.Employee is null)
             {
@@ -85,7 +85,7 @@ namespace Temp.Application.Engagements
             }
         }
 
-        /*
+       
         public void ValidateWorkplace(GetCreateEngagementViewModel.Response response)
         {
             if(response.Workplaces is null)
@@ -101,7 +101,7 @@ namespace Temp.Application.Engagements
                 throw new NullEmploymentStatusException();
             }
         }
-        */
+        
 
         public static bool IsInvalidInt(int input)
         {

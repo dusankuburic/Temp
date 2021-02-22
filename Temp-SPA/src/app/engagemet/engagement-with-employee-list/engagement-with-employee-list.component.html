@@ -1,0 +1,27 @@
+<h1 class="text-center">Employee With Engagement</h1>
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Role</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let employee of employees">
+        <td>{{employee.firstName}}</td>
+        <td>{{employee.lastName}}</td>
+        <td>
+            <span class="badge badge-pill" [ngClass]="{'badge-warning': employee.role === 'Admin',
+                              'badge-info' : employee.role === 'User',
+                              'badge-secondary': employee.role === 'None'}">
+                {{employee.role}}
+            </span>
+        </td>
+        <td>
+          <a class="btn btn-primary" href="#"><i class="fas fa-code-branch"></i></a>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -35,6 +35,11 @@ import { EmploymentStatusListResolver } from './_resolvers/employment-status-lis
 import { EmploymentStatusCreateComponent } from './employment-status/employment-status-create/employment-status-create.component';
 import { EmploymentStatusEditComponent } from './employment-status/employment-status-edit/employment-status-edit.component';
 import { EmploymentStatusEditResolver } from './_resolvers/employment-status-edit.resolver';
+import { EngagementWithEmployeeListComponent } from './engagemet/engagement-with-employee-list/engagement-with-employee-list.component';
+import { EngagementWithoutEmployeeListComponent } from './engagemet/engagement-without-employee-list/engagement-without-employee-list.component';
+import { EngagmentWithEmployeeResolver } from './_resolvers/engagement-with-employee-list.resolver';
+import { EngagmentWithoutEmployeeResolver } from './_resolvers/engagement-without-employee-list.resolver';
+import { EngagementCreateComponent } from './engagemet/engagement-create/engagement-create.component';
 
 
 export function tokenGetter(): any {
@@ -58,7 +63,10 @@ export function tokenGetter(): any {
     WorkplaceEditComponent,
     EmploymentStatusListComponent,
     EmploymentStatusCreateComponent,
-    EmploymentStatusEditComponent
+    EmploymentStatusEditComponent,
+    EngagementWithEmployeeListComponent,
+    EngagementWithoutEmployeeListComponent,
+    EngagementCreateComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -85,7 +93,9 @@ export function tokenGetter(): any {
     WorkplaceListResolver,
     WorkplaceEditResolver,
     EmploymentStatusListResolver,
-    EmploymentStatusEditResolver
+    EmploymentStatusEditResolver,
+    EngagmentWithEmployeeResolver,
+    EngagmentWithoutEmployeeResolver
   ],
   bootstrap: [AppComponent]
 })
