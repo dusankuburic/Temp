@@ -20,6 +20,7 @@ import { EmployeeEditResolver } from './_resolvers/employee-edit.resolver';
 import { EmployeeListResolver } from './_resolvers/employee-list.resolver';
 import { EmploymentStatusEditResolver } from './_resolvers/employment-status-edit.resolver';
 import { EmploymentStatusListResolver } from './_resolvers/employment-status-list.resolver';
+import { EngagmentCreateResolver } from './_resolvers/engagement-create.resolver';
 import { EngagmentWithEmployeeResolver } from './_resolvers/engagement-with-employee-list.resolver';
 import { EngagmentWithoutEmployeeResolver } from './_resolvers/engagement-without-employee-list.resolver';
 import { WorkplaceEditResolver } from './_resolvers/workplace-edit.resolver';
@@ -52,7 +53,8 @@ export const appRoutes: Routes = [
                 resolve: {employmentStatus: EmploymentStatusEditResolver}},
             {path: 'employment-status/create', component: EmploymentStatusCreateComponent},
 
-            {path: 'engagement/create/:id', component: EngagementCreateComponent},
+            {path: 'engagement/create/:id', component: EngagementCreateComponent,
+                resolve: {employeeData: EngagmentCreateResolver}},
             {path: 'engagement/with-employee', component: EngagementWithEmployeeListComponent,
                 resolve: {employeesWith: EngagmentWithEmployeeResolver}},
             {path: 'engagement/without-employee', component: EngagementWithoutEmployeeListComponent,

@@ -40,6 +40,7 @@ import { EngagementWithoutEmployeeListComponent } from './engagemet/engagement-w
 import { EngagmentWithEmployeeResolver } from './_resolvers/engagement-with-employee-list.resolver';
 import { EngagmentWithoutEmployeeResolver } from './_resolvers/engagement-without-employee-list.resolver';
 import { EngagementCreateComponent } from './engagemet/engagement-create/engagement-create.component';
+import { EngagmentCreateResolver } from './_resolvers/engagement-create.resolver';
 
 
 export function tokenGetter(): any {
@@ -95,7 +96,8 @@ export function tokenGetter(): any {
     EmploymentStatusListResolver,
     EmploymentStatusEditResolver,
     EngagmentWithEmployeeResolver,
-    EngagmentWithoutEmployeeResolver
+    EngagmentWithoutEmployeeResolver,
+    EngagmentCreateResolver
   ],
   bootstrap: [AppComponent]
 })

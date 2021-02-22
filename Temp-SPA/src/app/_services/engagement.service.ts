@@ -19,4 +19,8 @@ getEmpoyeesWithoutEngagement(): any {
   return this.http.get<Employee[]>(this.baseUrl + 'engagements/without');
 }
 
+getEngagementForEmployee(id: number): any {
+  return this.http.get(this.baseUrl + 'engagements/employee/' + id);
+}
+
 }

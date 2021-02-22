@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-engagement-create',
@@ -6,10 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./engagement-create.component.scss']
 })
 export class EngagementCreateComponent implements OnInit {
+  employeeData: any;
+  constructor(private route: ActivatedRoute) { }
 
-  constructor() { }
-
-  ngOnInit() {
+  ngOnInit(): void {
+    this.route.data.subscribe(data => {
+      this.employeeData = data['employeeData'];
+    });
   }
 
 }
