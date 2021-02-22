@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Temp.Application.EmploymentStatuses;
 using Temp.Application.Employees;
 using Temp.Application.Workplaces;
 using Temp.Database;
-using Temp.Domain.Models;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Temp.Application.Engagements
 {
@@ -17,7 +18,7 @@ namespace Temp.Application.Engagements
             _ctx = ctx;
         }
        
-        public Response Do(int id) =>
+        public string Do(int id) =>
         TryCatch(() => 
         { 
             var response = new Response
@@ -25,12 +26,20 @@ namespace Temp.Application.Engagements
                 Employee = new GetEmployee(_ctx).Do(id),
                 Workplaces = new GetWorkplaces(_ctx).Do(),
                 EmploymentStatuses = new GetEmploymentStatuses(_ctx).Do(),
-                Engagements = _ctx.Engagements.Where(x => x.Employee.Id == id).ToList()
+                Engagements = _ctx.Engagements.Where(x => x.Employee.Id == id)
+                    .Select(eng => new
+                    {
+                       id = eng.Id,
+                       workplaceName = eng.Workplace.Name,
+                       employmentStatusName = eng.EmploymentStatus.Name,
+                       dateFrom = eng.DateFrom,
+                       dateTo = eng.DateTo
+                    })
             };
 
             ValidateCreateEngagementViewModel(response);
-
-            return response;
+            
+            return JsonConvert.SerializeObject(response);
         });
             
         public class Response
@@ -38,7 +47,7 @@ namespace Temp.Application.Engagements
             public GetEmployee.EmployeeViewModel Employee;
             public IEnumerable<GetWorkplaces.WorkplacesViewModel> Workplaces;
             public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> EmploymentStatuses;
-            public IEnumerable<Engagement> Engagements; 
+            public IEnumerable Engagements;
         }
     }
 }
