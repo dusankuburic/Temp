@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Engagement } from 'src/app/_models/engagement';
+import { AlertifyService } from 'src/app/_services/alertify.service';
 import { EngagementService } from 'src/app/_services/engagement.service';
 
 @Component({
@@ -20,6 +21,7 @@ export class EngagementCreateComponent implements OnInit {
     private route: ActivatedRoute,
     private engagementService: EngagementService,
     private fb: FormBuilder,
+    private alertify: AlertifyService,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -30,6 +32,14 @@ export class EngagementCreateComponent implements OnInit {
       this.employeeData = data['employeeData'];
     });
     this.createForm();
+  }
+
+  loadEngagements(): void {
+    this.engagementService.getEngagementForEmployee(this.employeeData.Employee.Id).subscribe((res: any) => {
+      this.employeeData = res;
+    }, error => {
+      this.alertify.error('Problem retriving data');
+    });
   }
 
   createForm(): void {
@@ -43,8 +53,16 @@ export class EngagementCreateComponent implements OnInit {
 
   create(): any {
     this.engagement = Object.assign({}, this.createEngagementForm.value);
+    this.engagement.employeeId = this.employeeData.Employee.Id;
 
-    console.log(this.engagement);
+    this.engagementService.createEngagement(this.engagement).subscribe(() => {
+      this.loadEngagements();
+      this.alertify.success('Successfully created');
+      this.createEngagementForm.reset();
+    }, error => {
+      this.alertify.error(error.error);
+    });
+
   }
 
 }

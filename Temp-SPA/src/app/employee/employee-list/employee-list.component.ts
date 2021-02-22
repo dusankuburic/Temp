@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Employee } from 'src/app/_models/employee';
 import { UnassignRoleDto } from 'src/app/_models/unassignRoleDto';
 import { AlertifyService } from 'src/app/_services/alertify.service';
@@ -17,7 +17,6 @@ export class EmployeeListComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
-    private router: Router,
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {
