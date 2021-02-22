@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -35,6 +36,12 @@ import { EmploymentStatusListResolver } from './_resolvers/employment-status-lis
 import { EmploymentStatusCreateComponent } from './employment-status/employment-status-create/employment-status-create.component';
 import { EmploymentStatusEditComponent } from './employment-status/employment-status-edit/employment-status-edit.component';
 import { EmploymentStatusEditResolver } from './_resolvers/employment-status-edit.resolver';
+import { EngagementWithEmployeeListComponent } from './engagemet/engagement-with-employee-list/engagement-with-employee-list.component';
+import { EngagementWithoutEmployeeListComponent } from './engagemet/engagement-without-employee-list/engagement-without-employee-list.component';
+import { EngagmentWithEmployeeResolver } from './_resolvers/engagement-with-employee-list.resolver';
+import { EngagmentWithoutEmployeeResolver } from './_resolvers/engagement-without-employee-list.resolver';
+import { EngagementCreateComponent } from './engagemet/engagement-create/engagement-create.component';
+import { EngagmentCreateResolver } from './_resolvers/engagement-create.resolver';
 
 
 export function tokenGetter(): any {
@@ -58,7 +65,10 @@ export function tokenGetter(): any {
     WorkplaceEditComponent,
     EmploymentStatusListComponent,
     EmploymentStatusCreateComponent,
-    EmploymentStatusEditComponent
+    EmploymentStatusEditComponent,
+    EngagementWithEmployeeListComponent,
+    EngagementWithoutEmployeeListComponent,
+    EngagementCreateComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -68,6 +78,7 @@ export function tokenGetter(): any {
     ReactiveFormsModule,
     BrowserAnimationsModule,
     BsDropdownModule.forRoot(),
+    BsDatepickerModule.forRoot(),
     HttpClientModule,
     JwtModule.forRoot({
       config: {
@@ -85,7 +96,10 @@ export function tokenGetter(): any {
     WorkplaceListResolver,
     WorkplaceEditResolver,
     EmploymentStatusListResolver,
-    EmploymentStatusEditResolver
+    EmploymentStatusEditResolver,
+    EngagmentWithEmployeeResolver,
+    EngagmentWithoutEmployeeResolver,
+    EngagmentCreateResolver
   ],
   bootstrap: [AppComponent]
 })

@@ -6,6 +6,9 @@ import { EmployeeListComponent } from './employee/employee-list/employee-list.co
 import { EmploymentStatusCreateComponent } from './employment-status/employment-status-create/employment-status-create.component';
 import { EmploymentStatusEditComponent } from './employment-status/employment-status-edit/employment-status-edit.component';
 import { EmploymentStatusListComponent } from './employment-status/employment-status-list/employment-status-list.component';
+import { EngagementCreateComponent } from './engagemet/engagement-create/engagement-create.component';
+import { EngagementWithEmployeeListComponent } from './engagemet/engagement-with-employee-list/engagement-with-employee-list.component';
+import { EngagementWithoutEmployeeListComponent } from './engagemet/engagement-without-employee-list/engagement-without-employee-list.component';
 import { HomeComponent } from './home/home.component';
 import { UsersComponent } from './users/users.component';
 import { WorkplaceCreateComponent } from './workplace/workplace-create/workplace-create.component';
@@ -17,6 +20,9 @@ import { EmployeeEditResolver } from './_resolvers/employee-edit.resolver';
 import { EmployeeListResolver } from './_resolvers/employee-list.resolver';
 import { EmploymentStatusEditResolver } from './_resolvers/employment-status-edit.resolver';
 import { EmploymentStatusListResolver } from './_resolvers/employment-status-list.resolver';
+import { EngagmentCreateResolver } from './_resolvers/engagement-create.resolver';
+import { EngagmentWithEmployeeResolver } from './_resolvers/engagement-with-employee-list.resolver';
+import { EngagmentWithoutEmployeeResolver } from './_resolvers/engagement-without-employee-list.resolver';
 import { WorkplaceEditResolver } from './_resolvers/workplace-edit.resolver';
 import { WorkplaceListResolver } from './_resolvers/workplace-list.resolver';
 
@@ -45,7 +51,14 @@ export const appRoutes: Routes = [
                 resolve: {employmentStatuses: EmploymentStatusListResolver}},
             {path: 'employment-statuses/:id', component: EmploymentStatusEditComponent,
                 resolve: {employmentStatus: EmploymentStatusEditResolver}},
-            {path: 'employment-status/create', component: EmploymentStatusCreateComponent}
+            {path: 'employment-status/create', component: EmploymentStatusCreateComponent},
+
+            {path: 'engagement/create/:id', component: EngagementCreateComponent,
+                resolve: {employeeData: EngagmentCreateResolver}},
+            {path: 'engagement/with-employee', component: EngagementWithEmployeeListComponent,
+                resolve: {employeesWith: EngagmentWithEmployeeResolver}},
+            {path: 'engagement/without-employee', component: EngagementWithoutEmployeeListComponent,
+                resolve: {employeesWithout: EngagmentWithoutEmployeeResolver}},
         ]
     },
     {
