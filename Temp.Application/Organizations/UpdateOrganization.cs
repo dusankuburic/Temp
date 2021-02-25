@@ -25,10 +25,10 @@ namespace Temp.Application.Organizations
             return false;
         }
 
-        public Task<Response> Do(Request request) =>
+        public Task<Response> Do(int id, Request request) =>
         TryCatch(async () =>
         {
-            var organization = _ctx.Organizations.FirstOrDefault(x => x.Id == request.Id);
+            var organization = _ctx.Organizations.FirstOrDefault(x => x.Id == id);
 
             if(organization.Name.Equals(request.Name))
             {
@@ -49,7 +49,7 @@ namespace Temp.Application.Organizations
                 {
                     Id = organization.Id,
                     Name = organization.Name,
-                    Message = $"Message already exists with {request.Name} name",
+                    Message = $"Organization already exists with {request.Name} name",
                     Status = false
                 };
             }
@@ -71,10 +71,7 @@ namespace Temp.Application.Organizations
         });
       
         public class Request
-        {
-            [Required]
-            public int Id { get; set; }
-                
+        {                
             [MinLength(2)]
             [MaxLength(50)]
             public string Name { get; set; }
