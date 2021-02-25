@@ -16,4 +16,12 @@ getOrganizations(): any {
   return this.http.get<Organization[]>(this.baseUrl + 'organizations');
 }
 
+getOrganization(id: number): any {
+  return this.http.get<Organization>(this.baseUrl + 'organizations/' + id);
+}
+
+updateOrganization(id: any, organization: Organization): any {
+  return this.http.put(this.baseUrl + 'organizations/' + id, organization)
+}
+
 }

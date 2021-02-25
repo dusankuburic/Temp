@@ -10,6 +10,7 @@ import { EngagementCreateComponent } from './engagemet/engagement-create/engagem
 import { EngagementWithEmployeeListComponent } from './engagemet/engagement-with-employee-list/engagement-with-employee-list.component';
 import { EngagementWithoutEmployeeListComponent } from './engagemet/engagement-without-employee-list/engagement-without-employee-list.component';
 import { HomeComponent } from './home/home.component';
+import { OrganizationEditComponent } from './organization/organization-edit/organization-edit.component';
 import { OrganizationListComponent } from './organization/organization-list/organization-list.component';
 import { UsersComponent } from './users/users.component';
 import { WorkplaceCreateComponent } from './workplace/workplace-create/workplace-create.component';
@@ -24,6 +25,7 @@ import { EmploymentStatusListResolver } from './_resolvers/employment-status-lis
 import { EngagmentCreateResolver } from './_resolvers/engagement-create.resolver';
 import { EngagmentWithEmployeeResolver } from './_resolvers/engagement-with-employee-list.resolver';
 import { EngagmentWithoutEmployeeResolver } from './_resolvers/engagement-without-employee-list.resolver';
+import { OrganizationEditResolver } from './_resolvers/organization-edit.resolver';
 import { OrganizationListResolver } from './_resolvers/organization-list.resolver';
 import { WorkplaceEditResolver } from './_resolvers/workplace-edit.resolver';
 import { WorkplaceListResolver } from './_resolvers/workplace-list.resolver';
@@ -64,7 +66,9 @@ export const appRoutes: Routes = [
                 resolve: {employeesWithout: EngagmentWithoutEmployeeResolver}},
 
             {path: 'organizations', component: OrganizationListComponent,
-                resolve: {organizations: OrganizationListResolver}}
+                resolve: {organizations: OrganizationListResolver}},
+            {path: 'organizations/:id', component: OrganizationEditComponent,
+                resolve: {organization: OrganizationEditResolver}}
         ]
     },
     {

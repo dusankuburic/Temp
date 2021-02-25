@@ -70,14 +70,14 @@ namespace Temp.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrganization(UpdateOrganization.Request request)
+        public async Task<IActionResult> UpdateOrganization(int id, UpdateOrganization.Request request)
         {
             try
             {
-                var response = await new UpdateOrganization(_ctx).Do(request);
+                var response = await new UpdateOrganization(_ctx).Do(id, request);
                 if(response.Status)
                 { 
-                    return Ok(response.Message);
+                    return Ok(response);
                 }
                 
                 return BadRequest(response.Message);
