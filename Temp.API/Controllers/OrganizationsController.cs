@@ -28,12 +28,12 @@ namespace Temp.API.Controllers
                 var response = new GetOrganizations(_ctx).Do();
                 return Ok(response);
             }
-            catch(OrganizationValidationException organizationValidationException)
+            catch (OrganizationValidationException organizationValidationException)
             {
                 return BadRequest(GetInnerMessage(organizationValidationException));
             }
         }
-        
+
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateOrganization.Request request)
@@ -41,15 +41,14 @@ namespace Temp.API.Controllers
             try
             {
                 var response = await new CreateOrganization(_ctx).Do(request);
-
-                if(response.Status)
+                if (response.Status)
                 {
-                    return Ok(response.Message);
+                    return Ok(response);
                 }
-            
+
                 return BadRequest(response.Message);
             }
-            catch(OrganizationValidationException organizationValidationException)
+            catch (OrganizationValidationException organizationValidationException)
             {
                 return BadRequest(GetInnerMessage(organizationValidationException));
             }
@@ -63,7 +62,7 @@ namespace Temp.API.Controllers
                 var response = new GetOrganization(_ctx).Do(id);
                 return Ok(response);
             }
-            catch(OrganizationValidationException organizationValidationException)
+            catch (OrganizationValidationException organizationValidationException)
             {
                 return BadRequest(GetInnerMessage(organizationValidationException));
             }
@@ -75,21 +74,21 @@ namespace Temp.API.Controllers
             try
             {
                 var response = await new UpdateOrganization(_ctx).Do(id, request);
-                if(response.Status)
-                { 
+                if (response.Status)
+                {
                     return Ok(response);
                 }
-                
+
                 return BadRequest(response.Message);
             }
-            catch(OrganizationValidationException organizationValidationException)
+            catch (OrganizationValidationException organizationValidationException)
             {
                 return BadRequest(GetInnerMessage(organizationValidationException));
             }
         }
 
         [HttpGet("inner-groups/{id}")]
-        public  IActionResult InnerGroups(int id)
+        public IActionResult InnerGroups(int id)
         {
             var innerGroups = new GetInnerGroups(_ctx).Do(id);
             return Ok(innerGroups);

@@ -49,7 +49,7 @@ namespace Temp.Application.Organizations
                 {
                     Id = organization.Id,
                     Name = organization.Name,
-                    Message = $"Message already exists with {request.Name} name",
+                    Message = $"Organization already exists with {request.Name} name",
                     Status = false
                 };
             }

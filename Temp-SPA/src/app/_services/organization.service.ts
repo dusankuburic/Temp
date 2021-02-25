@@ -24,4 +24,8 @@ updateOrganization(id: any, organization: Organization): any {
   return this.http.put(this.baseUrl + 'organizations/' + id, organization)
 }
 
+createOrganization(organization: Organization): any {
+  return this.http.post(this.baseUrl + 'organizations', organization);
+}
+
 }

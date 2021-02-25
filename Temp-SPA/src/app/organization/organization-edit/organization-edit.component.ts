@@ -38,7 +38,7 @@ export class OrganizationEditComponent implements OnInit {
     this.organizationService.updateOrganization(this.organization.id, organizatonForm).subscribe(() => {
       this.alertify.success('Successfully updated');
     }, error => {
-      this.alertify.error(error);
+      this.alertify.error(error.error);
     });
   }
 

@@ -17,8 +17,7 @@ export class EmployeeCreateComponent implements OnInit {
   constructor(
     private employeeService: EmployeeService,
     private alertify: AlertifyService,
-    private fb: FormBuilder,
-    private router: Router) { }
+    private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.createForm();

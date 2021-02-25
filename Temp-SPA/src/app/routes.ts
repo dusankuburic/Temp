@@ -10,6 +10,7 @@ import { EngagementCreateComponent } from './engagemet/engagement-create/engagem
 import { EngagementWithEmployeeListComponent } from './engagemet/engagement-with-employee-list/engagement-with-employee-list.component';
 import { EngagementWithoutEmployeeListComponent } from './engagemet/engagement-without-employee-list/engagement-without-employee-list.component';
 import { HomeComponent } from './home/home.component';
+import { OrganizationCreateComponent } from './organization/organization-create/organization-create.component';
 import { OrganizationEditComponent } from './organization/organization-edit/organization-edit.component';
 import { OrganizationListComponent } from './organization/organization-list/organization-list.component';
 import { UsersComponent } from './users/users.component';
@@ -68,7 +69,8 @@ export const appRoutes: Routes = [
             {path: 'organizations', component: OrganizationListComponent,
                 resolve: {organizations: OrganizationListResolver}},
             {path: 'organizations/:id', component: OrganizationEditComponent,
-                resolve: {organization: OrganizationEditResolver}}
+                resolve: {organization: OrganizationEditResolver}},
+            {path: 'organization/create', component: OrganizationCreateComponent}
         ]
     },
     {
