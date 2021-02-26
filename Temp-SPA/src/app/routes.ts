@@ -73,8 +73,8 @@ export const appRoutes: Routes = [
                 resolve: {organization: OrganizationEditResolver}},
             {path: 'organization/create', component: OrganizationCreateComponent},
 
-            {path: 'inner-groups/:id', component: GroupListComponent,
-                resolve: {groups: GroupListResolver}}
+            {path: 'organization/inner-groups/:id', component: GroupListComponent,
+                resolve: {innergroups: GroupListResolver}}
         ]
     },
     {

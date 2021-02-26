@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { InnerGroups } from 'src/app/_models/group';
 
 @Component({
   selector: 'app-group-list',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GroupListComponent implements OnInit {
 
-  constructor() { }
+  innerGroups: InnerGroups;
 
-  ngOnInit() {
+  constructor(
+    private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    this.route.data.subscribe(data => {
+      this.innerGroups = data['innergroups'];
+    });
   }
 
 }

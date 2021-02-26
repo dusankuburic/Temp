@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using Temp.Database;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Temp.Application.Organizations
 {
@@ -32,7 +34,10 @@ namespace Temp.Application.Organizations
                
             //Validate
 
-            return JsonConvert.SerializeObject(innerGroups);
+            return JsonConvert.SerializeObject(innerGroups, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
         }
 
         public class Response
