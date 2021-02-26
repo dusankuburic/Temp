@@ -25,10 +25,10 @@ namespace Temp.Application.Groups
             return false;
         }
 
-        public Task<Response> Do(Request request) =>
+        public Task<Response> Do(int id, Request request) =>
         TryCatch(async () =>
         {
-            var group = _ctx.Groups.FirstOrDefault(x => x.Id == request.Id);
+            var group = _ctx.Groups.FirstOrDefault(x => x.Id == id);
 
             if (group.Name.Equals(request.Name))
             {
@@ -69,9 +69,6 @@ namespace Temp.Application.Groups
 
         public class Request
         {
-            [Required]
-            public int Id { get; set; }
-
             [Required]
             public int OrganizationId { get; set; }
 

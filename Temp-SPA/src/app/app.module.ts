@@ -47,6 +47,8 @@ import { OrganizationListResolver } from './_resolvers/organization-list.resolve
 import { OrganizationEditComponent } from './organization/organization-edit/organization-edit.component';
 import { OrganizationEditResolver } from './_resolvers/organization-edit.resolver';
 import { OrganizationCreateComponent } from './organization/organization-create/organization-create.component';
+import { GroupListComponent } from './organization/group/group-list/group-list.component';
+import { GroupListResolver } from './_resolvers/group-list.resolver';
 
 
 export function tokenGetter(): any {
@@ -76,7 +78,8 @@ export function tokenGetter(): any {
     EngagementCreateComponent,
     OrganizationListComponent,
     OrganizationEditComponent,
-    OrganizationCreateComponent
+    OrganizationCreateComponent,
+    GroupListComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -109,7 +112,8 @@ export function tokenGetter(): any {
     EngagmentWithoutEmployeeResolver,
     EngagmentCreateResolver,
     OrganizationListResolver,
-    OrganizationEditResolver
+    OrganizationEditResolver,
+    GroupListResolver
   ],
   bootstrap: [AppComponent]
 })
