@@ -9,7 +9,7 @@ namespace Temp.Application.Groups
 {
     public class UpdateGroup : GroupService
     {
-        readonly private ApplicationDbContext _ctx;
+        private readonly ApplicationDbContext _ctx;
         
         public UpdateGroup(ApplicationDbContext ctx)
         {

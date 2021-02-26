@@ -11,6 +11,7 @@ import { EngagementWithEmployeeListComponent } from './engagemet/engagement-with
 import { EngagementWithoutEmployeeListComponent } from './engagemet/engagement-without-employee-list/engagement-without-employee-list.component';
 import { HomeComponent } from './home/home.component';
 import { GroupCreateComponent } from './organization/group/group-create/group-create.component';
+import { GroupEditComponent } from './organization/group/group-edit/group-edit.component';
 import { GroupListComponent } from './organization/group/group-list/group-list.component';
 import { OrganizationCreateComponent } from './organization/organization-create/organization-create.component';
 import { OrganizationEditComponent } from './organization/organization-edit/organization-edit.component';
@@ -29,6 +30,7 @@ import { EngagmentCreateResolver } from './_resolvers/engagement-create.resolver
 import { EngagmentWithEmployeeResolver } from './_resolvers/engagement-with-employee-list.resolver';
 import { EngagmentWithoutEmployeeResolver } from './_resolvers/engagement-without-employee-list.resolver';
 import { GroupCreateResolver } from './_resolvers/group-create.resolver';
+import { GroupEditResolver } from './_resolvers/group-edit.resolver';
 import { GroupListResolver } from './_resolvers/group-list.resolver';
 import { OrganizationEditResolver } from './_resolvers/organization-edit.resolver';
 import { OrganizationListResolver } from './_resolvers/organization-list.resolver';
@@ -78,7 +80,9 @@ export const appRoutes: Routes = [
             {path: 'organization/inner-groups/:id', component: GroupListComponent,
                 resolve: {innergroups: GroupListResolver}},
             {path: 'group/create/:id', component: GroupCreateComponent,
-                resolve: {organization: GroupCreateResolver}}
+                resolve: {organization: GroupCreateResolver}},
+            {path: 'groups/:id', component: GroupEditComponent,
+                resolve: {group: GroupEditResolver}}
         ]
     },
     {

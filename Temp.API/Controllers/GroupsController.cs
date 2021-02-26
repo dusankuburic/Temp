@@ -64,8 +64,9 @@ namespace Temp.API.Controllers
                 var response = await new UpdateGroup(_ctx).Do(id, request);
                 if (response.Status)
                 {
-                    return Ok(response.Message);
+                    return Ok(response);
                 }
+
 
                 return BadRequest(response.Message);
             }
