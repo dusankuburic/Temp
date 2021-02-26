@@ -15,4 +15,8 @@ getGroups(organizationId: number): any {
   return this.http.get<Group[]>(this.baseUrl + 'organizations/inner-groups/' + organizationId);
 }
 
+createGroup(group: Group): any {
+  return this.http.post(this.baseUrl + 'groups', group);
+}
+
 }
