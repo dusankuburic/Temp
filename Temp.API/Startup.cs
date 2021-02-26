@@ -36,7 +36,7 @@ namespace Temp.API
                     policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
                 });
             });
-            
+
             services.AddControllers();
 
             services.Configure<ApiBehaviorOptions>(opt =>

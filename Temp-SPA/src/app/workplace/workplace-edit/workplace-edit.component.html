@@ -1,23 +1,17 @@
-<div id="page-content-wrapper">
-  <div class="container-fluid">
+<div class="row justify-content-center">
+  <div class="col-lg-5">
     <h1 class="text-center">Edit Workplace</h1>
-      <div class="row justify-content-center">
-          <div class="col-lg-6 col-sm-6 col-8">
-
-              <form [formGroup]="editWorkplaceForm" (ngSubmit)="update()">
-                <div class="form-group">
-                  <h4>First Name</h4>
-                  <input [ngClass]="{'is-invalid' : editWorkplaceForm.get('name').errors 
-                    && editWorkplaceForm.get('name').touched}"
-                    type="text" 
-                    class="form-control" 
-                    formControlName="name">
-                  <div class="invalid-feedback">Please enter a Name</div>
-                </div>      
-                <button type="submit" [disabled]="!editWorkplaceForm.valid" class="btn btn-success float-right">Save</button>
-              </form>
-
-          </div>
-      </div>
-  </div>
+      <form [formGroup]="editWorkplaceForm" (ngSubmit)="update()">
+        <div class="form-group">
+          <h4>First Name</h4>
+          <input [ngClass]="{'is-invalid' : editWorkplaceForm.get('name').errors 
+            && editWorkplaceForm.get('name').touched}"
+            type="text" 
+            class="form-control" 
+            formControlName="name">
+          <div class="invalid-feedback">Please enter a Name</div>
+        </div>      
+        <button type="submit" [disabled]="!editWorkplaceForm.valid" class="btn btn-success float-right">Save</button>
+      </form>
+    </div>
 </div>
