@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Temp.Database;
-using Temp.Domain.Models;
+using Newtonsoft.Json;
 
 namespace Temp.Application.Organizations
 {
@@ -15,30 +15,33 @@ namespace Temp.Application.Organizations
             _ctx = ctx;
         }
 
-        public Response Do(int id)
+        public string Do(int id)
         {
             var innerGroups = _ctx.Organizations.Include(x => x.Groups)
                 .Where(x => x.Id == id)
                 .Select(x => new Response
                 {
                     Name = x.Name,
-                    Groups = x.Groups
+                    Groups = x.Groups.Select(g => new InnerGroupViewModel
+                    {
+                        Id = g.Id,
+                        Name =  g.Name
+                    })
                 })
                 .FirstOrDefault();
                
             //Validate
 
-            return innerGroups;
+            return JsonConvert.SerializeObject(innerGroups);
         }
 
         public class Response
         {
             public string Name;
-
-            public IEnumerable<Group> Groups;
+            public IEnumerable<InnerGroupViewModel> Groups;
         }
 
-        public class InnerGruopViewModel
+        public class InnerGroupViewModel
         {
             public int Id { get; set; }
             public string Name { get; set; }

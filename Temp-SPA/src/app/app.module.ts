@@ -42,6 +42,11 @@ import { EngagmentWithEmployeeResolver } from './_resolvers/engagement-with-empl
 import { EngagmentWithoutEmployeeResolver } from './_resolvers/engagement-without-employee-list.resolver';
 import { EngagementCreateComponent } from './engagemet/engagement-create/engagement-create.component';
 import { EngagmentCreateResolver } from './_resolvers/engagement-create.resolver';
+import { OrganizationListComponent } from './organization/organization-list/organization-list.component';
+import { OrganizationListResolver } from './_resolvers/organization-list.resolver';
+import { OrganizationEditComponent } from './organization/organization-edit/organization-edit.component';
+import { OrganizationEditResolver } from './_resolvers/organization-edit.resolver';
+import { OrganizationCreateComponent } from './organization/organization-create/organization-create.component';
 
 
 export function tokenGetter(): any {
@@ -55,8 +60,8 @@ export function tokenGetter(): any {
     HomeComponent,
     LoginComponent,
     SidebarComponent,
-    EmployeeListComponent,
     UsersComponent,
+    EmployeeListComponent,
     EmployeeCreateComponent,
     EmployeeEditComponent,
     EmployeeAssignRoleComponent,
@@ -68,7 +73,10 @@ export function tokenGetter(): any {
     EmploymentStatusEditComponent,
     EngagementWithEmployeeListComponent,
     EngagementWithoutEmployeeListComponent,
-    EngagementCreateComponent
+    EngagementCreateComponent,
+    OrganizationListComponent,
+    OrganizationEditComponent,
+    OrganizationCreateComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -99,7 +107,9 @@ export function tokenGetter(): any {
     EmploymentStatusEditResolver,
     EngagmentWithEmployeeResolver,
     EngagmentWithoutEmployeeResolver,
-    EngagmentCreateResolver
+    EngagmentCreateResolver,
+    OrganizationListResolver,
+    OrganizationEditResolver
   ],
   bootstrap: [AppComponent]
 })

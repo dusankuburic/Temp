@@ -28,7 +28,6 @@ namespace Temp.API.Controllers
             {
                 var response = new GetEmployees(_ctx).Do();
                 return Ok(response);
-
             }
             catch (EmployeeValidationException employeeValidationException)
             {
@@ -38,13 +37,13 @@ namespace Temp.API.Controllers
                 });
             }
         }
-        
+
         [HttpGet("{id}")]
         public GetEmployee.EmployeeViewModel GetEmployee(int id)
         {
             return new GetEmployee(_ctx).Do(id);
         }
-        
+
         [HttpPost]
         public async Task<ActionResult> Create(CreateEmployee.Request request)
         {
@@ -59,42 +58,40 @@ namespace Temp.API.Controllers
                 {
                     Message = GetInnerMessage(employeeValidationException)
                 });
-            }      
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateEmployee(int id, UpdateEmployee.Request request)
         {
-            var response = await new UpdateEmployee(_ctx).Do(id,request);
+            var response = await new UpdateEmployee(_ctx).Do(id, request);
             if (response.Status)
                 return NoContent();
 
             return BadRequest();
         }
-        
+
         [HttpPost("assign")]
         public async Task<IActionResult> AssignRole(AssignRole.Request request)
         {
             var response = await new AssignRole(_ctx).Do(request);
             if (response.Status)
                 return Ok();
-            
+
             return BadRequest(response.Message);
         }
-        
+
         [HttpPost("unassign")]
         public async Task<IActionResult> RemoveRole(RemoveEmployeeRole.Request request)
         {
             var response = await new RemoveEmployeeRole(_ctx).Do(request);
             if (response.Status)
                 return Ok();
-            
+
             return BadRequest(response.Message);
         }
-        
+
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
-
-        }
-    
+    }
 }
