@@ -21,7 +21,7 @@ getOrganization(id: number): any {
 }
 
 updateOrganization(id: any, organization: Organization): any {
-  return this.http.put(this.baseUrl + 'organizations/' + id, organization)
+  return this.http.put(this.baseUrl + 'organizations/' + id, organization);
 }
 
 createOrganization(organization: Organization): any {

@@ -11,7 +11,7 @@ namespace Temp.API.Controllers
     [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class OrganizationsController : Controller
+    public class OrganizationsController : ControllerBase
     {
         private readonly ApplicationDbContext _ctx;
 
