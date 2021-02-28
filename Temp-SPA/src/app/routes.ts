@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './_guards/auth.guard';
+import { UserGuard } from './_guards/user.guard';
 import { EmployeeAssignRoleComponent } from './employee/employee-assign-role/employee-assign-role.component';
 import { EmployeeCreateComponent } from './employee/employee-create/employee-create.component';
 import { EmployeeEditComponent } from './employee/employee-edit/employee-edit.component';
@@ -12,10 +14,10 @@ import { EngagementWithoutEmployeeListComponent } from './engagemet/engagement-w
 import { HomeComponent } from './home/home.component';
 import { GroupCreateComponent } from './organization/group/group-create/group-create.component';
 import { GroupEditComponent } from './organization/group/group-edit/group-edit.component';
-import { GroupListComponent } from './organization/group/group-list/group-list.component';
+import { GroupListComponent } from './organization/group/inner-group-list/inner-group-list.component';
 import { TeamCreateComponent } from './organization/group/team/team-create/team-create.component';
 import { TeamEditComponent } from './organization/group/team/team-edit/team-edit.component';
-import { TeamListComponent } from './organization/group/team/team-list/team-list.component';
+import { TeamListComponent } from './organization/group/team/inner-team-list/inner-team-list.component';
 import { OrganizationCreateComponent } from './organization/organization-create/organization-create.component';
 import { OrganizationEditComponent } from './organization/organization-edit/organization-edit.component';
 import { OrganizationListComponent } from './organization/organization-list/organization-list.component';
@@ -23,8 +25,6 @@ import { UsersComponent } from './users/users.component';
 import { WorkplaceCreateComponent } from './workplace/workplace-create/workplace-create.component';
 import { WorkplaceEditComponent } from './workplace/workplace-edit/workplace-edit.component';
 import { WorkplaceListComponent } from './workplace/workplace-list/workplace-list.component';
-import { AuthGuard } from './_guards/auth.guard';
-import { UserGuard } from './_guards/user.guard';
 import { EmployeeEditResolver } from './_resolvers/employee/employee-edit.resolver';
 import { EmployeeListResolver } from './_resolvers/employee/employee-list.resolver';
 import { EmploymentStatusEditResolver } from './_resolvers/employment-status/employment-status-edit.resolver';

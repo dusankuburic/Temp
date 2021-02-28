@@ -47,13 +47,13 @@ import { OrganizationListResolver } from './_resolvers/organization/organization
 import { OrganizationEditComponent } from './organization/organization-edit/organization-edit.component';
 import { OrganizationEditResolver } from './_resolvers/organization/organization-edit.resolver';
 import { OrganizationCreateComponent } from './organization/organization-create/organization-create.component';
-import { GroupListComponent } from './organization/group/group-list/group-list.component';
+import { GroupListComponent } from './organization/group/inner-group-list/inner-group-list.component';
 import { GroupListResolver } from './_resolvers/group/group-list.resolver';
 import { GroupCreateComponent } from './organization/group/group-create/group-create.component';
 import { GroupCreateResolver } from './_resolvers/group/group-create.resolver';
 import { GroupEditComponent } from './organization/group/group-edit/group-edit.component';
 import { GroupEditResolver } from './_resolvers/group/group-edit.resolver';
-import { TeamListComponent } from './organization/group/team/team-list/team-list.component';
+import { TeamListComponent } from './organization/group/team/inner-team-list/inner-team-list.component';
 import { TeamListResolver } from './_resolvers/team/team-list.resolver';
 import { TeamCreateComponent } from './organization/group/team/team-create/team-create.component';
 import { TeamCreateResolver } from './_resolvers/team/team-create.resolver';
