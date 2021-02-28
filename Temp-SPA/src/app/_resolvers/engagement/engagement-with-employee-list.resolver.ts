@@ -2,20 +2,20 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Employee } from '../_models/employee';
-import { AlertifyService } from '../_services/alertify.service';
-import { EmployeeService } from '../_services/employee.service';
+import { Employee } from '../../_models/employee';
+import { AlertifyService } from '../../_services/alertify.service';
+import { EngagementService } from '../../_services/engagement.service';
 
 @Injectable()
-export class EmployeeListResolver implements Resolve<Employee[]> {
+export class EngagmentWithEmployeeResolver implements Resolve<Employee[]> {
 
     constructor(
-        private employeeService: EmployeeService,
+        private engaementService: EngagementService,
         private router: Router,
         private alertify: AlertifyService){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<Employee[]> {
-        return this.employeeService.getEmployees().pipe(
+        return this.engaementService.getEmpoyeesWithEngagement().pipe(
             catchError(error => {
                 this.alertify.error('Problem retriving data');
                 this.router.navigate(['']);
