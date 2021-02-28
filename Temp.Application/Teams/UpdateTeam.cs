@@ -22,66 +22,59 @@ namespace Temp.Application.Teams
             {
                 return true;
             }
+
             return false;
         }
 
-        public Task<Response> Do(Request request) =>
-        TryCatch(async() => 
-        {
-            var team = _ctx.Teams.FirstOrDefault(x => x.Id == request.Id);
-            
-
-            if (team.Name.Equals(request.Name))
+        public Task<Response> Do(int id, Request request) =>
+            TryCatch(async () =>
             {
+                var team = _ctx.Teams.FirstOrDefault(x => x.Id == id);
+
+
+                if (team.Name.Equals(request.Name))
+                {
+                    return new Response
+                    {
+                        Id = team.Id,
+                        Name = team.Name,
+                        Message = "Team name is same",
+                        Status = true
+                    };
+                }
+
+                var teamExists = await TeamExists(request.Name, request.GroupId);
+
+                if (teamExists)
+                {
+                    return new Response
+                    {
+                        Message = $"{request.Name} already exists",
+                        Status = false
+                    };
+                }
+
+                team.Name = request.Name;
+
+                ValidateTeamOnUpdate(team);
+
+
+                await _ctx.SaveChangesAsync();
+
                 return new Response
                 {
                     Id = team.Id,
                     Name = team.Name,
-                    Message = "Team name is same",
+                    Message = "Success",
                     Status = true
                 };
-            }
+            });
 
-            var teamExists = await TeamExists(request.Name, request.GroupId);
-
-            if (teamExists)
-            {
-                return new Response
-                {
-                    Message = $"Error {request.Name} already exists",
-                    Status = false
-                };
-            }
-
-            team.Name = request.Name;
-
-            ValidateTeamOnUpdate(team);
-           
-
-            await _ctx.SaveChangesAsync();
-
-            return new Response
-            {
-                Id = team.Id,
-                Name = team.Name,
-                Message = "Success",
-                Status = true
-            };
-
-        });
-        
         public class Request
         {
-            [Required]
-            public int Id { get; set; }
+            [Required] public int GroupId { get; set; }
 
-            [Required]
-            public int GroupId { get; set; }
-
-            [MinLength(2)]
-            [MaxLength(50)]
-            public string Name { get; set; }
-
+            [MinLength(2)] [MaxLength(50)] public string Name { get; set; }
         }
 
         public class Response
