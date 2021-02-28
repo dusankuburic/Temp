@@ -57,6 +57,8 @@ import { TeamListComponent } from './organization/group/team/team-list/team-list
 import { TeamListResolver } from './_resolvers/team-list.resolver';
 import { TeamCreateComponent } from './organization/group/team/team-create/team-create.component';
 import { TeamCreateResolver } from './_resolvers/team-create.resolver';
+import { TeamEditComponent } from './organization/group/team/team-edit/team-edit.component';
+import { TeamEditResolver } from './_resolvers/team-edit.resolver';
 
 
 export function tokenGetter(): any {
@@ -91,7 +93,8 @@ export function tokenGetter(): any {
     GroupCreateComponent,
     GroupEditComponent,
     TeamListComponent,
-    TeamCreateComponent
+    TeamCreateComponent,
+    TeamEditComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -129,7 +132,8 @@ export function tokenGetter(): any {
     GroupCreateResolver,
     GroupEditResolver,
     TeamListResolver,
-    TeamCreateResolver
+    TeamCreateResolver,
+    TeamEditResolver
   ],
   bootstrap: [AppComponent]
 })
