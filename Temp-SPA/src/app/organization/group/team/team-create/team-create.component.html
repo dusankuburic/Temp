@@ -1,9 +1,9 @@
 <div id="page-content-wrapper">
   <div class="container-fluid">
-    <h1 class="text-center">Create Group</h1>
+    <h1 class="text-center">Create Team</h1>
       <div class="row justify-content-center">
         <div class="col-lg-6 col-sm-6 col-8 alert alert-info text-center" role="alert">
-          <h4> Organization Name: {{organization.name}}</h4>
+          <h4> Group Name: {{group.name}}</h4>
         </div>
 
       </div>
@@ -11,18 +11,18 @@
 
           <div class="col-lg-6 col-sm-6 col-8">
 
-            <form [formGroup]="createGroupForm" (ngSubmit)="create()">
+            <form [formGroup]="createTeamForm" (ngSubmit)="create()">
               <div class="form-group">
                 <h4>Name</h4>
-                <input [ngClass]="{'is-invalid' : createGroupForm.get('Name').errors 
-                  && createGroupForm.get('Name').touched}"
+                <input [ngClass]="{'is-invalid' : createTeamForm.get('Name').errors 
+                  && createTeamForm.get('Name').touched}"
                   type="text" 
                   class="form-control" 
                   formControlName="Name">
                 <div class="invalid-feedback">Please enter a Name</div>
               </div>
                  
-              <button type="submit" [disabled]="!createGroupForm.valid" class="btn btn-success float-right">Create</button>
+              <button type="submit" [disabled]="!createTeamForm.valid" class="btn btn-success float-right">Create</button>
             </form>
           </div>
       </div>

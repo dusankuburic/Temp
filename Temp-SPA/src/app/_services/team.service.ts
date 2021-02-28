@@ -11,8 +11,20 @@ export class TeamService {
 
 constructor(private http: HttpClient) { }
 
+getTeam(id: number): any {
+  return this.http.get<Team>(this.baseUrl + 'teams/' + id);
+}
+
 getTeams(groupId: number): any {
   return this.http.get<Team[]>(this.baseUrl + 'groups/inner-teams/' + groupId);
+}
+
+createTeam(team: Team): any {
+  return this.http.post(this.baseUrl + 'teams', team);
+}
+
+updateTeam(id: number, team: Team): any {
+  return this.http.put(this.baseUrl + 'teams/' + id, team);
 }
 
 }

@@ -17,7 +17,7 @@
           <a class="btn btn-primary" [routerLink]="['/groups/', group.id]"><i class="fa fa-edit"></i></a>
         </td>
         <td><a class="btn btn-success"[routerLink]="['/groups/inner-teams/', group.id]" ><i class="fas fa-users"></i></a></td>
-        <td><a class="btn btn-info" asp-controller="Team" asp-action="Create" asp-route-id="@group.Id"><i class="fas fa-project-diagram"></i></a></td>
+        <td><a class="btn btn-info"  [routerLink]="['/team/create/', group.id]"><i class="fas fa-project-diagram"></i></a></td>
       </tr>
     </tbody>
   </table>

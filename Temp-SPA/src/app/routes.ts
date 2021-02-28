@@ -13,6 +13,7 @@ import { HomeComponent } from './home/home.component';
 import { GroupCreateComponent } from './organization/group/group-create/group-create.component';
 import { GroupEditComponent } from './organization/group/group-edit/group-edit.component';
 import { GroupListComponent } from './organization/group/group-list/group-list.component';
+import { TeamCreateComponent } from './organization/group/team/team-create/team-create.component';
 import { TeamListComponent } from './organization/group/team/team-list/team-list.component';
 import { OrganizationCreateComponent } from './organization/organization-create/organization-create.component';
 import { OrganizationEditComponent } from './organization/organization-edit/organization-edit.component';
@@ -35,6 +36,7 @@ import { GroupEditResolver } from './_resolvers/group-edit.resolver';
 import { GroupListResolver } from './_resolvers/group-list.resolver';
 import { OrganizationEditResolver } from './_resolvers/organization-edit.resolver';
 import { OrganizationListResolver } from './_resolvers/organization-list.resolver';
+import { TeamCreateResolver } from './_resolvers/team-create.resolver';
 import { TeamListResolver } from './_resolvers/team-list.resolver';
 import { WorkplaceEditResolver } from './_resolvers/workplace-edit.resolver';
 import { WorkplaceListResolver } from './_resolvers/workplace-list.resolver';
@@ -87,7 +89,9 @@ export const appRoutes: Routes = [
                 resolve: {group: GroupEditResolver}},
 
             {path: 'groups/inner-teams/:id', component: TeamListComponent,
-                resolve: {innerteams: TeamListResolver}}
+                resolve: {innerteams: TeamListResolver}},
+            {path: 'team/create/:id', component: TeamCreateComponent,
+                resolve: {group: TeamCreateResolver}}
         ]
     },
     {
