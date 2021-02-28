@@ -7,7 +7,7 @@ namespace Temp.Application.Teams
 {
     public class GetTeam : TeamService
     {
-        readonly private ApplicationDbContext _ctx;
+        private  readonly ApplicationDbContext _ctx;
 
         public GetTeam(ApplicationDbContext ctx)
         {
