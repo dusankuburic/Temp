@@ -16,7 +16,7 @@ namespace Temp.Application.Employees
         }
 
         public Task<PagedList<EmployeeViewModel>> Do(Request request) => 
-        TryCatch(async() => 
+        TryCatch(async () => 
         {
             var employees = _ctx.Employees
             .Select(x => new EmployeeViewModel

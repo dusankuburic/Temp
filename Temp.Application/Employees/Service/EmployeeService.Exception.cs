@@ -14,7 +14,7 @@ namespace Temp.Application.Employees
         public delegate GetEmployee.EmployeeViewModel ReturningGetEmployeeFunction();
         public delegate Task<UpdateEmployee.Response> ReturningUpdateEmployeeFunction();
         public delegate IEnumerable<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel> ReturningEmployeesWithoutEngagement();
-        public delegate IEnumerable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> ReturningEmployeesWithEngagement();
+        public delegate Task<PagedList<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel>> ReturningEmployeesWithEngagement();
 
         public async Task<CreateEmployee.Response> TryCatch(ReturningCreateEmployeeFunction returningCreateEmployeeFunction)
         {
@@ -124,11 +124,11 @@ namespace Temp.Application.Employees
             }
         }
 
-        public IEnumerable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> TryCatch(ReturningEmployeesWithEngagement returningEmployeesWithEngagement)
+        public async Task<PagedList<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel>> TryCatch(ReturningEmployeesWithEngagement returningEmployeesWithEngagement)
         {
             try
             {
-                return returningEmployeesWithEngagement();
+                return await returningEmployeesWithEngagement();
             }
             catch(EmployeeWithEngagementStorageException employeeWithEngagementStorageException) 
             {

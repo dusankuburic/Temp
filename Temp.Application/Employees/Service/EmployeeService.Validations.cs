@@ -47,7 +47,7 @@ namespace Temp.Application.Employees
         }
 
         public void ValidateGetEmployeeWithEngagementViewModel
-            (IEnumerable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> employeeWithEngagement)
+            (IQueryable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> employeeWithEngagement)
         {
             if(employeeWithEngagement.Count() == 0)
             {

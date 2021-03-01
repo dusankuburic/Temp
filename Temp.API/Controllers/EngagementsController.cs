@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Temp.API.Helpers;
 using Temp.Application.Employees;
 using Temp.Application.Engagements;
+using Temp.Application.Helpers;
 using Temp.Database;
 using Temp.Domain.Models.Employees.Exceptions;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
@@ -50,11 +52,12 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet("with")]
-        public IActionResult WithEngagements()
+        public async Task<ActionResult> WithEngagements([FromQuery]GetEmployeesWithEngagement.Request request)
         {
             try
             {
-                var response = new GetEmployeesWithEngagement(_ctx).Do();
+                var response = await new GetEmployeesWithEngagement(_ctx).Do(request);
+                Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
                 return Ok(response);
             }
             catch(EmployeeValidationException employeeValidationException)
