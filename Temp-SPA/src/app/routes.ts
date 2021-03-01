@@ -8,9 +8,9 @@ import { EmployeeListComponent } from './employee/employee-list/employee-list.co
 import { EmploymentStatusCreateComponent } from './employment-status/employment-status-create/employment-status-create.component';
 import { EmploymentStatusEditComponent } from './employment-status/employment-status-edit/employment-status-edit.component';
 import { EmploymentStatusListComponent } from './employment-status/employment-status-list/employment-status-list.component';
-import { EngagementCreateComponent } from './engagemet/engagement-create/engagement-create.component';
-import { EngagementWithEmployeeListComponent } from './engagemet/engagement-with-employee-list/engagement-with-employee-list.component';
-import { EngagementWithoutEmployeeListComponent } from './engagemet/engagement-without-employee-list/engagement-without-employee-list.component';
+import { EngagementCreateComponent } from './engagement/engagement-create/engagement-create.component';
+import { EngagementWithEmployeeListComponent } from './engagement/engagement-with-employee-list/engagement-with-employee-list.component';
+import { EngagementWithoutEmployeeListComponent } from './engagement/engagement-without-employee-list/engagement-without-employee-list.component';
 import { HomeComponent } from './home/home.component';
 import { GroupCreateComponent } from './organization/group/group-create/group-create.component';
 import { GroupEditComponent } from './organization/group/group-edit/group-edit.component';

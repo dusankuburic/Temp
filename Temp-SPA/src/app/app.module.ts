@@ -36,11 +36,11 @@ import { EmploymentStatusListResolver } from './_resolvers/employment-status/emp
 import { EmploymentStatusCreateComponent } from './employment-status/employment-status-create/employment-status-create.component';
 import { EmploymentStatusEditComponent } from './employment-status/employment-status-edit/employment-status-edit.component';
 import { EmploymentStatusEditResolver } from './_resolvers/employment-status/employment-status-edit.resolver';
-import { EngagementWithEmployeeListComponent } from './engagemet/engagement-with-employee-list/engagement-with-employee-list.component';
-import { EngagementWithoutEmployeeListComponent } from './engagemet/engagement-without-employee-list/engagement-without-employee-list.component';
+import { EngagementWithEmployeeListComponent } from './engagement/engagement-with-employee-list/engagement-with-employee-list.component';
+import { EngagementWithoutEmployeeListComponent } from './engagement/engagement-without-employee-list/engagement-without-employee-list.component';
 import { EngagmentWithEmployeeResolver } from './_resolvers/engagement/engagement-with-employee-list.resolver';
 import { EngagmentWithoutEmployeeResolver } from './_resolvers/engagement/engagement-without-employee-list.resolver';
-import { EngagementCreateComponent } from './engagemet/engagement-create/engagement-create.component';
+import { EngagementCreateComponent } from './engagement/engagement-create/engagement-create.component';
 import { EngagmentCreateResolver } from './_resolvers/engagement/engagement-create.resolver';
 import { OrganizationListComponent } from './organization/organization-list/organization-list.component';
 import { OrganizationListResolver } from './_resolvers/organization/organization-list.resolver';
