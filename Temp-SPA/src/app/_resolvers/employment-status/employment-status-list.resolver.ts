@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { EmploymentStatus } from '../_models/employmentStatus';
-import { AlertifyService } from '../_services/alertify.service';
-import { EmploymentStatusService } from '../_services/employment-status.service';
+import { EmploymentStatus } from '../../_models/employmentStatus';
+import { AlertifyService } from '../../_services/alertify.service';
+import { EmploymentStatusService } from '../../_services/employment-status.service';
 
 @Injectable()
 export class EmploymentStatusListResolver implements Resolve<EmploymentStatus[]> {

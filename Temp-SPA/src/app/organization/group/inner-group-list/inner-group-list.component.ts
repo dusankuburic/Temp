@@ -4,8 +4,8 @@ import { InnerGroups } from 'src/app/_models/group';
 
 @Component({
   selector: 'app-group-list',
-  templateUrl: './group-list.component.html',
-  styleUrls: ['./group-list.component.scss']
+  templateUrl: './inner-group-list.component.html',
+  styleUrls: ['./inner-group-list.component.scss']
 })
 export class GroupListComponent implements OnInit {
 

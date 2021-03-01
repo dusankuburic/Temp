@@ -4,8 +4,8 @@ import { InnerTeams } from 'src/app/_models/team';
 
 @Component({
   selector: 'app-team-list',
-  templateUrl: './team-list.component.html',
-  styleUrls: ['./team-list.component.scss']
+  templateUrl: './inner-team-list.component.html',
+  styleUrls: ['./inner-team-list.component.scss']
 })
 export class TeamListComponent implements OnInit {
 

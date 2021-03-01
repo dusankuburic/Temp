@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Group } from '../_models/group';
-import { AlertifyService } from '../_services/alertify.service';
-import { GroupService } from '../_services/group.service';
+import { Group } from '../../_models/group';
+import { AlertifyService } from '../../_services/alertify.service';
+import { GroupService } from '../../_services/group.service';
 
 @Injectable()
 export class TeamCreateResolver implements Resolve<Group> {
