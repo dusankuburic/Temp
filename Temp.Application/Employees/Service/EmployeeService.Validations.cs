@@ -29,7 +29,7 @@ namespace Temp.Application.Employees
             }
         }
 
-        public void ValidateGetEmployeViewModel(GetEmployee.EmployeeViewModel employee)
+        public void ValidateGetEmployeeViewModel(GetEmployee.EmployeeViewModel employee)
         {
             if(employee is null)
             {
@@ -71,7 +71,7 @@ namespace Temp.Application.Employees
             }
         }
 
-        public void ValidateStorageEmployees(IEnumerable<GetEmployees.EmployeeViewModel> storageEmployees)
+        public void ValidateStorageEmployees(IQueryable<GetEmployees.EmployeeViewModel> storageEmployees)
         {
             if(storageEmployees.Count() == 0)
             {
