@@ -9,13 +9,16 @@ import { EmployeeService } from '../../_services/employee.service';
 @Injectable()
 export class EmployeeListResolver implements Resolve<Employee[]> {
 
+    pageNumber = 1;
+    pageSize = 5;
+
     constructor(
         private employeeService: EmployeeService,
         private router: Router,
         private alertify: AlertifyService){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<Employee[]> {
-        return this.employeeService.getEmployees().pipe(
+        return this.employeeService.getEmployees(this.pageNumber, this.pageSize).pipe(
             catchError(error => {
                 this.alertify.error('Problem retriving data');
                 this.router.navigate(['']);

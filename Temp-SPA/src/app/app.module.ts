@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import { RouterModule } from '@angular/router';
+import {PaginationModule} from 'ngx-bootstrap/pagination';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -103,6 +104,7 @@ export function tokenGetter(): any {
     AppRoutingModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    PaginationModule.forRoot(),
     BsDropdownModule.forRoot(),
     BsDatepickerModule.forRoot(),
     HttpClientModule,

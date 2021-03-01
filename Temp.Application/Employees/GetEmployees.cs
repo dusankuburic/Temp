@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Temp.Application.Auth.Users;
 using Temp.Application.Helpers;
 using Temp.Database;
 

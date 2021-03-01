@@ -24,8 +24,7 @@ namespace Temp.Application.Employees
             })
             .FirstOrDefault();
 
-
-            ValidateGetEmployeeViewModel(employee);
+             ValidateGetEmployeeViewModel(employee);
 
             return employee;
 

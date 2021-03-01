@@ -55,7 +55,6 @@ namespace Temp.Application.Employees
             }
         }
 
-
         public void ValidateEmployeeStrings(Employee employee)
         {
             switch (employee)
@@ -80,7 +79,5 @@ namespace Temp.Application.Employees
         }
 
         public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
-
-        
     }
 }
