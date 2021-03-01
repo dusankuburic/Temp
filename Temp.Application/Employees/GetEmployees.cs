@@ -47,7 +47,6 @@ namespace Temp.Application.Employees
             }
         }
         
-        
         public class EmployeeViewModel
         {
             public int Id {get; set;}

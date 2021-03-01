@@ -47,7 +47,7 @@ namespace Temp.Application.EmploymentStatuses.Service
             }
         }
 
-        public void ValidateEmploymentStatuses(IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> storageEmploymentStatuses)
+        public void ValidateEmploymentStatuses(IQueryable<GetEmploymentStatuses.EmploymentStatusViewModel> storageEmploymentStatuses)
         {
             if(storageEmploymentStatuses.Count() == 0)
             {

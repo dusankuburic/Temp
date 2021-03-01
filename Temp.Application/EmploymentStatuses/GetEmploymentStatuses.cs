@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Temp.Application.EmploymentStatuses.Service;
+using Temp.Application.Helpers;
 using Temp.Database;
 
 namespace Temp.Application.EmploymentStatuses
@@ -14,20 +15,34 @@ namespace Temp.Application.EmploymentStatuses
             _ctx = ctx;
         }
 
-        public IEnumerable<EmploymentStatusViewModel> Do() =>
-        TryCatch(() =>
+        public Task<PagedList<EmploymentStatusViewModel>> Do(Request request) =>
+        TryCatch(async() =>
         {
-            var employmentStatuses = _ctx.EmploymentStatuses.ToList()
+            var employmentStatuses = _ctx.EmploymentStatuses
             .Select(x => new EmploymentStatusViewModel
             {
                 Id = x.Id,
                 Name = x.Name
-            });
+            }).AsQueryable();
 
             ValidateEmploymentStatuses(employmentStatuses);
 
-            return employmentStatuses;
+            return await PagedList<EmploymentStatusViewModel>.CreateAsync(employmentStatuses, request.PageNumber, request.PageSize);
         });
+        
+        public class Request
+        {
+            private const int MaxPageSize = 20;
+            public int PageNumber { get; set; } = 1;
+
+            private int _pageSize = 10;
+
+            public int PageSize
+            {
+                get { return _pageSize; }
+                set { _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
+            }
+        }
 
         public class EmploymentStatusViewModel
         {

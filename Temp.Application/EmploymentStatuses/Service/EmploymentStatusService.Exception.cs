@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Temp.Application.Helpers;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 
 namespace Temp.Application.EmploymentStatuses.Service
@@ -9,7 +10,7 @@ namespace Temp.Application.EmploymentStatuses.Service
     public partial class EmploymentStatusService
     {
         public delegate Task<CreateEmploymentStatus.Response> ReturningEmploymentStatusFunction();
-        public delegate IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> ReturningEmploymentStatusesFunction();
+        public delegate Task<PagedList<GetEmploymentStatuses.EmploymentStatusViewModel>> ReturningEmploymentStatusesFunction();
         public delegate GetEmploymentStatus.EmploymentStatusViewModel ReturningGetEmploymentStatusFunction();
         public delegate Task<UpdateEmploymentStatus.Response> ReturningUpdateEmploymentStatusFunction();
 
@@ -37,11 +38,11 @@ namespace Temp.Application.EmploymentStatuses.Service
             }
         }
 
-        public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> TryCatch(ReturningEmploymentStatusesFunction returningEmploymentStatusesFunction)
+        public async Task<PagedList<GetEmploymentStatuses.EmploymentStatusViewModel>> TryCatch(ReturningEmploymentStatusesFunction returningEmploymentStatusesFunction)
         {
             try
             {
-                return returningEmploymentStatusesFunction();
+                return await returningEmploymentStatusesFunction();
             }
             catch(EmploymentStatusEmptyStorageException employmentStatusEmptyStorageException)
             {
