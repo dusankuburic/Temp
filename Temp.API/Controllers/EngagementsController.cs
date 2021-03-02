@@ -28,11 +28,12 @@ namespace Temp.API.Controllers
         
 
         [HttpGet("without")]
-        public IActionResult WithoutEngagements()
+        public async Task<ActionResult> WithoutEngagements([FromQuery]GetEmployeesWithoutEngagement.Request request)
         {
             try
             {
-                var response = new GetEmployeesWithoutEngagement(_ctx).Do();
+                var response = await new GetEmployeesWithoutEngagement(_ctx).Do(request);
+                Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
                 return Ok(response);
             }
             catch(EmployeeValidationException employeeValidationException)

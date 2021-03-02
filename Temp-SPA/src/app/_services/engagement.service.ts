@@ -37,8 +37,26 @@ getEmpoyeesWithEngagement(page?, itemsPerPage?): Observable<PaginatedResult<Empl
     );
 }
 
-getEmpoyeesWithoutEngagement(): any {
-  return this.http.get<Employee[]>(this.baseUrl + 'engagements/without');
+getEmpoyeesWithoutEngagement(page?, itemsPerPage?): Observable<PaginatedResult<Employee[]>> {
+  const paginatedResult: PaginatedResult<Employee[]> = new PaginatedResult<Employee[]>();
+
+  let params = new HttpParams();
+
+  if(page != null && itemsPerPage != null){
+    params = params.append('pageNumber', page);
+    params = params.append('pageSize', itemsPerPage);
+  }
+
+  return this.http.get<Employee[]>(this.baseUrl + 'engagements/without', {observe: 'response', params})
+    .pipe(
+      map(response => {
+        paginatedResult.result = response.body;
+        if(response.headers.get('Pagination') != null){
+          paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+        }
+        return paginatedResult;
+      })
+    );
 }
 
 getEngagementForEmployee(id: number): any {
