@@ -29,7 +29,7 @@ namespace Temp.Application.Employees
             }
         }
 
-        public void ValidateGetEmployeViewModel(GetEmployee.EmployeeViewModel employee)
+        public void ValidateGetEmployeeViewModel(GetEmployee.EmployeeViewModel employee)
         {
             if(employee is null)
             {
@@ -38,7 +38,7 @@ namespace Temp.Application.Employees
         }
 
         public void ValidateGetEmployeeWithoutEngagementViewModel
-            (IEnumerable<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel> employeeWithoutEngagement)
+            (IQueryable<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel> employeeWithoutEngagement)
         {
             if(employeeWithoutEngagement.Count() == 0)
             {
@@ -47,14 +47,13 @@ namespace Temp.Application.Employees
         }
 
         public void ValidateGetEmployeeWithEngagementViewModel
-            (IEnumerable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> employeeWithEngagement)
+            (IQueryable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> employeeWithEngagement)
         {
             if(employeeWithEngagement.Count() == 0)
             {
                throw new EmployeeWithEngagementStorageException();
             }
         }
-
 
         public void ValidateEmployeeStrings(Employee employee)
         {
@@ -71,7 +70,7 @@ namespace Temp.Application.Employees
             }
         }
 
-        public void ValidateStorageEmployees(IEnumerable<GetEmployees.EmployeeViewModel> storageEmployees)
+        public void ValidateStorageEmployees(IQueryable<GetEmployees.EmployeeViewModel> storageEmployees)
         {
             if(storageEmployees.Count() == 0)
             {
@@ -80,7 +79,5 @@ namespace Temp.Application.Employees
         }
 
         public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
-
-        
     }
 }

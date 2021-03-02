@@ -9,13 +9,16 @@ import { EmploymentStatusService } from '../../_services/employment-status.servi
 @Injectable()
 export class EmploymentStatusListResolver implements Resolve<EmploymentStatus[]> {
 
+    pageNumber = 1;
+    pageSize = 5;
+
     constructor(
         private employmentStatusService: EmploymentStatusService,
         private router: Router,
         private alertify: AlertifyService) {}
 
     resolve(route: ActivatedRouteSnapshot): Observable<EmploymentStatus[]> {
-        return this.employmentStatusService.getEmploymentStatuses().pipe(
+        return this.employmentStatusService.getEmploymentStatuses(this.pageNumber, this.pageSize).pipe(
             catchError(error => {
                 this.alertify.error('Problem retriving data');
                 this.router.navigate(['']);

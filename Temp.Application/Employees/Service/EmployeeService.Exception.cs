@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Temp.Application.Helpers;
 using Temp.Domain.Models.Employees.Exceptions;
 
 namespace Temp.Application.Employees
@@ -9,11 +10,11 @@ namespace Temp.Application.Employees
     public partial class EmployeeService
     {
         public delegate Task<CreateEmployee.Response> ReturningCreateEmployeeFunction();
-        public delegate IEnumerable<GetEmployees.EmployeeViewModel> ReturningGetEmployeesFunction();
+        public delegate Task<PagedList<GetEmployees.EmployeeViewModel>> ReturningGetEmployeesFunction();
         public delegate GetEmployee.EmployeeViewModel ReturningGetEmployeeFunction();
         public delegate Task<UpdateEmployee.Response> ReturningUpdateEmployeeFunction();
-        public delegate IEnumerable<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel> ReturningEmployeesWithoutEngagement();
-        public delegate IEnumerable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> ReturningEmployeesWithEngagement();
+        public delegate Task<PagedList<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel>>  ReturningEmployeesWithoutEngagement();
+        public delegate Task<PagedList<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel>> ReturningEmployeesWithEngagement();
 
         public async Task<CreateEmployee.Response> TryCatch(ReturningCreateEmployeeFunction returningCreateEmployeeFunction)
         {
@@ -39,11 +40,11 @@ namespace Temp.Application.Employees
             }
         }
 
-        public IEnumerable<GetEmployees.EmployeeViewModel> TryCatch(ReturningGetEmployeesFunction returningGetEmployeesFunction)
+        public async Task<PagedList<GetEmployees.EmployeeViewModel>> TryCatch(ReturningGetEmployeesFunction returningGetEmployeesFunction)
         {
             try
             {
-                return returningGetEmployeesFunction();
+                return await returningGetEmployeesFunction();
             }
             catch(EmployeeEmptyStorageException employeeEmptyStorageException) 
             {
@@ -103,11 +104,11 @@ namespace Temp.Application.Employees
             }
         }
 
-        public IEnumerable<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel> TryCatch(ReturningEmployeesWithoutEngagement returningEmployeesWithoutEngagement)
+        public async Task<PagedList<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel>> TryCatch(ReturningEmployeesWithoutEngagement returningEmployeesWithoutEngagement)
         {
             try
             {
-                return returningEmployeesWithoutEngagement();
+                return await returningEmployeesWithoutEngagement();
             }
             catch(EmployeeWithoutEngagementStorageException employeeWithoutEngagementStorageException) 
             {
@@ -123,11 +124,11 @@ namespace Temp.Application.Employees
             }
         }
 
-        public IEnumerable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> TryCatch(ReturningEmployeesWithEngagement returningEmployeesWithEngagement)
+        public async Task<PagedList<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel>> TryCatch(ReturningEmployeesWithEngagement returningEmployeesWithEngagement)
         {
             try
             {
-                return returningEmployeesWithEngagement();
+                return await returningEmployeesWithEngagement();
             }
             catch(EmployeeWithEngagementStorageException employeeWithEngagementStorageException) 
             {

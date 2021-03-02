@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Temp.API.Helpers;
 using Temp.Application.EmploymentStatuses;
 using Temp.Database;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
@@ -22,11 +23,12 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel>> GetEmploymentStatuses()
+        public async Task<ActionResult> GetEmploymentStatuses([FromQuery]GetEmploymentStatuses.Request request)
         {
             try
             {
-                var response = new GetEmploymentStatuses(_ctx).Do();
+                var response = await new GetEmploymentStatuses(_ctx).Do(request);
+                Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
                 return Ok(response);
             }
             catch (EmploymentStatusValidationException employmentStatusValidationException)

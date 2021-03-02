@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Temp.Application.Helpers;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 
 namespace Temp.Application.EmploymentStatuses.Service
@@ -10,6 +11,7 @@ namespace Temp.Application.EmploymentStatuses.Service
     {
         public delegate Task<CreateEmploymentStatus.Response> ReturningEmploymentStatusFunction();
         public delegate IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> ReturningEmploymentStatusesFunction();
+        public delegate Task<PagedList<GetEmploymentStatuses.EmploymentStatusViewModel>> ReturningEmploymentStatusesFunctionPage();
         public delegate GetEmploymentStatus.EmploymentStatusViewModel ReturningGetEmploymentStatusFunction();
         public delegate Task<UpdateEmploymentStatus.Response> ReturningUpdateEmploymentStatusFunction();
 
@@ -36,12 +38,33 @@ namespace Temp.Application.EmploymentStatuses.Service
                 throw CreateAndLogServiceException(exception);
             }
         }
-
+        
         public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> TryCatch(ReturningEmploymentStatusesFunction returningEmploymentStatusesFunction)
         {
             try
             {
                 return returningEmploymentStatusesFunction();
+            }
+            catch(EmploymentStatusEmptyStorageException employmentStatusEmptyStorageException)
+            {
+                throw CreateAndLogValidationException(employmentStatusEmptyStorageException);
+            }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+
+        }
+
+        public async Task<PagedList<GetEmploymentStatuses.EmploymentStatusViewModel>> TryCatch(ReturningEmploymentStatusesFunctionPage returningEmploymentStatusesFunctionPage)
+        {
+            try
+            {
+                return await returningEmploymentStatusesFunctionPage();
             }
             catch(EmploymentStatusEmptyStorageException employmentStatusEmptyStorageException)
             {
