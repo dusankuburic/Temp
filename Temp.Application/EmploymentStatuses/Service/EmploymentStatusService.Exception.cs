@@ -10,7 +10,8 @@ namespace Temp.Application.EmploymentStatuses.Service
     public partial class EmploymentStatusService
     {
         public delegate Task<CreateEmploymentStatus.Response> ReturningEmploymentStatusFunction();
-        public delegate Task<PagedList<GetEmploymentStatuses.EmploymentStatusViewModel>> ReturningEmploymentStatusesFunction();
+        public delegate IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> ReturningEmploymentStatusesFunction();
+        public delegate Task<PagedList<GetEmploymentStatuses.EmploymentStatusViewModel>> ReturningEmploymentStatusesFunctionPage();
         public delegate GetEmploymentStatus.EmploymentStatusViewModel ReturningGetEmploymentStatusFunction();
         public delegate Task<UpdateEmploymentStatus.Response> ReturningUpdateEmploymentStatusFunction();
 
@@ -37,12 +38,33 @@ namespace Temp.Application.EmploymentStatuses.Service
                 throw CreateAndLogServiceException(exception);
             }
         }
-
-        public async Task<PagedList<GetEmploymentStatuses.EmploymentStatusViewModel>> TryCatch(ReturningEmploymentStatusesFunction returningEmploymentStatusesFunction)
+        
+        public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> TryCatch(ReturningEmploymentStatusesFunction returningEmploymentStatusesFunction)
         {
             try
             {
-                return await returningEmploymentStatusesFunction();
+                return returningEmploymentStatusesFunction();
+            }
+            catch(EmploymentStatusEmptyStorageException employmentStatusEmptyStorageException)
+            {
+                throw CreateAndLogValidationException(employmentStatusEmptyStorageException);
+            }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+
+        }
+
+        public async Task<PagedList<GetEmploymentStatuses.EmploymentStatusViewModel>> TryCatch(ReturningEmploymentStatusesFunctionPage returningEmploymentStatusesFunctionPage)
+        {
+            try
+            {
+                return await returningEmploymentStatusesFunctionPage();
             }
             catch(EmploymentStatusEmptyStorageException employmentStatusEmptyStorageException)
             {

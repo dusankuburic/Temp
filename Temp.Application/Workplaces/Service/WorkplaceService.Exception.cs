@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Temp.Application.Helpers;
 using Temp.Domain.Models.Workplaces.Exceptions;
@@ -9,7 +10,8 @@ namespace Temp.Application.Workplaces.Service
     public partial class WorkplaceService
     {
         public delegate Task<CreateWorkplace.Response> ReturningWorkplaceFunction();
-        public delegate Task<PagedList<GetWorkplaces.WorkplacesViewModel>> ReturningGetWorkplacesFunction();
+        public delegate IEnumerable<GetWorkplaces.WorkplacesViewModel> ReturningGetWorkplacesFunction();
+        public delegate Task<PagedList<GetWorkplaces.WorkplacesViewModel>> ReturningGetWorkplacesFunctionPage();
         public delegate GetWorkplace.WorkplaceViewModel ReturningGetWorkplaceFunction();
         public delegate Task<UpdateWorkplace.Response> ReturningUpdateWorkplaceFunction();
 
@@ -36,12 +38,32 @@ namespace Temp.Application.Workplaces.Service
                 throw CreateAndLogServiceException(exception);
             }
         }
-
-        public async Task<PagedList<GetWorkplaces.WorkplacesViewModel>> TryCatch(ReturningGetWorkplacesFunction returningGetWorkplacesFunction)
+        
+        public IEnumerable<GetWorkplaces.WorkplacesViewModel> TryCatch(ReturningGetWorkplacesFunction returningGetWorkplacesFunction)
         {
             try
             {
-                return await returningGetWorkplacesFunction();
+                return returningGetWorkplacesFunction();
+            }
+            catch(WorkplaceEmptyStorageException workplaceEmptyStorageException)
+            {
+                throw CreateAndLogValidationException(workplaceEmptyStorageException);
+            }
+            catch(SqlException sqlExcepton)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }           
+        }
+
+        public async Task<PagedList<GetWorkplaces.WorkplacesViewModel>> TryCatch(ReturningGetWorkplacesFunctionPage returningGetWorkplacesFunctionPage)
+        {
+            try
+            {
+                return await returningGetWorkplacesFunctionPage();
             }
             catch(WorkplaceEmptyStorageException workplaceEmptyStorageException)
             {
