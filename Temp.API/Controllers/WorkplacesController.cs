@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Temp.API.Helpers;
 using Temp.Application.Workplaces;
 using Temp.Database;
 using Temp.Domain.Models.Workplaces.Exceptions;
@@ -19,6 +20,21 @@ namespace Temp.API.Controllers
         public WorkplacesController(ApplicationDbContext ctx)
         {
             _ctx = ctx;
+        }
+        
+        [HttpGet]
+        public async Task<ActionResult> GetWorkplaces([FromQuery]GetWorkplaces.Request request)
+        {
+            try
+            {
+                var response = await new GetWorkplaces(_ctx).Do(request);
+                Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
+                return Ok(response);
+            }
+            catch (WorkplaceValidationException workplaceValidationException)
+            {
+                return BadRequest(GetInnerMessage(workplaceValidationException));
+            }
         }
 
         [HttpPost]
@@ -39,20 +55,7 @@ namespace Temp.API.Controllers
                 return BadRequest(GetInnerMessage(workplaceValidationException));
             }
         }
-
-        [HttpGet]
-        public ActionResult<IEnumerable<GetWorkplaces.WorkplacesViewModel>> GetWorkplaces()
-        {
-            try
-            {
-                var response = new GetWorkplaces(_ctx).Do();
-                return Ok(response);
-            }
-            catch (WorkplaceValidationException workplaceValidationException)
-            {
-                return BadRequest(GetInnerMessage(workplaceValidationException));
-            }
-        }
+        
 
         [HttpGet("{id}")]
         public IActionResult GetWorkplace(int id)

@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Temp.Application.Employees;
 using Temp.Database;
 using Temp.Domain.Models.Employees.Exceptions;
+using Temp.API.Helpers;
 
 namespace Temp.API.Controllers
 {
@@ -22,11 +22,12 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<GetEmployees.EmployeeViewModel>> GetEmployees()
+        public async Task<ActionResult> GetEmployees([FromQuery]GetEmployees.Request request)
         {
             try
             {
-                var response = new GetEmployees(_ctx).Do();
+                var response = await new GetEmployees(_ctx).Do(request);
+                Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
                 return Ok(response);
             }
             catch (EmployeeValidationException employeeValidationException)

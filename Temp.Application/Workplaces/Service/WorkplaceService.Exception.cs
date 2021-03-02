@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Temp.Application.Helpers;
 using Temp.Domain.Models.Workplaces.Exceptions;
 
 namespace Temp.Application.Workplaces.Service
@@ -10,6 +11,7 @@ namespace Temp.Application.Workplaces.Service
     {
         public delegate Task<CreateWorkplace.Response> ReturningWorkplaceFunction();
         public delegate IEnumerable<GetWorkplaces.WorkplacesViewModel> ReturningGetWorkplacesFunction();
+        public delegate Task<PagedList<GetWorkplaces.WorkplacesViewModel>> ReturningGetWorkplacesFunctionPage();
         public delegate GetWorkplace.WorkplaceViewModel ReturningGetWorkplaceFunction();
         public delegate Task<UpdateWorkplace.Response> ReturningUpdateWorkplaceFunction();
 
@@ -27,16 +29,16 @@ namespace Temp.Application.Workplaces.Service
             {
                 throw CreateAndLogValidationException(invalidWorkplaceException);
             }
-            catch(SqlException sqlExcepton)
+            catch(SqlException sqlException)
             {
-                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+                throw CreateAndLogCriticalDependencyException(sqlException);
             }
             catch(Exception exception)
             {
                 throw CreateAndLogServiceException(exception);
             }
         }
-
+        
         public IEnumerable<GetWorkplaces.WorkplacesViewModel> TryCatch(ReturningGetWorkplacesFunction returningGetWorkplacesFunction)
         {
             try
@@ -57,6 +59,26 @@ namespace Temp.Application.Workplaces.Service
             }           
         }
 
+        public async Task<PagedList<GetWorkplaces.WorkplacesViewModel>> TryCatch(ReturningGetWorkplacesFunctionPage returningGetWorkplacesFunctionPage)
+        {
+            try
+            {
+                return await returningGetWorkplacesFunctionPage();
+            }
+            catch(WorkplaceEmptyStorageException workplaceEmptyStorageException)
+            {
+                throw CreateAndLogValidationException(workplaceEmptyStorageException);
+            }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }           
+        }
+
         public GetWorkplace.WorkplaceViewModel TryCatch(ReturningGetWorkplaceFunction returningGetWorkplaceFunction)
         {
             try
@@ -67,9 +89,9 @@ namespace Temp.Application.Workplaces.Service
             {
                 throw CreateAndLogValidationException(nullWorkplaceException);
             }
-            catch(SqlException sqlExcepton)
+            catch(SqlException sqlException)
             {
-                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+                throw CreateAndLogCriticalDependencyException(sqlException);
             }
             catch(Exception exception)
             {
@@ -92,9 +114,9 @@ namespace Temp.Application.Workplaces.Service
             {
                 throw CreateAndLogValidationException(invalidWorkplaceException);
             }
-            catch(SqlException sqlExcepton)
+            catch(SqlException sqlException)
             {
-                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+                throw CreateAndLogCriticalDependencyException(sqlException);
             }
             catch(Exception exception)
             {
