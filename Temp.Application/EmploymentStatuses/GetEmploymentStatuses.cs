@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Temp.Application.EmploymentStatuses.Service;
 using Temp.Application.Helpers;
@@ -14,6 +15,22 @@ namespace Temp.Application.EmploymentStatuses
         {
             _ctx = ctx;
         }
+        
+        public IEnumerable<EmploymentStatusViewModel> Do() =>
+            TryCatch(() =>
+            {
+                var employmentStatuses = _ctx.EmploymentStatuses
+                    .Select(x => new EmploymentStatusViewModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    }).ToList();
+
+                ValidateEmploymentStatuses(employmentStatuses);
+
+                return employmentStatuses;
+            });
+        
 
         public Task<PagedList<EmploymentStatusViewModel>> Do(Request request) =>
         TryCatch(async() =>

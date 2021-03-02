@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Temp.Application.Helpers;
 using Temp.Application.Workplaces.Service;
@@ -14,6 +15,21 @@ namespace Temp.Application.Workplaces
         {
             _ctx = ctx;
         }
+        
+        public IEnumerable<WorkplacesViewModel> Do() =>
+        TryCatch(() => 
+        { 
+            var workplaces =_ctx.Workplaces
+                .Select(x =>  new WorkplacesViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList();
+        
+            ValidateStorageWorkplaces(workplaces);        
+
+            return workplaces;
+        });
 
         public Task<PagedList<WorkplacesViewModel>> Do(Request request) =>
         TryCatch(async () => 

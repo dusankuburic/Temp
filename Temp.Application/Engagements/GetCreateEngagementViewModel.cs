@@ -24,8 +24,8 @@ namespace Temp.Application.Engagements
             var response = new Response
             {
                 Employee = new GetEmployee(_ctx).Do(id),
-                 //Workplaces = new GetWorkplaces(_ctx).Do(),
-                //EmploymentStatuses = new GetEmploymentStatuses(_ctx).Do(),
+                Workplaces = new GetWorkplaces(_ctx).Do(),
+                EmploymentStatuses = new GetEmploymentStatuses(_ctx).Do(),
                 Engagements = _ctx.Engagements.Where(x => x.Employee.Id == id)
                     .Select(eng => new
                     {
