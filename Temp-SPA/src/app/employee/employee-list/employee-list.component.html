@@ -17,6 +17,7 @@
                 <td>
                     <span class="badge badge-pill" [ngClass]="{'badge-warning': employee.role === 'Admin',
                                     'badge-info' : employee.role === 'User',
+                                    'badge-success' : employee.role === 'Moderator',
                                     'badge-secondary': employee.role === 'None'}">
                         {{employee.role}}
                     </span>
@@ -24,7 +25,7 @@
                 <td>
                     <a class="btn btn-primary" [routerLink]="['/employees/', employee.id]"><i class="fa fa-edit"></i></a>
                 </td>
-                <td *ngIf="employee.role != 'Admin' && employee.role != 'User'">
+                <td *ngIf="employee.role != 'Admin' && employee.role != 'User' && employee.role != 'Moderator'">
                     <a class="btn btn-info" [routerLink]="['/employee/assign-role/', employee.id]"><i class="fa fa-sitemap"></i></a>
                 </td>
                 <td *ngIf="employee.role != 'None'">
