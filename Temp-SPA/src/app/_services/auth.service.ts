@@ -32,6 +32,21 @@ loginUser(model: any): any {
   );
 }
 
+loginModerator(model: any): any {
+  return this.http.post(this.baseUrl + 'moderators/login', model)
+  .pipe(
+    map((response: any) => {
+      const user = response;
+      if (user) {
+        localStorage.setItem('token', user.token);
+        localStorage.setItem('user', JSON.stringify(user.user));
+        this.decodedToken = this.jwtHelper.decodeToken(user.token);
+        this.currentUser = user.user;
+      }
+    })
+  );
+}
+
 loginAdmin(model: any): any {
   return this.http.post(this.baseUrl + 'admins/login', model)
   .pipe(
@@ -46,6 +61,8 @@ loginAdmin(model: any): any {
     })
   );
 }
+
+
 
 
 

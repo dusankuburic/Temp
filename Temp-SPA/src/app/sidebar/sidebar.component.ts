@@ -10,22 +10,29 @@ export class SidebarComponent implements OnInit {
 
   constructor(private authService: AuthService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   loggedIn(): any {
     return this.authService.loggedIn();
   }
 
-  isAdmin() {
-    if(this.authService.decodedToken.role === 'Admin'){
+  isAdmin(): boolean {
+    if (this.authService.decodedToken.role === 'Admin'){
       return true;
     }
     return false;
   }
 
-  isUser() {
-    if(this.authService.decodedToken.role === 'User'){
+  isUser(): boolean {
+    if (this.authService.decodedToken.role === 'User'){
+      return true;
+    }
+    return false;
+  }
+
+  isModerator(): boolean {
+    if (this.authService.decodedToken.role === 'Moderator'){
       return true;
     }
     return false;

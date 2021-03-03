@@ -1,22 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Application.Employees;
 using Temp.Database;
 using Temp.Domain.Models;
 
-namespace Temp.Application.Auth.Admins
+namespace Temp.Application.Auth.Moderators
 {
-    public class RegisterAdmin
+    public class RegisterModerator
     {
         private readonly ApplicationDbContext _ctx;
 
-        public RegisterAdmin(ApplicationDbContext ctx)
+        public RegisterModerator(ApplicationDbContext ctx)
         {
             _ctx = ctx;
-            
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
@@ -28,9 +27,9 @@ namespace Temp.Application.Auth.Admins
             }
         }
 
-        private async Task<bool> AdminExists(string username)
+        private async Task<bool> ModeratorExists(string username)
         {
-            if (await _ctx.Admins.AnyAsync(x => x.Username == username))
+            if (await _ctx.Moderators.AnyAsync(x => x.Username == username))
             {
                 return true;
             }
@@ -40,9 +39,9 @@ namespace Temp.Application.Auth.Admins
 
         public async Task<Response> Do(Request request)
         {
-            var adminExists = await AdminExists(request.Username);
+            var moderatorExists = await ModeratorExists(request.Username);
 
-            if (adminExists)
+            if (moderatorExists)
             {
                 return new Response
                 {
@@ -55,7 +54,7 @@ namespace Temp.Application.Auth.Admins
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(request.Password, out passwordHash, out passwordSalt);
 
-            var admin = new Admin
+            var moderator = new Moderator
             {
                 Username = request.Username,
                 PasswordHash = passwordHash,
@@ -63,26 +62,26 @@ namespace Temp.Application.Auth.Admins
                 EmployeeId = request.EmployeeId
             };
 
-            _ctx.Admins.Add(admin);
+            _ctx.Moderators.Add(moderator);
             await _ctx.SaveChangesAsync();
 
-             var result = await new UpdateEmployeeRole(_ctx).Do("Admin",request.EmployeeId);
+            var result = await new UpdateEmployeeRole(_ctx).Do("Moderator", request.EmployeeId);
 
             return new Response
             {
                 Message = "Successful registration",
-                Username = admin.Username,
+                Username = moderator.Username,
                 Status = true
             };
         }
-
+        
 
         public class Request
         {
             public int EmployeeId { get; set; }
-            
+
             [Required]
-            [MinLength(5),MaxLength(30)] 
+            [MinLength(5),MaxLength(30)]
             public string Username { get; set; }
             
             [Required]
@@ -92,10 +91,8 @@ namespace Temp.Application.Auth.Admins
 
         public class Response
         {
-            public string Username { get; set; }
-            
+            public  string Username { get; set; }
             public string Message { get; set; }
-            
             public bool Status { get; set; }
         }
     }
