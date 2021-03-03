@@ -30,5 +30,21 @@ namespace Temp.API.Controllers
 
             return BadRequest(response.Message);
         }
+
+
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginAdmin(LoginModerator.Request request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.Values);
+            }
+
+            var response = await new LoginModerator(_ctx, _config).Do(request);
+            if (response is null)
+                return Unauthorized();
+
+            return Ok(response);
+        }
     }
 }
