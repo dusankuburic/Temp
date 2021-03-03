@@ -42,6 +42,8 @@ import { TeamEditResolver } from './_resolvers/team/team-edit.resolver';
 import { TeamListResolver } from './_resolvers/team/team-list.resolver';
 import { WorkplaceEditResolver } from './_resolvers/workplace/workplace-edit.resolver';
 import { WorkplaceListResolver } from './_resolvers/workplace/workplace-list.resolver';
+import { ModeratorGuard } from './_guards/moderator.guard';
+import { ModeratorComponent } from './moderator/moderator.component';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
@@ -104,6 +106,14 @@ export const appRoutes: Routes = [
         canActivate: [UserGuard],
         children: [
             {path: 'users', component: UsersComponent}
+        ]
+    },
+    {
+        path: '',
+        runGuardsAndResolvers: 'always',
+        canActivate: [ModeratorGuard],
+        children: [
+            {path: 'moderators', component: ModeratorComponent}
         ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Admin } from '../_models/admin';
+import { Moderator } from '../_models/moderator';
 import { User } from '../_models/user';
 import { AlertifyService } from '../_services/alertify.service';
 import { AuthService } from '../_services/auth.service';
@@ -13,9 +14,15 @@ import { AuthService } from '../_services/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  roleList = [{value: 'User', display: 'User'}, {value: 'Admin', display: 'Admin'}];
+  roleList = [
+    {value: 'User', display: 'User'},
+    {value: 'Admin', display: 'Admin'},
+    {value: 'Moderator', display: 'Moderator'}
+  ];
+
   admin: Admin;
   user: User;
+  moderator: Moderator;
   roleState: any = {};
 
   constructor(
@@ -43,9 +50,9 @@ export class LoginComponent implements OnInit {
   login(): any {
     if (this.loginForm.valid) {
 
-      if (this.loginForm.get('role').value === 'Admin') {
-        this.admin = Object.assign({}, this.loginForm.value);
-        this.authService.loginAdmin(this.admin).subscribe(() => {
+      if (this.loginForm.get('role').value === 'User') {
+        this.user = Object.assign({}, this.loginForm.value);
+        this.authService.loginUser(this.user).subscribe(() => {
           this.router.navigate(['/home']);
           this.alertify.success('Login successful');
         }, error => {
@@ -53,9 +60,19 @@ export class LoginComponent implements OnInit {
         });
       }
 
-      if (this.loginForm.get('role').value === 'User') {
-        this.user = Object.assign({}, this.loginForm.value);
-        this.authService.loginUser(this.user).subscribe(() => {
+      if (this.loginForm.get('role').value === 'Moderator') {
+        this.moderator = Object.assign({}, this.loginForm.value);
+        this.authService.loginModerator(this.moderator).subscribe(() => {
+          this.router.navigate(['/home']);
+          this.alertify.success('Login successful');
+        }, error => {
+          this.alertify.error('Can not login');
+        });
+      }
+
+      if (this.loginForm.get('role').value === 'Admin') {
+        this.admin = Object.assign({}, this.loginForm.value);
+        this.authService.loginAdmin(this.admin).subscribe(() => {
           this.router.navigate(['/home']);
           this.alertify.success('Login successful');
         }, error => {

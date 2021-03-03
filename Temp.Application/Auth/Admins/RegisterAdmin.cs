@@ -80,9 +80,11 @@ namespace Temp.Application.Auth.Admins
         public class Request
         {
             public int EmployeeId { get; set; }
+            
             [Required]
             [MinLength(5),MaxLength(30)] 
             public string Username { get; set; }
+            
             [Required]
             [MinLength(5),MaxLength(30)]
             public string Password { get; set; }
@@ -91,7 +93,9 @@ namespace Temp.Application.Auth.Admins
         public class Response
         {
             public string Username { get; set; }
+            
             public string Message { get; set; }
+            
             public bool Status { get; set; }
         }
     }
