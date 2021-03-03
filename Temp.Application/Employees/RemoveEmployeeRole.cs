@@ -19,7 +19,7 @@ namespace Temp.Application.Employees
             var employee = _ctx.Employees.FirstOrDefault(x => x.Id == request.Id);         
             string message = "";
 
-            if(employee.Role == "Admin")
+            if (employee.Role == "Admin")
             {
                 var admin = _ctx.Admins.Where(x => x.EmployeeId == request.Id).FirstOrDefault();
                 _ctx.Admins.Remove(admin); 
@@ -32,6 +32,13 @@ namespace Temp.Application.Employees
                 _ctx.Users.Remove(user);
                 message = $"Removed User role for Id:{employee.Id} {employee.FirstName} {employee.LastName}";
             }
+
+            if (employee.Role == "Moderator")
+            {
+                var moderator = _ctx.Moderators.Where(x => x.EmployeeId == request.Id).FirstOrDefault();
+                _ctx.Moderators.Remove(moderator);
+            }
+            
 
             employee.Role = "None";
             await _ctx.SaveChangesAsync();
