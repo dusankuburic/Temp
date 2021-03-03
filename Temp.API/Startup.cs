@@ -63,6 +63,7 @@ namespace Temp.API
             {
                 config.AddPolicy("Admin", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "Admin"));
                 config.AddPolicy("User", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "User"));
+                config.AddPolicy("Moderator", policyBuilder => policyBuilder.RequireClaim(ClaimTypes.Role, "Moderator"));
             });
 
 

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Temp.Application.Auth.Admins;
+using Temp.Application.Auth.Moderators;
 using Temp.Application.Auth.Users;
 using Temp.Database;
 
@@ -47,6 +48,24 @@ namespace Temp.Application.Employees
                 };
 
                 var response = await new RegisterAdmin(_ctx).Do(adminRequest);
+
+                return new Response
+                {
+                    Username = response.Username,
+                    Message = response.Message,
+                    Status = response.Status
+                };
+            }
+            else if(request.Role == "Moderator")
+            {
+                var moderatorRequest = new RegisterModerator.Request
+                {
+                    Username = request.Username,
+                    Password = request.Password,
+                    EmployeeId = request.Id
+                };
+
+                var response = await new RegisterModerator(_ctx).Do(moderatorRequest);
 
                 return new Response
                 {
