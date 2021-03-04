@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Employee } from 'src/app/_models/employee';
+import { Organization } from 'src/app/_models/organization';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { EmployeeService } from 'src/app/_services/employee.service';
 
@@ -13,20 +14,26 @@ import { EmployeeService } from 'src/app/_services/employee.service';
 export class EmployeeCreateComponent implements OnInit {
   createEmployeeForm: FormGroup;
   employee: Employee;
+  organizations: Organization[];
 
   constructor(
+    private route: ActivatedRoute,
     private employeeService: EmployeeService,
     private alertify: AlertifyService,
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.route.data.subscribe(data => {
+      this.organizations = data['organizations'];
+    });
     this.createForm();
   }
 
   createForm(): void {
     this.createEmployeeForm = this.fb.group({
       firstName: ['', Validators.required],
-      lastName: ['', Validators.required]
+      lastName: ['', Validators.required],
+      organizationId: [null, Validators.required]
     });
   }
 

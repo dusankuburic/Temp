@@ -56,7 +56,8 @@ export const appRoutes: Routes = [
                 resolve: {employees: EmployeeListResolver}},
             {path: 'employees/:id', component: EmployeeEditComponent,
                 resolve: {employee: EmployeeEditResolver}},
-            {path: 'employee/create', component: EmployeeCreateComponent},
+            {path: 'employee/create', component: EmployeeCreateComponent,
+                resolve: {organizations: OrganizationListResolver}},
             {path: 'employee/assign-role/:id', component: EmployeeAssignRoleComponent,
                 resolve: {employee: EmployeeEditResolver}},
 
