@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Group } from '../_models/group';
+import { Team } from '../_models/team';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,10 @@ createGroup(group: Group): any {
 
 updateGroup(id: number, group: Group): any {
   return this.http.put(this.baseUrl + 'groups/' + id, group);
+}
+
+getInnerTeams(groupId: number): any {
+  return this.http.get<Team[]>(this.baseUrl + 'groups/inner-teams/' + groupId);
 }
 
 }
