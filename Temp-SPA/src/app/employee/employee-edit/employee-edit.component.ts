@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Employee } from 'src/app/_models/employee';
 import { Group } from 'src/app/_models/group';
 import { Organization } from 'src/app/_models/organization';
-import { Team } from 'src/app/_models/team';
+import { FullTeam, Team } from 'src/app/_models/team';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { EmployeeService } from 'src/app/_services/employee.service';
 import { GroupService } from 'src/app/_services/group.service';
 import { OrganizationService } from 'src/app/_services/organization.service';
+import { TeamService } from 'src/app/_services/team.service';
 
 @Component({
   selector: 'app-employee-edit',
@@ -18,6 +19,7 @@ import { OrganizationService } from 'src/app/_services/organization.service';
 export class EmployeeEditComponent implements OnInit {
   editEmployeeForm: FormGroup;
   employee: Employee;
+  fullTeam: FullTeam;
   organizations: Organization[];
   innerGroups = [] as Group[];
   innerTeams = [] as Team[];
@@ -26,6 +28,7 @@ export class EmployeeEditComponent implements OnInit {
     private employeeService: EmployeeService,
     private organizationService: OrganizationService,
     private groupService: GroupService,
+    private teamService: TeamService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private alertify: AlertifyService) { }
@@ -36,6 +39,7 @@ export class EmployeeEditComponent implements OnInit {
       this.organizations = data['organizations'];
     });
     this.createForm();
+    this.loadFullTeam(this.employee.teamId);
   }
 
   createForm(): void {
@@ -45,6 +49,12 @@ export class EmployeeEditComponent implements OnInit {
       organizationId: [null],
       groupId: [null],
       teamId: [null]
+    });
+  }
+
+  loadFullTeam(id): void {
+    this.teamService.getFullTeam(id).subscribe((res) => {
+      this.fullTeam = res;
     });
   }
 
@@ -76,6 +86,8 @@ export class EmployeeEditComponent implements OnInit {
   sliceStringId(str): number{
     return str.slice(3, str.length);
   }
+
+
 
   update(): any {
     const employeeForm = Object.assign({}, this.editEmployeeForm.value);
