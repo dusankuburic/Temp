@@ -80,11 +80,11 @@ namespace Temp.API.Controllers
 
         
         [HttpGet("employee/{id}")]
-        public ActionResult GetEngagementForEmployee(int id)
+        public async Task<ActionResult> GetEngagementForEmployee(int id)
         {
             try
             {
-                var response = new GetCreateEngagementViewModel(_ctx).Do(id);
+                var response = await new GetCreateEngagementViewModel(_ctx).Do(id);
                 return Ok(response);
             }
             catch(EmployeeValidationException employeeValidationException)

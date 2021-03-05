@@ -1,7 +1,6 @@
 ﻿using Temp.Domain.Models.Employees.Exceptions;
 using Temp.Domain.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Temp.Application.Employees

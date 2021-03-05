@@ -5,6 +5,7 @@ using Temp.Application.Employees;
 using Temp.Application.Workplaces;
 using Temp.Database;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Temp.Application.Engagements
@@ -18,12 +19,12 @@ namespace Temp.Application.Engagements
             _ctx = ctx;
         }
        
-        public string Do(int id) =>
-        TryCatch(() => 
+        public Task<string> Do(int id) =>
+        TryCatch(async() => 
         { 
             var response = new Response
             {
-                Employee = new GetEmployee(_ctx).Do(id),
+                Employee = await new GetEmployee(_ctx).Do(id),
                 Workplaces = new GetWorkplaces(_ctx).Do(),
                 EmploymentStatuses = new GetEmploymentStatuses(_ctx).Do(),
                 Engagements = _ctx.Engagements.Where(x => x.Employee.Id == id)

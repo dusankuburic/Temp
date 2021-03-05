@@ -11,7 +11,7 @@ namespace Temp.Application.Employees
     {
         public delegate Task<CreateEmployee.Response> ReturningCreateEmployeeFunction();
         public delegate Task<PagedList<GetEmployees.EmployeeViewModel>> ReturningGetEmployeesFunction();
-        public delegate GetEmployee.EmployeeViewModel ReturningGetEmployeeFunction();
+        public delegate Task<GetEmployee.EmployeeViewModel> ReturningGetEmployeeFunction();
         public delegate Task<UpdateEmployee.Response> ReturningUpdateEmployeeFunction();
         public delegate Task<PagedList<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel>>  ReturningEmployeesWithoutEngagement();
         public delegate Task<PagedList<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel>> ReturningEmployeesWithEngagement();
@@ -60,11 +60,11 @@ namespace Temp.Application.Employees
             }
         }
 
-        public GetEmployee.EmployeeViewModel TryCatch(ReturningGetEmployeeFunction returningGetEmployeeFunction)
+        public async Task<GetEmployee.EmployeeViewModel> TryCatch(ReturningGetEmployeeFunction returningGetEmployeeFunction)
         {
             try
             {
-                return returningGetEmployeeFunction();
+                return await returningGetEmployeeFunction();
             }
             catch(NullEmployeeException nullEmployeeException)
             {

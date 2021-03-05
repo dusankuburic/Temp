@@ -2,10 +2,8 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Temp.Application.Groups;
 using Temp.Application.Teams;
 using Temp.Database;
-using Temp.Domain.Models.Groups.Exceptions;
 using Temp.Domain.Models.Teams.Exceptions;
 
 namespace Temp.API.Controllers
@@ -43,11 +41,25 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetTeam(int id)
+        public async Task<IActionResult> GetTeam(int id)
         {
             try
             {
-                var response = new GetTeam(_ctx).Do(id);
+                var response = await new GetTeam(_ctx).Do(id);
+                return Ok(response);
+            }
+            catch (TeamValidationException teamValidationException)
+            {
+                return BadRequest(GetInnerMessage(teamValidationException));
+            }
+        }
+
+        [HttpGet("full/{id}")]
+        public async Task<IActionResult> GetFullTeam(int id)
+        {
+            try
+            {
+                var response = await new GetFullTeamTree(_ctx).Do(id);
                 return Ok(response);
             }
             catch (TeamValidationException teamValidationException)

@@ -8,8 +8,27 @@ namespace Temp.Application.Teams.Service
     public partial class TeamService
     {
         public delegate Task<CreateTeam.Response> ReturningCreateTeamFunction();
-        public delegate GetTeam.TeamViewModel ReturningGetTeamFunction();
-        public delegate Task<UpdateTeam.Response> ReturningUpateFunction();
+        public delegate Task<GetTeam.TeamViewModel> ReturningGetTeamFunction();
+        public delegate Task<UpdateTeam.Response> ReturningUpdateFunction();
+        public delegate Task<GetFullTeamTree.TeamTreeViewModel> ReturningTeamTreeFunction();
+
+
+        public async Task<GetFullTeamTree.TeamTreeViewModel> TryCatch(ReturningTeamTreeFunction returningTeamTreeFunction)
+        {
+            try
+            {
+                return await returningTeamTreeFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+            
+        }
 
 
         public async Task<CreateTeam.Response> TryCatch(ReturningCreateTeamFunction returningCreateTeamFunction)
@@ -26,9 +45,9 @@ namespace Temp.Application.Teams.Service
             {
                 throw CreateAndLogValidationException(invalidTeamException);
             }
-            catch (SqlException sqlExcepton)
+            catch (SqlException sqlException)
             {
-                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+                throw CreateAndLogCriticalDependencyException(sqlException);
             }
             catch (Exception exception)
             {
@@ -36,20 +55,19 @@ namespace Temp.Application.Teams.Service
             }
         }
 
-
-        public GetTeam.TeamViewModel TryCatch(ReturningGetTeamFunction returningGetTeamFunction)
+        public async Task<GetTeam.TeamViewModel> TryCatch(ReturningGetTeamFunction returningGetTeamFunction)
         {
             try
             {
-                return returningGetTeamFunction();
+                return await returningGetTeamFunction();
             }
             catch(NullTeamException nullTeamException)
             {
                 throw CreateAndLogServiceException(nullTeamException);
             }
-            catch (SqlException sqlExcepton)
+            catch (SqlException sqlException)
             {
-                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+                throw CreateAndLogCriticalDependencyException(sqlException);
             }
             catch (Exception exception)
             {
@@ -57,11 +75,11 @@ namespace Temp.Application.Teams.Service
             }
         }
 
-        public async Task<UpdateTeam.Response> TryCatch(ReturningUpateFunction returningUpateFunction)
+        public async Task<UpdateTeam.Response> TryCatch(ReturningUpdateFunction returningUpdateFunction)
         {
             try
             {
-                return await returningUpateFunction();
+                return await returningUpdateFunction();
             }
             catch (NullTeamException nullTeamException)
             {
@@ -71,9 +89,9 @@ namespace Temp.Application.Teams.Service
             {
                 throw CreateAndLogValidationException(invalidTeamException);
             }
-            catch (SqlException sqlExcepton)
+            catch (SqlException sqlException)
             {
-                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+                throw CreateAndLogCriticalDependencyException(sqlException);
             }
             catch (Exception exception)
             {
