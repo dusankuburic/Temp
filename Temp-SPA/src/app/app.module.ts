@@ -63,6 +63,7 @@ import { TeamEditResolver } from './_resolvers/team/team-edit.resolver';
 import { ModeratorComponent } from './moderator/moderator.component';
 
 
+
 export function tokenGetter(): any {
   return localStorage.getItem('token');
 }

@@ -31,7 +31,8 @@ export class EmployeeEditComponent implements OnInit {
     private teamService: TeamService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private alertify: AlertifyService) { }
+    private alertify: AlertifyService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -95,8 +96,8 @@ export class EmployeeEditComponent implements OnInit {
     {
       employeeForm.teamId = this.employee.teamId;
     }
-    console.log(employeeForm);
     this.employeeService.updateEmployee(this.employee.id, employeeForm).subscribe(() => {
+      this.loadFullTeam(employeeForm.teamId);
       this.alertify.success('Successfully updated');
     }, error => {
       this.alertify.error(error);
