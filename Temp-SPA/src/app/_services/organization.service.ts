@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Group, InnerGroups } from '../_models/group';
 import { Organization } from '../_models/organization';
 
 @Injectable({
@@ -27,5 +29,10 @@ updateOrganization(id: any, organization: Organization): any {
 createOrganization(organization: Organization): any {
   return this.http.post(this.baseUrl + 'organizations', organization);
 }
+
+getInnerGroups(organizationId: number): any {
+  return this.http.get<Group[]>(this.baseUrl + 'organizations/inner-groups/' + organizationId);
+}
+
 
 }

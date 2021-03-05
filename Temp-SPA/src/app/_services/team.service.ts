@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Team } from '../_models/team';
+import { FullTeam, Team } from '../_models/team';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,10 @@ constructor(private http: HttpClient) { }
 
 getTeam(id: number): any {
   return this.http.get<Team>(this.baseUrl + 'teams/' + id);
+}
+
+getFullTeam(id: number): any {
+  return this.http.get<FullTeam>(this.baseUrl + 'teams/full/' + id);
 }
 
 getTeams(groupId: number): any {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 using Temp.Application.Teams.Service;
 using Temp.Database;
 
@@ -14,10 +15,10 @@ namespace Temp.Application.Teams
             _ctx = ctx;
         }
 
-        public TeamViewModel Do(int id) =>
-        TryCatch(() =>
+        public Task<TeamViewModel> Do(int id) =>
+        TryCatch(async () =>
         {
-            var team = _ctx.Teams.Include(x => x.Group)
+            var team = await _ctx.Teams.Include(x => x.Group)
                 .Where(x => x.Id == id)
                 .Select(x => new TeamViewModel
                 {
@@ -25,7 +26,7 @@ namespace Temp.Application.Teams
                     Name = x.Name,
                     GroupId = x.Group.Id
                 })
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             ValidateGetTeamViewModel(team);
 

@@ -40,9 +40,10 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public GetEmployee.EmployeeViewModel GetEmployee(int id)
+        public async Task<ActionResult> GetEmployee(int id)
         {
-            return new GetEmployee(_ctx).Do(id);
+            var response = await new GetEmployee(_ctx).Do(id);
+            return Ok(response);
         }
 
         [HttpPost]

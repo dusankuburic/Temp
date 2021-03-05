@@ -4,6 +4,12 @@
       <div class="row justify-content-center">
           <div class="col-lg-6 col-sm-6 col-8">
 
+            <div *ngIf="fullTeam" class="alert alert-info text-center" role="alert">
+              <h4>Organization: {{fullTeam.organizationName}}</h4>
+              <h4>Group: {{fullTeam.groupName}}</h4>
+              <h4>Team: {{fullTeam.teamName}}</h4>
+            </div>
+            
               <form [formGroup]="editEmployeeForm" (ngSubmit)="update()">
 
                 <div class="form-group">
@@ -29,6 +35,52 @@
                     && editEmployeeForm.get('lastName').touched">Please enter a Last Name
                   </div>
                 </div>
+
+                <div class="form-group">
+                  <h4>Organizations</h4>        
+                  <select #OrganizationSelect [ngClass]="{'is-invalid': editEmployeeForm.get('organizationId').errors
+                  && editEmployeeForm.get('organizationId').touched}"
+                  formControlName="organizationId"
+                  class="form-control"
+                  (change)="loadInnerGroups(OrganizationSelect.value)">
+                  <option [ngValue]="null" disabled>Select Organization</option>
+                  <option *ngFor="let organization of organizations" value="{{organization.id}}" [ngValue]="organization.id">
+                    {{organization.name}}
+                  </option>
+                  </select>           
+                  <div class="invalid-feedback">Please choose a organization</div>                     
+                </div>
+  
+                <div class="form-group">
+                  <h4>Groups</h4>        
+                  <select #GroupSelect [ngClass]="{'is-invalid': editEmployeeForm.get('groupId').errors
+                  && editEmployeeForm.get('groupId').touched}"
+                  formControlName="groupId"
+                  class="form-control"
+                  (change)="loadInnerTeams(GroupSelect.value)">
+                  <option [ngValue]="null" disabled>Select Group</option>   
+                  <option *ngFor="let group of innerGroups" value="{{group.id}}" [ngValue]="group.id">
+                    {{group.name}}
+                  </option> 
+                  </select>           
+                  <div class="invalid-feedback">Please choose a group</div>                     
+                </div>
+  
+                <div class="form-group">
+                  <h4>Teams</h4>        
+                  <select  [ngClass]="{'is-invalid': editEmployeeForm.get('teamId').errors
+                  && editEmployeeForm.get('teamId').touched}"
+                  formControlName="teamId"
+                  class="form-control">
+                  <option [ngValue]="null" disabled>Select Team</option>
+                  <option *ngFor="let team of innerTeams" [ngValue]="team.id">
+                    {{team.name}}
+                  </option>
+                  </select>           
+                  <div class="invalid-feedback">Please choose a team</div>                     
+                </div>
+
+
                 <button type="submit" [disabled]="!editEmployeeForm.valid" class="btn btn-success float-right">Save</button>
               </form>
 

@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Database;
 
 namespace Temp.Application.Employees
@@ -12,17 +14,18 @@ namespace Temp.Application.Employees
             _ctx = ctx;
         }
 
-        public EmployeeViewModel Do(int id) => 
-        TryCatch(() =>
+        public Task<EmployeeViewModel> Do(int id) => 
+        TryCatch(async () =>
         {
-             var employee = _ctx.Employees.Where(x => x.Id == id)
+             var employee = await _ctx.Employees.Where(x => x.Id == id)
             .Select(x => new EmployeeViewModel
             {
                 Id = x.Id,
                 FirstName = x.FirstName,
-                LastName = x.LastName
+                LastName = x.LastName,
+                TeamId = x.TeamId
             })
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
 
              ValidateGetEmployeeViewModel(employee);
 
@@ -36,6 +39,7 @@ namespace Temp.Application.Employees
             public int Id {get; set;}
             public string FirstName {get; set;}
             public string LastName {get; set;}
+            public int? TeamId { get; set; }
         }
     }
 }

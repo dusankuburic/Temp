@@ -13,7 +13,7 @@ namespace Temp.Application.Engagements
     {
         public delegate Task<CreateEngagement.Response> ReturningCreateEngagementFunction();
 
-        public delegate string ReturningCreateEngagementViewModelFunction();
+        public delegate Task<string> ReturningCreateEngagementViewModelFunction();
 
 
         public async Task<CreateEngagement.Response> TryCatch(ReturningCreateEngagementFunction returningCreateEngagementFunction)
@@ -44,11 +44,11 @@ namespace Temp.Application.Engagements
             }         
         }
 
-        public string TryCatch(ReturningCreateEngagementViewModelFunction returningCreateEngagementViewModelFunction)
+        public async Task<string> TryCatch(ReturningCreateEngagementViewModelFunction returningCreateEngagementViewModelFunction)
         {
             try
             {
-                return returningCreateEngagementViewModelFunction();
+                return await returningCreateEngagementViewModelFunction();
             }
             catch(NullEmployeeException nullEmployeeException)
             {

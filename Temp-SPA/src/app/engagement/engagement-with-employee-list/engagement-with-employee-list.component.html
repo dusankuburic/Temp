@@ -17,6 +17,7 @@
                 <td>
                     <span class="badge badge-pill" [ngClass]="{'badge-warning': employee.role === 'Admin',
                                     'badge-info' : employee.role === 'User',
+                                    'badge-success' : employee.role === 'Moderator',
                                     'badge-secondary': employee.role === 'None'}">
                         {{employee.role}}
                     </span>
