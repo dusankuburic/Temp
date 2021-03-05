@@ -43,9 +43,11 @@ namespace Temp.Application.Employees
             [Required]
             [MaxLength(30)]
             public string FirstName {get; set;}
+            
             [Required]
             [MaxLength(30)]
             public string LastName {get; set;}
+            
             [Required] 
             public int TeamId { get; set; }
         }

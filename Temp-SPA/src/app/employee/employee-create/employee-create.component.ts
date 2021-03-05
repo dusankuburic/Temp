@@ -53,7 +53,6 @@ export class EmployeeCreateComponent implements OnInit {
       if (res !== null)
       {
         this.innerGroups = res.groups;
-        console.log(this.innerGroups);
       }
       else {
         this.innerGroups = [] as Group[];
@@ -66,7 +65,6 @@ export class EmployeeCreateComponent implements OnInit {
     this.groupService.getInnerTeams(this.sliceStringId(id)).subscribe((res) => {
       if (res !== null) {
         this.innerTeams = res.teams;
-        console.log(this.innerTeams);
       }
       else {
         this.innerTeams = [] as Team[];
@@ -76,6 +74,7 @@ export class EmployeeCreateComponent implements OnInit {
 
   // input => 1: 4343, 3: 3, 2: 5
   // output => 4343, 3, 5
+
   sliceStringId(str): number{
     return str.slice(3, str.length);
   }
