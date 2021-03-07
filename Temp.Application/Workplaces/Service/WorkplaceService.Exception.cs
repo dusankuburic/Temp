@@ -49,9 +49,9 @@ namespace Temp.Application.Workplaces.Service
             {
                 throw CreateAndLogValidationException(workplaceEmptyStorageException);
             }
-            catch(SqlException sqlExcepton)
+            catch(SqlException sqlException)
             {
-                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+                throw CreateAndLogCriticalDependencyException(sqlException);
             }
             catch(Exception exception)
             {

@@ -1,7 +1,9 @@
-﻿namespace Temp.Domain.Models.ModeratorGroups.Exceptions
+﻿using System;
+
+namespace Temp.Domain.Models.ModeratorGroups.Exceptions
 {
-    public class NullModeratorGroupsException
+    public class NullModeratorGroupsException: Exception
     {
-        
+        public NullModeratorGroupsException(): base("moderatorGroups is null") {}
     }
 }

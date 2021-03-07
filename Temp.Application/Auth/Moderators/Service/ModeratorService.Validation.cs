@@ -1,7 +1,17 @@
-﻿namespace Temp.Application.Auth.Moderators.Service
+﻿using System.Collections.Generic;
+using Temp.Domain.Models;
+using Temp.Domain.Models.ModeratorGroups.Exceptions;
+
+namespace Temp.Application.Auth.Moderators.Service
 {
-    public class ModeratorService_Validation
+    public partial class ModeratorService
     {
-        
+        public void ValidateModeratorGroups(IEnumerable<ModeratorGroup> moderatorGroups)
+        {
+            if (moderatorGroups is null)
+            {
+                throw new NullModeratorGroupsException();
+            }
+        }
     }
 }

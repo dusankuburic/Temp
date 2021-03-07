@@ -1,7 +1,13 @@
-﻿namespace Temp.Domain.Models.ModeratorGroups.Exceptions
+﻿using System;
+
+namespace Temp.Domain.Models.ModeratorGroups.Exceptions
 {
-    public class ModeratorGroupsDependencyException
+    public class ModeratorGroupsDependencyException : Exception
     {
-        
+        public ModeratorGroupsDependencyException(Exception innerException)
+            : base("Service dependency error occurred, contact support", innerException)
+        {
+            
+        }
     }
 }

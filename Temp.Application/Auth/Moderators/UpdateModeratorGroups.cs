@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Temp.Database;
 using Temp.Domain.Models;
+using Temp.Application.Auth.Moderators.Service;
 
-namespace Temp.API.Controllers
+namespace Temp.Application.Auth.Moderators
 {
-    public class UpdateModeratorGroups
+    public class UpdateModeratorGroups : ModeratorService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -16,11 +17,11 @@ namespace Temp.API.Controllers
         {
             _ctx = ctx;
         }
-
-
-        public async Task<Response> Do(int id, Request request)
+        
+        public Task<Response> Do(int id, Request request) => 
+        TryCatch(async () =>
         {
-            if (!request.Groups.Any())
+            if (request.Groups.Count() == 0)
             {
                 foreach (var group in request.Groups)
                 {
@@ -33,9 +34,14 @@ namespace Temp.API.Controllers
             }
             else
             {
-                var moderatorGroups = await _ctx.ModeratorGroups.AllAsync(x => x.ModeratorId == id);
-                _ctx.Remove(moderatorGroups);
+                var moderatorGroups = await _ctx.ModeratorGroups
+                    .Where(x => x.ModeratorId == id)
+                    .ToListAsync();
                 
+                ValidateModeratorGroups(moderatorGroups);
+
+                _ctx.RemoveRange(moderatorGroups);
+
                 foreach (var group in request.Groups)
                 {
                     _ctx.ModeratorGroups.Add(new ModeratorGroup
@@ -45,19 +51,17 @@ namespace Temp.API.Controllers
                     });
                 }
             }
-
             
-            //Validate
             await _ctx.SaveChangesAsync();
-            
+        
             return new Response
             {
                 Message = $"Groups are assigned",
                 Status = true
             };
-        }
-
-
+        });
+        
+        
         public class Request
         {
             [Required] 

@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Temp.Application.Auth.Moderators;
 using Temp.Database;
+using Temp.Domain.Models.ModeratorGroups.Exceptions;
 
 namespace Temp.API.Controllers
 {
@@ -46,5 +48,30 @@ namespace Temp.API.Controllers
 
             return Ok(response);
         }
+
+        [HttpPut("update-groups/{id}")]
+        public async Task<IActionResult> UpdateGroups(int id, UpdateModeratorGroups.Request request)
+        {
+            try
+            {
+                var response = await new UpdateModeratorGroups(_ctx).Do(id, request);
+                if (response.Status)
+                {
+                    return Ok();
+                }
+
+                return BadRequest(response.Message);
+            }
+            catch (ModeratorGroupValidationException moderatorGroupValidationException)
+            {
+                return BadRequest(GetInnerMessage(moderatorGroupValidationException));
+            }
+            
+        }
+        
+        
+        
+        private static string GetInnerMessage(Exception exception) =>
+            exception.InnerException.Message;
     }
 }

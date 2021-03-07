@@ -83,6 +83,21 @@ namespace Temp.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet("moderator-groups/{id}")]
+        public async Task<IActionResult> GetModeratorGroups(int id)
+        {
+            var response = await new GetModeratorGroups(_ctx).Do(id);
+            return Ok(response);
+        }
+        
+        [HttpGet("moderator-free-groups/{id}")]
+        public async Task<IActionResult> GetModeratorFreeGroups(int id)
+        {
+            var response = await new GetModeratorFreeGroups(_ctx).Do(id);
+            return Ok(response);
+        }
+        
+
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
     }
