@@ -29,6 +29,8 @@ namespace Temp.Database
         public DbSet<Group> Groups { get; set; }
 
         public DbSet<Team> Teams { get; set; }
+        
+        public DbSet<ModeratorGroup> ModeratorGroups { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,6 +43,9 @@ namespace Temp.Database
             modelBuilder.Entity<Engagement>()
                 .Property(x => x.Id)
                 .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<ModeratorGroup>()
+                .HasKey(x => new {x.ModeratorId, x.GroupId});
 
             modelBuilder.Entity<Employee>()
                 .Property(x => x.Role)
