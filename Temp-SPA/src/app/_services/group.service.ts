@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Group } from '../_models/group';
+import { ModeratorMin } from '../_models/moderator';
 import { Team } from '../_models/team';
 
 @Injectable({
@@ -31,5 +32,19 @@ updateGroup(id: number, group: Group): any {
 getInnerTeams(groupId: number): any {
   return this.http.get<Team[]>(this.baseUrl + 'groups/inner-teams/' + groupId);
 }
+
+getModeratorGroups(moderatorId: number): any {
+  return this.http.get<Group[]>(this.baseUrl + 'groups/moderator-groups/' + moderatorId);
+}
+
+getModeratorFreeGroups(organizationId: number, moderator: ModeratorMin): any {
+  return this.http.get<Group[]>(this.baseUrl + 'groups/moderator-free-groups/' + organizationId + '/moderator/' + moderator.id);
+}
+
+
+updateModeratorGroups(id: number, groups): any {
+  return this.http.put(this.baseUrl + 'moderators/update-groups/' + id, groups);
+}
+
 
 }

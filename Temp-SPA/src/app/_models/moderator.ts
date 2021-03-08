@@ -3,3 +3,9 @@ export interface Moderator {
     username: string;
     password: string;
 }
+
+export interface ModeratorMin {
+    id: number;
+}
+
+

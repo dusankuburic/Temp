@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AssignRoleDto } from '../_models/assignRoleDto';
 import { Employee } from '../_models/employee';
+import { Moderator } from '../_models/moderator';
 import { PaginatedResult } from '../_models/pagination';
 
 @Injectable({
@@ -37,6 +38,10 @@ getEmployees(page?, itemsPerPage?): Observable<PaginatedResult<Employee[]>> {
         return paginatedResult;
       })
     );
+}
+
+getModerator(EmployeeId: number): any {
+  return this.http.get<Moderator>(this.baseUrl + 'moderators/' + EmployeeId);
 }
 
 getEmployee(id: number): any {

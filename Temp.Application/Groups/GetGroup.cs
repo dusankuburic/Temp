@@ -7,7 +7,7 @@ namespace Temp.Application.Groups
 {
     public class GetGroup : GroupService
     {
-        readonly private ApplicationDbContext _ctx;
+        private readonly ApplicationDbContext _ctx;
 
         public GetGroup(ApplicationDbContext ctx)
         {

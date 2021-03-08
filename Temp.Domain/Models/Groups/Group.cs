@@ -11,5 +11,7 @@ namespace Temp.Domain.Models
         public Organization Organization { get; set; }
 
         public ICollection<Team> Teams { get; set; }
+        
+        public ICollection<ModeratorGroup> ModeratorGroups { get; set; }
     }
 }
