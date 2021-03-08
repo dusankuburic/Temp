@@ -27,6 +27,7 @@ namespace Temp.Application.Teams
             {
                 Id = team.Id,
                 OrganizationName = team.Group.Organization.Name,
+                OrganizationId = team.Group.Organization.Id,
                 GroupName = team.Group.Name,
                 TeamName = team.Name
             };
@@ -38,6 +39,7 @@ namespace Temp.Application.Teams
         {
             public int Id { get; set; }
             public string OrganizationName { get; set; }
+            public int OrganizationId { get; set; }
             public string GroupName { get; set; }
             public string TeamName { get; set; }
         } 

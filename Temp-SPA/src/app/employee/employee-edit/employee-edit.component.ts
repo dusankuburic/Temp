@@ -1,8 +1,10 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Employee } from 'src/app/_models/employee';
 import { Group } from 'src/app/_models/group';
+import { Moderator } from 'src/app/_models/moderator';
 import { Organization } from 'src/app/_models/organization';
 import { FullTeam, Team } from 'src/app/_models/team';
 import { AlertifyService } from 'src/app/_services/alertify.service';
@@ -20,9 +22,12 @@ export class EmployeeEditComponent implements OnInit {
   editEmployeeForm: FormGroup;
   employee: Employee;
   fullTeam: FullTeam;
+  Moderator: Moderator;
   organizations: Organization[];
   innerGroups = [] as Group[];
   innerTeams = [] as Team[];
+  currentModeratorGroups = [] as Group[];
+  freeModeratorGroups = [] as Group[];
 
   constructor(
     private employeeService: EmployeeService,
@@ -31,16 +36,25 @@ export class EmployeeEditComponent implements OnInit {
     private teamService: TeamService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private alertify: AlertifyService,
-    private router: Router) { }
+    private alertify: AlertifyService) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.employee = data['employee'];
       this.organizations = data['organizations'];
     });
+
     this.createForm();
-    this.loadFullTeam(this.employee.teamId);
+
+    if (this.employee.role === 'Moderator')
+    {
+      this.loadModeratorGroups(this.employee.teamId, this.employee.id);
+    }
+    else 
+    {
+      this.loadFullTeam(this.employee.teamId);
+    }
+
   }
 
   createForm(): void {
@@ -58,6 +72,27 @@ export class EmployeeEditComponent implements OnInit {
       this.fullTeam = res;
     });
   }
+
+  loadModeratorGroups(id, EmployeeId: number): void {
+
+    this.teamService.getFullTeam(id).toPromise().then((fullTeam) => {
+      this.fullTeam = fullTeam;
+
+      this.employeeService.getModerator(EmployeeId).toPromise().then((moderator) => {
+        this.Moderator = moderator;
+
+        this.groupService.getModeratorGroups(moderator.id).toPromise().then((currModerGroup) => {
+          this.currentModeratorGroups = currModerGroup;
+        });
+
+        this.groupService.getModeratorFreeGroups(this.fullTeam.organizationId).toPromise().then((res)=> {
+          this.freeModeratorGroups = res;
+        });
+
+      });
+    });
+  }
+
 
   loadInnerGroups(id): void {
     this.innerTeams = [] as Team[];

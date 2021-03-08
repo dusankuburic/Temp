@@ -1,11 +1,11 @@
 <div class="row justify-content-center">
-  <div class="col-lg-5">
+  <div  class="col-lg-6">
     <h1 class="text-center">Edit Employee</h1>
       <div class="row justify-content-center">
           <div class="col-lg-6 col-sm-6 col-8">
 
             <div *ngIf="fullTeam" class="alert alert-info text-center" role="alert">
-              <h4>Organization: {{fullTeam.organizationName }}</h4>
+              <h4>Organization: {{fullTeam.organizationName}}</h4>
               <h4>Group: {{fullTeam.groupName}}</h4>
               <h4>Team: {{fullTeam.teamName}}</h4>
             </div>
@@ -88,7 +88,7 @@
       </div>
   </div>
 
-  <div class="col-lg-7">
+  <div *ngIf="employee.role == 'Moderator'" class="col-lg-6">
     <div class="container">
       <h1 class="text-center">Assign Groups</h1>
       <div class="row justify-content-center">
@@ -101,7 +101,10 @@
               <th>Options</th>
             </thead>
             <tbody>
-
+              <tr *ngFor="let group of currentModeratorGroups">
+                <td>{{group.name}}</td>
+                <td><a class="btn btn-danger" href=""><i class="fas fa-minus-circle"></i></a></td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -114,6 +117,10 @@
               <th>Options</th>
             </thead>
             <tbody>
+              <tr *ngFor="let group of freeModeratorGroups">
+                <td>{{group.name}}</td>
+                <td><a class="btn btn-success" href=""><i class="fas fa-plus-circle"></i></a></td>
+              </tr>
               
             </tbody>
           </table>
@@ -122,4 +129,5 @@
       </div>
     </div>
   </div>
+
 </div>

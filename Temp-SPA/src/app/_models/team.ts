@@ -12,6 +12,7 @@ export interface InnerTeams {
 export interface FullTeam {
     id: number;
     organizationName: string;
+    organizationId: number;
     groupName: string;
     teamName: string;
 }

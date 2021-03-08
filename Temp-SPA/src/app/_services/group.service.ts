@@ -32,4 +32,12 @@ getInnerTeams(groupId: number): any {
   return this.http.get<Team[]>(this.baseUrl + 'groups/inner-teams/' + groupId);
 }
 
+getModeratorGroups(moderatorId: number): any {
+  return this.http.get<Group[]>(this.baseUrl + 'groups/moderator-groups/' + moderatorId);
+}
+
+getModeratorFreeGroups(organizationId: number): any {
+  return this.http.get<Group[]>(this.baseUrl + 'groups/moderator-free-groups/' + organizationId);
+}
+
 }

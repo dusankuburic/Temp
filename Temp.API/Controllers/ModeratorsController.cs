@@ -21,6 +21,13 @@ namespace Temp.API.Controllers
             _config = config;
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetModerator(int id)
+        {
+            var response = await new GetModerator(_ctx).Do(id);
+            return Ok(response);
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAdmin(RegisterModerator.Request request)
         {
