@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Temp.Domain.Models
 {
     public class Moderator
@@ -10,5 +12,7 @@ namespace Temp.Domain.Models
         
         public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
+        
+        public ICollection<ModeratorGroup> ModeratorGroups { get; set; }
     }
 }

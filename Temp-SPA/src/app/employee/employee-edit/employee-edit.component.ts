@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Employee } from 'src/app/_models/employee';
-import { Group } from 'src/app/_models/group';
+import { Group, ModeratorGroups } from 'src/app/_models/group';
+import { Moderator, ModeratorMin } from 'src/app/_models/moderator';
 import { Organization } from 'src/app/_models/organization';
 import { FullTeam, Team } from 'src/app/_models/team';
 import { AlertifyService } from 'src/app/_services/alertify.service';
@@ -20,9 +21,12 @@ export class EmployeeEditComponent implements OnInit {
   editEmployeeForm: FormGroup;
   employee: Employee;
   fullTeam: FullTeam;
+  Moderator: Moderator;
   organizations: Organization[];
   innerGroups = [] as Group[];
   innerTeams = [] as Team[];
+  currentModeratorGroups = [] as Group[];
+  freeModeratorGroups = [] as Group[];
 
   constructor(
     private employeeService: EmployeeService,
@@ -31,16 +35,24 @@ export class EmployeeEditComponent implements OnInit {
     private teamService: TeamService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private alertify: AlertifyService,
-    private router: Router) { }
+    private alertify: AlertifyService) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.employee = data['employee'];
       this.organizations = data['organizations'];
     });
+
     this.createForm();
-    this.loadFullTeam(this.employee.teamId);
+
+    if (this.employee.role === 'Moderator')
+    {
+      this.loadModeratorGroups(this.employee.teamId, this.employee.id);
+    }
+    else
+    {
+      this.loadFullTeam(this.employee.teamId);
+    }
   }
 
   createForm(): void {
@@ -58,6 +70,27 @@ export class EmployeeEditComponent implements OnInit {
       this.fullTeam = res;
     });
   }
+
+  loadModeratorGroups(id, EmployeeId: number): void {
+    let moderatorMin = {} as ModeratorMin;
+    this.teamService.getFullTeam(id).toPromise().then((fullTeam) => {
+      this.fullTeam = fullTeam;
+
+      this.employeeService.getModerator(EmployeeId).toPromise().then((moderator) => {
+        this.Moderator = moderator;
+        moderatorMin.id = moderator.id;
+
+        this.groupService.getModeratorGroups(moderator.id).toPromise().then((currModerGroup) => {
+          this.currentModeratorGroups = currModerGroup;
+        });
+
+        this.groupService.getModeratorFreeGroups(this.fullTeam.organizationId, moderatorMin).toPromise().then((res)=> {
+          this.freeModeratorGroups = res;
+        });
+      });
+    });
+  }
+
 
   loadInnerGroups(id): void {
     this.innerTeams = [] as Team[];
@@ -88,7 +121,29 @@ export class EmployeeEditComponent implements OnInit {
     return str.slice(3, str.length);
   }
 
+  updateGroup(moderatorId: number, newGroupId: number): any {
+    let moderatorGroups: ModeratorGroups = {} as ModeratorGroups;
+    moderatorGroups.groups = [] as number[];
 
+    this.currentModeratorGroups.forEach((elem) => {
+      moderatorGroups.groups.push(elem.id);
+    });
+
+    if (!moderatorGroups.groups.includes(newGroupId)){
+      moderatorGroups.groups.push(newGroupId);
+    }
+    else{
+      moderatorGroups.groups = moderatorGroups.groups
+      .filter(elem => elem !== newGroupId);
+    }
+
+    this.groupService.updateModeratorGroups(moderatorId, moderatorGroups).subscribe(() => {
+      this.loadModeratorGroups(this.employee.teamId, this.employee.id);
+      this.alertify.success('Success');
+    }, error => {
+      this.alertify.error(error);
+    })
+  }
 
   update(): any {
     const employeeForm = Object.assign({}, this.editEmployeeForm.value);
