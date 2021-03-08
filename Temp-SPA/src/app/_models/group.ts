@@ -8,3 +8,7 @@ export interface InnerGroups {
     name: string;
     groups: Group[];
 }
+
+export interface ModeratorGroups {
+    groups: number[];
+}

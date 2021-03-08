@@ -40,4 +40,10 @@ getModeratorFreeGroups(organizationId: number): any {
   return this.http.get<Group[]>(this.baseUrl + 'groups/moderator-free-groups/' + organizationId);
 }
 
+
+updateModeratorGroups(id: number, groups): any {
+  return this.http.put(this.baseUrl + 'moderators/update-groups/' + id, groups);
+}
+
+
 }

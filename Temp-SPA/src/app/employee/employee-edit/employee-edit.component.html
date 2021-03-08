@@ -103,7 +103,7 @@
             <tbody>
               <tr *ngFor="let group of currentModeratorGroups">
                 <td>{{group.name}}</td>
-                <td><a class="btn btn-danger" href=""><i class="fas fa-minus-circle"></i></a></td>
+                <td><a class="btn btn-danger" (click)="updateGroup(Moderator.id, group.id)"><i class="fas fa-minus-circle"></i></a></td>
               </tr>
             </tbody>
           </table>
@@ -119,7 +119,7 @@
             <tbody>
               <tr *ngFor="let group of freeModeratorGroups">
                 <td>{{group.name}}</td>
-                <td><a class="btn btn-success" href=""><i class="fas fa-plus-circle"></i></a></td>
+                <td><a class="btn btn-success" (click)="updateGroup(Moderator.id, group.id)"><i class="fas fa-plus-circle"></i></a></td>
               </tr>
               
             </tbody>

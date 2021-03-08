@@ -1,9 +1,8 @@
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Employee } from 'src/app/_models/employee';
-import { Group } from 'src/app/_models/group';
+import { Group, ModeratorGroups } from 'src/app/_models/group';
 import { Moderator } from 'src/app/_models/moderator';
 import { Organization } from 'src/app/_models/organization';
 import { FullTeam, Team } from 'src/app/_models/team';
@@ -50,11 +49,10 @@ export class EmployeeEditComponent implements OnInit {
     {
       this.loadModeratorGroups(this.employee.teamId, this.employee.id);
     }
-    else 
+    else
     {
       this.loadFullTeam(this.employee.teamId);
     }
-
   }
 
   createForm(): void {
@@ -74,7 +72,6 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   loadModeratorGroups(id, EmployeeId: number): void {
-
     this.teamService.getFullTeam(id).toPromise().then((fullTeam) => {
       this.fullTeam = fullTeam;
 
@@ -88,7 +85,6 @@ export class EmployeeEditComponent implements OnInit {
         this.groupService.getModeratorFreeGroups(this.fullTeam.organizationId).toPromise().then((res)=> {
           this.freeModeratorGroups = res;
         });
-
       });
     });
   }
@@ -123,7 +119,29 @@ export class EmployeeEditComponent implements OnInit {
     return str.slice(3, str.length);
   }
 
+  updateGroup(moderatorId: number, newGroupId: number): any {
+    let moderatorGroups: ModeratorGroups = {} as ModeratorGroups;
+    moderatorGroups.groups = [] as number[];
 
+    this.currentModeratorGroups.forEach((elem) => {
+      moderatorGroups.groups.push(elem.id);
+    });
+
+    if (!moderatorGroups.groups.includes(newGroupId)){
+      moderatorGroups.groups.push(newGroupId);
+    }
+    else{
+      moderatorGroups.groups = moderatorGroups.groups
+      .filter(elem => elem !== newGroupId);
+    }
+
+    this.groupService.updateModeratorGroups(moderatorId, moderatorGroups).subscribe(() => {
+      this.loadModeratorGroups(this.employee.teamId, this.employee.id);
+      this.alertify.success('Success');
+    }, error => {
+      this.alertify.error(error);
+    })
+  }
 
   update(): any {
     const employeeForm = Object.assign({}, this.editEmployeeForm.value);

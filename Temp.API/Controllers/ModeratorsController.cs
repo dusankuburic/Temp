@@ -63,17 +63,14 @@ namespace Temp.API.Controllers
             {
                 var response = await new UpdateModeratorGroups(_ctx).Do(id, request);
                 if (response.Status)
-                {
-                    return Ok();
-                }
-
+                    return NoContent();
+                
                 return BadRequest(response.Message);
             }
             catch (ModeratorGroupValidationException moderatorGroupValidationException)
             {
                 return BadRequest(GetInnerMessage(moderatorGroupValidationException));
             }
-            
         }
         
         
