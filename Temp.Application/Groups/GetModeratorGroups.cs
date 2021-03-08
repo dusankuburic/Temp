@@ -18,7 +18,9 @@ namespace Temp.Application.Groups
 
         public async Task<IEnumerable<ModeratorGroupViewModel>> Do(int id)
         {
+            
             var moderatorGroups = await _ctx.ModeratorGroups
+                .Where(x => x.ModeratorId == id)
                 .Join(_ctx.Groups,
                     mg => mg.GroupId,
                     group => group.Id,
@@ -26,7 +28,9 @@ namespace Temp.Application.Groups
                     {
                         Id = group.Id,
                         Name = group.Name
-                    }).ToListAsync();
+                    })
+                .ToListAsync();
+
 
             return moderatorGroups;
         }
