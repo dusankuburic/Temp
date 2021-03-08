@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
@@ -17,11 +18,14 @@ namespace Temp.Application.Groups
             _ctx = ctx;
         }
 
-        public async Task<IEnumerable<ModeratorFreeGroupViewModel>> Do(int id)
+        public async Task<IEnumerable<ModeratorFreeGroupViewModel>> Do(int id, int moderatorId)
         {
+            
             var moderatorGroups = await _ctx.ModeratorGroups
+                .Where(x => x.ModeratorId == moderatorId)
                 .Select(x => x.GroupId)
                 .ToListAsync();
+
 
             var moderatorFreeGroups = await _ctx.Groups
                 .Where(x => x.OrganizationId == id)
@@ -36,8 +40,7 @@ namespace Temp.Application.Groups
 
             return moderatorFreeGroups;
         }
-
-
+        
         public class ModeratorFreeGroupViewModel
         {
             public int Id { get; set; }

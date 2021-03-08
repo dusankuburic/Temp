@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Group } from '../_models/group';
+import { ModeratorMin } from '../_models/moderator';
 import { Team } from '../_models/team';
 
 @Injectable({
@@ -36,8 +37,8 @@ getModeratorGroups(moderatorId: number): any {
   return this.http.get<Group[]>(this.baseUrl + 'groups/moderator-groups/' + moderatorId);
 }
 
-getModeratorFreeGroups(organizationId: number): any {
-  return this.http.get<Group[]>(this.baseUrl + 'groups/moderator-free-groups/' + organizationId);
+getModeratorFreeGroups(organizationId: number, moderator: ModeratorMin): any {
+  return this.http.get<Group[]>(this.baseUrl + 'groups/moderator-free-groups/' + organizationId + '/moderator/' + moderator.id);
 }
 
 

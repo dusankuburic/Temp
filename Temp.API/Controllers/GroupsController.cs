@@ -90,10 +90,10 @@ namespace Temp.API.Controllers
             return Ok(response);
         }
         
-        [HttpGet("moderator-free-groups/{id}")]
-        public async Task<IActionResult> GetModeratorFreeGroups(int id)
+        [HttpGet("moderator-free-groups/{organizationId}/moderator/{moderatorId}")]
+        public async Task<IActionResult> GetModeratorFreeGroups(int organizationId, int moderatorId)
         {
-            var response = await new GetModeratorFreeGroups(_ctx).Do(id);
+            var response = await new GetModeratorFreeGroups(_ctx).Do(organizationId, moderatorId);
             return Ok(response);
         }
         

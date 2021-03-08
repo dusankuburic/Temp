@@ -23,6 +23,13 @@ namespace Temp.Application.Auth.Moderators
         {
             if (request.Groups.Count() == 0)
             {
+                var mod = await _ctx.ModeratorGroups
+                    .Where(x => x.ModeratorId == id)
+                    .FirstOrDefaultAsync();
+                
+                _ctx.Remove(mod);
+                
+                /*
                 foreach (var group in request.Groups)
                 {
                     _ctx.ModeratorGroups.Add(new ModeratorGroup
@@ -31,6 +38,7 @@ namespace Temp.Application.Auth.Moderators
                         GroupId = group
                     });
                 }
+                */
             }
             else
             {

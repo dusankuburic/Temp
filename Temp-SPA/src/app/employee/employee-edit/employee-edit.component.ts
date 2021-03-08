@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Employee } from 'src/app/_models/employee';
 import { Group, ModeratorGroups } from 'src/app/_models/group';
-import { Moderator } from 'src/app/_models/moderator';
+import { Moderator, ModeratorMin } from 'src/app/_models/moderator';
 import { Organization } from 'src/app/_models/organization';
 import { FullTeam, Team } from 'src/app/_models/team';
 import { AlertifyService } from 'src/app/_services/alertify.service';
@@ -72,17 +72,19 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   loadModeratorGroups(id, EmployeeId: number): void {
+    let moderatorMin = {} as ModeratorMin;
     this.teamService.getFullTeam(id).toPromise().then((fullTeam) => {
       this.fullTeam = fullTeam;
 
       this.employeeService.getModerator(EmployeeId).toPromise().then((moderator) => {
         this.Moderator = moderator;
+        moderatorMin.id = moderator.id;
 
         this.groupService.getModeratorGroups(moderator.id).toPromise().then((currModerGroup) => {
           this.currentModeratorGroups = currModerGroup;
         });
 
-        this.groupService.getModeratorFreeGroups(this.fullTeam.organizationId).toPromise().then((res)=> {
+        this.groupService.getModeratorFreeGroups(this.fullTeam.organizationId, moderatorMin).toPromise().then((res)=> {
           this.freeModeratorGroups = res;
         });
       });

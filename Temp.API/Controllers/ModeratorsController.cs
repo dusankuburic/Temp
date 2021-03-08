@@ -72,9 +72,7 @@ namespace Temp.API.Controllers
                 return BadRequest(GetInnerMessage(moderatorGroupValidationException));
             }
         }
-        
-        
-        
+
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
     }
