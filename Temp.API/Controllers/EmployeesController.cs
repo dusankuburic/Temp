@@ -32,10 +32,7 @@ namespace Temp.API.Controllers
             }
             catch (EmployeeValidationException employeeValidationException)
             {
-                return BadRequest(new
-                {
-                    Message = GetInnerMessage(employeeValidationException)
-                });
+                return BadRequest(GetInnerMessage(employeeValidationException));
             }
         }
 

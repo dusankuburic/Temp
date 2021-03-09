@@ -34,7 +34,8 @@ namespace Temp.Application.Engagements
                        workplaceName = eng.Workplace.Name,
                        employmentStatusName = eng.EmploymentStatus.Name,
                        dateFrom = eng.DateFrom,
-                       dateTo = eng.DateTo
+                       dateTo = eng.DateTo,
+                       salary = eng.Salary 
                     })
             };
 

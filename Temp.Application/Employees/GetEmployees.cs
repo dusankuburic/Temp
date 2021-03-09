@@ -6,6 +6,7 @@ using Temp.Database;
 
 namespace Temp.Application.Employees
 {
+    
     public class GetEmployees : EmployeeService
     {
         private readonly ApplicationDbContext _ctx;
@@ -27,6 +28,21 @@ namespace Temp.Application.Employees
                 Role = x.Role
             }).AsQueryable();
 
+            if(!string.IsNullOrEmpty(request.Role)) {
+                employees = employees.Where(x => x.Role == request.Role);
+            }
+
+            if (!string.IsNullOrEmpty(request.FirstName))
+            {
+                employees = employees.Where(x => x.FirstName.Contains(request.FirstName));
+            }
+
+            if (!string.IsNullOrEmpty(request.LastName))
+            {
+                employees = employees.Where(x => x.LastName.Contains(request.LastName));
+            }
+            
+
             ValidateStorageEmployees(employees);
 
             return await PagedList<EmployeeViewModel>.CreateAsync(employees, request.PageNumber, request.PageSize);
@@ -45,6 +61,11 @@ namespace Temp.Application.Employees
                 get { return _pageSize; }
                 set { _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
             }
+            
+            public string Role { get; set; }
+            
+            public string FirstName {get; set;}
+            public string LastName {get; set;}
         }
         
         public class EmployeeViewModel
