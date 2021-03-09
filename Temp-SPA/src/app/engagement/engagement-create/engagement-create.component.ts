@@ -21,8 +21,7 @@ export class EngagementCreateComponent implements OnInit {
     private route: ActivatedRoute,
     private engagementService: EngagementService,
     private fb: FormBuilder,
-    private alertify: AlertifyService,
-    private router: Router) { }
+    private alertify: AlertifyService) { }
 
   ngOnInit(): void {
     this.bsConfig = {
@@ -45,6 +44,7 @@ export class EngagementCreateComponent implements OnInit {
   createForm(): void {
     this.createEngagementForm = this.fb.group({
       workplaceId: [null, Validators.required],
+      salary: ['', [Validators.required, Validators.min(300), Validators.max(5000)]],
       dateFrom: [null, Validators.required],
       dateTo: [null, Validators.required],
       employmentStatusId: [null, Validators.required]

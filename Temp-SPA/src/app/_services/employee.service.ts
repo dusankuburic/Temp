@@ -17,22 +17,29 @@ export class EmployeeService {
 constructor(private http: HttpClient) { }
 
 
-getEmployees(page?, itemsPerPage?): Observable<PaginatedResult<Employee[]>> {
+getEmployees(page?, itemsPerPage?, employeeParams?): Observable<PaginatedResult<Employee[]>> {
   const paginatedResult: PaginatedResult<Employee[]> = new PaginatedResult<Employee[]>();
 
   let params = new HttpParams();
 
-  if(page != null && itemsPerPage != null)
+  if (page != null && itemsPerPage != null)
   {
     params = params.append('pageNumber', page);
     params = params.append('pageSize', itemsPerPage);
+  }
+
+  if (employeeParams != null)
+  {
+    params = params.append('role', employeeParams.role);
+    params = params.append('firstName', employeeParams.firstName);
+    params = params.append('lastName', employeeParams.lastName);
   }
 
   return this.http.get<Employee[]>(this.baseUrl + 'employees', {observe : 'response', params})
     .pipe(
       map(response => {
         paginatedResult.result = response.body;
-        if(response.headers.get('Pagination') != null) {
+        if (response.headers.get('Pagination') != null) {
           paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
         }
         return paginatedResult;

@@ -14,6 +14,12 @@ import { EmployeeService } from 'src/app/_services/employee.service';
 export class EmployeeListComponent implements OnInit {
   employees: Employee[];
   unassignRoleDto = {} as UnassignRoleDto;
+  roles = [
+    {value: 'User', display: 'User'},
+    {value: 'Admin', display: 'Admin'},
+    {value: 'Moderator', display: 'Moderator'},
+    {value: 'None', display: 'None'}];
+  employeeParams: any = {};
   pagination: Pagination;
 
   constructor(
@@ -26,16 +32,30 @@ export class EmployeeListComponent implements OnInit {
       this.employees = data['employees'].result;
       this.pagination = data['employees'].pagination;
     });
+
+    this.employeeParams.role = '';
+    this.employeeParams.firstName = '';
+    this.employeeParams.lastName = '';
   }
 
   loadEmployees(): void {
-    this.employeeService.getEmployees(this.pagination.currentPage, this.pagination.itemsPerPage)
-      .subscribe((res: PaginatedResult<Employee[]>) => {
+    this.employeeService.getEmployees(
+      this.pagination.currentPage,
+      this.pagination.itemsPerPage,
+      this.employeeParams)
+      .toPromise().then((res: PaginatedResult<Employee[]>) => {
       this.employees = res.result;
       this.pagination = res.pagination;
     }, error => {
       this.alertify.error(error.error);
-    })
+    });
+  }
+
+  resetFilters(): void {
+    this.employeeParams.role = '';
+    this.employeeParams.firstName = '';
+    this.employeeParams.lastName = '';
+    this.loadEmployees();
   }
 
   pageChanged(event: any): void {
