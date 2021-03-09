@@ -25,7 +25,8 @@ namespace Temp.Application.Engagements
                 WorkplaceId = request.WorkplaceId,
                 EmploymentStatusId = request.EmploymentStatusId,
                 DateFrom = request.DateFrom,
-                DateTo = request.DateTo
+                DateTo = request.DateTo,
+                Salary = request.Salary
             };
 
             ValidateEngagementOnCreate(engagement);
@@ -58,6 +59,9 @@ namespace Temp.Application.Engagements
             
             [Required]
             public DateTime DateTo {get; set;}
+            
+            [Required]
+            public int Salary { get; set; }
         }
 
 
