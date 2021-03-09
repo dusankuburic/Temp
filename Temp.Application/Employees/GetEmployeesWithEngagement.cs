@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Internal;
 using Temp.Application.Auth.Users;
 using Temp.Application.Helpers;
 using Temp.Database;
@@ -33,7 +35,61 @@ namespace Temp.Application.Employees
                     LastName = x.LastName,
                     Role = x.Role
                 }).AsQueryable();
-                
+
+            if (!string.IsNullOrEmpty(request.Workplace) && !string.IsNullOrEmpty(request.EmploymentStatus))
+            {
+                employeesWithEngagement = employeesWithEngagement
+                    .Join(_ctx.Engagements,
+                        employee => employee.Id,
+                        engagement => engagement.EmployeeId,
+                        (employee, engagement) => new EmployeesWithEngagementViewModel
+                        {
+                            Id = employee.Id,
+                            FirstName = employee.FirstName,
+                            LastName = employee.LastName,
+                            Role = employee.Role,
+                            Workplace = engagement.Workplace.Name,
+                            EmploymentStatus = engagement.EmploymentStatus.Name,
+                        })
+                    .Where(x => x.Workplace.Contains(request.Workplace) && x.EmploymentStatus.Contains(request.EmploymentStatus))
+                    .AsQueryable();
+            }
+            else if (!string.IsNullOrEmpty(request.Workplace))
+            {
+                employeesWithEngagement = employeesWithEngagement
+                    .Join(_ctx.Engagements,
+                        employee => employee.Id,
+                        engagement => engagement.EmployeeId,
+                        (employee, engagement) => new EmployeesWithEngagementViewModel
+                        {
+                            Id = employee.Id,
+                            FirstName = employee.FirstName,
+                            LastName = employee.LastName,
+                            Role = employee.Role,
+                            Workplace = engagement.Workplace.Name,
+                            EmploymentStatus = engagement.EmploymentStatus.Name,
+                        })
+                    .Where(x => x.Workplace.Contains(request.Workplace))
+                    .AsQueryable();
+            }
+            else if (!string.IsNullOrEmpty(request.EmploymentStatus))
+            {
+                employeesWithEngagement = employeesWithEngagement
+                    .Join(_ctx.Engagements,
+                        employee => employee.Id,
+                        engagement => engagement.EmployeeId,
+                        (employee, engagement) => new EmployeesWithEngagementViewModel
+                        {
+                            Id = employee.Id,
+                            FirstName = employee.FirstName,
+                            LastName = employee.LastName,
+                            Role = employee.Role,
+                            Workplace = engagement.Workplace.Name,
+                            EmploymentStatus = engagement.EmploymentStatus.Name
+                        })
+                    .Where(x => x.EmploymentStatus.Contains(request.EmploymentStatus))
+                    .AsQueryable();
+            }
 
             ValidateGetEmployeeWithEngagementViewModel(employeesWithEngagement);
 
@@ -53,6 +109,9 @@ namespace Temp.Application.Employees
                 get { return _pageSize; }
                 set { _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
             }
+            
+            public string Workplace { get; set; }
+            public string EmploymentStatus { get; set; }
         }
         
         public class EmployeesWithEngagementViewModel
@@ -61,6 +120,9 @@ namespace Temp.Application.Employees
             public string FirstName {get; set;}
             public string LastName {get; set;}
             public string Role {get; set;}
+
+            public string Workplace { get; set; } = string.Empty;
+            public string EmploymentStatus { get; set; } = string.Empty;
         }
     }
 }
