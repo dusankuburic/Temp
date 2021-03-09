@@ -17,6 +17,8 @@ namespace Temp.Domain.Models
        
         public DateTime DateFrom {get; set;}
         public DateTime DateTo {get; set;}
+        
+        public int Salary { get; set; }
    
     }
 }
