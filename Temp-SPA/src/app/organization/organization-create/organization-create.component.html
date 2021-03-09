@@ -1,23 +1,18 @@
 <div class="row justify-content-center">
-  <div class="col-lg-8">
-    <h1 class="text-center">Create Organization</h1>
-      <div class="row justify-content-center">
-          <div class="col-lg-6 col-sm-6 col-8">
-
-            <form [formGroup]="createOrganizationForm" (ngSubmit)="create()">
-              <div class="form-group">
-                <h4>Name</h4>
-                <input [ngClass]="{'is-invalid' : createOrganizationForm.get('Name').errors 
-                  && createOrganizationForm.get('Name').touched}"
-                  type="text" 
-                  class="form-control" 
-                  formControlName="Name">
-                <div class="invalid-feedback">Please enter a First Name</div>
-              </div>
-                 
-              <button type="submit" [disabled]="!createOrganizationForm.valid" class="btn btn-success float-right">Create</button>
-            </form>
-          </div>
-      </div>
+    <div class="col-lg-4">
+      <h1 class="text-center">Create Organization</h1>
+      <form [formGroup]="createOrganizationForm" (ngSubmit)="create()">
+        <div class="form-group">
+          <h4>Name</h4>
+          <input [ngClass]="{'is-invalid' : createOrganizationForm.get('Name').errors 
+            && createOrganizationForm.get('Name').touched}"
+            type="text" 
+            class="form-control" 
+            formControlName="Name">
+          <div class="invalid-feedback">Please enter a First Name</div>
+        </div>
+          
+        <button type="submit" [disabled]="!createOrganizationForm.valid" class="btn btn-success float-right">Create</button>
+      </form>
+    </div>
   </div>
-</div>
