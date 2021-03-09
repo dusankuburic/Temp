@@ -28,6 +28,8 @@ export class EngagementWithEmployeeListComponent implements OnInit {
 
     this.employeeParams.workplace = '';
     this.employeeParams.employmentStatus = '';
+    this.employeeParams.minSalary = 0;
+    this.employeeParams.maxSalary = 5000;
   }
 
   loadEmployeesWithEngagement(): void {
@@ -46,6 +48,8 @@ export class EngagementWithEmployeeListComponent implements OnInit {
   resetFilters(): void {
     this.employeeParams.workplace = '';
     this.employeeParams.employmentStatus = '';
+    this.employeeParams.minSalary = 0;
+    this.employeeParams.maxSalary = 5000;
     this.loadEmployeesWithEngagement();
   }
 

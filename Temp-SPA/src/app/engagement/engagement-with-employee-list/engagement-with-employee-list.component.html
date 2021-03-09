@@ -56,7 +56,18 @@
               name="employmentStatus"
               [(ngModel)]="employeeParams.employmentStatus">
             </div>
-
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="minSalary">Salary From</label>
+                    <input type="number" class="form-control ml-1" 
+                    [(ngModel)]="employeeParams.minSalary" name="minSalary">
+                </div>
+                <div class="col form-group">
+                    <label for="maxSalary">Salary To</label>
+                    <input type="number" class="form-control ml-1" 
+                        [(ngModel)]="employeeParams.maxSalary" name="maxSalary">
+                </div>
+            </div>
             <button type="button" (click)="resetFilters()" class="btn btn-info float-right ml-2">Reset</button>
             <button type="submit" class="btn btn-primary float-right">Apply</button>      
         </form>

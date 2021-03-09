@@ -12,7 +12,6 @@ namespace Temp.Application.Employees
 {
     public class GetEmployeesWithEngagement : EmployeeService
     {
-        
         private readonly ApplicationDbContext _ctx;
 
         public GetEmployeesWithEngagement(ApplicationDbContext ctx)
@@ -21,82 +20,58 @@ namespace Temp.Application.Employees
         }
 
         public Task<PagedList<EmployeesWithEngagementViewModel>> Do(Request request) =>
-        TryCatch(async () =>
-        {
-
-            var employeesWithEngagement = _ctx.Employees
-                .Include(x => x.Engagements)
-                .Where(x => x.Engagements.Count != 0)
-                .OrderByDescending(x => x.Id)
-                .Select(x => new EmployeesWithEngagementViewModel
+            TryCatch(async () =>
+            {
+                
+                var employeesWithEngagement = _ctx.Employees
+                    .Where(x => x.Engagements.Count != 0)
+                    .OrderByDescending(x => x.Id)
+                    .Select(x => new EmployeesWithEngagementViewModel
+                    {
+                        Id = x.Id,
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        Role = x.Role,
+                        Salary = _ctx.Engagements.Where(e => e.EmployeeId == x.Id).Select(e => e.Salary),
+                        Workplace = _ctx.Engagements.Where(e => e.EmployeeId == x.Id).Select(e => e.Workplace.Name),
+                        EmploymentStatus = _ctx.Engagements.Where(e => e.EmployeeId == x.Id).Select(e => e.EmploymentStatus.Name)
+                    }).AsQueryable();
+                
+                
+                if (request.MinSalary != 0 || request.MaxSalary != 5000)
                 {
-                    Id = x.Id,
-                    FirstName = x.FirstName,
-                    LastName = x.LastName,
-                    Role = x.Role
-                }).AsQueryable();
+                    employeesWithEngagement = employeesWithEngagement
+                        .Where(x => x.Salary.Any(sal => sal >= request.MinSalary && sal <= request.MaxSalary ))
+                        .AsQueryable();
+                }
+                
+                if (!string.IsNullOrEmpty(request.Workplace) && !string.IsNullOrEmpty(request.EmploymentStatus))
+                {
+                    employeesWithEngagement = employeesWithEngagement
+                        .Where(x => x.Workplace.Any(w => w.Contains(request.Workplace)) &&
+                                    x.EmploymentStatus.Any(e => e.Contains(request.EmploymentStatus)))
+                        .AsQueryable();
+                }
+                else if (!string.IsNullOrEmpty(request.Workplace))
+                {
+                    employeesWithEngagement = employeesWithEngagement
+                        .Where(x => x.Workplace.Any(w => w.Contains(request.Workplace)))
+                        .AsQueryable();
+                    
+                }
+                else if (!string.IsNullOrEmpty(request.EmploymentStatus))
+                {
+                    employeesWithEngagement = employeesWithEngagement
+                        .Where(x => x.EmploymentStatus.Any(es => es.Contains(request.EmploymentStatus)))
+                        .AsQueryable();
+                }
 
-            if (!string.IsNullOrEmpty(request.Workplace) && !string.IsNullOrEmpty(request.EmploymentStatus))
-            {
-                employeesWithEngagement = employeesWithEngagement
-                    .Join(_ctx.Engagements,
-                        employee => employee.Id,
-                        engagement => engagement.EmployeeId,
-                        (employee, engagement) => new EmployeesWithEngagementViewModel
-                        {
-                            Id = employee.Id,
-                            FirstName = employee.FirstName,
-                            LastName = employee.LastName,
-                            Role = employee.Role,
-                            Workplace = engagement.Workplace.Name,
-                            EmploymentStatus = engagement.EmploymentStatus.Name,
-                        })
-                    .Where(x => x.Workplace.Contains(request.Workplace) && x.EmploymentStatus.Contains(request.EmploymentStatus))
-                    .AsQueryable();
-            }
-            else if (!string.IsNullOrEmpty(request.Workplace))
-            {
-                employeesWithEngagement = employeesWithEngagement
-                    .Join(_ctx.Engagements,
-                        employee => employee.Id,
-                        engagement => engagement.EmployeeId,
-                        (employee, engagement) => new EmployeesWithEngagementViewModel
-                        {
-                            Id = employee.Id,
-                            FirstName = employee.FirstName,
-                            LastName = employee.LastName,
-                            Role = employee.Role,
-                            Workplace = engagement.Workplace.Name,
-                            EmploymentStatus = engagement.EmploymentStatus.Name,
-                        })
-                    .Where(x => x.Workplace.Contains(request.Workplace))
-                    .AsQueryable();
-            }
-            else if (!string.IsNullOrEmpty(request.EmploymentStatus))
-            {
-                employeesWithEngagement = employeesWithEngagement
-                    .Join(_ctx.Engagements,
-                        employee => employee.Id,
-                        engagement => engagement.EmployeeId,
-                        (employee, engagement) => new EmployeesWithEngagementViewModel
-                        {
-                            Id = employee.Id,
-                            FirstName = employee.FirstName,
-                            LastName = employee.LastName,
-                            Role = employee.Role,
-                            Workplace = engagement.Workplace.Name,
-                            EmploymentStatus = engagement.EmploymentStatus.Name
-                        })
-                    .Where(x => x.EmploymentStatus.Contains(request.EmploymentStatus))
-                    .AsQueryable();
-            }
+                ValidateGetEmployeeWithEngagementViewModel(employeesWithEngagement);
 
-            ValidateGetEmployeeWithEngagementViewModel(employeesWithEngagement);
+                return await PagedList<EmployeesWithEngagementViewModel>.CreateAsync(employeesWithEngagement,
+                    request.PageNumber, request.PageSize);
+            });
 
-            return await PagedList<EmployeesWithEngagementViewModel>.CreateAsync(employeesWithEngagement, 
-                request.PageNumber, request.PageSize);
-        });
-        
         public class Request
         {
             private const int MaxPageSize = 20;
@@ -109,20 +84,24 @@ namespace Temp.Application.Employees
                 get { return _pageSize; }
                 set { _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
             }
-            
+
             public string Workplace { get; set; }
             public string EmploymentStatus { get; set; }
+
+            public int MinSalary { get; set; } = 0;
+            public int MaxSalary { get; set; } = 5000;
         }
-        
+
         public class EmployeesWithEngagementViewModel
         {
-            public int Id {get; set;}
-            public string FirstName {get; set;}
-            public string LastName {get; set;}
-            public string Role {get; set;}
+            public int Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Role { get; set; }
 
-            public string Workplace { get; set; } = string.Empty;
-            public string EmploymentStatus { get; set; } = string.Empty;
+            public IEnumerable<string> Workplace { get; set; } 
+            public IEnumerable<string> EmploymentStatus { get; set; }
+            public IEnumerable<int> Salary { get; set; }
         }
     }
 }

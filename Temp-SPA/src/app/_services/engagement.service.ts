@@ -25,8 +25,12 @@ getEmpoyeesWithEngagement(page?, itemsPerPage?, employeeParams?): Observable<Pag
     params = params.append('pageSize', itemsPerPage);
   }
 
+
   if (employeeParams != null)
   {
+    params = params.append('minSalary', employeeParams.minSalary);
+    params = params.append('maxSalary', employeeParams.maxSalary);
+
     if (employeeParams.workplace !== '' && employeeParams.employmentStatus !== '')
     {
       params = params.append('workplace', employeeParams.workplace);
@@ -39,7 +43,6 @@ getEmpoyeesWithEngagement(page?, itemsPerPage?, employeeParams?): Observable<Pag
     else if (employeeParams.employmentStatus !== ''){
       params = params.append('employmentStatus', employeeParams.employmentStatus);
     }
-
   }
 
   return this.http.get<Employee[]>(this.baseUrl + 'engagements/with', {observe: 'response', params})
