@@ -38,7 +38,6 @@ namespace Temp.API.Controllers
             return BadRequest(response.Message);
         }
 
-
         [HttpPost("login")]
         public async Task<IActionResult> LoginAdmin(LoginModerator.Request request)
         {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +28,7 @@ namespace Temp.API.Controllers
             {
                 var response = await new GetWorkplaces(_ctx).Do(request);
                 Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
+
                 return Ok(response);
             }
             catch (WorkplaceValidationException workplaceValidationException)
@@ -44,10 +44,8 @@ namespace Temp.API.Controllers
             {
                 var response = await new CreateWorkplace(_ctx).Do(request);
                 if (response.Status)
-                {
-                    return Ok(response);
-                }
-
+                    return NoContent();
+                
                 return BadRequest(response.Message);
             }
             catch (WorkplaceValidationException workplaceValidationException)
@@ -87,7 +85,6 @@ namespace Temp.API.Controllers
                 return BadRequest(GetInnerMessage(workplaceValidationException));
             }
         }
-
 
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
