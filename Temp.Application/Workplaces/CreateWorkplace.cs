@@ -38,7 +38,6 @@ namespace Temp.Application.Workplaces
                 };
             }
 
-
             var workplace = new Workplace
             {
                 Name = request.Name

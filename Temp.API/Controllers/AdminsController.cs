@@ -20,28 +20,21 @@ namespace Temp.API.Controllers
             _config = config;
         }
 
-
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAdmin(RegisterAdmin.Request request)
         {
             var response = await new RegisterAdmin(_ctx).Do(request);
-            if (response.Status)
-            {
+            if (response.Status)  
                 return Ok(response);
-            }
-
+            
             return BadRequest(response.Message);
         }
-        
-      
+            
         [HttpPost("login")]
         public async Task<IActionResult> LoginAdmin(LoginAdmin.Request request)
         {
-
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.Values);
-            }
+            if(!ModelState.IsValid)          
+                return BadRequest(ModelState.Values);         
             
             var response = await new LoginAdmin(_ctx, _config).Do(request);
             if (response is null)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +28,7 @@ namespace Temp.API.Controllers
             {
                 var response = await new GetEmploymentStatuses(_ctx).Do(request);
                 Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
+
                 return Ok(response);
             }
             catch (EmploymentStatusValidationException employmentStatusValidationException)
@@ -37,18 +37,15 @@ namespace Temp.API.Controllers
             }
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Create(CreateEmploymentStatus.Request request)
         {
             try
             {
                 var response = await new CreateEmploymentStatus(_ctx).Do(request);
-                if (response.Status)
-                {
-                    return Ok();
-                }
-
+                if (response.Status)             
+                    return NoContent();
+                
                 return BadRequest(response.Message);
             }
             catch (EmploymentStatusValidationException employmentStatusValidationException)
@@ -56,7 +53,6 @@ namespace Temp.API.Controllers
                 return BadRequest(GetInnerMessage(employmentStatusValidationException));
             }
         }
-
 
         [HttpGet("{id}")]
         public IActionResult GetEmploymentStatus(int id)
@@ -72,7 +68,6 @@ namespace Temp.API.Controllers
             }
         }
 
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEmploymentStatus(int id, UpdateEmploymentStatus.Request request)
         {
@@ -80,10 +75,8 @@ namespace Temp.API.Controllers
             {
                 var response = await new UpdateEmploymentStatus(_ctx).Do(id, request);
                 if (response.Status)
-                {
-                    return Ok();
-                }
-
+                    NoContent();
+   
                 return BadRequest(response.Message);
             }
             catch (EmploymentStatusValidationException employmentStatusValidationException)
@@ -91,7 +84,6 @@ namespace Temp.API.Controllers
                 return BadRequest(GetInnerMessage(employmentStatusValidationException));
             }
         }
-
 
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;

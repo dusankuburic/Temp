@@ -32,11 +32,9 @@ namespace Temp.API.Controllers
         public async Task<IActionResult> RegisterAdmin(RegisterModerator.Request request)
         {
             var response = await new RegisterModerator(_ctx).Do(request);
-            if (response.Status)
-            {
-                return Ok(response);
-            }
-
+            if (response.Status)      
+                return NoContent();
+            
             return BadRequest(response.Message);
         }
 
