@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Temp.API.Helpers;
 using Temp.Application.Employees;
 using Temp.Application.Engagements;
-using Temp.Application.Helpers;
 using Temp.Database;
 using Temp.Domain.Models.Employees.Exceptions;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
@@ -26,7 +25,6 @@ namespace Temp.API.Controllers
             _ctx = ctx;
         }
         
-
         [HttpGet("without")]
         public async Task<ActionResult> WithoutEngagements([FromQuery]GetEmployeesWithoutEngagement.Request request)
         {
@@ -38,13 +36,11 @@ namespace Temp.API.Controllers
             }
             catch(EmployeeValidationException employeeValidationException)
             {
-                return BadRequest(GetInnerMessage(employeeValidationException));
-           
+                return BadRequest(GetInnerMessage(employeeValidationException));        
             }
             catch(WorkplaceValidationException workplaceValidationException)
             {
-                 return BadRequest(GetInnerMessage(workplaceValidationException));
-                
+                 return BadRequest(GetInnerMessage(workplaceValidationException));           
             }
             catch(EmploymentStatusValidationException employmentStatusValidationException)
             {
@@ -64,12 +60,10 @@ namespace Temp.API.Controllers
             catch(EmployeeValidationException employeeValidationException)
             {
                 return BadRequest(GetInnerMessage(employeeValidationException));
-
             }
             catch(WorkplaceValidationException workplaceValidationException)
             {
-                return BadRequest(GetInnerMessage(workplaceValidationException));
-               
+                return BadRequest(GetInnerMessage(workplaceValidationException));            
             }
             catch(EmploymentStatusValidationException employmentStatusValidationException)
             {
@@ -77,8 +71,7 @@ namespace Temp.API.Controllers
                 
             }
         }
-
-        
+  
         [HttpGet("employee/{id}")]
         public async Task<ActionResult> GetEngagementForEmployee(int id)
         {
@@ -108,10 +101,8 @@ namespace Temp.API.Controllers
             {
                 var response = await new CreateEngagement(_ctx).Do(request);
                 if(response.Status)
-                {
-                    return Ok(response);
-                }
-
+                    return NoContent();
+                
                 return BadRequest();
             }
             catch(EngagementValidationException engagementValidationException)
@@ -119,7 +110,6 @@ namespace Temp.API.Controllers
                  return BadRequest(GetInnerMessage(engagementValidationException));
             }
         }
-        
         
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;

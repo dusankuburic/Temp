@@ -49,14 +49,11 @@ namespace Temp.API.Controllers
             try
             {
                 var response = await new CreateEmployee(_ctx).Do(request);
-                return Ok(response);
+                return NoContent();
             }
             catch (EmployeeValidationException employeeValidationException)
             {
-                return BadRequest(new CreateEmployee.Response
-                {
-                    Message = GetInnerMessage(employeeValidationException)
-                });
+                return BadRequest(GetInnerMessage(employeeValidationException));
             }
         }
 
