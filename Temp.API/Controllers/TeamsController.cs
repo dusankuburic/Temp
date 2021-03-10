@@ -20,7 +20,6 @@ namespace Temp.API.Controllers
             _ctx = ctx;
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Create(CreateTeam.Request request)
         {
@@ -28,10 +27,8 @@ namespace Temp.API.Controllers
             {
                 var response = await new CreateTeam(_ctx).Do(request);
                 if (response.Status)
-                {
-                    return Ok(response);
-                }
-
+                    return NoContent();
+                
                 return BadRequest(response.Message);
             }
             catch (TeamValidationException teamValidationException)
@@ -76,10 +73,8 @@ namespace Temp.API.Controllers
             {
                 var response = await new UpdateTeam(_ctx).Do(id, request);
                 if (response.Status)
-                {
-                    return Ok(response);
-                }
-
+                    return NoContent();
+                
                 return BadRequest(response.Message);
             }
             catch (TeamValidationException teamValidationException)

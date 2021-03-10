@@ -34,18 +34,15 @@ namespace Temp.API.Controllers
             }
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Create(CreateOrganization.Request request)
         {
             try
             {
                 var response = await new CreateOrganization(_ctx).Do(request);
-                if (response.Status)
-                {
-                    return Ok(response);
-                }
-
+                if (response.Status)            
+                    return NoContent();
+                
                 return BadRequest(response.Message);
             }
             catch (OrganizationValidationException organizationValidationException)
@@ -74,11 +71,9 @@ namespace Temp.API.Controllers
             try
             {
                 var response = await new UpdateOrganization(_ctx).Do(id, request);
-                if (response.Status)
-                {
-                    return Ok(response);
-                }
-
+                if (response.Status)          
+                    return NoContent();
+                
                 return BadRequest(response.Message);
             }
             catch (OrganizationValidationException organizationValidationException)

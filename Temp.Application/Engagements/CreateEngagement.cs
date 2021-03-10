@@ -15,7 +15,6 @@ namespace Temp.Application.Engagements
             _ctx = ctx;
         }
         
-
         public Task<Response> Do(Request request) =>
         TryCatch(async () =>
         { 
@@ -36,12 +35,10 @@ namespace Temp.Application.Engagements
 
             return new Response
             {
-                Message = $"Success",
                 Status = true
             };
         });
         
-
        
         public class Request
         {
@@ -64,12 +61,11 @@ namespace Temp.Application.Engagements
             public int Salary { get; set; }
         }
 
-
-         public class Response
+        public class Response
         {
-            public string Message {get; set;}
             public bool Status {get; set;}
         }
-        
+
+      
     }
 }

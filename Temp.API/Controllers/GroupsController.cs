@@ -27,9 +27,7 @@ namespace Temp.API.Controllers
             {
                 var response = await new CreateGroup(_ctx).Do(request);
                 if (response.Status)
-                {
-                    return Ok(response);
-                }
+                    return NoContent();  
 
                 return BadRequest(response.Message);
             }
@@ -52,22 +50,17 @@ namespace Temp.API.Controllers
             {
                 return BadRequest(GetInnerMessage(groupValidationException));
             }
-   
         }
         
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGroup(int id, UpdateGroup.Request request)
         {
             try
             {
                 var response = await new UpdateGroup(_ctx).Do(id, request);
-                if (response.Status)
-                {
-                    return Ok(response);
-                }
-
-
+                if (response.Status)       
+                    return NoContent();
+                
                 return BadRequest(response.Message);
             }
             catch (GroupValidationException groupValidationException)
@@ -97,7 +90,6 @@ namespace Temp.API.Controllers
             return Ok(response);
         }
         
-
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;
     }
