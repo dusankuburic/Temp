@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,9 +22,11 @@ namespace Temp.Application.Employees
         TryCatch(async () =>
         {
 
+            var currentDateTime = DateTime.Now;
+
             var employeesWithoutEngagement = _ctx.Employees
                 .Include(x => x.Engagements)
-                .Where(x => x.Engagements.Count == 0)
+                .Where(x => x.Engagements.All(n => n.DateTo < currentDateTime) || x.Engagements.Count == 0)
                 .OrderByDescending(x => x.Id)
                 .Select(x => new EmployeesWithoutEngagementViewModel
                 {
@@ -31,7 +34,8 @@ namespace Temp.Application.Employees
                     FirstName = x.FirstName,
                     LastName = x.LastName,
                     Role = x.Role
-                }).AsQueryable();
+                })             
+                .AsQueryable();
                 
 
             ValidateGetEmployeeWithoutEngagementViewModel(employeesWithoutEngagement);
@@ -58,10 +62,10 @@ namespace Temp.Application.Employees
 
         public class EmployeesWithoutEngagementViewModel
         {
-            public int Id {get; set;}
-            public string FirstName {get; set;}
-            public string LastName {get; set;}
-            public string Role {get; set;}
+            public int Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Role { get; set; }
         }
     }
 }
