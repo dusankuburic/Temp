@@ -18,9 +18,8 @@ namespace Temp.Application.Workplaces
         private async Task<bool> WorkplaceExists(string name)
         {
             if (await _ctx.Workplaces.AnyAsync(x => x.Name == name))
-            {
                 return true;
-            }
+
             return false;
         }
 

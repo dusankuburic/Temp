@@ -21,11 +21,11 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetOrganizations()
+        public async Task<IActionResult> GetOrganizations()
         {
             try
             {
-                var response = new GetOrganizations(_ctx).Do();
+                var response = await new GetOrganizations(_ctx).Do();
                 return Ok(response);
             }
             catch (OrganizationValidationException organizationValidationException)
@@ -52,11 +52,11 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetOrganization(int id)
+        public async Task<IActionResult> GetOrganization(int id)
         {
             try
             {
-                var response = new GetOrganization(_ctx).Do(id);
+                var response = await new GetOrganization(_ctx).Do(id);
                 return Ok(response);
             }
             catch (OrganizationValidationException organizationValidationException)
@@ -83,9 +83,9 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet("inner-groups/{id}")]
-        public IActionResult InnerGroups(int id)
+        public async Task<IActionResult> InnerGroups(int id)
         {
-            var innerGroups = new GetInnerGroups(_ctx).Do(id);
+            var innerGroups = await new GetInnerGroups(_ctx).Do(id);
             return Ok(innerGroups);
         }
 

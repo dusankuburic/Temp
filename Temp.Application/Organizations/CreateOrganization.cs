@@ -18,17 +18,15 @@ namespace Temp.Application.Organizations
 
         private async Task<bool> OrganizationExists(string name)
         {
-            if(await _ctx.Organizations.AnyAsync(x => x.Name == name))
-            {
+            if(await _ctx.Organizations.AnyAsync(x => x.Name == name))  
                 return true;
-            }
+            
             return false;
         }
 
         public Task<Response> Do(Request request) =>
         TryCatch(async () =>
         {
-
             var organizationExists = await OrganizationExists(request.Name);
 
             if (organizationExists)
@@ -57,8 +55,6 @@ namespace Temp.Application.Organizations
             };
         });
        
-
-
         public class Request
         {
             [Required]

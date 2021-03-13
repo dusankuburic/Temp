@@ -29,11 +29,9 @@ namespace Temp.Application.Auth.Users
 
         private async Task<bool> UserExists(string username)
         {
-            if(await _ctx.Users.AnyAsync(x => x.Username == username))
-            {
+            if(await _ctx.Users.AnyAsync(x => x.Username == username))    
                 return true;
-            }
-
+            
             return false;
         }
 

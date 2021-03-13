@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Temp.Application.Organizations.Service;
 using Temp.Database;
 
@@ -14,15 +16,16 @@ namespace Temp.Application.Organizations
             _ctx = ctx;
         }
 
-        public IEnumerable<OrganizationViewModel> Do() =>
-        TryCatch(() =>
+        public  Task<IEnumerable<OrganizationViewModel>> Do() =>
+        TryCatch(async() =>
         {
-            var organizations = _ctx.Organizations.ToList()
+            var organizations = await _ctx.Organizations
             .Select(x => new OrganizationViewModel
             {
                 Id = x.Id,
                 Name = x.Name
-            });
+            })
+            .ToListAsync();
 
             ValidateStorageOrganizations(organizations);
 

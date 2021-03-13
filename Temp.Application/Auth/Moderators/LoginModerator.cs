@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
-using Temp.Application.Auth.Users;
 using Temp.Database;
 
 namespace Temp.Application.Auth.Moderators
@@ -37,7 +35,6 @@ namespace Temp.Application.Auth.Moderators
                         return false;
                 }
             }
-
             return true;
         }
 

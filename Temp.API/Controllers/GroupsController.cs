@@ -39,11 +39,11 @@ namespace Temp.API.Controllers
 
         
         [HttpGet("{id}")]
-        public IActionResult GetGroup(int id)
+        public async Task<IActionResult> GetGroup(int id)
         {
             try
             {
-                var group = new GetGroup(_ctx).Do(id);
+                var group = await new GetGroup(_ctx).Do(id);
                 return Ok(group);
             }
             catch (GroupValidationException groupValidationException)
@@ -70,9 +70,9 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet("inner-teams/{id}")]
-        public IActionResult InnerTeams(int id)
+        public async Task<IActionResult> InnerTeams(int id)
         {
-            var response = new GetInnerTeams(_ctx).Do(id);
+            var response = await new GetInnerTeams(_ctx).Do(id);
             return Ok(response);
         }
 

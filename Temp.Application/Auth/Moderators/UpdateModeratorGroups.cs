@@ -28,17 +28,6 @@ namespace Temp.Application.Auth.Moderators
                     .FirstOrDefaultAsync();
                 
                 _ctx.Remove(mod);
-                
-                /*
-                foreach (var group in request.Groups)
-                {
-                    _ctx.ModeratorGroups.Add(new ModeratorGroup
-                    {
-                        ModeratorId = id,
-                        GroupId = group
-                    });
-                }
-                */
             }
             else
             {

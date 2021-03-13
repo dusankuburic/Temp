@@ -19,9 +19,8 @@ namespace Temp.Application.Workplaces
         private async Task<bool> WorkplaceExists(string name)
         {
             if (await _ctx.Workplaces.AnyAsync(x => x.Name == name))
-            {
                 return true;
-            }
+
             return false;
         }
 
@@ -71,11 +70,9 @@ namespace Temp.Application.Workplaces
 
         public class Request
         {
-
             [MinLength(2)]
             [MaxLength(50)]
             public string Name {get; set;}
-
         }
 
         public class Response
@@ -85,6 +82,5 @@ namespace Temp.Application.Workplaces
             public string Message {get; set;}
             public bool Status {get; set;}
         }
-
     }
 }

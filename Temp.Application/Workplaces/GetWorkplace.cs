@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 using Temp.Application.Workplaces.Service;
 using Temp.Database;
 
@@ -13,16 +15,16 @@ namespace Temp.Application.Workplaces
             _ctx = ctx;
         }
 
-        public WorkplaceViewModel Do(int id) =>
-        TryCatch(() => 
+        public Task<WorkplaceViewModel> Do(int id) =>
+        TryCatch(async () => 
         { 
-             var workplace = _ctx.Workplaces.Where(x => x.Id == id)
+             var workplace = await _ctx.Workplaces.Where(x => x.Id == id)
             .Select(x => new WorkplaceViewModel
             { 
                 Id = x.Id,
                 Name = x.Name
             })
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
 
             ValidateGetWorkplaceViewModel(workplace);
 

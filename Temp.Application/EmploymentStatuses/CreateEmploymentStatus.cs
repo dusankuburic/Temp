@@ -18,10 +18,9 @@ namespace Temp.Application.EmploymentStatuses
 
         private async Task<bool> EmploymentStatusExists(string name)
         {
-            if(await _ctx.EmploymentStatuses.AnyAsync(x => x.Name == name))
-            {
+            if(await _ctx.EmploymentStatuses.AnyAsync(x => x.Name == name))       
                 return true;
-            }
+            
             return false;
         }
 

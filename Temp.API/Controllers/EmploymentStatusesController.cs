@@ -55,11 +55,11 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetEmploymentStatus(int id)
+        public async Task<IActionResult> GetEmploymentStatus(int id)
         {
             try
             {
-                var response = new GetEmploymentStatus(_ctx).Do(id);
+                var response = await new GetEmploymentStatus(_ctx).Do(id);
                 return Ok(response);
             }
             catch (EmploymentStatusValidationException employmentStatusValidationException)

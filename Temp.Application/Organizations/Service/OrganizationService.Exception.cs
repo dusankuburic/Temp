@@ -9,8 +9,8 @@ namespace Temp.Application.Organizations.Service
     public partial class OrganizationService
     {
         public delegate Task<CreateOrganization.Response> ReturningCreateOrganizationFunction();
-        public delegate IEnumerable<GetOrganizations.OrganizationViewModel> ReturningGetOrganizationsFunction();
-        public delegate GetOrganization.OrganizationViewModel ReturningGetOrganizationFunction();
+        public delegate Task<IEnumerable<GetOrganizations.OrganizationViewModel>> ReturningGetOrganizationsFunction();
+        public delegate Task<GetOrganization.OrganizationViewModel> ReturningGetOrganizationFunction();
         public delegate Task<UpdateOrganization.Response> ReturningUpdateOrganizationFunction();
 
         public async Task<CreateOrganization.Response> TryCatch(ReturningCreateOrganizationFunction returningCreateOrganizationFunction)
@@ -37,11 +37,11 @@ namespace Temp.Application.Organizations.Service
             }
         }
 
-        public IEnumerable<GetOrganizations.OrganizationViewModel> TryCatch(ReturningGetOrganizationsFunction returningGetOrganizationsFunction)
+        public async Task<IEnumerable<GetOrganizations.OrganizationViewModel>> TryCatch(ReturningGetOrganizationsFunction returningGetOrganizationsFunction)
         {
             try
             {
-                return returningGetOrganizationsFunction();
+                return await returningGetOrganizationsFunction();
             }
             catch(OrganizationEmptyStorageException organizationEmptyStorageException)
             {
@@ -57,11 +57,11 @@ namespace Temp.Application.Organizations.Service
             }
         }
 
-        public GetOrganization.OrganizationViewModel TryCatch(ReturningGetOrganizationFunction returningGetOrganizationFunction)
+        public async Task<GetOrganization.OrganizationViewModel> TryCatch(ReturningGetOrganizationFunction returningGetOrganizationFunction)
         {
             try
             {
-                return returningGetOrganizationFunction();
+                return await returningGetOrganizationFunction();
             }
             catch (NullOrganizationException nullOrganizationException)
             {
