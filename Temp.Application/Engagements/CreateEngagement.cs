@@ -38,7 +38,6 @@ namespace Temp.Application.Engagements
                 Status = true
             };
         });
-        
        
         public class Request
         {
@@ -64,8 +63,6 @@ namespace Temp.Application.Engagements
         public class Response
         {
             public bool Status {get; set;}
-        }
-
-      
+        } 
     }
 }

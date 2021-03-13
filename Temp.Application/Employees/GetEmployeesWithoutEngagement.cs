@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Temp.Application.Helpers;
@@ -57,8 +56,6 @@ namespace Temp.Application.Employees
                 set { _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
             }
         }
-
-
 
         public class EmployeesWithoutEngagementViewModel
         {

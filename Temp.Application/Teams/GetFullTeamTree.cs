@@ -33,8 +33,6 @@ namespace Temp.Application.Teams
             };
         });
 
-
-
         public class TeamTreeViewModel
         {
             public int Id { get; set; }

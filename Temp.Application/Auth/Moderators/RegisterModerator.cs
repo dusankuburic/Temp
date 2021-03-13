@@ -29,11 +29,9 @@ namespace Temp.Application.Auth.Moderators
 
         private async Task<bool> ModeratorExists(string username)
         {
-            if (await _ctx.Moderators.AnyAsync(x => x.Username == username))
-            {
+            if (await _ctx.Moderators.AnyAsync(x => x.Username == username))      
                 return true;
-            }
-
+            
             return false;
         }
 

@@ -15,8 +15,7 @@ namespace Temp.Application.Auth.Admins
 
         public RegisterAdmin(ApplicationDbContext ctx)
         {
-            _ctx = ctx;
-            
+            _ctx = ctx;      
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

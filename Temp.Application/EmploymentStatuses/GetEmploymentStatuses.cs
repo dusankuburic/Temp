@@ -65,6 +65,7 @@ namespace Temp.Application.EmploymentStatuses
         public class EmploymentStatusViewModel
         {
             public int Id {get; set;}
+
             public string Name {get; set;}
         }
     }

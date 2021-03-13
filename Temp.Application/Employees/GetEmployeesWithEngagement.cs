@@ -46,7 +46,6 @@ namespace Temp.Application.Employees
                     })
                    .AsQueryable();
                 
-                
                 if (request.MinSalary != 0 || request.MaxSalary != 5000)
                 {
                     employeesWithEngagement = employeesWithEngagement

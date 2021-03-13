@@ -19,11 +19,9 @@ namespace Temp.Application.Employees
             empolyee.Role = RoleName;
             await _ctx.SaveChangesAsync();
 
-            if(empolyee.Role != RoleName)
-            {
+            if(empolyee.Role != RoleName)    
                return false;
-            }
-
+       
             return true;    
         }
     }
