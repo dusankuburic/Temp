@@ -4,7 +4,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Temp.Database;
-using Temp.Domain.Models;
 
 namespace Temp.Application.Groups
 {

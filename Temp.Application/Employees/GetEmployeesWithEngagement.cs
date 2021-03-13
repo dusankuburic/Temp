@@ -41,7 +41,7 @@ namespace Temp.Application.Employees
                 if (request.MinSalary != 0 || request.MaxSalary != 5000)
                 {
                     employeesWithEngagement = employeesWithEngagement
-                        .Where(x => x.Salary.Any(sal => sal >= request.MinSalary && sal <= request.MaxSalary ))
+                        .Where(x => x.Salary.All(sal => sal >= request.MinSalary && sal <= request.MaxSalary ))
                         .AsQueryable();
                 }
                 
@@ -65,7 +65,7 @@ namespace Temp.Application.Employees
                         .Where(x => x.EmploymentStatus.Any(es => es.Contains(request.EmploymentStatus)))
                         .AsQueryable();
                 }
-
+                
                 ValidateGetEmployeeWithEngagementViewModel(employeesWithEngagement);
 
                 return await PagedList<EmployeesWithEngagementViewModel>.CreateAsync(employeesWithEngagement,
