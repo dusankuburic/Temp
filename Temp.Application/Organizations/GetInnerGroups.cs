@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using Temp.Database;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Temp.Application.Organizations
 {
@@ -17,9 +17,9 @@ namespace Temp.Application.Organizations
             _ctx = ctx;
         }
 
-        public string Do(int id)
+        public async Task<string> Do(int id)
         {
-            var innerGroups = _ctx.Organizations.Include(x => x.Groups)
+            var innerGroups = await _ctx.Organizations.Include(x => x.Groups)
                 .Where(x => x.Id == id)
                 .Select(x => new Response
                 {
@@ -30,7 +30,7 @@ namespace Temp.Application.Organizations
                         Name =  g.Name
                     })
                 })
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
                
             //Validate
 

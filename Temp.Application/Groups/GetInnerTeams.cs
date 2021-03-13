@@ -4,6 +4,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Temp.Database;
+using System.Threading.Tasks;
 
 namespace Temp.Application.Groups
 {
@@ -16,9 +17,9 @@ namespace Temp.Application.Groups
             _ctx = ctx;
         }
 
-        public string Do(int id)
+        public async Task<string> Do(int id)
         {
-            var innerTeams = _ctx.Groups.Include(x => x.Teams)
+            var innerTeams = await _ctx.Groups.Include(x => x.Teams)
                 .Where(x => x.Id == id)
                 .Select(x => new Response
                 {
@@ -29,7 +30,7 @@ namespace Temp.Application.Groups
                         Name = t.Name
                     })
                 })
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             //Validate
 

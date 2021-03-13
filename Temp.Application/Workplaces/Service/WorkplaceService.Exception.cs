@@ -10,9 +10,9 @@ namespace Temp.Application.Workplaces.Service
     public partial class WorkplaceService
     {
         public delegate Task<CreateWorkplace.Response> ReturningWorkplaceFunction();
-        public delegate IEnumerable<GetWorkplaces.WorkplacesViewModel> ReturningGetWorkplacesFunction();
+        public delegate Task<IEnumerable<GetWorkplaces.WorkplacesViewModel>> ReturningGetWorkplacesFunction();
         public delegate Task<PagedList<GetWorkplaces.WorkplacesViewModel>> ReturningGetWorkplacesFunctionPage();
-        public delegate GetWorkplace.WorkplaceViewModel ReturningGetWorkplaceFunction();
+        public delegate Task<GetWorkplace.WorkplaceViewModel> ReturningGetWorkplaceFunction();
         public delegate Task<UpdateWorkplace.Response> ReturningUpdateWorkplaceFunction();
 
         public async Task<CreateWorkplace.Response> TryCatch(ReturningWorkplaceFunction returningWorkplaceFunction)
@@ -39,11 +39,11 @@ namespace Temp.Application.Workplaces.Service
             }
         }
         
-        public IEnumerable<GetWorkplaces.WorkplacesViewModel> TryCatch(ReturningGetWorkplacesFunction returningGetWorkplacesFunction)
+        public async Task<IEnumerable<GetWorkplaces.WorkplacesViewModel>> TryCatch(ReturningGetWorkplacesFunction returningGetWorkplacesFunction)
         {
             try
             {
-                return returningGetWorkplacesFunction();
+                return await returningGetWorkplacesFunction();
             }
             catch(WorkplaceEmptyStorageException workplaceEmptyStorageException)
             {
@@ -79,11 +79,11 @@ namespace Temp.Application.Workplaces.Service
             }           
         }
 
-        public GetWorkplace.WorkplaceViewModel TryCatch(ReturningGetWorkplaceFunction returningGetWorkplaceFunction)
+        public async Task<GetWorkplace.WorkplaceViewModel> TryCatch(ReturningGetWorkplaceFunction returningGetWorkplaceFunction)
         {
             try
             {
-                return returningGetWorkplaceFunction();
+                return await returningGetWorkplaceFunction();
             }
             catch(NullWorkplaceException nullWorkplaceException)
             {

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 using Temp.Application.EmploymentStatuses.Service;
 using Temp.Database;
 
@@ -13,17 +15,17 @@ namespace Temp.Application.EmploymentStatuses
             _ctx = ctx;
         }
 
-        public EmploymentStatusViewModel Do(int id) =>
-        TryCatch(() => 
+        public Task<EmploymentStatusViewModel> Do(int id) =>
+        TryCatch(async() => 
         { 
-             var employmentStatus = _ctx.EmploymentStatuses
+             var employmentStatus = await _ctx.EmploymentStatuses
             .Where(x => x.Id == id)
             .Select(x => new EmploymentStatusViewModel
             {
                 Id = x.Id,
                 Name = x.Name
             })
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
 
             ValidateGetEmploymentStatus(employmentStatus);
 
