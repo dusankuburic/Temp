@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
-using Temp.Application.Auth.Users;
 using Temp.Application.Helpers;
 using Temp.Database;
 
@@ -22,9 +21,12 @@ namespace Temp.Application.Employees
         public Task<PagedList<EmployeesWithEngagementViewModel>> Do(Request request) =>
             TryCatch(async () =>
             {
-                
+                var currentDateTime = DateTime.Now;
+
                 var employeesWithEngagement = _ctx.Employees
+                    .Include(x => x.Engagements)
                     .Where(x => x.Engagements.Count != 0)
+                    .Where(x => x.Engagements.Any(n => n.DateTo > currentDateTime))
                     .OrderByDescending(x => x.Id)
                     .Select(x => new EmployeesWithEngagementViewModel
                     {
@@ -32,16 +34,22 @@ namespace Temp.Application.Employees
                         FirstName = x.FirstName,
                         LastName = x.LastName,
                         Role = x.Role,
-                        Salary = _ctx.Engagements.Where(e => e.EmployeeId == x.Id).Select(e => e.Salary),
-                        Workplace = _ctx.Engagements.Where(e => e.EmployeeId == x.Id).Select(e => e.Workplace.Name),
-                        EmploymentStatus = _ctx.Engagements.Where(e => e.EmployeeId == x.Id).Select(e => e.EmploymentStatus.Name)
-                    }).AsQueryable();
-                
+                        Salary = _ctx.Engagements
+                            .Where(e => e.EmployeeId == x.Id)
+                            .Select(e => e.Salary),
+                        Workplace = _ctx.Engagements
+                            .Where(e => e.EmployeeId == x.Id)
+                            .Select(e => e.Workplace.Name),
+                        EmploymentStatus = _ctx.Engagements
+                            .Where(e => e.EmployeeId == x.Id)
+                            .Select(e => e.EmploymentStatus.Name)
+                    })
+                   .AsQueryable();
                 
                 if (request.MinSalary != 0 || request.MaxSalary != 5000)
                 {
                     employeesWithEngagement = employeesWithEngagement
-                        .Where(x => x.Salary.Any(sal => sal >= request.MinSalary && sal <= request.MaxSalary ))
+                        .Where(x => x.Salary.All(sal => sal >= request.MinSalary && sal <= request.MaxSalary ))
                         .AsQueryable();
                 }
                 
@@ -65,7 +73,7 @@ namespace Temp.Application.Employees
                         .Where(x => x.EmploymentStatus.Any(es => es.Contains(request.EmploymentStatus)))
                         .AsQueryable();
                 }
-
+                
                 ValidateGetEmployeeWithEngagementViewModel(employeesWithEngagement);
 
                 return await PagedList<EmployeesWithEngagementViewModel>.CreateAsync(employeesWithEngagement,

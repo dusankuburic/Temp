@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 using Temp.Application.Helpers;
 using Temp.Database;
 
-
 namespace Temp.Application.Employees
-{
-    
+{  
     public class GetEmployees : EmployeeService
     {
         private readonly ApplicationDbContext _ctx;
@@ -28,7 +26,8 @@ namespace Temp.Application.Employees
                 Role = x.Role
             }).AsQueryable();
 
-            if(!string.IsNullOrEmpty(request.Role)) {
+            if(!string.IsNullOrEmpty(request.Role))
+            {
                 employees = employees.Where(x => x.Role == request.Role);
             }
 

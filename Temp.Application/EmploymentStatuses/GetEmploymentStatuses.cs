@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Temp.Application.EmploymentStatuses.Service;
@@ -16,15 +17,15 @@ namespace Temp.Application.EmploymentStatuses
             _ctx = ctx;
         }
         
-        public IEnumerable<EmploymentStatusViewModel> Do() =>
-            TryCatch(() =>
+        public Task<IEnumerable<EmploymentStatusViewModel>> Do() =>
+            TryCatch(async () =>
             {
-                var employmentStatuses = _ctx.EmploymentStatuses
+                var employmentStatuses = await _ctx.EmploymentStatuses
                     .Select(x => new EmploymentStatusViewModel
                     {
                         Id = x.Id,
                         Name = x.Name
-                    }).ToList();
+                    }).ToListAsync();
 
                 ValidateEmploymentStatuses(employmentStatuses);
 
@@ -64,6 +65,7 @@ namespace Temp.Application.EmploymentStatuses
         public class EmploymentStatusViewModel
         {
             public int Id {get; set;}
+
             public string Name {get; set;}
         }
     }

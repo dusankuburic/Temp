@@ -16,8 +16,7 @@ namespace Temp.Application.Groups
         }
 
         public async Task<IEnumerable<ModeratorFreeGroupViewModel>> Do(int id, int moderatorId)
-        {
-            
+        {          
             var moderatorGroups = await _ctx.ModeratorGroups
                 .Where(x => x.ModeratorId == moderatorId)
                 .Select(x => x.GroupId)
@@ -33,7 +32,6 @@ namespace Temp.Application.Groups
                     Name = x.Name
                 })
                 .ToListAsync();
-
 
             return moderatorFreeGroups;
         }

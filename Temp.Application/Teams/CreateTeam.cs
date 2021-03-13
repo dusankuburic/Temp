@@ -19,9 +19,8 @@ namespace Temp.Application.Teams
         private async Task<bool> TeamExists(string name, int groupId)
         {
             if(await _ctx.Teams.AnyAsync(x => x.Name == name && x.GroupId == groupId))
-            {
                 return true;
-            }
+            
             return false;
         }
 
@@ -56,8 +55,6 @@ namespace Temp.Application.Teams
                 Status = true
             };
         });
-     
-
 
         public class Request
         {

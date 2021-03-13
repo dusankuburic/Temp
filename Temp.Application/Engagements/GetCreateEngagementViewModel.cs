@@ -7,6 +7,7 @@ using Temp.Database;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace Temp.Application.Engagements
 {
@@ -21,22 +22,22 @@ namespace Temp.Application.Engagements
        
         public Task<string> Do(int id) =>
         TryCatch(async() => 
-        { 
+        {
             var response = new Response
             {
                 Employee = await new GetEmployee(_ctx).Do(id),
-                Workplaces = new GetWorkplaces(_ctx).Do(),
-                EmploymentStatuses = new GetEmploymentStatuses(_ctx).Do(),
-                Engagements = _ctx.Engagements.Where(x => x.Employee.Id == id)
+                Workplaces = await new GetWorkplaces(_ctx).Do(),
+                EmploymentStatuses = await new GetEmploymentStatuses(_ctx).Do(),
+                Engagements = await _ctx.Engagements.Where(x => x.Employee.Id == id)
                     .Select(eng => new
                     {
-                       id = eng.Id,
-                       workplaceName = eng.Workplace.Name,
-                       employmentStatusName = eng.EmploymentStatus.Name,
-                       dateFrom = eng.DateFrom,
-                       dateTo = eng.DateTo,
-                       salary = eng.Salary 
-                    })
+                        id = eng.Id,
+                        workplaceName = eng.Workplace.Name,
+                        employmentStatusName = eng.EmploymentStatus.Name,
+                        dateFrom = eng.DateFrom,
+                        dateTo = eng.DateTo,
+                        salary = eng.Salary
+                    }).ToListAsync()
             };
 
             ValidateCreateEngagementViewModel(response);

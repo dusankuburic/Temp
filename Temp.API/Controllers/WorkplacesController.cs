@@ -22,7 +22,7 @@ namespace Temp.API.Controllers
         }
         
         [HttpGet]
-        public async Task<ActionResult> GetWorkplaces([FromQuery]GetWorkplaces.Request request)
+        public async Task<IActionResult> GetWorkplaces([FromQuery]GetWorkplaces.Request request)
         {
             try
             {
@@ -56,11 +56,11 @@ namespace Temp.API.Controllers
         
 
         [HttpGet("{id}")]
-        public IActionResult GetWorkplace(int id)
+        public async Task<IActionResult> GetWorkplace(int id)
         {
             try
             {
-                var response = new GetWorkplace(_ctx).Do(id);
+                var response = await new GetWorkplace(_ctx).Do(id);
                 return Ok(response);
             }
             catch (WorkplaceValidationException workplaceValidationException)

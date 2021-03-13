@@ -35,7 +35,6 @@ namespace Temp.Application.Auth.Admins
                         return false;
                 }
             }
-
             return true;
         }
 
@@ -75,8 +74,7 @@ namespace Temp.Application.Auth.Admins
                 User = new AdminResponse
                 {
                     Id = admin.Id,
-                    Username = admin.Username
-                    
+                    Username = admin.Username          
                 },
                 Token = tokenHandler.WriteToken(token)
             };

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Temp.Application.Helpers;
@@ -16,15 +17,15 @@ namespace Temp.Application.Workplaces
             _ctx = ctx;
         }
         
-        public IEnumerable<WorkplacesViewModel> Do() =>
-        TryCatch(() => 
+        public Task<IEnumerable<WorkplacesViewModel>> Do() =>
+        TryCatch(async () => 
         { 
-            var workplaces =_ctx.Workplaces
+            var workplaces = await _ctx.Workplaces
                 .Select(x =>  new WorkplacesViewModel
                 {
                     Id = x.Id,
                     Name = x.Name
-                }).ToList();
+                }).ToListAsync();
         
             ValidateStorageWorkplaces(workplaces);        
 

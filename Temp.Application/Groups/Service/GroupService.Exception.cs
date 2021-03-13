@@ -8,7 +8,7 @@ namespace Temp.Application.Groups.Service
     public partial class GroupService
     {
         public delegate Task<CreateGroup.Response> ReturningCreateGroupFunction();
-        public delegate GetGroup.GroupViewModel ReturningGetGroupFunction();
+        public delegate Task<GetGroup.GroupViewModel> ReturningGetGroupFunction();
         public delegate Task<UpdateGroup.Response> ReturningUpdateGroupFunction();
 
 
@@ -36,11 +36,11 @@ namespace Temp.Application.Groups.Service
             }
         }
 
-        public GetGroup.GroupViewModel TryCatch(ReturningGetGroupFunction returningGetGroupFunction)
+        public async Task<GetGroup.GroupViewModel> TryCatch(ReturningGetGroupFunction returningGetGroupFunction)
         {
             try
             {
-                return returningGetGroupFunction();
+                return await returningGetGroupFunction();
             }
             catch(NullGroupException nullGroupException)
             {

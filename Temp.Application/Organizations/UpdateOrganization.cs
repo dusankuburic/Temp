@@ -18,10 +18,9 @@ namespace Temp.Application.Organizations
 
         public async Task<bool> OrganizationExists(string name)
         {
-            if(await _ctx.Organizations.AnyAsync(x => x.Name == name))
-            {
+            if(await _ctx.Organizations.AnyAsync(x => x.Name == name))   
                 return true;
-            }
+            
             return false;
         }
 

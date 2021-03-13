@@ -10,9 +10,9 @@ namespace Temp.Application.EmploymentStatuses.Service
     public partial class EmploymentStatusService
     {
         public delegate Task<CreateEmploymentStatus.Response> ReturningEmploymentStatusFunction();
-        public delegate IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> ReturningEmploymentStatusesFunction();
+        public delegate Task<IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel>> ReturningEmploymentStatusesFunction();
         public delegate Task<PagedList<GetEmploymentStatuses.EmploymentStatusViewModel>> ReturningEmploymentStatusesFunctionPage();
-        public delegate GetEmploymentStatus.EmploymentStatusViewModel ReturningGetEmploymentStatusFunction();
+        public delegate Task<GetEmploymentStatus.EmploymentStatusViewModel> ReturningGetEmploymentStatusFunction();
         public delegate Task<UpdateEmploymentStatus.Response> ReturningUpdateEmploymentStatusFunction();
 
         public async Task<CreateEmploymentStatus.Response> TryCatch(ReturningEmploymentStatusFunction returningEmploymentStatusFunction)
@@ -39,11 +39,11 @@ namespace Temp.Application.EmploymentStatuses.Service
             }
         }
         
-        public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> TryCatch(ReturningEmploymentStatusesFunction returningEmploymentStatusesFunction)
+        public async Task<IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel>> TryCatch(ReturningEmploymentStatusesFunction returningEmploymentStatusesFunction)
         {
             try
             {
-                return returningEmploymentStatusesFunction();
+                return await returningEmploymentStatusesFunction();
             }
             catch(EmploymentStatusEmptyStorageException employmentStatusEmptyStorageException)
             {
@@ -81,11 +81,11 @@ namespace Temp.Application.EmploymentStatuses.Service
 
         }
 
-        public  GetEmploymentStatus.EmploymentStatusViewModel TryCatch(ReturningGetEmploymentStatusFunction returningGetEmploymentStatusFunction)
+        public async Task<GetEmploymentStatus.EmploymentStatusViewModel> TryCatch(ReturningGetEmploymentStatusFunction returningGetEmploymentStatusFunction)
         {
             try
             {
-                return returningGetEmploymentStatusFunction();
+                return await returningGetEmploymentStatusFunction();
             }
             catch (NullEmploymentStatusException nullEmploymentStatusException)
             {

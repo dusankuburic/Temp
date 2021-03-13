@@ -19,9 +19,7 @@ namespace Temp.Application.Teams
         private async Task<bool> TeamExists(string name, int groupId)
         {
             if (await _ctx.Teams.AnyAsync(x => x.Name == name && x.GroupId == groupId))
-            {
                 return true;
-            }
 
             return false;
         }
@@ -58,7 +56,6 @@ namespace Temp.Application.Teams
 
                 ValidateTeamOnUpdate(team);
 
-
                 await _ctx.SaveChangesAsync();
 
                 return new Response
@@ -72,9 +69,12 @@ namespace Temp.Application.Teams
 
         public class Request
         {
-            [Required] public int GroupId { get; set; }
+            [Required] 
+            public int GroupId { get; set; }
 
-            [MinLength(2)] [MaxLength(50)] public string Name { get; set; }
+            [MinLength(2)] 
+            [MaxLength(50)] 
+            public string Name { get; set; }
         }
 
         public class Response
