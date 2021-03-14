@@ -22,7 +22,7 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetEmploymentStatuses([FromQuery]GetEmploymentStatuses.Request request)
+        public async Task<IActionResult> GetEmploymentStatuses([FromQuery]GetEmploymentStatuses.Request request)
         {
             try
             {

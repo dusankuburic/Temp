@@ -26,7 +26,7 @@ namespace Temp.API.Controllers
         }
         
         [HttpGet("without")]
-        public async Task<ActionResult> WithoutEngagements([FromQuery]GetEmployeesWithoutEngagement.Request request)
+        public async Task<IActionResult> WithoutEngagements([FromQuery]GetEmployeesWithoutEngagement.Request request)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet("with")]
-        public async Task<ActionResult> WithEngagements([FromQuery]GetEmployeesWithEngagement.Request request)
+        public async Task<IActionResult> WithEngagements([FromQuery]GetEmployeesWithEngagement.Request request)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace Temp.API.Controllers
         }
   
         [HttpGet("employee/{id}")]
-        public async Task<ActionResult> GetEngagementForEmployee(int id)
+        public async Task<IActionResult> GetEngagementForEmployee(int id)
         {
             try
             {

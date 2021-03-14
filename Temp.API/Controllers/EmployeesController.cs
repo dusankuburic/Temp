@@ -22,7 +22,7 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetEmployees([FromQuery]GetEmployees.Request request)
+        public async Task<IActionResult> GetEmployees([FromQuery]GetEmployees.Request request)
         {
             try
             {
@@ -37,14 +37,14 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetEmployee(int id)
+        public async Task<IActionResult> GetEmployee(int id)
         {
             var response = await new GetEmployee(_ctx).Do(id);
             return Ok(response);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(CreateEmployee.Request request)
+        public async Task<IActionResult> Create(CreateEmployee.Request request)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace Temp.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateEmployee(int id, UpdateEmployee.Request request)
+        public async Task<IActionResult> UpdateEmployee(int id, UpdateEmployee.Request request)
         {
             var response = await new UpdateEmployee(_ctx).Do(id, request);
             if (response.Status)

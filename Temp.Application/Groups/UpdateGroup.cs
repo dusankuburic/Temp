@@ -18,10 +18,9 @@ namespace Temp.Application.Groups
 
         private async Task<bool> GroupExists(string name, int organizationId)
         {
-            if (await _ctx.Groups.AnyAsync(x => x.Name == name && x.OrganizationId == organizationId))
-            {
+            if (await _ctx.Groups.AnyAsync(x => x.Name == name && x.OrganizationId == organizationId))           
                 return true;
-            }
+            
             return false;
         }
 

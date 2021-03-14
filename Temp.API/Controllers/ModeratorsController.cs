@@ -22,7 +22,7 @@ namespace Temp.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetModerator(int id)
+        public async Task<IActionResult> GetModerator(int id)
         {
             var response = await new GetModerator(_ctx).Do(id);
             return Ok(response);
