@@ -3,15 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Temp.UI", "Temp.UI\Temp.UI.csproj", "{7812C8CC-EE5D-49FF-9CF6-4A9019C376F1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Temp.Domain", "Temp.Domain\Temp.Domain.csproj", "{EC33EC32-9E37-4F86-A2C4-14968F3A2AF9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Temp.Database", "Temp.Database\Temp.Database.csproj", "{99514A95-1E60-4F64-BFFC-F51673C138AC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Temp.Application", "Temp.Application\Temp.Application.csproj", "{8637FC83-5213-4848-A77C-72C3E15EEA93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Temp.API", "Temp.API\Temp.API.csproj", "{54296DE6-C36D-4774-82E9-98E9034B8D63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Temp.API", "Temp.API\Temp.API.csproj", "{54296DE6-C36D-4774-82E9-98E9034B8D63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7812C8CC-EE5D-49FF-9CF6-4A9019C376F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7812C8CC-EE5D-49FF-9CF6-4A9019C376F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7812C8CC-EE5D-49FF-9CF6-4A9019C376F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7812C8CC-EE5D-49FF-9CF6-4A9019C376F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EC33EC32-9E37-4F86-A2C4-14968F3A2AF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EC33EC32-9E37-4F86-A2C4-14968F3A2AF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC33EC32-9E37-4F86-A2C4-14968F3A2AF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
