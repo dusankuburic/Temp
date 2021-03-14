@@ -15,7 +15,6 @@ namespace Temp.Application.Groups
             _ctx = ctx;
         }
 
-
         public async Task<IEnumerable<ModeratorGroupViewModel>> Do(int id)
         {          
             var moderatorGroups = await _ctx.ModeratorGroups
@@ -32,7 +31,6 @@ namespace Temp.Application.Groups
 
             return moderatorGroups;
         }
-
 
         public class ModeratorGroupViewModel
         {

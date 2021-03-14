@@ -26,10 +26,8 @@ namespace Temp.API
 
         public IConfiguration Configuration { get; }
 
-
         public void ConfigureServices(IServiceCollection services)
-        {
-            
+        {    
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
@@ -46,7 +44,6 @@ namespace Temp.API
                     new BadRequestObjectResult(ctx.ModelState);
             });
             
-             
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -67,8 +64,8 @@ namespace Temp.API
             });
 
 
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
-          
+            services.AddDbContext<ApplicationDbContext>(options => 
+                options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -93,7 +90,6 @@ namespace Temp.API
                 });
             });
             
-
             app.UseHttpsRedirection();
             app.UseRouting();
 
@@ -105,9 +101,7 @@ namespace Temp.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-            
-
+            });           
         }
     }
 }
