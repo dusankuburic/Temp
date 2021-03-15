@@ -6,8 +6,7 @@ import { EmploymentStatusService } from 'src/app/_services/employment-status.ser
 
 @Component({
   selector: 'app-employment-status-create',
-  templateUrl: './employment-status-create.component.html',
-  styleUrls: ['./employment-status-create.component.scss']
+  templateUrl: './employment-status-create.component.html'
 })
 export class EmploymentStatusCreateComponent implements OnInit {
   createEmploymentStatusForm: FormGroup;

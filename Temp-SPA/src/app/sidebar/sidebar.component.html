@@ -85,11 +85,10 @@
         <!-- Employee -->
         <div class="dropdown" dropdown>
             <a class="list-group-item list-group-item-action bg-light" dropdownToggle>
-                <i class="fa fa-address-book"></i> Employee
+                <i class="fas fa-users"></i> Groups
             </a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-                <a class="dropdown-item" [routerLink]="['/employees']"><i class="fa fa-angle-right"></i>Empolyees</a>
-                <a class="dropdown-item"><i class="fa fa-angle-right"></i> Create Employee</a>
+                <a class="dropdown-item" [routerLink]="['/assigned-groups/',user.id]"><i class="fa fa-angle-right"></i> Assigned groups</a>
             </div>
         </div>
         

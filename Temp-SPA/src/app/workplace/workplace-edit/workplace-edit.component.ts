@@ -7,8 +7,7 @@ import { WorkplaceService } from 'src/app/_services/workplace.service';
 
 @Component({
   selector: 'app-workplace-edit',
-  templateUrl: './workplace-edit.component.html',
-  styleUrls: ['./workplace-edit.component.scss']
+  templateUrl: './workplace-edit.component.html'
 })
 export class WorkplaceEditComponent implements OnInit {
   editWorkplaceForm: FormGroup;

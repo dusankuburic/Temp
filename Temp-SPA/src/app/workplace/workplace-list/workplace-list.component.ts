@@ -7,8 +7,7 @@ import { WorkplaceService } from 'src/app/_services/workplace.service';
 
 @Component({
   selector: 'app-workplace-list',
-  templateUrl: './workplace-list.component.html',
-  styleUrls: ['./workplace-list.component.scss']
+  templateUrl: './workplace-list.component.html'
 })
 export class WorkplaceListComponent implements OnInit {
   workplaces: Workplace[];

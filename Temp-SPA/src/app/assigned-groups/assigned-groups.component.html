@@ -1,0 +1,28 @@
+<div class="row justify-content-center">
+
+  <div class="col-lg-8">
+    <h1 class="text-center">Assigned Groups</h1>
+    <table class="table table-striped table-hover text-center">
+      <thead>
+          <tr>
+            <th>Name</th>
+            <th>Team Options</th>
+          </tr>
+      </thead>
+      <tbody *ngIf="groups.length !== 0"> 
+        <tr *ngFor="let group of groups">
+          <td>{{group.name}}</td>
+          <td><a class="btn btn-success"[routerLink]="['/assigned-groups/inner-teams/', group.id]" ><i class="fas fa-users"></i></a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-lg-6" *ngIf="groups.length === 0">
+    <div class="alert alert-info text-center" role="alert">
+      <h5>There are no assigned groups</h5>
+    </div>
+  </div>
+  </div>
+  
+  
+  

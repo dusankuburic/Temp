@@ -14,8 +14,7 @@ import { TeamService } from 'src/app/_services/team.service';
 
 @Component({
   selector: 'app-employee-edit',
-  templateUrl: './employee-edit.component.html',
-  styleUrls: ['./employee-edit.component.scss']
+  templateUrl: './employee-edit.component.html'
 })
 export class EmployeeEditComponent implements OnInit {
   editEmployeeForm: FormGroup;

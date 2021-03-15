@@ -7,8 +7,7 @@ import { EngagementService } from 'src/app/_services/engagement.service';
 
 @Component({
   selector: 'app-engagement-with-employee-list',
-  templateUrl: './engagement-with-employee-list.component.html',
-  styleUrls: ['./engagement-with-employee-list.component.scss']
+  templateUrl: './engagement-with-employee-list.component.html'
 })
 export class EngagementWithEmployeeListComponent implements OnInit {
   employees: Employee[];

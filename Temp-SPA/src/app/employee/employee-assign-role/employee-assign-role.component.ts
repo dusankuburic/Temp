@@ -8,8 +8,7 @@ import { EmployeeService } from 'src/app/_services/employee.service';
 
 @Component({
   selector: 'app-employee-assign-role',
-  templateUrl: './employee-assign-role.component.html',
-  styleUrls: ['./employee-assign-role.component.css']
+  templateUrl: './employee-assign-role.component.html'
 })
 export class EmployeeAssignRoleComponent implements OnInit {
   createAssignRoleForm: FormGroup;
