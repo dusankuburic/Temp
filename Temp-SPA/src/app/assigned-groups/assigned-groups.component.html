@@ -6,14 +6,13 @@
       <thead>
           <tr>
             <th>Name</th>
-            <th colspan="2">Team Options</th>
+            <th>Team Options</th>
           </tr>
       </thead>
       <tbody *ngIf="groups.length !== 0"> 
         <tr *ngFor="let group of groups">
           <td>{{group.name}}</td>
-          <td><a class="btn btn-success"[routerLink]="['/groups/inner-teams/', group.id]" ><i class="fas fa-users"></i></a></td>
-          <td><a class="btn btn-info"  [routerLink]="['/team/create/', group.id]"><i class="fas fa-project-diagram"></i></a></td>
+          <td><a class="btn btn-success"[routerLink]="['/assigned-groups/inner-teams/', group.id]" ><i class="fas fa-users"></i></a></td>
         </tr>
       </tbody>
     </table>

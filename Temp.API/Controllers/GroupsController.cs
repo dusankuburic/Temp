@@ -71,7 +71,6 @@ namespace Temp.API.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("inner-teams/{id}")]
         public async Task<IActionResult> InnerTeams(int id)
         {

@@ -63,6 +63,7 @@ import { TeamEditResolver } from './_resolvers/team/team-edit.resolver';
 import { ModeratorComponent } from './moderator/moderator.component';
 import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.component';
 import { ModeratorAssignedGroupsResolver } from './_resolvers/group/moderator-assigned-groups.resolver';
+import { AssignedInnerTeamsComponent } from './assigned-groups/assigned-inner-teams/assigned-inner-teams.component';
 
 
 export function tokenGetter(): any {
@@ -100,7 +101,8 @@ export function tokenGetter(): any {
     TeamCreateComponent,
     TeamEditComponent,
     ModeratorComponent,
-    AssignedGroupsComponent
+    AssignedGroupsComponent,
+    AssignedInnerTeamsComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),

@@ -46,8 +46,10 @@ import { ModeratorGuard } from './_guards/moderator.guard';
 import { ModeratorComponent } from './moderator/moderator.component';
 import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.component';
 import { ModeratorAssignedGroupsResolver } from './_resolvers/group/moderator-assigned-groups.resolver';
+import { AssignedInnerTeamsComponent } from './assigned-groups/assigned-inner-teams/assigned-inner-teams.component';
 
 export const appRoutes: Routes = [
+
     {path: '', component: HomeComponent},
     {
         path: '',
@@ -121,7 +123,9 @@ export const appRoutes: Routes = [
         children: [
             {path: 'moderators', component: ModeratorComponent},
             {path: 'assigned-groups/:id', component: AssignedGroupsComponent,
-                resolve: {groups: ModeratorAssignedGroupsResolver}}
+                resolve: {groups: ModeratorAssignedGroupsResolver}},
+            {path: 'assigned-groups/inner-teams/:id', component: AssignedInnerTeamsComponent,
+                resolve: {teams: TeamListResolver}}
         ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}
