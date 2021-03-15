@@ -4,8 +4,7 @@ import { Group } from '../_models/group';
 
 @Component({
   selector: 'app-assigned-groups',
-  templateUrl: './assigned-groups.component.html',
-  styleUrls: ['./assigned-groups.component.css']
+  templateUrl: './assigned-groups.component.html'
 })
 export class AssignedGroupsComponent implements OnInit {
   groups: Group[];

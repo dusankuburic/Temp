@@ -4,8 +4,7 @@ import { InnerTeams } from 'src/app/_models/team';
 
 @Component({
   selector: 'app-assigned-inner-teams',
-  templateUrl: './assigned-inner-teams.component.html',
-  styleUrls: ['./assigned-inner-teams.component.css']
+  templateUrl: './assigned-inner-teams.component.html'
 })
 export class AssignedInnerTeamsComponent implements OnInit {
 

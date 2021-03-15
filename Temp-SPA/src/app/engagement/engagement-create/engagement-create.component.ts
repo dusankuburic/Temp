@@ -8,8 +8,7 @@ import { EngagementService } from 'src/app/_services/engagement.service';
 
 @Component({
   selector: 'app-engagement-create',
-  templateUrl: './engagement-create.component.html',
-  styleUrls: ['./engagement-create.component.scss']
+  templateUrl: './engagement-create.component.html'
 })
 export class EngagementCreateComponent implements OnInit {
   employeeData: any;

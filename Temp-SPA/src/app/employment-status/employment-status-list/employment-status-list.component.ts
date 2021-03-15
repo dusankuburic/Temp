@@ -7,8 +7,7 @@ import { EmploymentStatusService } from 'src/app/_services/employment-status.ser
 
 @Component({
   selector: 'app-employment-status-list',
-  templateUrl: './employment-status-list.component.html',
-  styleUrls: ['./employment-status-list.component.scss']
+  templateUrl: './employment-status-list.component.html'
 })
 export class EmploymentStatusListComponent implements OnInit {
   employmentStatuses: EmploymentStatus[];

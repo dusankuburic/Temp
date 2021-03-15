@@ -4,8 +4,7 @@ import { Organization } from 'src/app/_models/organization';
 
 @Component({
   selector: 'app-organization-list',
-  templateUrl: './organization-list.component.html',
-  styleUrls: ['./organization-list.component.scss']
+  templateUrl: './organization-list.component.html'
 })
 export class OrganizationListComponent implements OnInit {
   organizations: Organization[];
