@@ -8,8 +8,7 @@ import { GroupService } from 'src/app/_services/group.service';
 
 @Component({
   selector: 'app-group-create',
-  templateUrl: './group-create.component.html',
-  styleUrls: ['./group-create.component.scss']
+  templateUrl: './group-create.component.html'
 })
 
 export class GroupCreateComponent implements OnInit {

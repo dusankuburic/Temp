@@ -7,8 +7,7 @@ import { GroupService } from 'src/app/_services/group.service';
 
 @Component({
   selector: 'app-group-edit',
-  templateUrl: './group-edit.component.html',
-  styleUrls: ['./group-edit.component.scss']
+  templateUrl: './group-edit.component.html'
 })
 export class GroupEditComponent implements OnInit {
   editGroupForm: FormGroup;

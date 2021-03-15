@@ -3,10 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { InnerTeams } from 'src/app/_models/team';
 
 @Component({
-  selector: 'app-team-list',
-  templateUrl: './inner-team-list.component.html'
+  selector: 'app-assigned-inner-teams',
+  templateUrl: './assigned-inner-teams.component.html'
 })
-export class TeamListComponent implements OnInit {
+export class AssignedInnerTeamsComponent implements OnInit {
 
   innerTeams: InnerTeams;
 
@@ -15,7 +15,7 @@ export class TeamListComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.innerTeams = data['innerteams'];
+      this.innerTeams = data['teams'];
     });
   }
 

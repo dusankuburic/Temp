@@ -7,8 +7,7 @@ import { TeamService } from 'src/app/_services/team.service';
 
 @Component({
   selector: 'app-team-edit',
-  templateUrl: './team-edit.component.html',
-  styleUrls: ['./team-edit.component.scss']
+  templateUrl: './team-edit.component.html'
 })
 export class TeamEditComponent implements OnInit {
   editTeamForm: FormGroup;

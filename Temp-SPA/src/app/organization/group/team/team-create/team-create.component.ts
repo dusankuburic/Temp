@@ -8,8 +8,7 @@ import { TeamService } from 'src/app/_services/team.service';
 
 @Component({
   selector: 'app-team-create',
-  templateUrl: './team-create.component.html',
-  styleUrls: ['./team-create.component.scss']
+  templateUrl: './team-create.component.html'
 })
 export class TeamCreateComponent implements OnInit {
   createTeamForm: FormGroup;

@@ -6,8 +6,7 @@ import { WorkplaceService } from 'src/app/_services/workplace.service';
 
 @Component({
   selector: 'app-workplace-create',
-  templateUrl: './workplace-create.component.html',
-  styleUrls: ['./workplace-create.component.scss']
+  templateUrl: './workplace-create.component.html'
 })
 export class WorkplaceCreateComponent implements OnInit {
   createWorkplaceForm: FormGroup;
