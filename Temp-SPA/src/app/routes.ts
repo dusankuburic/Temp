@@ -44,6 +44,8 @@ import { WorkplaceEditResolver } from './_resolvers/workplace/workplace-edit.res
 import { WorkplaceListResolver } from './_resolvers/workplace/workplace-list.resolver';
 import { ModeratorGuard } from './_guards/moderator.guard';
 import { ModeratorComponent } from './moderator/moderator.component';
+import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.component';
+import { ModeratorAssignedGroupsResolver } from './_resolvers/group/moderator-assigned-groups.resolver';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
@@ -117,7 +119,9 @@ export const appRoutes: Routes = [
         runGuardsAndResolvers: 'always',
         canActivate: [ModeratorGuard],
         children: [
-            {path: 'moderators', component: ModeratorComponent}
+            {path: 'moderators', component: ModeratorComponent},
+            {path: 'assigned-groups/:id', component: AssignedGroupsComponent,
+                resolve: {groups: ModeratorAssignedGroupsResolver}}
         ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}

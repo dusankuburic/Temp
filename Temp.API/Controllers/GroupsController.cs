@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Temp.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Moderator")]
     [Route("api/[controller]")]
     [ApiController]
     public class GroupsController : ControllerBase
@@ -19,7 +19,8 @@ namespace Temp.API.Controllers
         {
             _ctx = ctx;
         }
-        
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateGroup.Request request)
         {
@@ -37,7 +38,7 @@ namespace Temp.API.Controllers
             }
         }
 
-        
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGroup(int id)
         {
@@ -51,7 +52,8 @@ namespace Temp.API.Controllers
                 return BadRequest(GetInnerMessage(groupValidationException));
             }
         }
-        
+
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGroup(int id, UpdateGroup.Request request)
         {
@@ -69,6 +71,7 @@ namespace Temp.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("inner-teams/{id}")]
         public async Task<IActionResult> InnerTeams(int id)
         {
@@ -82,7 +85,8 @@ namespace Temp.API.Controllers
             var response = await new GetModeratorGroups(_ctx).Do(id);
             return Ok(response);
         }
-        
+
+        [Authorize(Roles = "Admin")]
         [HttpGet("moderator-free-groups/{organizationId}/moderator/{moderatorId}")]
         public async Task<IActionResult> GetModeratorFreeGroups(int organizationId, int moderatorId)
         {

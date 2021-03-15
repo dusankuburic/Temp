@@ -61,7 +61,8 @@ import { TeamCreateResolver } from './_resolvers/team/team-create.resolver';
 import { TeamEditComponent } from './organization/group/team/team-edit/team-edit.component';
 import { TeamEditResolver } from './_resolvers/team/team-edit.resolver';
 import { ModeratorComponent } from './moderator/moderator.component';
-
+import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.component';
+import { ModeratorAssignedGroupsResolver } from './_resolvers/group/moderator-assigned-groups.resolver';
 
 
 export function tokenGetter(): any {
@@ -69,7 +70,7 @@ export function tokenGetter(): any {
 }
 
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
     NavComponent,
     HomeComponent,
@@ -98,7 +99,8 @@ export function tokenGetter(): any {
     TeamListComponent,
     TeamCreateComponent,
     TeamEditComponent,
-    ModeratorComponent
+    ModeratorComponent,
+    AssignedGroupsComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -138,7 +140,8 @@ export function tokenGetter(): any {
     GroupEditResolver,
     TeamListResolver,
     TeamCreateResolver,
-    TeamEditResolver
+    TeamEditResolver,
+    ModeratorAssignedGroupsResolver
   ],
   bootstrap: [AppComponent]
 })

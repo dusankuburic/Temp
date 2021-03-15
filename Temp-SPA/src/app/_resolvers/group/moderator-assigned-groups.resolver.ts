@@ -2,23 +2,23 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { InnerGroups } from '../../_models/group';
-import { AlertifyService } from '../../_services/alertify.service';
-import { GroupService } from '../../_services/group.service';
+import { Group } from 'src/app/_models/group';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { GroupService } from 'src/app/_services/group.service';
 
 @Injectable()
-export class GroupListResolver implements Resolve<InnerGroups> {
+export class ModeratorAssignedGroupsResolver implements Resolve<Group[]> {
 
     constructor(
         private groupService: GroupService,
         private router: Router,
         private alertify: AlertifyService){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<InnerGroups> {
-        return this.groupService.getGroups(route.params['id']).pipe(
+    resolve(route: ActivatedRouteSnapshot): Observable<Group[]> {
+        return this.groupService.getModeratorGroups(route.params['id']).pipe(
             catchError(error => {
                 this.alertify.error('Problem retriving data');
-                this.router.navigate(['/organizations']);
+                this.router.navigate(['/']);
                 return of(null);
             })
         );
