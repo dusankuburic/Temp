@@ -14,7 +14,7 @@
 ### Employees
 ![](images/3img.png)
 
-### Edit user with Moderator role
+### Edit employee with Moderator role
 ![](images/4img.png)
 
 ### Assign role
