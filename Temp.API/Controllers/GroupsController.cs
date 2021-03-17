@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using Temp.Application.Groups;
+using Temp.Core.Groups;
 using Temp.Database;
 using Temp.Domain.Models.Groups.Exceptions;
 using Microsoft.AspNetCore.Authorization;

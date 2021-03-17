@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Temp.Domain.Models
 {
     public class User
@@ -11,5 +13,7 @@ namespace Temp.Domain.Models
 
         public int? EmployeeId {get; set;}
         public Employee Employee {get; set;}
+
+        public ICollection<Application> Applications { get; set; }
     }
 }

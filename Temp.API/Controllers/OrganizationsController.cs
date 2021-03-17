@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using Temp.Application.Organizations;
+using Temp.Core.Organizations;
 using Temp.Domain.Models.Organizations.Exceptions;
 using System.Threading.Tasks;
 using Temp.Database;

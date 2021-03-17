@@ -12,5 +12,7 @@ namespace Temp.Domain.Models
         public Group Group { get; set; }
 
         public ICollection<Employee> Employees { get; set; }
+
+        public ICollection<Application> Applications { get; set; }
     }
 }
