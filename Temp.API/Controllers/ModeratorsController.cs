@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Temp.Application.Auth.Moderators;
+using Temp.Core.Auth.Moderators;
 using Temp.Database;
 using Temp.Domain.Models.ModeratorGroups.Exceptions;
 

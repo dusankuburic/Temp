@@ -47,6 +47,48 @@ namespace Temp.Database.Migrations
                     b.ToTable("Admins");
                 });
 
+            modelBuilder.Entity("Temp.Domain.Models.Application", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModeratorId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("StatusUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModeratorId");
+
+                    b.HasIndex("TeamId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Applications");
+                });
+
             modelBuilder.Entity("Temp.Domain.Models.Employee", b =>
                 {
                     b.Property<int>("Id")
@@ -270,6 +312,25 @@ namespace Temp.Database.Migrations
                     b.HasOne("Temp.Domain.Models.Employee", "Employee")
                         .WithOne("Admin")
                         .HasForeignKey("Temp.Domain.Models.Admin", "EmployeeId");
+                });
+
+            modelBuilder.Entity("Temp.Domain.Models.Application", b =>
+                {
+                    b.HasOne("Temp.Domain.Models.Moderator", "Moderator")
+                        .WithMany("Applications")
+                        .HasForeignKey("ModeratorId");
+
+                    b.HasOne("Temp.Domain.Models.Team", "Team")
+                        .WithMany("Applications")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Temp.Domain.Models.User", "User")
+                        .WithMany("Applications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Temp.Domain.Models.Employee", b =>

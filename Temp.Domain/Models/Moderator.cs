@@ -14,5 +14,7 @@ namespace Temp.Domain.Models
         public Employee Employee { get; set; }
         
         public ICollection<ModeratorGroup> ModeratorGroups { get; set; }
+
+        public ICollection<Application> Applications { get; set; }
     }
 }

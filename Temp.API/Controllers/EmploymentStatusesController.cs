@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Temp.API.Helpers;
-using Temp.Application.EmploymentStatuses;
+using Temp.Core.EmploymentStatuses;
 using Temp.Database;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 

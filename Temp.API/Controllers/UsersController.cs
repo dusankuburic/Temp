@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Temp.Application.Auth.Users;
+using Temp.Core.Auth.Users;
 using Temp.Database;
 
 namespace Temp.API.Controllers
