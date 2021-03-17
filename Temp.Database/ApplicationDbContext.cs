@@ -32,6 +32,8 @@ namespace Temp.Database
         
         public DbSet<ModeratorGroup> ModeratorGroups { get; set; }
 
+        public DbSet<Application> Applications { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
