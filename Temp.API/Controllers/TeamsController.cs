@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Temp.Application.Teams;
+using Temp.Core.Teams;
 using Temp.Database;
 using Temp.Domain.Models.Teams.Exceptions;
 

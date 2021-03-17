@@ -12,7 +12,7 @@ namespace Temp.Domain.Models
         public int TeamId { get; set; }
         public Team Team { get; set; }
 
-        public int ModeratorId { get; set; }
+        public int? ModeratorId { get; set; }
         public Moderator Moderator { get; set; }
 
         public string Category { get; set; }

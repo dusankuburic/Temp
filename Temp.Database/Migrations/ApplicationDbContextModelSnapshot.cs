@@ -63,7 +63,7 @@ namespace Temp.Database.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ModeratorId")
+                    b.Property<int?>("ModeratorId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Status")
@@ -318,9 +318,7 @@ namespace Temp.Database.Migrations
                 {
                     b.HasOne("Temp.Domain.Models.Moderator", "Moderator")
                         .WithMany("Applications")
-                        .HasForeignKey("ModeratorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ModeratorId");
 
                     b.HasOne("Temp.Domain.Models.Team", "Team")
                         .WithMany("Applications")
