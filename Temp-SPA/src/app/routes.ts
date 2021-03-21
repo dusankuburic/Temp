@@ -47,6 +47,8 @@ import { ModeratorComponent } from './moderator/moderator.component';
 import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.component';
 import { ModeratorAssignedGroupsResolver } from './_resolvers/group/moderator-assigned-groups.resolver';
 import { AssignedInnerTeamsComponent } from './assigned-groups/assigned-inner-teams/assigned-inner-teams.component';
+import { ApplicationCreateComponent } from './application/application-create/application-create.component';
+import { ApplicationCreateResolver } from './_resolvers/application/application-create.resolver';
 
 export const appRoutes: Routes = [
 
@@ -113,7 +115,9 @@ export const appRoutes: Routes = [
         runGuardsAndResolvers: 'always',
         canActivate: [UserGuard],
         children: [
-            {path: 'users', component: UsersComponent}
+            {path: 'users', component: UsersComponent},
+            {path: 'application/create/:id', component: ApplicationCreateComponent,
+                resolve: {team: ApplicationCreateResolver}}
         ]
     },
     {

@@ -8,7 +8,6 @@ namespace Temp.Domain.Models.Employees.Exceptions
             : base($"Invalid Employee, " +
                   $"ParameterName : {parameterName}, " +
                   $"ParameterValue: {parameterValue}.")
-            {}
-        
+            {}       
     }
 }
