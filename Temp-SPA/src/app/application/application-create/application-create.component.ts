@@ -47,7 +47,5 @@ export class ApplicationCreateComponent implements OnInit {
     }, error => {
       this.alertify.error(error);
     });
-
   }
-
 }
