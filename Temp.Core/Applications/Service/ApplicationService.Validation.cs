@@ -11,6 +11,7 @@ namespace Temp.Core.Applications.Service
         {
             ValidateApplication(application);
             ValidateApplicationInts(application);
+            ValidateApplicationString(application);
             ValidateApplicationDates(application);
         }
 
@@ -48,6 +49,19 @@ namespace Temp.Core.Applications.Service
             }
         }
 
+
+        public void ValidateApplicationString(Application application)
+        {
+            switch(application)
+            {
+                case { } when IsInvalid(application.Content):
+                    throw new InvalidApplicationException(
+                        parameterName: nameof(application.Content),
+                        parameterValue: application.Content);
+            }
+        }
+
+
         public static bool IsInvalidInt(int input)
         {
             if(input > 0 && input <= int.MaxValue)
@@ -65,5 +79,7 @@ namespace Temp.Core.Applications.Service
             }
             return true;
         }
+
+        public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
     }
 }
