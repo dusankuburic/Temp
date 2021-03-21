@@ -20,7 +20,7 @@ namespace Temp.API.Controllers
             _ctx = ctx;
         }
 
-        [Authorize(Roles = "Admin")]
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateGroup.Request request)
         {
@@ -38,7 +38,7 @@ namespace Temp.API.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGroup(int id)
         {
@@ -53,7 +53,7 @@ namespace Temp.API.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGroup(int id, UpdateGroup.Request request)
         {
@@ -71,6 +71,7 @@ namespace Temp.API.Controllers
             }
         }
 
+  
         [HttpGet("inner-teams/{id}")]
         public async Task<IActionResult> InnerTeams(int id)
         {
@@ -78,6 +79,7 @@ namespace Temp.API.Controllers
             return Ok(response);
         }
 
+      
         [HttpGet("moderator-groups/{id}")]
         public async Task<IActionResult> GetModeratorGroups(int id)
         {
@@ -85,7 +87,6 @@ namespace Temp.API.Controllers
             return Ok(response);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("moderator-free-groups/{organizationId}/moderator/{moderatorId}")]
         public async Task<IActionResult> GetModeratorFreeGroups(int organizationId, int moderatorId)
         {

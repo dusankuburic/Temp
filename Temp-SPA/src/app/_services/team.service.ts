@@ -31,4 +31,8 @@ updateTeam(id: number, team: Team): any {
   return this.http.put(this.baseUrl + 'teams/' + id, team);
 }
 
+getUserTeam(userId: number): any {
+  return this.http.get(this.baseUrl + 'teams/employee/team/' + userId);
+}
+
 }

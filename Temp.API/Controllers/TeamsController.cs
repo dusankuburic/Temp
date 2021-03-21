@@ -8,7 +8,7 @@ using Temp.Domain.Models.Teams.Exceptions;
 
 namespace Temp.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, User")]
     [Route("api/[controller]")]
     [ApiController]
     public class TeamsController : ControllerBase
@@ -20,6 +20,8 @@ namespace Temp.API.Controllers
             _ctx = ctx;
         }
 
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateTeam.Request request)
         {
@@ -37,6 +39,7 @@ namespace Temp.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTeam(int id)
         {
@@ -51,6 +54,7 @@ namespace Temp.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("full/{id}")]
         public async Task<IActionResult> GetFullTeam(int id)
         {
@@ -65,7 +69,14 @@ namespace Temp.API.Controllers
             }
         }
 
+        [HttpGet("employee/team/{userId}")]
+        public async Task<IActionResult> GetUserTeam(int userId)
+        {
+            var response = await new GetUserTeam(_ctx).Do(userId);
+            return Ok(response);
+        }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTeam(int id, UpdateTeam.Request request)
         {

@@ -64,14 +64,15 @@ import { ModeratorComponent } from './moderator/moderator.component';
 import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.component';
 import { ModeratorAssignedGroupsResolver } from './_resolvers/group/moderator-assigned-groups.resolver';
 import { AssignedInnerTeamsComponent } from './assigned-groups/assigned-inner-teams/assigned-inner-teams.component';
-
+import { ApplicationCreateComponent } from './application/application-create/application-create.component';
+import { ApplicationCreateResolver } from './_resolvers/application/application-create.resolver';
 
 export function tokenGetter(): any {
   return localStorage.getItem('token');
 }
 
 @NgModule({
-  declarations: [
+  declarations: [	
     AppComponent,
     NavComponent,
     HomeComponent,
@@ -102,7 +103,8 @@ export function tokenGetter(): any {
     TeamEditComponent,
     ModeratorComponent,
     AssignedGroupsComponent,
-    AssignedInnerTeamsComponent
+    AssignedInnerTeamsComponent,
+    ApplicationCreateComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -143,7 +145,8 @@ export function tokenGetter(): any {
     TeamListResolver,
     TeamCreateResolver,
     TeamEditResolver,
-    ModeratorAssignedGroupsResolver
+    ModeratorAssignedGroupsResolver,
+    ApplicationCreateResolver
   ],
   bootstrap: [AppComponent]
 })
