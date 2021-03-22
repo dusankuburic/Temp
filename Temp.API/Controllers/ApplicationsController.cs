@@ -20,7 +20,6 @@ namespace Temp.API.Controllers
             _ctx = ctx;
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Create(CreateApplication.Request request)
         {
