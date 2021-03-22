@@ -8,7 +8,7 @@ using Temp.Domain.Models.Applications.Exceptions;
 
 namespace Temp.API.Controllers
 {
-    [Authorize(Roles = "User, Admin")]
+    [Authorize(Roles = "Moderator, User, Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class ApplicationsController : ControllerBase
@@ -37,6 +37,13 @@ namespace Temp.API.Controllers
                 return BadRequest(GetInnerMessage(applicationValidationException));
             }
 
+        }
+
+        [HttpGet("team/{id}")]
+        public async Task<IActionResult> GetTeamApplications(int id)
+        {
+            var response = await new GetTeamApplications(_ctx).Do(id);
+            return Ok(response);
         }
 
 

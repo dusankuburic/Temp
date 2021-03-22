@@ -66,6 +66,8 @@ import { ModeratorAssignedGroupsResolver } from './_resolvers/group/moderator-as
 import { AssignedInnerTeamsComponent } from './assigned-groups/assigned-inner-teams/assigned-inner-teams.component';
 import { ApplicationCreateComponent } from './application/application-create/application-create.component';
 import { ApplicationCreateResolver } from './_resolvers/application/application-create.resolver';
+import { ApplicationModeratorListResolver } from './_resolvers/application/application-moderator-list.resolver';
+import { ApplicationModeratorListComponent } from './application/application-moderator-list/application-moderator-list.component';
 
 export function tokenGetter(): any {
   return localStorage.getItem('token');
@@ -104,7 +106,8 @@ export function tokenGetter(): any {
     ModeratorComponent,
     AssignedGroupsComponent,
     AssignedInnerTeamsComponent,
-    ApplicationCreateComponent
+    ApplicationCreateComponent,
+    ApplicationModeratorListComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -146,7 +149,8 @@ export function tokenGetter(): any {
     TeamCreateResolver,
     TeamEditResolver,
     ModeratorAssignedGroupsResolver,
-    ApplicationCreateResolver
+    ApplicationCreateResolver,
+    ApplicationModeratorListResolver
   ],
   bootstrap: [AppComponent]
 })

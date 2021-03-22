@@ -14,3 +14,11 @@ export interface CreateApplication{
     content: string;
     category: string;
 }
+
+export interface ModeratorListApplication {
+    id: number;
+    username: string;
+    category: string;
+    createdAt: Date;
+    status: boolean;
+}
