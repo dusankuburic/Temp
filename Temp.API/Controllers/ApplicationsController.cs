@@ -46,6 +46,12 @@ namespace Temp.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUserApplications(int id)
+        {
+            var response = await new GetUserApplications(_ctx).Do(id);
+            return Ok(response);
+        }
 
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;

@@ -6,7 +6,6 @@
           <thead>
               <tr>
                   <th>Category</th>
-                  <th>Username</th>
                   <th>Created At</th>
                   <th>Status</th>
                   <th colspan="2" class="text-center">Options</th>
@@ -15,7 +14,6 @@
           <tbody>
             <tr *ngFor="let application of applications">
                 <td>{{application.category}}</td>
-                <td>{{application.username}}</td>
                 <td>{{application.createdAt | date}}</td>
                 <td>
                     <h3>
@@ -26,7 +24,7 @@
                     </h3>
                 </td>
                 <td>
-                    <a class="btn btn-primary"><i class="far fa-comments"></i></a>
+                  <a class="btn btn-primary"><i class="far fa-comments"></i></a>
                 </td>
             </tr>
           </tbody>

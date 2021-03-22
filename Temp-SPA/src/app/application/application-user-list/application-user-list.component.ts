@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ModeratorListApplication } from 'src/app/_models/application';
+import { UserListApplication } from 'src/app/_models/application';
 
 @Component({
-  selector: 'app-application-moderator-list',
-  templateUrl: './application-moderator-list.component.html'
+  selector: 'app-application-user-list',
+  templateUrl: './application-user-list.component.html'
 })
-export class ApplicationModeratorListComponent implements OnInit {
-  applications: ModeratorListApplication[];
+export class ApplicationUserListComponent implements OnInit {
+  applications: UserListApplication[];
 
   constructor(private route: ActivatedRoute) { }
 
