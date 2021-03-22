@@ -8,7 +8,7 @@ using Temp.Domain.Models.Applications.Exceptions;
 
 namespace Temp.API.Controllers
 {
-    [Authorize(Roles = "User, Admin")]
+    [Authorize(Roles = "Moderator, User, Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class ApplicationsController : ControllerBase
@@ -39,6 +39,19 @@ namespace Temp.API.Controllers
 
         }
 
+        [HttpGet("team/{id}")]
+        public async Task<IActionResult> GetTeamApplications(int id)
+        {
+            var response = await new GetTeamApplications(_ctx).Do(id);
+            return Ok(response);
+        }
+
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUserApplications(int id)
+        {
+            var response = await new GetUserApplications(_ctx).Do(id);
+            return Ok(response);
+        }
 
         private static string GetInnerMessage(Exception exception) =>
             exception.InnerException.Message;

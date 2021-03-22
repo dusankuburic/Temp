@@ -7,10 +7,24 @@ export interface Application {
     content: string;
 }
 
-
 export interface CreateApplication{
     userId: number;
     teamId: number;
     content: string;
     category: string;
+}
+
+export interface ModeratorListApplication {
+    id: number;
+    username: string;
+    category: string;
+    createdAt: Date;
+    status: boolean;
+}
+
+export interface UserListApplication {
+    id: number;
+    category: string;
+    createdAt: Date;
+    status: boolean;
 }

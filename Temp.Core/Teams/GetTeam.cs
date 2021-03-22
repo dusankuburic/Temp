@@ -18,7 +18,8 @@ namespace Temp.Core.Teams
         public Task<TeamViewModel> Do(int id) =>
         TryCatch(async () =>
         {
-            var team = await _ctx.Teams.Include(x => x.Group)
+            var team = await _ctx.Teams
+                .Include(x => x.Group)
                 .Where(x => x.Id == id)
                 .Select(x => new TeamViewModel
                 {

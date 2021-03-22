@@ -49,6 +49,10 @@ import { ModeratorAssignedGroupsResolver } from './_resolvers/group/moderator-as
 import { AssignedInnerTeamsComponent } from './assigned-groups/assigned-inner-teams/assigned-inner-teams.component';
 import { ApplicationCreateComponent } from './application/application-create/application-create.component';
 import { ApplicationCreateResolver } from './_resolvers/application/application-create.resolver';
+import { ApplicationModeratorListComponent } from './application/application-moderator-list/application-moderator-list.component';
+import { ApplicationModeratorListResolver } from './_resolvers/application/application-moderator-list.resolver';
+import { ApplicationUserListComponent } from './application/application-user-list/application-user-list.component';
+import { ApplicationUserListResolver } from './_resolvers/application/application-user-list.resolver';
 
 export const appRoutes: Routes = [
 
@@ -117,7 +121,9 @@ export const appRoutes: Routes = [
         children: [
             {path: 'users', component: UsersComponent},
             {path: 'application/create/:id', component: ApplicationCreateComponent,
-                resolve: {team: ApplicationCreateResolver}}
+                resolve: {team: ApplicationCreateResolver}},
+            {path: 'application-list/:id', component: ApplicationUserListComponent,
+                resolve: {applications: ApplicationUserListResolver}}
         ]
     },
     {
@@ -129,8 +135,10 @@ export const appRoutes: Routes = [
             {path: 'assigned-groups/:id', component: AssignedGroupsComponent,
                 resolve: {groups: ModeratorAssignedGroupsResolver}},
             {path: 'assigned-groups/inner-teams/:id', component: AssignedInnerTeamsComponent,
-                resolve: {teams: TeamListResolver}}
+                resolve: {teams: TeamListResolver}},
+            {path: 'application-list/team/:id', component: ApplicationModeratorListComponent,
+                resolve: {applications: ApplicationModeratorListResolver}}
         ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}
-]
+];
