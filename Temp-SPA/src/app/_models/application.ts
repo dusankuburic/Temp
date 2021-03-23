@@ -1,10 +1,8 @@
 export interface Application {
     id: number;
-    userId: number;
-    teamId: number;
-    moderatorId?: number;
     category: string;
     content: string;
+    createdAt: Date;
 }
 
 export interface CreateApplication{

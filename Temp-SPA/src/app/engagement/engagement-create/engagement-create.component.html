@@ -91,7 +91,8 @@
       </form>          
     </div>
 
-    <div class="col-lg-7 pt-3">   
+    <div class="col-lg-7 pt-3">
+      <div class="table-responsive">   
         <table class="table table-striped table-hover text-center">
           <thead>
               <tr>
@@ -112,6 +113,7 @@
             </tr>
           </tbody>                     
         </table>
+      </div>
         <div *ngIf="employeeData.Engagements.length === 0" class="alert alert-danger text-center" role="alert">
             Employee doesn't have assigned engagement
         </div>                     

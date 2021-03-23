@@ -20,7 +20,6 @@ namespace Temp.API.Controllers
             _ctx = ctx;
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Create(CreateApplication.Request request)
         {
@@ -37,6 +36,13 @@ namespace Temp.API.Controllers
                 return BadRequest(GetInnerMessage(applicationValidationException));
             }
 
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetApplication(int id)
+        {
+            var response = await new GetApplication(_ctx).Do(id);
+            return Ok(response);
         }
 
         [HttpGet("team/{id}")]
