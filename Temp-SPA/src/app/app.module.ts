@@ -70,6 +70,8 @@ import { ApplicationModeratorListResolver } from './_resolvers/application/appli
 import { ApplicationModeratorListComponent } from './application/application-moderator-list/application-moderator-list.component';
 import { ApplicationUserListComponent } from './application/application-user-list/application-user-list.component';
 import { ApplicationUserListResolver } from './_resolvers/application/application-user-list.resolver';
+import { ApplicationUserResolver } from './_resolvers/application/application-user.resolver';
+import { ApplicationUserComponent } from './application/application-user/application-user.component';
 
 export function tokenGetter(): any {
   return localStorage.getItem('token');
@@ -110,7 +112,8 @@ export function tokenGetter(): any {
     AssignedInnerTeamsComponent,
     ApplicationCreateComponent,
     ApplicationModeratorListComponent,
-    ApplicationUserListComponent
+    ApplicationUserListComponent,
+    ApplicationUserComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -129,7 +132,7 @@ export function tokenGetter(): any {
         allowedDomains: ['localhost:5000'],
         disallowedRoutes: ['localhost:5000/api/admins/register', 'localhost:5000/api/users/register']
       }
-    })
+    }),
   ],
   providers: [
     AuthService,
@@ -154,7 +157,8 @@ export function tokenGetter(): any {
     ModeratorAssignedGroupsResolver,
     ApplicationCreateResolver,
     ApplicationModeratorListResolver,
-    ApplicationUserListResolver
+    ApplicationUserListResolver,
+    ApplicationUserResolver
   ],
   bootstrap: [AppComponent]
 })

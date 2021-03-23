@@ -38,6 +38,13 @@ namespace Temp.API.Controllers
 
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetApplication(int id)
+        {
+            var response = await new GetApplication(_ctx).Do(id);
+            return Ok(response);
+        }
+
         [HttpGet("team/{id}")]
         public async Task<IActionResult> GetTeamApplications(int id)
         {
