@@ -9,6 +9,7 @@ import { Application } from 'src/app/_models/application';
 export class ApplicationUserComponent implements OnInit {
   application: Application;
 
+
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {

@@ -73,12 +73,13 @@ import { ApplicationUserListResolver } from './_resolvers/application/applicatio
 import { ApplicationUserResolver } from './_resolvers/application/application-user.resolver';
 import { ApplicationUserComponent } from './application/application-user/application-user.component';
 
+
 export function tokenGetter(): any {
   return localStorage.getItem('token');
 }
 
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
     NavComponent,
     HomeComponent,
@@ -132,7 +133,7 @@ export function tokenGetter(): any {
         allowedDomains: ['localhost:5000'],
         disallowedRoutes: ['localhost:5000/api/admins/register', 'localhost:5000/api/users/register']
       }
-    }),
+    })
   ],
   providers: [
     AuthService,
