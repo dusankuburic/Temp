@@ -53,6 +53,8 @@ import { ApplicationModeratorListComponent } from './application/application-mod
 import { ApplicationModeratorListResolver } from './_resolvers/application/application-moderator-list.resolver';
 import { ApplicationUserListComponent } from './application/application-user-list/application-user-list.component';
 import { ApplicationUserListResolver } from './_resolvers/application/application-user-list.resolver';
+import { ApplicationUserComponent } from './application/application-user/application-user.component';
+import { ApplicationUserResolver } from './_resolvers/application/application-user.resolver';
 
 export const appRoutes: Routes = [
 
@@ -123,7 +125,9 @@ export const appRoutes: Routes = [
             {path: 'application/create/:id', component: ApplicationCreateComponent,
                 resolve: {team: ApplicationCreateResolver}},
             {path: 'application-list/:id', component: ApplicationUserListComponent,
-                resolve: {applications: ApplicationUserListResolver}}
+                resolve: {applications: ApplicationUserListResolver}},
+            {path: 'application-user/:id', component: ApplicationUserComponent,
+                resolve: {application: ApplicationUserResolver}}
         ]
     },
     {
