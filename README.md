@@ -58,3 +58,13 @@
 ### Teams inside moderator groups
 ![](images/17img.png)
 
+### Applications from selected team
+![](images/18img.png)
+
+## User
+
+### Applications
+![](images/19img.png)
+
+### Create Application
+![](images/20img.png)
