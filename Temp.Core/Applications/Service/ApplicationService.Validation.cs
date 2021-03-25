@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Temp.Domain.Models;
 using Temp.Domain.Models.Applications.Exceptions;
 
@@ -68,6 +70,14 @@ namespace Temp.Core.Applications.Service
                 throw new NullApplicationException();
             }
 
+        }
+
+        public void ValidateGetTeamApplicationsViewModel(IEnumerable<GetTeamApplications.ApplicationViewModel> applicationViewModels)
+        {
+            if(applicationViewModels.Count() == 0)
+            {
+                throw new ApplicationWithTeamStorageException();
+            }
         }
 
 
