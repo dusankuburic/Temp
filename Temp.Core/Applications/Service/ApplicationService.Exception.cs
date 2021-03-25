@@ -11,7 +11,7 @@ namespace Temp.Core.Applications.Service
         public delegate Task<CreateApplication.Response> ReturningCreateApplicationFunction();
         public delegate Task<GetApplication.ApplicationViewModel> ReturningGetApplicationFunction();
         public delegate Task<IEnumerable<GetTeamApplications.ApplicationViewModel>> ReturningGetTeamApplicationsFunction();
-
+        public delegate Task<IEnumerable<GetUserApplications.ApplicationViewModel>> ReturningGetUserApplicationsFunction();
 
         public async Task<CreateApplication.Response> TryCatch(ReturningCreateApplicationFunction returningCreateApplicationFunction)
         {
@@ -66,6 +66,26 @@ namespace Temp.Core.Applications.Service
             catch(ApplicationWithTeamStorageException applicationWithTeamStorageException)
             {
                 throw CreateAndLogValidationException(applicationWithTeamStorageException);
+            }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
+        public async Task<IEnumerable<GetUserApplications.ApplicationViewModel>> TryCatch(ReturningGetUserApplicationsFunction returningGetUserApplicationsFunction)
+        {
+            try
+            {
+                return await returningGetUserApplicationsFunction();
+            }
+            catch(ApplicationWithUserStorageException applicationWithUserStorageException)
+            {
+                throw CreateAndLogValidationException(applicationWithUserStorageException);
             }
             catch(SqlException sqlException)
             {

@@ -80,6 +80,14 @@ namespace Temp.Core.Applications.Service
             }
         }
 
+        public void ValidateGetUserApplicationsViewModel(IEnumerable<GetUserApplications.ApplicationViewModel> applicationViewModels)
+        {
+            if(applicationViewModels.Count() == 0)
+            {
+                throw new ApplicationWithUserStorageException();
+            }
+        }
+
 
         public static bool IsInvalidInt(int input)
         {

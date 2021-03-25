@@ -69,8 +69,15 @@ namespace Temp.API.Controllers
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetUserApplications(int id)
         {
-            var response = await new GetUserApplications(_ctx).Do(id);
-            return Ok(response);
+            try
+            {
+                var response = await new GetUserApplications(_ctx).Do(id);
+                return Ok(response);
+            }
+            catch(ApplicationValidationException applicationValidationException)
+            {
+                return BadRequest(GetInnerMessage(applicationValidationException));
+            }       
         }
 
         private static string GetInnerMessage(Exception exception) =>

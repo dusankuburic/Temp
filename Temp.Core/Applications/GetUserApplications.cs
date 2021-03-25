@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Temp.Core.Applications.Service;
 using Temp.Database;
 
 namespace Temp.Core.Applications
 {
-    public class GetUserApplications
+    public class GetUserApplications : ApplicationService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -16,23 +17,25 @@ namespace Temp.Core.Applications
             _ctx = ctx;
         }
 
-        public async Task<IEnumerable<ApplicationViewModel>> Do(int id)
-        {
-            var applications = await _ctx.Applications
-                .Where(x => x.UserId == id)
-                .OrderByDescending(x => x.CreatedAt)
-                .ThenBy(x => x.Status)
-                .Select(x => new ApplicationViewModel
-                {
-                    Id = x.Id,
-                    Category = x.Category,
-                    CreatedAt = x.CreatedAt,
-                    Status = x.Status
-                })
-                .ToListAsync();
+        public Task<IEnumerable<ApplicationViewModel>> Do(int id) =>
+            TryCatch(async () =>
+            {
+                var applications = await _ctx.Applications
+                    .Where(x => x.UserId == id)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .ThenBy(x => x.Status)
+                    .Select(x => new ApplicationViewModel
+                    {
+                        Id = x.Id,
+                        Category = x.Category,
+                        CreatedAt = x.CreatedAt,
+                        Status = x.Status
+                    })
+                    .ToListAsync();
 
-            return applications;
-        }
+                return applications;
+            });
+     
         public class ApplicationViewModel
         {
             public int Id { get; set; }
