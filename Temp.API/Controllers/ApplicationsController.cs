@@ -41,8 +41,15 @@ namespace Temp.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetApplication(int id)
         {
-            var response = await new GetApplication(_ctx).Do(id);
-            return Ok(response);
+            try
+            {
+                var response = await new GetApplication(_ctx).Do(id);
+                return Ok(response);
+            }
+            catch(ApplicationValidationException applicationValidationException)
+            {
+                return BadRequest(GetInnerMessage(applicationValidationException));
+            }
         }
 
         [HttpGet("team/{id}")]

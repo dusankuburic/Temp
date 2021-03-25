@@ -8,6 +8,7 @@ namespace Temp.Core.Applications.Service
     public partial class ApplicationService
     {
         public delegate Task<CreateApplication.Response> ReturningCreateApplicationFunction();
+        public delegate Task<GetApplication.ApplicationViewModel> ReturningGetApplicationFunction();
 
 
         public async Task<CreateApplication.Response> TryCatch(ReturningCreateApplicationFunction returningCreateApplicationFunction)
@@ -34,7 +35,26 @@ namespace Temp.Core.Applications.Service
             }
         }
 
-       
+        public async Task<GetApplication.ApplicationViewModel> TryCatch(ReturningGetApplicationFunction returningGetApplicationFunction)
+        {
+            try
+            {
+                return await returningGetApplicationFunction();
+            }
+            catch(NullApplicationException nullApplicationException)
+            {
+                throw CreateAndLogValidationException(nullApplicationException);
+            }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
         private ApplicationServiceException CreateAndLogServiceException(Exception exception)
         {
             var applicationServiceException = new ApplicationServiceException(exception);

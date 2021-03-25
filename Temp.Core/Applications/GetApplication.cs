@@ -2,11 +2,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Temp.Core.Applications.Service;
 using Temp.Database;
 
 namespace Temp.Core.Applications
 {
-    public class GetApplication
+    public class GetApplication : ApplicationService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -15,21 +16,25 @@ namespace Temp.Core.Applications
             _ctx = ctx;
         }
 
-        public async Task<ApplicationViewModel> Do(int id)
-        {
-            var application = await _ctx.Applications
-                .Where(x => x.Id == id)
-                .Select(x => new ApplicationViewModel
-                {
-                    Id = x.Id,
-                    Category = x.Category,
-                    Content = x.Content,
-                    CreatedAt = x.CreatedAt
-                })
-                .FirstOrDefaultAsync();
+        public Task<ApplicationViewModel> Do(int id) =>
+            TryCatch(async () =>
+            {
+                var application = await _ctx.Applications
+               .Where(x => x.Id == id)
+               .Select(x => new ApplicationViewModel
+               {
+                   Id = x.Id,
+                   Category = x.Category,
+                   Content = x.Content,
+                   CreatedAt = x.CreatedAt
+               })
+               .FirstOrDefaultAsync();
 
-            return application;
-        }
+                ValidateGetApplicationViewModel(application);
+
+                return application;
+            });
+
 
         public class ApplicationViewModel
         {

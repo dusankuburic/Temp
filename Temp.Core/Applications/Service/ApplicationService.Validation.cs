@@ -61,6 +61,15 @@ namespace Temp.Core.Applications.Service
             }
         }
 
+        public void ValidateGetApplicationViewModel(GetApplication.ApplicationViewModel application)
+        {
+            if(application is null)
+            {
+                throw new NullApplicationException();
+            }
+
+        }
+
 
         public static bool IsInvalidInt(int input)
         {
