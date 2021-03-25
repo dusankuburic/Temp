@@ -33,6 +33,8 @@ namespace Temp.Core.Applications
                     })
                     .ToListAsync();
 
+                ValidateGetUserApplicationsViewModel(applications);
+
                 return applications;
             });
      

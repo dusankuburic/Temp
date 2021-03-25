@@ -38,7 +38,6 @@ namespace Temp.Core.Applications
 
                 return applications;
             });
-    
 
         public class ApplicationViewModel
         {

@@ -35,7 +35,6 @@ namespace Temp.Core.Applications
                 return application;
             });
 
-
         public class ApplicationViewModel
         {
             public int Id { get; set; }
