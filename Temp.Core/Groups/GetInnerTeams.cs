@@ -5,10 +5,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Temp.Database;
 using System.Threading.Tasks;
+using Temp.Core.Groups.Service;
 
 namespace Temp.Core.Groups
 {
-    public class GetInnerTeams
+    public class GetInnerTeams : GroupService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -17,9 +18,11 @@ namespace Temp.Core.Groups
             _ctx = ctx;
         }
 
-        public async Task<string> Do(int id)
+        public Task<string> Do(int id) =>
+        TryCatch(async () =>
         {
-            var innerTeams = await _ctx.Groups.Include(x => x.Teams)
+            var innerTeams = await _ctx.Groups
+                .Include(x => x.Teams)
                 .Where(x => x.Id == id)
                 .Select(x => new Response
                 {
@@ -32,13 +35,15 @@ namespace Temp.Core.Groups
                 })
                 .FirstOrDefaultAsync();
 
-            //Validate
+            ValidateGetInnerTeamResponse(innerTeams);
+            ValidateGetInnerTeamsViewModel(innerTeams.Teams);
 
             return JsonConvert.SerializeObject(innerTeams, Formatting.Indented, new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
-        }
+        });
+
 
         public class Response
         {

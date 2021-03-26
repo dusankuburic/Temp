@@ -12,6 +12,7 @@ namespace Temp.Core.Organizations.Service
         public delegate Task<IEnumerable<GetOrganizations.OrganizationViewModel>> ReturningGetOrganizationsFunction();
         public delegate Task<GetOrganization.OrganizationViewModel> ReturningGetOrganizationFunction();
         public delegate Task<UpdateOrganization.Response> ReturningUpdateOrganizationFunction();
+        public delegate Task<string> ReturningGetInnerGroupsFunction();
 
         public async Task<CreateOrganization.Response> TryCatch(ReturningCreateOrganizationFunction returningCreateOrganizationFunction)
         {
@@ -101,6 +102,26 @@ namespace Temp.Core.Organizations.Service
             }
         }
 
+
+        public async Task<string> TryCatch(ReturningGetInnerGroupsFunction returningGetInnerGroupsFunction)
+        {
+            try
+            {
+                return await returningGetInnerGroupsFunction();
+            }
+            catch(OrganizationGetInnerGroupsStorageException organizationGetInnerGroupsStorageException)
+            {
+                throw CreateAndLogServiceException(organizationGetInnerGroupsStorageException);
+            }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
 
         private OrganizationValidationException CreateAndLogValidationException(Exception exception)
         {

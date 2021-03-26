@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Temp.Domain.Models.Applications.Exceptions;
 
@@ -8,7 +9,9 @@ namespace Temp.Core.Applications.Service
     public partial class ApplicationService
     {
         public delegate Task<CreateApplication.Response> ReturningCreateApplicationFunction();
-
+        public delegate Task<GetApplication.ApplicationViewModel> ReturningGetApplicationFunction();
+        public delegate Task<IEnumerable<GetTeamApplications.ApplicationViewModel>> ReturningGetTeamApplicationsFunction();
+        public delegate Task<IEnumerable<GetUserApplications.ApplicationViewModel>> ReturningGetUserApplicationsFunction();
 
         public async Task<CreateApplication.Response> TryCatch(ReturningCreateApplicationFunction returningCreateApplicationFunction)
         {
@@ -16,13 +19,53 @@ namespace Temp.Core.Applications.Service
             {
                 return await returningCreateApplicationFunction();
             }
-            catch(NullApplicationException nullApplicationException)
+            catch (NullApplicationException nullApplicationException)
             {
                 throw CreateAndLogValidationException(nullApplicationException);
             }
-            catch(InvalidApplicationException invalidApplicationException)
+            catch (InvalidApplicationException invalidApplicationException)
             {
                 throw CreateAndLogValidationException(invalidApplicationException);
+            }
+            catch (SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
+        public async Task<GetApplication.ApplicationViewModel> TryCatch(ReturningGetApplicationFunction returningGetApplicationFunction)
+        {
+            try
+            {
+                return await returningGetApplicationFunction();
+            }
+            catch (NullApplicationException nullApplicationException)
+            {
+                throw CreateAndLogValidationException(nullApplicationException);
+            }
+            catch (SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
+        public async Task<IEnumerable<GetTeamApplications.ApplicationViewModel>> TryCatch(ReturningGetTeamApplicationsFunction returningGetTeamApplicationsFunction)
+        {
+            try
+            {
+                return await returningGetTeamApplicationsFunction();
+            }
+            catch(ApplicationWithTeamStorageException applicationWithTeamStorageException)
+            {
+                throw CreateAndLogValidationException(applicationWithTeamStorageException);
             }
             catch(SqlException sqlException)
             {
@@ -34,7 +77,26 @@ namespace Temp.Core.Applications.Service
             }
         }
 
-       
+        public async Task<IEnumerable<GetUserApplications.ApplicationViewModel>> TryCatch(ReturningGetUserApplicationsFunction returningGetUserApplicationsFunction)
+        {
+            try
+            {
+                return await returningGetUserApplicationsFunction();
+            }
+            catch(ApplicationWithUserStorageException applicationWithUserStorageException)
+            {
+                throw CreateAndLogValidationException(applicationWithUserStorageException);
+            }
+            catch(SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch(Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
         private ApplicationServiceException CreateAndLogServiceException(Exception exception)
         {
             var applicationServiceException = new ApplicationServiceException(exception);
