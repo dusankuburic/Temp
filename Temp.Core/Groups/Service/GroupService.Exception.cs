@@ -13,6 +13,8 @@ namespace Temp.Core.Groups.Service
         public delegate Task<UpdateGroup.Response> ReturningUpdateGroupFunction();
         public delegate Task<IEnumerable<GetModeratorGroups.ModeratorGroupViewModel>> ReturningGetModeratorGroupsFunction();
         public delegate Task<IEnumerable<GetModeratorFreeGroups.ModeratorFreeGroupViewModel>> ReturningGetModeratorFreeGroupsFunction();
+        public delegate Task<string> ReturningInnerTeamsFunction();
+
 
         public async Task<CreateGroup.Response> TryCatch(ReturningCreateGroupFunction returningCreateGroupFunction)
         {
@@ -110,6 +112,30 @@ namespace Temp.Core.Groups.Service
             try
             {
                 return await returningGetModeratorFreeGroupsFunction();
+            }
+            catch (SqlException sqlExcepton)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
+        public async Task<string> TryCatch(ReturningInnerTeamsFunction returningInnerTeamsFunction)
+        {
+            try
+            {
+                return await returningInnerTeamsFunction();
+            }
+            catch(NullGroupInnerTeamsException nullGroupInnerTeamsException)
+            {
+                throw CreateAndLogValidationException(nullGroupInnerTeamsException);
+            }
+            catch (GroupInnerTeamsStorageException groupInnerTeamsStorageException)
+            {
+                throw CreateAndLogValidationException(groupInnerTeamsStorageException);
             }
             catch (SqlException sqlExcepton)
             {

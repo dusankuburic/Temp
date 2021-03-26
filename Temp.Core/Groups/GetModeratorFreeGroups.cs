@@ -35,6 +35,8 @@ namespace Temp.Core.Groups
                 })
                 .ToListAsync();
 
+            ValidateGetModeratorFreeGroupsViewModel(moderatorFreeGroups);
+
             return moderatorFreeGroups;
         });
  

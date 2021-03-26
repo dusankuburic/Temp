@@ -44,6 +44,32 @@ namespace Temp.Core.Groups.Service
                 throw new ModeratorGroupsEmptyStorageException();
             }
         }
+        public void ValidateGetModeratorFreeGroupsViewModel
+            (IEnumerable<GetModeratorFreeGroups.ModeratorFreeGroupViewModel> moderatorFreeGroupViewModel)
+        {
+            if(moderatorFreeGroupViewModel is null)
+            {
+                throw new NullGroupException();
+            }
+        }
+
+        public void ValidateGetInnerTeamResponse(GetInnerTeams.Response response)
+        {
+            if(response is null)
+            {
+                throw new NullGroupInnerTeamsException();
+            }
+        }
+    
+
+        public void ValidateGetInnerTeamsViewModel
+            (IEnumerable<GetInnerTeams.InnerTeamViewModel> innerTeamViewModels)
+        {
+            if(innerTeamViewModels.Count() == 0)
+            {
+                throw new GroupInnerTeamsStorageException();
+            }
+        }
 
 
         public void ValidateGroupString(Group group)
