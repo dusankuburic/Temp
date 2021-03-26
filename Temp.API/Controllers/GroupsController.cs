@@ -83,8 +83,15 @@ namespace Temp.API.Controllers
         [HttpGet("moderator-groups/{id}")]
         public async Task<IActionResult> GetModeratorGroups(int id)
         {
-            var response = await new GetModeratorGroups(_ctx).Do(id);
-            return Ok(response);
+            try
+            {
+                var response = await new GetModeratorGroups(_ctx).Do(id);
+                return Ok(response);
+            }
+            catch(GroupValidationException groupValidationException)
+            {
+                return BadRequest(GetInnerMessage(groupValidationException));
+            }
         }
 
         [HttpGet("moderator-free-groups/{organizationId}/moderator/{moderatorId}")]
