@@ -72,8 +72,15 @@ namespace Temp.API.Controllers
         [HttpGet("employee/team/{userId}")]
         public async Task<IActionResult> GetUserTeam(int userId)
         {
-            var response = await new GetUserTeam(_ctx).Do(userId);
-            return Ok(response);
+            try
+            {
+                var response = await new GetUserTeam(_ctx).Do(userId);
+                return Ok(response);
+            }
+            catch (TeamValidationException teamValidationException)
+            {
+                return BadRequest(GetInnerMessage(teamValidationException));
+            }
         }
 
         [Authorize(Roles = "Admin")]

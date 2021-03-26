@@ -35,6 +35,14 @@ namespace Temp.Core.Teams.Service
             }
         }
 
+        public void ValidateGetUserTeamViewModel(GetUserTeam.TeamViewModel team)
+        {
+            if(team is null)
+            {
+                throw new NullTeamException();
+            }
+        }
+
         public void ValidateTeamString(Team team)
         {
             switch (team)
