@@ -2,11 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Temp.Core.Groups.Service;
 using Temp.Database;
 
 namespace Temp.Core.Groups
 {
-    public class GetModeratorFreeGroups
+    public class GetModeratorFreeGroups: GroupService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -15,8 +16,9 @@ namespace Temp.Core.Groups
             _ctx = ctx;
         }
 
-        public async Task<IEnumerable<ModeratorFreeGroupViewModel>> Do(int id, int moderatorId)
-        {          
+        public Task<IEnumerable<ModeratorFreeGroupViewModel>> Do(int id, int moderatorId) =>
+        TryCatch(async () =>
+        {
             var moderatorGroups = await _ctx.ModeratorGroups
                 .Where(x => x.ModeratorId == moderatorId)
                 .Select(x => x.GroupId)
@@ -33,8 +35,11 @@ namespace Temp.Core.Groups
                 })
                 .ToListAsync();
 
+            ValidateGetModeratorFreeGroupsViewModel(moderatorFreeGroups);
+
             return moderatorFreeGroups;
-        }
+        });
+ 
         
         public class ModeratorFreeGroupViewModel
         {

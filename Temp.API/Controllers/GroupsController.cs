@@ -75,23 +75,44 @@ namespace Temp.API.Controllers
         [HttpGet("inner-teams/{id}")]
         public async Task<IActionResult> InnerTeams(int id)
         {
-            var response = await new GetInnerTeams(_ctx).Do(id);
-            return Ok(response);
+            try
+            {
+                var response = await new GetInnerTeams(_ctx).Do(id);
+                return Ok(response);
+            }
+            catch (GroupValidationException groupValidationException)
+            {
+                return BadRequest(GetInnerMessage(groupValidationException));
+            }
         }
 
       
         [HttpGet("moderator-groups/{id}")]
         public async Task<IActionResult> GetModeratorGroups(int id)
         {
-            var response = await new GetModeratorGroups(_ctx).Do(id);
-            return Ok(response);
+            try
+            {
+                var response = await new GetModeratorGroups(_ctx).Do(id);
+                return Ok(response);
+            }
+            catch(GroupValidationException groupValidationException)
+            {
+                return BadRequest(GetInnerMessage(groupValidationException));
+            }
         }
 
         [HttpGet("moderator-free-groups/{organizationId}/moderator/{moderatorId}")]
         public async Task<IActionResult> GetModeratorFreeGroups(int organizationId, int moderatorId)
         {
-            var response = await new GetModeratorFreeGroups(_ctx).Do(organizationId, moderatorId);
-            return Ok(response);
+            try
+            {
+                var response = await new GetModeratorFreeGroups(_ctx).Do(organizationId, moderatorId);
+                return Ok(response);
+            }
+            catch (GroupValidationException groupValidationException)
+            {
+                return BadRequest(GetInnerMessage(groupValidationException));
+            }
         }
         
         private static string GetInnerMessage(Exception exception) =>

@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Temp.Core.Teams.Service;
 using Temp.Database;
 
 namespace Temp.Core.Teams
 {
-    public class GetUserTeam
+    public class GetUserTeam : TeamService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -14,21 +15,24 @@ namespace Temp.Core.Teams
             _ctx = ctx;
         }
 
-        public async Task<TeamViewModel> Do(int id)
+        public Task<TeamViewModel> Do(int id) =>
+        TryCatch(async () =>
         {
             var team = await _ctx.Users
-                .Include(x => x.Employee)
-                .Where(x => x.Id == id)
-                .Select(x => new TeamViewModel
-                {
-                    Id = x.Employee.Team.Id,
-                    Name = x.Employee.Team.Name
-                })
-                .FirstOrDefaultAsync();
+            .Include(x => x.Employee)
+            .Where(x => x.Id == id)
+            .Select(x => new TeamViewModel
+            {
+                Id = x.Employee.Team.Id,
+                Name = x.Employee.Team.Name
+            })
+            .FirstOrDefaultAsync();
+
+            ValidateGetUserTeamViewModel(team);
 
             return team;
-        }
-
+        });
+           
 
         public class TeamViewModel
         {

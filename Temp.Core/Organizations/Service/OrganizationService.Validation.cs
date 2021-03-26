@@ -56,6 +56,14 @@ namespace Temp.Core.Organizations.Service
             }
         }
 
+        public void ValidateStorageOrganizationInnerGroups(IEnumerable<GetInnerGroups.InnerGroupViewModel> innerGroupViewModels)
+        {
+            if(innerGroupViewModels.Count() == 0)
+            {
+                throw new OrganizationGetInnerGroupsStorageException();
+            }
+        }
+
         public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
     }
 }

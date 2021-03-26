@@ -85,8 +85,15 @@ namespace Temp.API.Controllers
         [HttpGet("inner-groups/{id}")]
         public async Task<IActionResult> InnerGroups(int id)
         {
-            var innerGroups = await new GetInnerGroups(_ctx).Do(id);
-            return Ok(innerGroups);
+            try
+            {
+                var innerGroups = await new GetInnerGroups(_ctx).Do(id);
+                return Ok(innerGroups);
+            }
+            catch(OrganizationValidationException organizationValidationException)
+            {
+                return BadRequest(GetInnerMessage(organizationValidationException));
+            }
         }
 
         private static string GetInnerMessage(Exception exception) =>

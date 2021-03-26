@@ -9,6 +9,7 @@ namespace Temp.Core.Teams.Service
     {
         public delegate Task<CreateTeam.Response> ReturningCreateTeamFunction();
         public delegate Task<GetTeam.TeamViewModel> ReturningGetTeamFunction();
+        public delegate Task<GetUserTeam.TeamViewModel> ReturningGetUserTeamFunction();
         public delegate Task<UpdateTeam.Response> ReturningUpdateFunction();
         public delegate Task<GetFullTeamTree.TeamTreeViewModel> ReturningTeamTreeFunction();
 
@@ -60,6 +61,27 @@ namespace Temp.Core.Teams.Service
             try
             {
                 return await returningGetTeamFunction();
+            }
+            catch(NullTeamException nullTeamException)
+            {
+                throw CreateAndLogServiceException(nullTeamException);
+            }
+            catch (SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
+
+        public async Task<GetUserTeam.TeamViewModel> TryCatch(ReturningGetUserTeamFunction returningGetUserTeamFunction)
+        {
+            try
+            {
+                return await returningGetUserTeamFunction();
             }
             catch(NullTeamException nullTeamException)
             {
