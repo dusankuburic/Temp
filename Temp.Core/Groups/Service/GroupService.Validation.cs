@@ -45,6 +45,7 @@ namespace Temp.Core.Groups.Service
             }
         }
 
+
         public void ValidateGroupString(Group group)
         {
             switch(group)

@@ -12,7 +12,7 @@ namespace Temp.Core.Groups.Service
         public delegate Task<GetGroup.GroupViewModel> ReturningGetGroupFunction();
         public delegate Task<UpdateGroup.Response> ReturningUpdateGroupFunction();
         public delegate Task<IEnumerable<GetModeratorGroups.ModeratorGroupViewModel>> ReturningGetModeratorGroupsFunction();
-
+        public delegate Task<IEnumerable<GetModeratorFreeGroups.ModeratorFreeGroupViewModel>> ReturningGetModeratorFreeGroupsFunction();
 
         public async Task<CreateGroup.Response> TryCatch(ReturningCreateGroupFunction returningCreateGroupFunction)
         {
@@ -82,7 +82,8 @@ namespace Temp.Core.Groups.Service
             }
         }
 
-        public async Task<IEnumerable<GetModeratorGroups.ModeratorGroupViewModel>> TryCatch(ReturningGetModeratorGroupsFunction returningGetModeratorGroupsFunction)
+        public async Task<IEnumerable<GetModeratorGroups.ModeratorGroupViewModel>> TryCatch
+            (ReturningGetModeratorGroupsFunction returningGetModeratorGroupsFunction)
         {
             try
             {
@@ -102,6 +103,24 @@ namespace Temp.Core.Groups.Service
             }
         }
 
+        
+        public async Task<IEnumerable<GetModeratorFreeGroups.ModeratorFreeGroupViewModel>> TryCatch
+            (ReturningGetModeratorFreeGroupsFunction returningGetModeratorFreeGroupsFunction)
+        {
+            try
+            {
+                return await returningGetModeratorFreeGroupsFunction();
+            }
+            catch (SqlException sqlExcepton)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlExcepton);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+        
         private GroupValidationException CreateAndLogValidationException(Exception exception)
         {
             var groupValidationException = new GroupValidationException(exception);
