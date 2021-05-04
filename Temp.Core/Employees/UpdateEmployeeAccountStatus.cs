@@ -29,6 +29,7 @@ namespace Temp.Core.Employees
                 case "User":
                     if (employee.User.IsActive)
                         employee.User.IsActive = false;
+                        
                     else
                         employee.User.IsActive = true;
                     break;

@@ -45,6 +45,9 @@ namespace Temp.Core.Auth.Moderators
             if (moderator is null)
                 return null;
 
+            if (moderator.IsActive == false)
+                return null;
+ 
             if (!VerifyPasswordHash(request.Password, moderator.PasswordHash, moderator.PasswordSalt))
                 return null;
 
