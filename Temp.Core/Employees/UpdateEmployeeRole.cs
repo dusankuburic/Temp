@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 using Temp.Database;
 
@@ -15,7 +16,10 @@ namespace Temp.Core.Employees
 
         public async Task<bool> Do(string RoleName, int EmployeeId)
         {
-            var empolyee = _ctx.Employees.Where(x => x.Id == EmployeeId).First();    
+            var empolyee = await _ctx.Employees
+                .Where(x => x.Id == EmployeeId)
+                .FirstOrDefaultAsync();    
+
             empolyee.Role = RoleName;
             await _ctx.SaveChangesAsync();
 

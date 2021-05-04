@@ -13,6 +13,8 @@ namespace Temp.Domain.Models
 
         public Admin Admin {get; set;}
 
+        public Moderator Moderator { get; set; }
+
         public ICollection<Engagement> Engagements {get; set;}
 
         public int? TeamId { get; set; }

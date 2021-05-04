@@ -45,6 +45,9 @@ namespace Temp.Core.Auth.Users
             if (user is null)
                 return null;
 
+            if (user.IsActive == false)
+                return null;
+
 
             if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
                 return null;

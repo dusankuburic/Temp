@@ -67,6 +67,16 @@ namespace Temp.API.Controllers
             return BadRequest();
         }
 
+        [HttpPut("change-status/{id}")]
+        public async Task<IActionResult> UpdateEmployeeAccountStatus(int id)
+        {
+            var response = await new UpdateEmployeeAccountStatus(_ctx).Do(id);
+            if (response)
+                return NoContent();
+
+            return BadRequest();
+        }
+
         [HttpPost("assign")]
         public async Task<IActionResult> AssignRole(AssignRole.Request request)
         {

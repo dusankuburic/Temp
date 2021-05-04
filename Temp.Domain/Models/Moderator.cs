@@ -9,7 +9,8 @@ namespace Temp.Domain.Models
         public string Username { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        
+        public bool IsActive { get; set; }
+
         public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
         

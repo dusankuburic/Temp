@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 using Temp.Core.Helpers;
 using Temp.Database;
@@ -18,12 +19,16 @@ namespace Temp.Core.Employees
         TryCatch(async () => 
         {
             var employees = _ctx.Employees
+            .Include(x => x.User)
+            .Include(x => x.Moderator)
+            .Include(x => x.Admin)
             .Select(x => new EmployeeViewModel
             {
                 Id = x.Id,
                 FirstName = x.FirstName,
                 LastName = x.LastName,
-                Role = x.Role
+                Role = x.Role,
+                IsActive = x.User.IsActive || x.Moderator.IsActive || x.Admin.IsActive
             }).AsQueryable();
 
             if(!string.IsNullOrEmpty(request.Role))
@@ -73,6 +78,7 @@ namespace Temp.Core.Employees
             public string FirstName {get; set;}
             public string LastName {get; set;}
             public string Role {get; set;}
+            public bool IsActive { get; set; }
         }
     }
 }
