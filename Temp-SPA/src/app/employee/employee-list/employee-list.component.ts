@@ -72,5 +72,15 @@ export class EmployeeListComponent implements OnInit {
     });
   }
 
+  changeStatus(id: number): any {
+    this.unassignRoleDto.id = id;
+    this.employeeService.changeStatus(id).subscribe(() => {
+      this.loadEmployees();
+      this.alertify.success('Status changed');
+    }, error => {
+      this.alertify.error(error.error);
+    })
+  }
+
 
 }

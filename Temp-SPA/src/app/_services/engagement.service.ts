@@ -49,7 +49,7 @@ getEmpoyeesWithEngagement(page?, itemsPerPage?, employeeParams?): Observable<Pag
     .pipe(
       map(response => {
         paginatedResult.result = response.body;
-        if(response.headers.get('Pagination') != null) {
+        if (response.headers.get('Pagination') != null) {
           paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
         }
         return paginatedResult;
@@ -62,7 +62,7 @@ getEmpoyeesWithoutEngagement(page?, itemsPerPage?): Observable<PaginatedResult<E
 
   let params = new HttpParams();
 
-  if(page != null && itemsPerPage != null){
+  if (page != null && itemsPerPage != null){
     params = params.append('pageNumber', page);
     params = params.append('pageSize', itemsPerPage);
   }
@@ -71,7 +71,7 @@ getEmpoyeesWithoutEngagement(page?, itemsPerPage?): Observable<PaginatedResult<E
     .pipe(
       map(response => {
         paginatedResult.result = response.body;
-        if(response.headers.get('Pagination') != null){
+        if (response.headers.get('Pagination') != null){
           paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
         }
         return paginatedResult;

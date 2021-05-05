@@ -5,4 +5,5 @@ export interface Employee {
     lastName: string;
     role: string;
     teamId: number;
+    isActive: boolean;
 }

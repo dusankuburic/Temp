@@ -45,6 +45,9 @@ namespace Temp.Core.Auth.Admins
             if (admin is null)
                 return null;
 
+            if (admin.IsActive == false)
+                return null;
+
             if (!VerifyPasswordHash(request.Password, admin.PasswordHash, admin.PasswordSalt))
                 return null;
 
