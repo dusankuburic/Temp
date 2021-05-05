@@ -1,0 +1,54 @@
+[
+  {
+    "name": "QOT",
+    "organizationId": 5
+  },
+  {
+    "name": "AUSTECH",
+    "organizationId": 2
+  },
+  {
+    "name": "ZERBINA",
+    "organizationId": 5
+  },
+  {
+    "name": "DELPHIDE",
+    "organizationId": 1
+  },
+  {
+    "name": "FUTURITY",
+    "organizationId": 1
+  },
+  {
+    "name": "ZENCO",
+    "organizationId": 1
+  },
+  {
+    "name": "KIOSK",
+    "organizationId": 4
+  },
+  {
+    "name": "EDECINE",
+    "organizationId": 4
+  },
+  {
+    "name": "RADIANTIX",
+    "organizationId": 3
+  },
+  {
+    "name": "TRIPSCH",
+    "organizationId": 3
+  },
+  {
+    "name": "INJOY",
+    "organizationId": 1
+  },
+  {
+    "name": "BOILICON",
+    "organizationId": 5
+  },
+  {
+    "name": "NETPLAX",
+    "organizationId": 1
+  }
+]
