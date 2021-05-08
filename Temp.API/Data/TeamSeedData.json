@@ -1,50 +1,50 @@
 [
   {
-    "name": "MAGNINA",
-    "groupId": 5
-  },
-  {
-    "name": "KIGGLE",
+    "name": ".NET DEV TEAM",
     "groupId": 1
   },
   {
-    "name": "ORONOKO",
+    "name": "PHP DEV TEAM",
+    "groupId": 1
+  },
+  {
+    "name": "GO DEV TEAM",
+    "groupId": 1
+  },
+  {
+    "name": "PASCAL DEV TEAM",
+    "groupId": 1
+  },
+  {
+    "name": "AZURE TEAM",
+    "groupId": 2
+  },
+  {
+    "name": "AWS TEAM TEAM",
+    "groupId": 2
+  },
+  {
+    "name": "GOOGLE TEAM TEAM",
+    "groupId": 2
+  },
+  {
+    "name": "ANGULAR NEW TEAM",
     "groupId": 3
   },
   {
-    "name": "GLUKGLUK",
-    "groupId": 2
+    "name": "REACT NEW TEAM",
+    "groupId": 3
   },
   {
-    "name": "AQUASURE",
-    "groupId": 5
+    "name": "VANILA NEW TEAM",
+    "groupId": 3
   },
   {
-    "name": "SHOPABOUT",
-    "groupId": 2
+    "name": "DES NEW TEAM",
+    "groupId": 3
   },
   {
-    "name": "TWIIST",
+    "name": "SCALA DEV TEAM",
     "groupId": 4
-  },
-  {
-    "name": "DAISU",
-    "groupId": 1
-  },
-  {
-    "name": "CEPRENE",
-    "groupId": 3
-  },
-  {
-    "name": "ENTROPIX",
-    "groupId": 3
-  },
-  {
-    "name": "GEOFARM",
-    "groupId": 3
-  },
-  {
-    "name": "KOFFEE",
-    "groupId": 2
   }
 ]

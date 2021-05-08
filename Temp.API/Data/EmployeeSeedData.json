@@ -1,0 +1,32 @@
+[
+	{
+		"firstName": "Nemanja",
+		"lastName": "Stankovic",
+		"role": "None",
+		"teamId": 2
+	},
+	{
+		"firstName": "Jovan",
+		"lastName": "Benak",
+		"role": "Moderator",
+		"teamId": 2
+	},
+	{
+		"firstName": "Dino",
+		"lastName": "Sadovic",
+		"role": "User",
+		"teamId": 2
+	},
+	{
+		"firstName": "Marko",
+		"lastName": "Samardzija",
+		"role": "User",
+		"teamId": 3
+	},
+	{
+		"firstName": "Dusan",
+		"lastName": "Kuburic",
+		"role": "Admin",
+		"teamId": 5
+	}
+]
