@@ -4,6 +4,7 @@ using Temp.Domain.Models.Workplaces.Exceptions;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 using System;
 using Temp.Domain.Models;
+using System.Collections.Generic;
 
 namespace Temp.Core.Engagements
 {
@@ -24,6 +25,22 @@ namespace Temp.Core.Engagements
             if(engagement is null)
             {
                 throw new NullEngagementException();            
+            }
+        }
+
+        public void ValidateUser(User user)
+        {
+            if(user is null)
+            {
+                throw new NullUserException();
+            }
+        }
+
+        public void ValidateUserEmployeeEngagements(IEnumerable<GetUserEmployeeEngagements.Response> response)
+        {
+            if(response is null)
+            {
+                throw new NullEngagementException();
             }
         }
 

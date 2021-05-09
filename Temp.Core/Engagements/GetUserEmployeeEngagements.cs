@@ -7,7 +7,7 @@ using Temp.Database;
 
 namespace Temp.Core.Engagements
 {
-    public class GetUserEmployeeEngagements
+    public class GetUserEmployeeEngagements : EngagementService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -17,14 +17,16 @@ namespace Temp.Core.Engagements
         }
 
 
-        public async Task<IEnumerable<Response>> Do(int id)
-        {
+        public Task<IEnumerable<Response>> Do(int id) =>
+        TryCatch(async () => {
+
             var user = await _ctx.Users
                 .Include(x => x.Employee)
                 .Where(x => x.Id == id)
                 .FirstOrDefaultAsync();
 
-            //Validate employee
+
+            ValidateUser(user);
 
             var response = await _ctx.Engagements
                 .Include(x => x.Workplace)
@@ -40,10 +42,11 @@ namespace Temp.Core.Engagements
                 })
                 .ToListAsync();
 
-            //Validate response(engagements)
+            ValidateUserEmployeeEngagements(response);
 
             return response;
-        }
+        });
+
 
         public class Response
         {

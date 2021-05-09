@@ -5,7 +5,7 @@ using Temp.Domain.Models.Engagements.Exceptions;
 using Temp.Domain.Models.Employees.Exceptions;
 using Temp.Domain.Models.Workplaces.Exceptions;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
-
+using System.Collections.Generic;
 
 namespace Temp.Core.Engagements
 {
@@ -15,6 +15,32 @@ namespace Temp.Core.Engagements
 
         public delegate Task<string> ReturningCreateEngagementViewModelFunction();
 
+        public delegate Task<IEnumerable<GetUserEmployeeEngagements.Response>> ReturningGetUserEmployeeEngagements();
+
+        public async Task<IEnumerable<GetUserEmployeeEngagements.Response>> TryCatch(ReturningGetUserEmployeeEngagements returningGetUserEmployeeEngagements)
+        {
+            try
+            {
+                return await returningGetUserEmployeeEngagements();
+            }
+            catch(NullUserException nullUserException)
+            {
+                throw CreateAndLogValidationException(nullUserException);
+            }
+            catch(NullEngagementException nullEngagementException)
+            {
+                throw CreateAndLogValidationException(nullEngagementException);
+            }
+            catch (SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+
+        }
 
         public async Task<CreateEngagement.Response> TryCatch(ReturningCreateEngagementFunction returningCreateEngagementFunction)
         {
