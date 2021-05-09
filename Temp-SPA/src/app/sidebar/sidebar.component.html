@@ -63,7 +63,7 @@
 <div *ngIf="loggedIn() && isUser()" class="bg-light border-right" id="sidebar-wrapper">
   <div class="list-group">
 
-      <!-- Employee -->
+      <!-- Application -->
       <div class="dropdown" dropdown>
           <a class="list-group-item list-group-item-action bg-light" dropdownToggle>
             <i class="fas fa-file-alt"></i> Application
@@ -73,6 +73,16 @@
               <a class="dropdown-item" [routerLink]="['/application/create/',user.id]"><i class="fa fa-angle-right"></i> Create Application</a>
           </div>
       </div>
+
+    <!-- Engagement -->
+    <div class="dropdown" dropdown>
+        <a class="list-group-item list-group-item-action bg-light " dropdownToggle>
+            <i class="fa fa-industry"></i> Engagement
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
+            <a class="dropdown-item" [routerLink]="['/engagement-user-list/', user.id]"><i class="fa fa-angle-right"></i> Engagements</a>
+        </div>
+    </div>
       
   </div>
   <!-- list-group END -->

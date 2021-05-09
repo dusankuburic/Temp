@@ -13,7 +13,7 @@ using Temp.Domain.Models.Engagements.Exceptions;
 
 namespace Temp.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, User")]
     [Route("api/[controller]")]
     [ApiController]
     public class EngagementsController : ControllerBase
@@ -69,6 +69,21 @@ namespace Temp.API.Controllers
             {
                 return BadRequest(GetInnerMessage(employmentStatusValidationException));
                 
+            }
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUserEmployeeEngagments(int id)
+        {
+            try
+            {
+                var response = await new GetUserEmployeeEngagements(_ctx).Do(id);
+                return Ok(response);
+            }
+            catch(EngagementValidationException engagementValidationException)
+            {
+                return BadRequest(GetInnerMessage(engagementValidationException));
             }
         }
   

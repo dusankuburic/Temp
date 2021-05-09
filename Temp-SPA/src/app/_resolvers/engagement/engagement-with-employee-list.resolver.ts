@@ -13,12 +13,12 @@ export class EngagmentWithEmployeeResolver implements Resolve<Employee[]> {
     pageSize = 5
 
     constructor(
-        private engaementService: EngagementService,
+        private engagementService: EngagementService,
         private router: Router,
         private alertify: AlertifyService){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<Employee[]> {
-        return this.engaementService.getEmpoyeesWithEngagement(this.pageNumber, this.pageSize).pipe(
+        return this.engagementService.getEmpoyeesWithEngagement(this.pageNumber, this.pageSize).pipe(
             catchError(error => {
                 this.alertify.error('Problem retriving data');
                 this.router.navigate(['']);

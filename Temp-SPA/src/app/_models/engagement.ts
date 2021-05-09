@@ -6,3 +6,11 @@ export interface Engagement {
     dateFrom: Date;
     dateTo: Date;
 }
+
+export interface UserEngagement {
+    workplaceName: string;
+    employmentStatusName: string;
+    dateFrom: Date;
+    dateTo: Date;
+    salary: number;
+}

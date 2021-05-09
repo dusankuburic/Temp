@@ -72,6 +72,8 @@ import { ApplicationUserListComponent } from './application/application-user-lis
 import { ApplicationUserListResolver } from './_resolvers/application/application-user-list.resolver';
 import { ApplicationUserResolver } from './_resolvers/application/application-user.resolver';
 import { ApplicationUserComponent } from './application/application-user/application-user.component';
+import { EngagementUserListComponent } from './engagement/engagement-user-list/engagement-user-list.component';
+import { EngagementUserListReslover } from './_resolvers/engagement/engagement-user-list.resolver';
 
 
 export function tokenGetter(): any {
@@ -98,6 +100,7 @@ export function tokenGetter(): any {
     EmploymentStatusEditComponent,
     EngagementWithEmployeeListComponent,
     EngagementWithoutEmployeeListComponent,
+    EngagementUserListComponent,
     EngagementCreateComponent,
     OrganizationListComponent,
     OrganizationEditComponent,
@@ -146,6 +149,7 @@ export function tokenGetter(): any {
     EmploymentStatusEditResolver,
     EngagmentWithEmployeeResolver,
     EngagmentWithoutEmployeeResolver,
+    EngagementUserListReslover,
     EngagmentCreateResolver,
     OrganizationListResolver,
     OrganizationEditResolver,
