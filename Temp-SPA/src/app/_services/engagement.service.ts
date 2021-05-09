@@ -83,6 +83,10 @@ getEngagementForEmployee(id: number): any {
   return this.http.get(this.baseUrl + 'engagements/employee/' + id);
 }
 
+getUserEmployeeEngagments(id: number): any {
+  return this.http.get(this.baseUrl + 'engagements/user/' + id);
+}
+
 createEngagement(engagement: Engagement): any {
   return this.http.post(this.baseUrl + 'engagements', engagement);
 }

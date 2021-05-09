@@ -13,7 +13,7 @@ using Temp.Domain.Models.Engagements.Exceptions;
 
 namespace Temp.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, User")]
     [Route("api/[controller]")]
     [ApiController]
     public class EngagementsController : ControllerBase
@@ -72,6 +72,7 @@ namespace Temp.API.Controllers
             }
         }
 
+        [Authorize(Roles = "User")]
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetUserEmployeeEngagments(int id)
         {

@@ -55,6 +55,8 @@ import { ApplicationUserListComponent } from './application/application-user-lis
 import { ApplicationUserListResolver } from './_resolvers/application/application-user-list.resolver';
 import { ApplicationUserComponent } from './application/application-user/application-user.component';
 import { ApplicationUserResolver } from './_resolvers/application/application-user.resolver';
+import { EngagementUserListComponent } from './engagement/engagement-user-list/engagement-user-list.component';
+import { EngagementUserListReslover } from './_resolvers/engagement/engagement-user-list.resolver';
 
 export const appRoutes: Routes = [
 
@@ -127,7 +129,9 @@ export const appRoutes: Routes = [
             {path: 'application-list/:id', component: ApplicationUserListComponent,
                 resolve: {applications: ApplicationUserListResolver}},
             {path: 'application-user/:id', component: ApplicationUserComponent,
-                resolve: {application: ApplicationUserResolver}}
+                resolve: {application: ApplicationUserResolver}},
+            {path: 'engagement-user-list/:id', component: EngagementUserListComponent,
+                resolve: {engagements: EngagementUserListReslover}}
         ]
     },
     {
