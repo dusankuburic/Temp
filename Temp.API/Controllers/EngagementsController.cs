@@ -75,8 +75,15 @@ namespace Temp.API.Controllers
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetUserEmployeeEngagments(int id)
         {
-            var response = await new GetUserEmployeeEngagements(_ctx).Do(id);
-            return Ok(response);
+            try
+            {
+                var response = await new GetUserEmployeeEngagements(_ctx).Do(id);
+                return Ok(response);
+            }
+            catch(EngagementValidationException engagementValidationException)
+            {
+                return BadRequest(GetInnerMessage(engagementValidationException));
+            }
         }
   
         [HttpGet("employee/{id}")]
