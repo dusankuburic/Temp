@@ -25,6 +25,9 @@
                         </span>
                     </h3>
                 </td>
+                <td *ngIf="application.status == false">
+                    <a class="btn btn-info"><i class="far fa-bookmark"></i></a>
+                </td>
                 <td>
                     <a class="btn btn-primary"><i class="far fa-comments"></i></a>
                 </td>
