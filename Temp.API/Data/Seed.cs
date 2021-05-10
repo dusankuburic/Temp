@@ -146,7 +146,7 @@ namespace Temp.API.Data
                 foreach(var moderator in moderators)
                 {
                     byte[] passwordHash, passwordSalt;
-                    CreatePasswordHash($"{moderator}123", out passwordHash, out passwordSalt);
+                    CreatePasswordHash($"{moderator.Username}123", out passwordHash, out passwordSalt);
 
                     moderator.PasswordHash = passwordHash;
                     moderator.PasswordSalt = passwordSalt;
