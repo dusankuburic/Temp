@@ -83,11 +83,18 @@ namespace Temp.API.Controllers
         [HttpPut("change-status/{id}")]
         public async Task<IActionResult> UpdateApplicationStatus(int id, UpdateApplicationStatus.Request request)
         {
-            var response = await new UpdateApplicationStatus(_ctx).Do(id, request);
-            if (response.Status)
-                return NoContent();
+            try
+            {
+                var response = await new UpdateApplicationStatus(_ctx).Do(id, request);
+                if (response.Status)
+                    return NoContent();
 
-            return BadRequest();
+                return BadRequest();
+            }
+            catch(ApplicationServiceException applicationValidationException)
+            {
+                return BadRequest(GetInnerMessage(applicationValidationException));
+            }
         }
 
         private static string GetInnerMessage(Exception exception) =>

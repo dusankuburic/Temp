@@ -12,6 +12,29 @@ namespace Temp.Core.Applications.Service
         public delegate Task<GetApplication.ApplicationViewModel> ReturningGetApplicationFunction();
         public delegate Task<IEnumerable<GetTeamApplications.ApplicationViewModel>> ReturningGetTeamApplicationsFunction();
         public delegate Task<IEnumerable<GetUserApplications.ApplicationViewModel>> ReturningGetUserApplicationsFunction();
+        public delegate Task<UpdateApplicationStatus.Response> ReturningUpdateApplicationStatusFunction();
+
+
+        public async Task<UpdateApplicationStatus.Response> TryCatch(ReturningUpdateApplicationStatusFunction returningUpdateApplicationStatusFunction)
+        {
+            try
+            {
+                return await returningUpdateApplicationStatusFunction();
+            }
+            catch(NullApplicationException nullApplicationException)
+            {
+                throw CreateAndLogValidationException(nullApplicationException);
+            }
+            catch (SqlException sqlException)
+            {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
 
         public async Task<CreateApplication.Response> TryCatch(ReturningCreateApplicationFunction returningCreateApplicationFunction)
         {

@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Temp.Core.Applications.Service;
 using Temp.Database;
 
 namespace Temp.Core.Applications
 {
-    public class UpdateApplicationStatus
+    public class UpdateApplicationStatus : ApplicationService
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -15,14 +16,14 @@ namespace Temp.Core.Applications
             _ctx = ctx;
         }
 
-        public async Task<Response> Do(int id, Request request)
-        {
+        public Task<Response> Do(int id, Request request) =>
+        TryCatch(async () => {
 
             var application = await _ctx.Applications
-                .Where(x => x.Id == id)
-                .FirstOrDefaultAsync();
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
 
-            //Validate application
+            ValidateApplication(application);
 
             application.ModeratorId = request.ModeratorId;
             application.Status = true;
@@ -34,7 +35,10 @@ namespace Temp.Core.Applications
                 Id = application.Id,
                 Status = true
             };
-        }
+        
+        });
+       
+
              
         public class Request
         {
