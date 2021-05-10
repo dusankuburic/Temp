@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { CreateApplication, ModeratorListApplication, Application, UserListApplication } from '../_models/application';
+import { CreateApplication, ModeratorListApplication, Application, UserListApplication, UpdateApplicationRequest } from '../_models/application';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,10 @@ getTeamApplicationsForModerator(teamId: number): any {
 
 getUserApplications(userId: number): any {
   return this.http.get<UserListApplication[]>(this.baseUrl + 'applications/user/' + userId);
+}
+
+updateApplicationStatus(id: number, request: UpdateApplicationRequest): any {
+  return this.http.put(this.baseUrl + 'applications/change-status/' + id, request);
 }
 
 }

@@ -27,6 +27,7 @@ namespace Temp.Core.Applications
                     .Select(x => new ApplicationViewModel
                     {
                         Id = x.Id,
+                        TeamId = x.TeamId,
                         Username = x.User.Username,
                         Category = x.Category,
                         CreatedAt = x.CreatedAt,
@@ -42,6 +43,7 @@ namespace Temp.Core.Applications
         public class ApplicationViewModel
         {
             public int Id { get; set; }
+            public int TeamId { get; set; }
             public string Username { get; set; }
             public string Category { get; set; }
             public DateTime CreatedAt { get; set; }

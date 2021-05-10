@@ -38,8 +38,6 @@ namespace Temp.Core.Applications
         
         });
        
-
-             
         public class Request
         {
             public int ModeratorId { get; set; }

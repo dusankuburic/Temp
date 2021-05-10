@@ -14,6 +14,7 @@ export interface CreateApplication{
 
 export interface ModeratorListApplication {
     id: number;
+    teamId: number;
     username: string;
     category: string;
     createdAt: Date;
@@ -25,4 +26,8 @@ export interface UserListApplication {
     category: string;
     createdAt: Date;
     status: boolean;
+}
+
+export interface UpdateApplicationRequest {
+    moderatorId: number;
 }
