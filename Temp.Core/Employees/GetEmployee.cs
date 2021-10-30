@@ -25,7 +25,8 @@ namespace Temp.Core.Employees
                     FirstName = x.FirstName,
                     LastName = x.LastName,
                     TeamId = x.TeamId,
-                    Role = x.Role
+                    Role = x.Role,
+
                 })
                 .FirstOrDefaultAsync();
 

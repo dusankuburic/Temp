@@ -18,7 +18,7 @@ export class TeamListResolver implements Resolve<InnerTeams> {
         return this.teamService.getTeams(route.params['id']).pipe(
             catchError(error => {
                 this.alertify.error('Problem retriving data');
-                this.router.navigate(['/organization']);
+                this.router.navigate(['']);
                 return of(null);
             })
         ) ;

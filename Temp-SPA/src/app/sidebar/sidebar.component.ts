@@ -21,7 +21,7 @@ export class SidebarComponent implements OnInit {
     if (this.authService.decodedToken.role === 'Admin'){
       return true;
     }
-    return false;
+    return false; 
   }
 
   isUser(): boolean {
