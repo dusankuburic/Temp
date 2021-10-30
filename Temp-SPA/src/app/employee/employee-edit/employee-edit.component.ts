@@ -140,7 +140,7 @@ export class EmployeeEditComponent implements OnInit {
       this.loadModeratorGroups(this.employee.teamId, this.employee.id);
       this.alertify.success('Success');
     }, error => {
-      this.alertify.error(error);
+      this.alertify.error(error.error);
     })
   }
 

@@ -17,7 +17,7 @@ export class ModeratorAssignedGroupsResolver implements Resolve<Group[]> {
     resolve(route: ActivatedRouteSnapshot): Observable<Group[]> {
         return this.groupService.getModeratorGroups(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retriving data');
+                this.alertify.error(error.error);
                 this.router.navigate(['/']);
                 return of(null);
             })

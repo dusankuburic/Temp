@@ -34,6 +34,7 @@ namespace Temp.Core.Auth.Moderators
                 var moderatorGroups = await _ctx.ModeratorGroups
                     .Where(x => x.ModeratorId == id)
                     .ToListAsync();
+
                 
                 ValidateModeratorGroups(moderatorGroups);
 
