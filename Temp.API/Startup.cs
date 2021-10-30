@@ -36,7 +36,9 @@ namespace Temp.API
                 });
             });
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(opt => 
+                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
 
             services.Configure<ApiBehaviorOptions>(opt =>
             {
