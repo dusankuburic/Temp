@@ -9,14 +9,12 @@ namespace Temp.Core.Employees
     {
 
         private readonly ApplicationDbContext _ctx;
-        public UpdateEmployee(ApplicationDbContext ctx)
-        {
+        public UpdateEmployee(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        public Task<Response> Do(int id ,Request request) =>
-        TryCatch(async () => 
-        {
+        public Task<Response> Do(int id, Request request) =>
+        TryCatch(async () => {
             var employee = _ctx.Employees.FirstOrDefault(x => x.Id == id);
 
             employee.FirstName = request.FirstName;
@@ -27,8 +25,7 @@ namespace Temp.Core.Employees
 
             await _ctx.SaveChangesAsync();
 
-            return new Response()
-            {
+            return new Response() {
                 Id = employee.Id,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
@@ -36,27 +33,27 @@ namespace Temp.Core.Employees
             };
         });
 
-     
+
         public class Request
         {
             [Required]
             [MaxLength(30)]
-            public string FirstName {get; set;}
-            
+            public string FirstName { get; set; }
+
             [Required]
             [MaxLength(30)]
-            public string LastName {get; set;}
+            public string LastName { get; set; }
 
-            [Required] 
+            [Required]
             public int TeamId { get; set; }
         }
 
         public class Response
         {
-            public int Id {get; set;}
-            public string FirstName {get; set;}
-            public string LastName {get; set;}
-            public bool Status {get; set;}
+            public int Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public bool Status { get; set; }
         }
     }
 }

@@ -9,38 +9,30 @@ namespace Temp.Core.Organizations.Service
     public partial class OrganizationService
     {
 
-        public void ValidateOrganizationOnCreate(Organization organization)
-        {
+        public void ValidateOrganizationOnCreate(Organization organization) {
             ValidateOrganization(organization);
             ValidateOrganizationString(organization);
         }
 
-        public void ValidateOrganizationOnUpdate(Organization organization)
-        {
+        public void ValidateOrganizationOnUpdate(Organization organization) {
             ValidateOrganization(organization);
             ValidateOrganizationString(organization);
         }
 
-        public void ValidateOrganization(Organization organization)
-        {
-            if(organization is null)
-            {
+        public void ValidateOrganization(Organization organization) {
+            if (organization is null) {
                 throw new NullOrganizationException();
             }
         }
 
-        public void ValidateGetOrganizationViewModel(GetOrganization.OrganizationViewModel organization)
-        {
-            if (organization is null)
-            {
+        public void ValidateGetOrganizationViewModel(GetOrganization.OrganizationViewModel organization) {
+            if (organization is null) {
                 throw new NullOrganizationException();
             }
         }
 
-        public void ValidateOrganizationString(Organization organization)
-        {
-            switch(organization)
-            {
+        public void ValidateOrganizationString(Organization organization) {
+            switch (organization) {
                 case { } when IsInvalid(organization.Name):
                     throw new InvalidOrganizationException(
                         parameterName: nameof(organization.Name),
@@ -48,18 +40,14 @@ namespace Temp.Core.Organizations.Service
             }
         }
 
-        public void ValidateStorageOrganizations(IEnumerable<GetOrganizations.OrganizationViewModel> storageOrganizations)
-        {
-            if(storageOrganizations.Count() == 0)
-            {
+        public void ValidateStorageOrganizations(IEnumerable<GetOrganizations.OrganizationViewModel> storageOrganizations) {
+            if (storageOrganizations.Count() == 0) {
                 throw new OrganizationEmptyStorageException();
             }
         }
 
-        public void ValidateStorageOrganizationInnerGroups(IEnumerable<GetInnerGroups.InnerGroupViewModel> innerGroupViewModels)
-        {
-            if(innerGroupViewModels.Count() == 0)
-            {
+        public void ValidateStorageOrganizationInnerGroups(IEnumerable<GetInnerGroups.InnerGroupViewModel> innerGroupViewModels) {
+            if (innerGroupViewModels.Count() == 0) {
                 throw new OrganizationGetInnerGroupsStorageException();
             }
         }

@@ -1,28 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.Applications.Service;
 using Temp.Database;
 
 namespace Temp.Core.Applications
 {
-    public class GetTeamApplications: ApplicationService
+    public class GetTeamApplications : ApplicationService
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetTeamApplications(ApplicationDbContext ctx)
-        {
+        public GetTeamApplications(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        public Task<IEnumerable<ApplicationViewModel>> Do(int id) =>
-            TryCatch(async () =>
-            {
+        public Task<IEnumerable<ApplicationViewModel>> Do(int teamId, int moderatorId) =>
+            TryCatch(async () => {
                 var applications = await _ctx.Applications
                     .Include(x => x.User)
-                    .Where(x => x.TeamId == id)
+                    .Where(x => x.TeamId == teamId )
+                    .Where(x => (x.ModeratorId == moderatorId) || (x.Status == false))
                     .OrderBy(x => x.Status)
                     .Select(x => new ApplicationViewModel
                     {
@@ -48,6 +47,6 @@ namespace Temp.Core.Applications
             public string Category { get; set; }
             public DateTime CreatedAt { get; set; }
             public bool Status { get; set; }
-        }   
+        }
     }
 }

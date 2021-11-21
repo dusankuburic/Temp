@@ -38,7 +38,7 @@ export class ApplicationModeratorListComponent implements OnInit {
   }
 
   loadApplications(teamId: number): void {
-    this.applicationService.getTeamApplicationsForModerator(teamId).toPromise().then((res: ModeratorListApplication[]) => {
+    this.applicationService.getTeamApplicationsForModerator(teamId, this.user.id).toPromise().then((res: ModeratorListApplication[]) => {
       this.applications = res;
     }, error => {
       this.alertify.error(error.error);

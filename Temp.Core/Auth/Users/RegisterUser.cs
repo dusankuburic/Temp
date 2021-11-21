@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.Employees;
 using Temp.Database;
 using Temp.Domain.Models;
@@ -13,36 +13,29 @@ namespace Temp.Core.Auth.Users
     {
 
         private readonly ApplicationDbContext _ctx;
-        public RegisterUser(ApplicationDbContext ctx)
-        {
+        public RegisterUser(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using(var hmac = new HMACSHA512())
-            {
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt) {
+            using (var hmac = new HMACSHA512()) {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
         }
 
-        private async Task<bool> UserExists(string username)
-        {
-            if(await _ctx.Users.AnyAsync(x => x.Username == username))    
+        private async Task<bool> UserExists(string username) {
+            if (await _ctx.Users.AnyAsync(x => x.Username == username))
                 return true;
-            
+
             return false;
         }
 
-        public async Task<Response> Do(Request request)
-        {
+        public async Task<Response> Do(Request request) {
             var userExists = await UserExists(request.Username);
 
-            if(userExists)
-            {
-                return new Response
-                {
+            if (userExists) {
+                return new Response {
                     Messsage = $"User already exists with {request.Username} username",
                     Username = request.Username,
                     Status = false
@@ -65,8 +58,7 @@ namespace Temp.Core.Auth.Users
 
             var result = await new UpdateEmployeeRole(_ctx).Do("User",request.EmployeeId);
 
-            return new Response
-            {
+            return new Response {
                 Messsage = "Successful registration",
                 Username = user.Username,
                 Status = true
@@ -75,7 +67,7 @@ namespace Temp.Core.Auth.Users
 
         public class Request
         {
-            public int EmployeeId {get; set;}
+            public int EmployeeId { get; set; }
             [Required]
             public string Username { get; set; }
             [Required]

@@ -12,7 +12,10 @@
             <tr *ngFor="let employment of employmentStatuses">
                 <td>{{employment.name}}</td>
                 <td>
-                    <a class="btn btn-primary" [routerLink]="['/employment-statuses/', employment.id]"><i class="fa fa-edit"></i></a>
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-primary" [routerLink]="['/employment-statuses/', employment.id]"><i class="fa fa-edit"></i></a>
+                        <a class="btn btn-success" (click)="changeStatus(employment.id)" ><i class="fas fa-pen-nib"></i></a>
+                    </div>
                 </td>
             </tr>
             </tbody>

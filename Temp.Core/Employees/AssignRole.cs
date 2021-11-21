@@ -11,16 +11,13 @@ namespace Temp.Core.Employees
     {
         private readonly ApplicationDbContext _ctx;
 
-        public AssignRole(ApplicationDbContext ctx)
-        {
+        public AssignRole(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        public async Task<Response> Do(Request request)
-        {
+        public async Task<Response> Do(Request request) {
 
-            if (request.Role == "User")
-            {   
+            if (request.Role == "User") {
                 var userRequest = new RegisterUser.Request
                 {
                     Username = request.Username,
@@ -30,16 +27,13 @@ namespace Temp.Core.Employees
 
                 var response = await new RegisterUser(_ctx).Do(userRequest);
 
-                return new Response
-                {
+                return new Response {
                     Username = response.Username,
                     Message = response.Messsage,
                     Status = response.Status
                 };
-                
-            }
-            else if(request.Role == "Admin")
-            {
+
+            } else if (request.Role == "Admin") {
                 var adminRequest = new RegisterAdmin.Request
                 {
                     Username = request.Username,
@@ -49,15 +43,12 @@ namespace Temp.Core.Employees
 
                 var response = await new RegisterAdmin(_ctx).Do(adminRequest);
 
-                return new Response
-                {
+                return new Response {
                     Username = response.Username,
                     Message = response.Message,
                     Status = response.Status
                 };
-            }
-            else if(request.Role == "Moderator")
-            {
+            } else if (request.Role == "Moderator") {
                 var moderatorRequest = new RegisterModerator.Request
                 {
                     Username = request.Username,
@@ -67,27 +58,23 @@ namespace Temp.Core.Employees
 
                 var response = await new RegisterModerator(_ctx).Do(moderatorRequest);
 
-                return new Response
-                {
+                return new Response {
                     Username = response.Username,
                     Message = response.Message,
                     Status = response.Status
                 };
-            }
-            else
-            {
-                return new Response
-                {
+            } else {
+                return new Response {
                     Status = false,
                     Message = "Wrong role!!!!"
                 };
-            }        
+            }
         }
 
         public class Request
         {
             [Required]
-            public int Id {get; set;}
+            public int Id { get; set; }
             [Required]
             [MaxLength(30)]
             public string Username { get; set; }
@@ -95,7 +82,7 @@ namespace Temp.Core.Employees
             [MaxLength(30)]
             public string Password { get; set; }
             [Required]
-            public string Role {get; set;}
+            public string Role { get; set; }
         }
 
         public class Response

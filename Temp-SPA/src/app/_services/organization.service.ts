@@ -33,5 +33,9 @@ getInnerGroups(organizationId: number): any {
   return this.http.get<Group[]>(this.baseUrl + 'organizations/inner-groups/' + organizationId);
 }
 
+changeStatus(id: number): any {
+  return this.http.put(this.baseUrl + 'organizations/change-stauts/' + id, id);
+}
+
 
 }

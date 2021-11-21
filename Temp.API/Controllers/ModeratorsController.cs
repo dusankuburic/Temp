@@ -15,34 +15,29 @@ namespace Temp.API.Controllers
         private readonly ApplicationDbContext _ctx;
         private readonly IConfiguration _config;
 
-        public ModeratorsController(ApplicationDbContext ctx, IConfiguration config)
-        {
+        public ModeratorsController(ApplicationDbContext ctx, IConfiguration config) {
             _ctx = ctx;
             _config = config;
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetModerator(int id)
-        {
+        public async Task<IActionResult> GetModerator(int id) {
             var response = await new GetModerator(_ctx).Do(id);
             return Ok(response);
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterAdmin(RegisterModerator.Request request)
-        {
+        public async Task<IActionResult> RegisterAdmin(RegisterModerator.Request request) {
             var response = await new RegisterModerator(_ctx).Do(request);
-            if (response.Status)      
+            if (response.Status)
                 return NoContent();
-            
+
             return BadRequest(response.Message);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginAdmin(LoginModerator.Request request)
-        {
-            if (!ModelState.IsValid)
-            {
+        public async Task<IActionResult> LoginAdmin(LoginModerator.Request request) {
+            if (!ModelState.IsValid) {
                 return BadRequest(ModelState.Values);
             }
 
@@ -54,18 +49,14 @@ namespace Temp.API.Controllers
         }
 
         [HttpPut("update-groups/{id}")]
-        public async Task<IActionResult> UpdateGroups(int id, UpdateModeratorGroups.Request request)
-        {
-            try
-            {
+        public async Task<IActionResult> UpdateGroups(int id, UpdateModeratorGroups.Request request) {
+            try {
                 var response = await new UpdateModeratorGroups(_ctx).Do(id, request);
                 if (response.Status)
                     return NoContent();
-                
+
                 return BadRequest(response.Message);
-            }
-            catch (ModeratorGroupValidationException moderatorGroupValidationException)
-            {
+            } catch (ModeratorGroupValidationException moderatorGroupValidationException) {
                 return BadRequest(GetInnerMessage(moderatorGroupValidationException));
             }
         }

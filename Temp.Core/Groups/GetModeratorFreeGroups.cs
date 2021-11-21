@@ -7,18 +7,16 @@ using Temp.Database;
 
 namespace Temp.Core.Groups
 {
-    public class GetModeratorFreeGroups: GroupService
+    public class GetModeratorFreeGroups : GroupService
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetModeratorFreeGroups(ApplicationDbContext ctx)
-        {
+        public GetModeratorFreeGroups(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
         public Task<IEnumerable<ModeratorFreeGroupViewModel>> Do(int id, int moderatorId) =>
-        TryCatch(async () =>
-        {
+        TryCatch(async () => {
             var moderatorGroups = await _ctx.ModeratorGroups
                 .Where(x => x.ModeratorId == moderatorId)
                 .Select(x => x.GroupId)
@@ -26,7 +24,7 @@ namespace Temp.Core.Groups
 
 
             var moderatorFreeGroups = await _ctx.Groups
-                .Where(x => x.OrganizationId == id)
+                .Where(x => x.OrganizationId == id && x.IsActive)
                 .Where(x => !moderatorGroups.Contains(x.Id))
                 .Select(x => new ModeratorFreeGroupViewModel
                 {
@@ -39,8 +37,8 @@ namespace Temp.Core.Groups
 
             return moderatorFreeGroups;
         });
- 
-        
+
+
         public class ModeratorFreeGroupViewModel
         {
             public int Id { get; set; }

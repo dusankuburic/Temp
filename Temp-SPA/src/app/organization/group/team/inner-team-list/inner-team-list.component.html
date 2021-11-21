@@ -1,7 +1,6 @@
 <div class="row justify-content-center">
-
   <div class="col-lg-8">
-    <h1 class="text-center">Teams inside {{innerTeams.name}}</h1>
+    <h1 class="text-center" *ngIf="innerTeams">Teams inside {{innerTeams.name}}</h1>
     <table class="table table-striped table-hover text-center">
       <thead>
           <tr>
@@ -9,17 +8,20 @@
             <th>Options</th>
           </tr>
       </thead>
-      <tbody *ngIf="innerTeams.teams.length !== 0"> 
+      <tbody *ngIf="innerTeams"> 
         <tr *ngFor="let team of innerTeams.teams">
           <td>{{team.name}}</td>
           <td>
-            <a class="btn btn-primary" [routerLink]="['/teams/', team.id]"><i class="fa fa-edit"></i></a>
+            <div class="btn-group" role="group">
+              <a class="btn btn-primary" [routerLink]="['/teams/', team.id]"><i class="fa fa-edit"></i></a>
+              <a class="btn btn-success" (click)="changeStatus(team.id)" ><i class="fas fa-pen-nib"></i></a>
+            </div>
           </td>  
         </tr>
       </tbody>
     </table>
   </div>
-  <div class="col-lg-6" *ngIf="innerTeams.teams.length === 0">
+  <div class="col-lg-6" *ngIf="!innerTeams">
     <div class="alert alert-info text-center" role="alert">
       <h5>There are no teams inside group</h5>
     </div>

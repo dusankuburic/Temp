@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.Workplaces.Service;
 using Temp.Database;
 using Temp.Domain.Models;
@@ -10,13 +10,11 @@ namespace Temp.Core.Workplaces
     public class CreateWorkplace : WorkplaceService
     {
         private readonly ApplicationDbContext _ctx;
-        public CreateWorkplace(ApplicationDbContext ctx)
-        {
+        public CreateWorkplace(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        private async Task<bool> WorkplaceExists(string name)
-        {
+        private async Task<bool> WorkplaceExists(string name) {
             if (await _ctx.Workplaces.AnyAsync(x => x.Name == name))
                 return true;
 
@@ -24,14 +22,11 @@ namespace Temp.Core.Workplaces
         }
 
         public Task<Response> Do(Request request) =>
-        TryCatch(async () =>
-        {
+        TryCatch(async () => {
             var workplaceExists = await WorkplaceExists(request.Name);
 
-            if(workplaceExists)
-            {
-                return new Response
-                {
+            if (workplaceExists) {
+                return new Response {
                     Message = $"{request.Name} already exists",
                     Status = false
                 };
@@ -47,8 +42,7 @@ namespace Temp.Core.Workplaces
             _ctx.Workplaces.Add(workplace);
             await _ctx.SaveChangesAsync();
 
-            return new Response
-            {
+            return new Response {
                 Message = $"Success {request.Name} is added",
                 Status = true
             };
@@ -59,13 +53,13 @@ namespace Temp.Core.Workplaces
             [Required]
             [MinLength(2)]
             [MaxLength(50)]
-            public string Name {get; set;}
+            public string Name { get; set; }
         }
 
         public class Response
         {
-            public string Message {get; set;}
-            public bool Status {get; set;}
+            public string Message { get; set; }
+            public bool Status { get; set; }
         }
     }
 }

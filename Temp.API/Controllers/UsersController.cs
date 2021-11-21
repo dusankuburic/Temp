@@ -13,15 +13,13 @@ namespace Temp.API.Controllers
         private readonly ApplicationDbContext _ctx;
         private readonly IConfiguration _config;
 
-        public UsersController(ApplicationDbContext ctx, IConfiguration config)
-        {
+        public UsersController(ApplicationDbContext ctx, IConfiguration config) {
             _ctx = ctx;
             _config = config;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser(RegisterUser.Request request)
-        {
+        public async Task<IActionResult> RegisterUser(RegisterUser.Request request) {
             var response = await new RegisterUser(_ctx).Do(request);
             if (response.Status)
                 return Ok(response);
@@ -30,8 +28,7 @@ namespace Temp.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginUser(LoginUser.Request request)
-        {
+        public async Task<IActionResult> LoginUser(LoginUser.Request request) {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Values);
 

@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Database;
 
 namespace Temp.Core.Engagements
@@ -11,8 +11,7 @@ namespace Temp.Core.Engagements
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetUserEmployeeEngagements(ApplicationDbContext ctx)
-        {
+        public GetUserEmployeeEngagements(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 

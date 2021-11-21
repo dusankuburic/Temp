@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Temp.Core.Auth.Moderators.Service;
 using Temp.Database;
 using Temp.Domain.Models;
-using Temp.Core.Auth.Moderators.Service;
 
 namespace Temp.Core.Auth.Moderators
 {
@@ -13,56 +13,48 @@ namespace Temp.Core.Auth.Moderators
     {
         private readonly ApplicationDbContext _ctx;
 
-        public UpdateModeratorGroups(ApplicationDbContext ctx)
-        {
+        public UpdateModeratorGroups(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
-        
-        public Task<Response> Do(int id, Request request) => 
-        TryCatch(async () =>
-        {
-            if (request.Groups.Count() == 0)
-            {
+
+        public Task<Response> Do(int id, Request request) =>
+        TryCatch(async () => {
+            if (request.Groups.Count() == 0) {
                 var mod = await _ctx.ModeratorGroups
                     .Where(x => x.ModeratorId == id)
                     .FirstOrDefaultAsync();
-                
+
                 _ctx.Remove(mod);
-            }
-            else
-            {
+            } else {
                 var moderatorGroups = await _ctx.ModeratorGroups
                     .Where(x => x.ModeratorId == id)
                     .ToListAsync();
 
-                
+
                 ValidateModeratorGroups(moderatorGroups);
 
                 _ctx.RemoveRange(moderatorGroups);
 
-                foreach (var group in request.Groups)
-                {
-                    _ctx.ModeratorGroups.Add(new ModeratorGroup
-                    {
+                foreach (var group in request.Groups) {
+                    _ctx.ModeratorGroups.Add(new ModeratorGroup {
                         ModeratorId = id,
                         GroupId = group
                     });
                 }
             }
-            
+
             await _ctx.SaveChangesAsync();
-        
-            return new Response
-            {
+
+            return new Response {
                 Message = $"Groups are assigned",
                 Status = true
             };
         });
-        
-        
+
+
         public class Request
         {
-            [Required] 
+            [Required]
             public IEnumerable<int> Groups { get; set; }
         }
 

@@ -57,6 +57,8 @@ import { ApplicationUserComponent } from './application/application-user/applica
 import { ApplicationUserResolver } from './_resolvers/application/application-user.resolver';
 import { EngagementUserListComponent } from './engagement/engagement-user-list/engagement-user-list.component';
 import { EngagementUserListReslover } from './_resolvers/engagement/engagement-user-list.resolver';
+import { ApplicationModeratorResolver } from './_resolvers/application/application-moderator.resolver';
+import { ApplicationModeratorComponent } from './application/application-moderator/application-moderator.component';
 
 export const appRoutes: Routes = [
 
@@ -145,7 +147,9 @@ export const appRoutes: Routes = [
             {path: 'assigned-groups/inner-teams/:id', component: AssignedInnerTeamsComponent,
                 resolve: {teams: TeamListResolver}},
             {path: 'application-list/team/:id', component: ApplicationModeratorListComponent,
-                resolve: {applications: ApplicationModeratorListResolver}}
+                resolve: {applications: ApplicationModeratorListResolver}},
+            {path: 'application-moderator/:id', component: ApplicationModeratorComponent,
+                resolve: {application: ApplicationModeratorResolver}},
         ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}

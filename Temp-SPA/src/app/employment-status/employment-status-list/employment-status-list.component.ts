@@ -40,4 +40,13 @@ export class EmploymentStatusListComponent implements OnInit {
     this.loadEmploymentStatuses();
   }
 
+  changeStatus(id: number): any {
+    this.employmentStatusService.changeStatus(id).subscribe(() => {
+      this.loadEmploymentStatuses();
+      this.alertify.success('Status changed');
+    }, error => {
+      this.alertify.error(error.error);
+    });
+  }
+
 }

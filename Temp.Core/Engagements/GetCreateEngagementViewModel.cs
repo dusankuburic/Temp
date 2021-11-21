@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Temp.Core.EmploymentStatuses;
-using Temp.Core.Employees;
-using Temp.Core.Workplaces;
-using Temp.Database;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Temp.Core.Employees;
+using Temp.Core.EmploymentStatuses;
+using Temp.Core.Workplaces;
+using Temp.Database;
 
 namespace Temp.Core.Engagements
 {
@@ -15,14 +15,12 @@ namespace Temp.Core.Engagements
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetCreateEngagementViewModel(ApplicationDbContext ctx)
-        {
+        public GetCreateEngagementViewModel(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
-       
+
         public Task<string> Do(int id) =>
-        TryCatch(async() => 
-        {
+        TryCatch(async () => {
             var response = new Response
             {
                 Employee = await new GetEmployee(_ctx).Do(id),
@@ -41,10 +39,10 @@ namespace Temp.Core.Engagements
             };
 
             ValidateCreateEngagementViewModel(response);
-            
+
             return JsonConvert.SerializeObject(response);
         });
-            
+
         public class Response
         {
             public GetEmployee.EmployeeViewModel Employee;

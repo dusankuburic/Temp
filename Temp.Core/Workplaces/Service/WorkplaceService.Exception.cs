@@ -1,7 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Temp.Core.Helpers;
 using Temp.Domain.Models.Workplaces.Exceptions;
 
@@ -15,131 +15,84 @@ namespace Temp.Core.Workplaces.Service
         public delegate Task<GetWorkplace.WorkplaceViewModel> ReturningGetWorkplaceFunction();
         public delegate Task<UpdateWorkplace.Response> ReturningUpdateWorkplaceFunction();
 
-        public async Task<CreateWorkplace.Response> TryCatch(ReturningWorkplaceFunction returningWorkplaceFunction)
-        {
-            try
-            {
+        public async Task<CreateWorkplace.Response> TryCatch(ReturningWorkplaceFunction returningWorkplaceFunction) {
+            try {
                 return await returningWorkplaceFunction();
-            }
-            catch(NullWorkplaceException nullWorkplaceException)
-            {
+            } catch (NullWorkplaceException nullWorkplaceException) {
                 throw CreateAndLogValidationException(nullWorkplaceException);
-            }
-            catch(InvalidWorkplaceException invalidWorkplaceException)
-            {
+            } catch (InvalidWorkplaceException invalidWorkplaceException) {
                 throw CreateAndLogValidationException(invalidWorkplaceException);
-            }
-            catch(SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch(Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
         }
-        
-        public async Task<IEnumerable<GetWorkplaces.WorkplacesViewModel>> TryCatch(ReturningGetWorkplacesFunction returningGetWorkplacesFunction)
-        {
-            try
-            {
+
+        public async Task<IEnumerable<GetWorkplaces.WorkplacesViewModel>> TryCatch(ReturningGetWorkplacesFunction returningGetWorkplacesFunction) {
+            try {
                 return await returningGetWorkplacesFunction();
-            }
-            catch(WorkplaceEmptyStorageException workplaceEmptyStorageException)
-            {
+            } catch (WorkplaceEmptyStorageException workplaceEmptyStorageException) {
                 throw CreateAndLogValidationException(workplaceEmptyStorageException);
-            }
-            catch(SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch(Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
-            }           
+            }
         }
 
-        public async Task<PagedList<GetWorkplaces.WorkplacesViewModel>> TryCatch(ReturningGetWorkplacesFunctionPage returningGetWorkplacesFunctionPage)
-        {
-            try
-            {
+        public async Task<PagedList<GetWorkplaces.WorkplacesViewModel>> TryCatch(ReturningGetWorkplacesFunctionPage returningGetWorkplacesFunctionPage) {
+            try {
                 return await returningGetWorkplacesFunctionPage();
-            }
-            catch(WorkplaceEmptyStorageException workplaceEmptyStorageException)
-            {
+            } catch (WorkplaceEmptyStorageException workplaceEmptyStorageException) {
                 throw CreateAndLogValidationException(workplaceEmptyStorageException);
-            }
-            catch(SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch(Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
-            }           
+            }
         }
 
-        public async Task<GetWorkplace.WorkplaceViewModel> TryCatch(ReturningGetWorkplaceFunction returningGetWorkplaceFunction)
-        {
-            try
-            {
+        public async Task<GetWorkplace.WorkplaceViewModel> TryCatch(ReturningGetWorkplaceFunction returningGetWorkplaceFunction) {
+            try {
                 return await returningGetWorkplaceFunction();
-            }
-            catch(NullWorkplaceException nullWorkplaceException)
-            {
+            } catch (NullWorkplaceException nullWorkplaceException) {
                 throw CreateAndLogValidationException(nullWorkplaceException);
-            }
-            catch(SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch(Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
-            
+
         }
 
-        public async Task<UpdateWorkplace.Response> TryCatch(ReturningUpdateWorkplaceFunction returningUpdateWorkplaceFunction)
-        {
-            try
-            {
+        public async Task<UpdateWorkplace.Response> TryCatch(ReturningUpdateWorkplaceFunction returningUpdateWorkplaceFunction) {
+            try {
                 return await returningUpdateWorkplaceFunction();
-            }
-            catch(NullWorkplaceException nullWorkplaceException)
-            {
+            } catch (NullWorkplaceException nullWorkplaceException) {
                 throw CreateAndLogValidationException(nullWorkplaceException);
-            }
-            catch(InvalidWorkplaceException invalidWorkplaceException)
-            {
+            } catch (InvalidWorkplaceException invalidWorkplaceException) {
                 throw CreateAndLogValidationException(invalidWorkplaceException);
-            }
-            catch(SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch(Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
         }
 
-        private WorkplaceValidationException CreateAndLogValidationException(Exception exception)
-        {
+        private WorkplaceValidationException CreateAndLogValidationException(Exception exception) {
             var workplaceValidationException = new WorkplaceValidationException(exception);
             //LOG
             return workplaceValidationException;
         }
 
-        private WorkplaceServiceException CreateAndLogServiceException(Exception exception)
-        {
+        private WorkplaceServiceException CreateAndLogServiceException(Exception exception) {
             var workplaceServiceException = new WorkplaceServiceException(exception);
             //LOG
             return workplaceServiceException;
         }
-        
-        private WorkplaceDependencyException CreateAndLogCriticalDependencyException(Exception exception)
-        {
+
+        private WorkplaceDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
             var workplaceDependencyException = new WorkplaceDependencyException(exception);
             //LOG
             return workplaceDependencyException;

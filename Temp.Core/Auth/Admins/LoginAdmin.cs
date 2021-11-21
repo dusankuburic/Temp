@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Temp.Database;
@@ -18,19 +18,15 @@ namespace Temp.Core.Auth.Admins
         private readonly ApplicationDbContext _ctx;
         private readonly IConfiguration _config;
 
-        public LoginAdmin(ApplicationDbContext ctx, IConfiguration config)
-        {
+        public LoginAdmin(ApplicationDbContext ctx, IConfiguration config) {
             _ctx = ctx;
             _config = config;
         }
 
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt) {
+            using (var hmac = new HMACSHA512(passwordSalt)) {
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                for (int i = 0; i < computedHash.Length; i++)
-                {
+                for (int i = 0; i < computedHash.Length; i++) {
                     if (computedHash[i] != passwordHash[i])
                         return false;
                 }
@@ -38,8 +34,7 @@ namespace Temp.Core.Auth.Admins
             return true;
         }
 
-        public async Task<Response> Do(Request request)
-        {
+        public async Task<Response> Do(Request request) {
             var admin = await _ctx.Admins.FirstOrDefaultAsync(x => x.Username == request.Username);
 
             if (admin is null)
@@ -72,17 +67,15 @@ namespace Temp.Core.Auth.Admins
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return new Response
-            {
-                User = new AdminResponse
-                {
+            return new Response {
+                User = new AdminResponse {
                     Id = admin.Id,
-                    Username = admin.Username          
+                    Username = admin.Username
                 },
                 Token = tokenHandler.WriteToken(token)
             };
         }
-        
+
 
         public class Request
         {
@@ -93,7 +86,7 @@ namespace Temp.Core.Auth.Admins
             [MaxLength(30)]
             public string Password { get; set; }
         }
-        
+
         public class AdminResponse
         {
             public int Id { get; set; }
@@ -105,6 +98,6 @@ namespace Temp.Core.Auth.Admins
             public string Token { get; set; }
             public AdminResponse User { get; set; }
         }
-        
+
     }
 }

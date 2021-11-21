@@ -20,8 +20,8 @@ createApplication(application: CreateApplication): any {
   return this.http.post(this.baseUrl + 'applications', application);
 }
 
-getTeamApplicationsForModerator(teamId: number): any {
-  return this.http.get<ModeratorListApplication[]>(this.baseUrl + 'applications/team/' + teamId);
+getTeamApplicationsForModerator(teamId: number, moderatorId: number): any {
+  return this.http.get<ModeratorListApplication[]>(this.baseUrl + 'applications/team/' + teamId + "/moderator/" + moderatorId);
 }
 
 getUserApplications(userId: number): any {

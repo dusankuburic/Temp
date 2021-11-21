@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.Applications.Service;
 using Temp.Database;
 
@@ -11,14 +11,12 @@ namespace Temp.Core.Applications
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetApplication(ApplicationDbContext ctx)
-        {
+        public GetApplication(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
         public Task<ApplicationViewModel> Do(int id) =>
-            TryCatch(async () =>
-            {
+            TryCatch(async () => {
                 var application = await _ctx.Applications
                .Where(x => x.Id == id)
                .Select(x => new ApplicationViewModel

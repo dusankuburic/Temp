@@ -4,17 +4,14 @@ namespace Temp.Database.Migrations
 {
     public partial class ModeratorGroups : Migration
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "ModeratorGroups",
-                columns: table => new
-                {
+                columns: table => new {
                     ModeratorId = table.Column<int>(nullable: false),
                     GroupId = table.Column<int>(nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_ModeratorGroups", x => new { x.ModeratorId, x.GroupId });
                     table.ForeignKey(
                         name: "FK_ModeratorGroups_Groups_GroupId",
@@ -36,8 +33,7 @@ namespace Temp.Database.Migrations
                 column: "GroupId");
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "ModeratorGroups");
         }

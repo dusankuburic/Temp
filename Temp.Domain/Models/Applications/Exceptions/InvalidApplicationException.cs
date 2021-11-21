@@ -7,7 +7,6 @@ namespace Temp.Domain.Models.Applications.Exceptions
         public InvalidApplicationException(string parameterName, object parameterValue)
             : base($"Invalid Employee, " +
                   $"ParameterName : {parameterName}, " +
-                  $"ParameterValue: {parameterValue}.")
-        {}
+                  $"ParameterValue: {parameterValue}.") { }
     }
 }

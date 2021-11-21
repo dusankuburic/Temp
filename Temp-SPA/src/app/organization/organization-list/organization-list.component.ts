@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Organization } from 'src/app/_models/organization';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { OrganizationService } from 'src/app/_services/organization.service';
 
 @Component({
   selector: 'app-organization-list',
@@ -10,11 +12,31 @@ export class OrganizationListComponent implements OnInit {
   organizations: Organization[];
 
   constructor(
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private organizationsService: OrganizationService,
+    private alertify: AlertifyService) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.organizations = data['organizations'];
+    });
+  }
+
+  loadOrganizations(): void {
+    this.organizationsService.getOrganizations()
+    .toPromise().then((result) => {
+      this.organizations = result;
+    }, error => {
+      this.alertify.error(error.error);
+    })
+  }
+
+  changeStatus(id: number): any {
+    this.organizationsService.changeStatus(id).subscribe(() => {
+      this.loadOrganizations();
+      this.alertify.success('Status changed');
+    }, error => {
+      this.alertify.error(error.error);
     });
   }
 

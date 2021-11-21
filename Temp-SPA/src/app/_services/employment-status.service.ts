@@ -48,4 +48,8 @@ updateEmploymentStatus(id: any, employmentStatus: EmploymentStatus): any {
   return this.http.put(this.baseUrl + 'employmentStatuses/' + id, employmentStatus);
 }
 
+changeStatus(id: number): any {
+  return this.http.put(this.baseUrl + 'employmentStatuses/change-status/' + id, id);
+}
+
 }
