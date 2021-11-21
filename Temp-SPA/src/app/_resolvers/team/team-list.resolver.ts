@@ -16,11 +16,11 @@ export class TeamListResolver implements Resolve<InnerTeams> {
 
     resolve(route: ActivatedRouteSnapshot): Observable<InnerTeams>  {
         return this.teamService.getTeams(route.params['id']).pipe(
-            catchError(error => {
+            catchError(error => {    
                 this.alertify.error('Problem retriving data');
-                this.router.navigate(['']);
+                //this.router.navigate(['/organizations']);
                 return of(null);
             })
-        ) ;
+        );
     }
 }

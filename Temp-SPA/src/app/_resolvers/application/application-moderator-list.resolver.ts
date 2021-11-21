@@ -11,14 +11,15 @@ export class ApplicationModeratorListResolver implements Resolve<ModeratorListAp
 
     constructor(
         private applicationService: ApplicationService,
-        private router: Router,
         private alertify: AlertifyService){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<ModeratorListApplication[]> {
-        return this.applicationService.getTeamApplicationsForModerator(route.params['id']).pipe(
+        const user = JSON.parse(localStorage.getItem('user'));
+        return this.applicationService.getTeamApplicationsForModerator(
+            route.params['id'], 
+            user.id).pipe(
             catchError(error => {
-                this.alertify.error('Problem retriving data');
-                this.router.navigate(['']);
+                this.alertify.error(error.error);
                 return of(null);
             })
         );

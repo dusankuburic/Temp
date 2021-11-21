@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Database;
 
 namespace Temp.Core.Employees
@@ -10,49 +10,51 @@ namespace Temp.Core.Employees
 
         private readonly ApplicationDbContext _ctx;
 
-        public UpdateEmployeeAccountStatus(ApplicationDbContext ctx)
-        {
+        public UpdateEmployeeAccountStatus(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        public async Task<bool> Do(int EmployeeId)
-        {
-            var employee = await _ctx.Employees
+        public async Task<bool> Do(int EmployeeId) {
+            Domain.Models.Employee employee = await _ctx.Employees
                 .Include(x => x.User)
                 .Include(x => x.Admin)
                 .Include(x => x.Moderator)
                 .Where(x => x.Id == EmployeeId)
                 .FirstOrDefaultAsync();
 
-            switch (employee.Role)
-            {
+            switch (employee.Role) {
                 case "User":
-                    if (employee.User.IsActive)
+                    if (employee.User.IsActive) {
                         employee.User.IsActive = false;
-                        
-                    else
+                    } else {
                         employee.User.IsActive = true;
+                    }
+
                     break;
                 case "Moderator":
-                    if (employee.Moderator.IsActive)
+                    if (employee.Moderator.IsActive) {
                         employee.Moderator.IsActive = false;
-                    else
+                    } else {
                         employee.Moderator.IsActive = true;
+                    }
+
                     break;
                 case "Admin":
-                    if (employee.Admin.IsActive)
+                    if (employee.Admin.IsActive) {
                         employee.Admin.IsActive = false;
-                    else
+                    } else {
                         employee.Admin.IsActive = true;
+                    }
+
                     break;
                 case "None":
-                    break;                           
+                    break;
             }
 
             await _ctx.SaveChangesAsync();
 
             return true;
         }
-        
+
     }
 }

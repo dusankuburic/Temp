@@ -13,7 +13,7 @@ namespace Temp.Domain.Models
 
         public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
-        
+
         public ICollection<ModeratorGroup> ModeratorGroups { get; set; }
 
         public ICollection<Application> Applications { get; set; }

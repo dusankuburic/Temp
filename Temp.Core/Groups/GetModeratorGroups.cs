@@ -11,14 +11,12 @@ namespace Temp.Core.Groups
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetModeratorGroups(ApplicationDbContext ctx)
-        {
+        public GetModeratorGroups(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
         public Task<IEnumerable<ModeratorGroupViewModel>> Do(int id) =>
-        TryCatch(async () =>
-        {
+        TryCatch(async () => {
 
             var moderatorGroups = await _ctx.ModeratorGroups
                 .Where(x => x.ModeratorId == id)

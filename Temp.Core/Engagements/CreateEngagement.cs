@@ -10,14 +10,12 @@ namespace Temp.Core.Engagements
     {
         private readonly ApplicationDbContext _ctx;
 
-        public CreateEngagement(ApplicationDbContext ctx)
-        {
+        public CreateEngagement(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
-        
+
         public Task<Response> Do(Request request) =>
-        TryCatch(async () =>
-        { 
+        TryCatch(async () => {
             var engagement = new Engagement
             {
                 EmployeeId = request.EmployeeId,
@@ -33,36 +31,35 @@ namespace Temp.Core.Engagements
             _ctx.Engagements.Add(engagement);
             await _ctx.SaveChangesAsync();
 
-            return new Response
-            {
+            return new Response {
                 Status = true
             };
         });
-       
+
         public class Request
         {
             [Required]
-            public int EmployeeId {get; set;}
+            public int EmployeeId { get; set; }
 
             [Required]
-            public int WorkplaceId {get; set;}
+            public int WorkplaceId { get; set; }
 
             [Required]
-            public int EmploymentStatusId {get; set;}
+            public int EmploymentStatusId { get; set; }
 
             [Required]
-            public DateTime DateFrom {get; set;}
-            
+            public DateTime DateFrom { get; set; }
+
             [Required]
-            public DateTime DateTo {get; set;}
-            
+            public DateTime DateTo { get; set; }
+
             [Required]
             public int Salary { get; set; }
         }
 
         public class Response
         {
-            public bool Status {get; set;}
-        } 
+            public bool Status { get; set; }
+        }
     }
 }

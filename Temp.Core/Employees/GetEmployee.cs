@@ -9,14 +9,12 @@ namespace Temp.Core.Employees
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetEmployee(ApplicationDbContext ctx)
-        {
+        public GetEmployee(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        public Task<EmployeeViewModel> Do(int id) => 
-        TryCatch(async () =>
-        {
+        public Task<EmployeeViewModel> Do(int id) =>
+        TryCatch(async () => {
             var employee = await _ctx.Employees
                 .Where(x => x.Id == id)
                 .Select(x => new EmployeeViewModel
@@ -30,16 +28,16 @@ namespace Temp.Core.Employees
                 })
                 .FirstOrDefaultAsync();
 
-             ValidateGetEmployeeViewModel(employee);
+            ValidateGetEmployeeViewModel(employee);
 
             return employee;
         });
 
         public class EmployeeViewModel
         {
-            public int Id {get; set;}
-            public string FirstName {get; set;}
-            public string LastName {get; set;}
+            public int Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
             public int? TeamId { get; set; }
             public string Role { get; set; }
         }

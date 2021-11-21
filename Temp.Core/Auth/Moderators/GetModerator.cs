@@ -9,13 +9,11 @@ namespace Temp.Core.Auth.Moderators
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetModerator(ApplicationDbContext ctx)
-        {
+        public GetModerator(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        public async Task<ModeratorViewModel> Do(int id)
-        {
+        public async Task<ModeratorViewModel> Do(int id) {
             var moderator = await _ctx.Moderators
                 .Where(x => x.EmployeeId == id)
                 .Select(x => new ModeratorViewModel

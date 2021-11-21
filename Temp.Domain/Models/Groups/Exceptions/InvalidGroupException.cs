@@ -7,8 +7,7 @@ namespace Temp.Domain.Models.Groups.Exceptions
         public InvalidGroupException(string parameterName, object parameterValue)
             : base($"Invalid Group, " +
                   $"Parameter Name: {parameterName}, " +
-                  $"Parameter Value: {parameterValue}.")
-        {
+                  $"Parameter Value: {parameterValue}.") {
 
         }
     }

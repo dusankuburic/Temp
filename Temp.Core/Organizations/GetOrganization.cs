@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using Temp.Database;
-using Temp.Core.Organizations.Service;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Temp.Core.Organizations.Service;
+using Temp.Database;
 
 namespace Temp.Core.Organizations
 {
@@ -10,21 +10,20 @@ namespace Temp.Core.Organizations
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetOrganization(ApplicationDbContext ctx)
-        {
+        public GetOrganization(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
         public Task<OrganizationViewModel> Do(int id) =>
-        TryCatch(async() =>
-        {
-            var organization = await _ctx.Organizations.Where(x => x.Id == id)
-            .Select(x => new OrganizationViewModel
-            {
-                Id = x.Id,
-                Name = x.Name
-            })
-            .FirstOrDefaultAsync();
+        TryCatch(async () => {
+            var organization = await _ctx.Organizations
+                .Where(x => x.Id == id && x.IsActive)
+                .Select(x => new OrganizationViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                })
+                .FirstOrDefaultAsync();
 
             ValidateGetOrganizationViewModel(organization);
 

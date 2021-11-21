@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.Teams.Service;
 using Temp.Database;
 
@@ -10,17 +10,15 @@ namespace Temp.Core.Teams
     {
         private  readonly ApplicationDbContext _ctx;
 
-        public GetTeam(ApplicationDbContext ctx)
-        {
+        public GetTeam(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
         public Task<TeamViewModel> Do(int id) =>
-        TryCatch(async () =>
-        {
+        TryCatch(async () => {
             var team = await _ctx.Teams
                 .Include(x => x.Group)
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == id && x.IsActive)
                 .Select(x => new TeamViewModel
                 {
                     Id = x.Id,

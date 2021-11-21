@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.EmploymentStatuses.Service;
 using Temp.Database;
 
@@ -10,16 +10,14 @@ namespace Temp.Core.EmploymentStatuses
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetEmploymentStatus(ApplicationDbContext ctx)
-        {
+        public GetEmploymentStatus(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
         public Task<EmploymentStatusViewModel> Do(int id) =>
-        TryCatch(async() => 
-        { 
-             var employmentStatus = await _ctx.EmploymentStatuses
-            .Where(x => x.Id == id)
+        TryCatch(async () => {
+            var employmentStatus = await _ctx.EmploymentStatuses
+            .Where(x => x.Id == id && x.IsActive)
             .Select(x => new EmploymentStatusViewModel
             {
                 Id = x.Id,
@@ -34,9 +32,8 @@ namespace Temp.Core.EmploymentStatuses
 
         public class EmploymentStatusViewModel
         {
-            public int Id {get; set;}
-            public string Name {get; set;}
+            public int Id { get; set; }
+            public string Name { get; set; }
         }
     }
 }
- 

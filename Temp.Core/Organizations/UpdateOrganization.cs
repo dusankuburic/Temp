@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.Organizations.Service;
 using Temp.Database;
 
@@ -11,28 +11,23 @@ namespace Temp.Core.Organizations
     {
         private readonly ApplicationDbContext _ctx;
 
-        public UpdateOrganization(ApplicationDbContext ctx)
-        {
+        public UpdateOrganization(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        public async Task<bool> OrganizationExists(string name)
-        {
-            if(await _ctx.Organizations.AnyAsync(x => x.Name == name))   
+        public async Task<bool> OrganizationExists(string name) {
+            if (await _ctx.Organizations.AnyAsync(x => x.Name == name))
                 return true;
-            
+
             return false;
         }
 
         public Task<Response> Do(int id, Request request) =>
-        TryCatch(async () =>
-        {
+        TryCatch(async () => {
             var organization = _ctx.Organizations.FirstOrDefault(x => x.Id == id);
 
-            if(organization.Name.Equals(request.Name))
-            {
-                return new Response
-                {
+            if (organization.Name.Equals(request.Name)) {
+                return new Response {
                     Id = organization.Id,
                     Name = organization.Name,
                     Message = "Organization name is same",
@@ -42,10 +37,8 @@ namespace Temp.Core.Organizations
 
             var organizationExists = await OrganizationExists(request.Name);
 
-            if(organizationExists)
-            {
-                return new Response
-                {
+            if (organizationExists) {
+                return new Response {
                     Id = organization.Id,
                     Name = organization.Name,
                     Message = $"Organization already exists with {request.Name} name",
@@ -59,8 +52,7 @@ namespace Temp.Core.Organizations
 
             await _ctx.SaveChangesAsync();
 
-            return new Response
-            {
+            return new Response {
                 Id = organization.Id,
                 Name = organization.Name,
                 Message = "Success",
@@ -68,9 +60,9 @@ namespace Temp.Core.Organizations
             };
 
         });
-      
+
         public class Request
-        {                
+        {
             [MinLength(2)]
             [MaxLength(50)]
             public string Name { get; set; }

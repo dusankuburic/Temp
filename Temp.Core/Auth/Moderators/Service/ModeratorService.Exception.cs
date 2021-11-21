@@ -11,42 +11,31 @@ namespace Temp.Core.Auth.Moderators.Service
 
 
         public async Task<UpdateModeratorGroups.Response> TryCatch(
-            ReturningUpdateModeratorGroupFunction returningUpdateModeratorGroupFunction)
-        {
-            try
-            {
+            ReturningUpdateModeratorGroupFunction returningUpdateModeratorGroupFunction) {
+            try {
                 return await returningUpdateModeratorGroupFunction();
-            }
-            catch (NullModeratorGroupsException nullModeratorGroupsException)
-            {
+            } catch (NullModeratorGroupsException nullModeratorGroupsException) {
                 throw CreateAndLogValidationException(nullModeratorGroupsException);
-            }
-            catch (SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch (Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
         }
 
 
-        private ModeratorGroupValidationException CreateAndLogValidationException(Exception exception)
-        {
+        private ModeratorGroupValidationException CreateAndLogValidationException(Exception exception) {
             var moderatorGroupValidationException = new ModeratorGroupValidationException(exception);
             //LOG
             return moderatorGroupValidationException;
         }
-        private ModeratorGroupsServiceException CreateAndLogServiceException(Exception exception)
-        {
+        private ModeratorGroupsServiceException CreateAndLogServiceException(Exception exception) {
             var moderatorGroupsServiceException = new ModeratorGroupsServiceException(exception);
             //LOG
             return moderatorGroupsServiceException;
         }
 
-        private ModeratorGroupsDependencyException CreateAndLogCriticalDependencyException(Exception exception)
-        {
+        private ModeratorGroupsDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
             var moderatorGroupsDependencyException = new ModeratorGroupsDependencyException(exception);
             //LOG
             return moderatorGroupsDependencyException;

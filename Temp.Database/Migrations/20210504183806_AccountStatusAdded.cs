@@ -4,8 +4,7 @@ namespace Temp.Database.Migrations
 {
     public partial class AccountStatusAdded : Migration
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.AddColumn<bool>(
                 name: "IsActive",
                 table: "Users",
@@ -25,8 +24,7 @@ namespace Temp.Database.Migrations
                 defaultValue: true);
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropColumn(
                 name: "IsActive",
                 table: "Users");

@@ -7,7 +7,6 @@ namespace Temp.Domain.Models.EmploymentStatuses.Exceptions
         public InvalidEmploymentStatusException(string parameterName, object parameterValue)
             : base($"Invalid Employee, " +
                   $"Parameter Name : {parameterName}, " +
-                  $"Parameter Value : {parameterValue}.")
-        { }
+                  $"Parameter Value : {parameterValue}.") { }
     }
 }

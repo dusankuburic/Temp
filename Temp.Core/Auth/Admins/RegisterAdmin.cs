@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.Employees;
 using Temp.Database;
 using Temp.Domain.Models;
@@ -13,38 +13,30 @@ namespace Temp.Core.Auth.Admins
     {
         private readonly ApplicationDbContext _ctx;
 
-        public RegisterAdmin(ApplicationDbContext ctx)
-        {
-            _ctx = ctx;      
+        public RegisterAdmin(ApplicationDbContext ctx) {
+            _ctx = ctx;
         }
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512())
-            {
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt) {
+            using (var hmac = new HMACSHA512()) {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
         }
 
-        private async Task<bool> AdminExists(string username)
-        {
-            if (await _ctx.Admins.AnyAsync(x => x.Username == username))
-            {
+        private async Task<bool> AdminExists(string username) {
+            if (await _ctx.Admins.AnyAsync(x => x.Username == username)) {
                 return true;
             }
 
             return false;
         }
 
-        public async Task<Response> Do(Request request)
-        {
+        public async Task<Response> Do(Request request) {
             var adminExists = await AdminExists(request.Username);
 
-            if (adminExists)
-            {
-                return new Response
-                {
+            if (adminExists) {
+                return new Response {
                     Message = $"Admin already exists with {request.Username} username",
                     Username = request.Username,
                     Status = false
@@ -65,10 +57,9 @@ namespace Temp.Core.Auth.Admins
             _ctx.Admins.Add(admin);
             await _ctx.SaveChangesAsync();
 
-             var result = await new UpdateEmployeeRole(_ctx).Do("Admin",request.EmployeeId);
+            var result = await new UpdateEmployeeRole(_ctx).Do("Admin",request.EmployeeId);
 
-            return new Response
-            {
+            return new Response {
                 Message = "Successful registration",
                 Username = admin.Username,
                 Status = true
@@ -79,22 +70,22 @@ namespace Temp.Core.Auth.Admins
         public class Request
         {
             public int EmployeeId { get; set; }
-            
+
             [Required]
-            [MinLength(5),MaxLength(30)] 
+            [MinLength(5), MaxLength(30)]
             public string Username { get; set; }
-            
+
             [Required]
-            [MinLength(5),MaxLength(30)]
+            [MinLength(5), MaxLength(30)]
             public string Password { get; set; }
         }
 
         public class Response
         {
             public string Username { get; set; }
-            
+
             public string Message { get; set; }
-            
+
             public bool Status { get; set; }
         }
     }

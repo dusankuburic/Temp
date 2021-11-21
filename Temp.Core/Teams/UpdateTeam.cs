@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.Teams.Service;
 using Temp.Database;
 
@@ -11,13 +11,11 @@ namespace Temp.Core.Teams
     {
         private readonly ApplicationDbContext _ctx;
 
-        public UpdateTeam(ApplicationDbContext ctx)
-        {
+        public UpdateTeam(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        private async Task<bool> TeamExists(string name, int groupId)
-        {
+        private async Task<bool> TeamExists(string name, int groupId) {
             if (await _ctx.Teams.AnyAsync(x => x.Name == name && x.GroupId == groupId))
                 return true;
 
@@ -25,15 +23,12 @@ namespace Temp.Core.Teams
         }
 
         public Task<Response> Do(int id, Request request) =>
-        TryCatch(async () =>
-        {
+        TryCatch(async () => {
             var team = _ctx.Teams.FirstOrDefault(x => x.Id == id);
 
 
-            if (team.Name.Equals(request.Name))
-            {
-                return new Response
-                {
+            if (team.Name.Equals(request.Name)) {
+                return new Response {
                     Id = team.Id,
                     Name = team.Name,
                     Message = "Team name is same",
@@ -43,10 +38,8 @@ namespace Temp.Core.Teams
 
             var teamExists = await TeamExists(request.Name, request.GroupId);
 
-            if (teamExists)
-            {
-                return new Response
-                {
+            if (teamExists) {
+                return new Response {
                     Message = $"{request.Name} already exists",
                     Status = false
                 };
@@ -58,8 +51,7 @@ namespace Temp.Core.Teams
 
             await _ctx.SaveChangesAsync();
 
-            return new Response
-            {
+            return new Response {
                 Id = team.Id,
                 Name = team.Name,
                 Message = "Success",
@@ -69,11 +61,11 @@ namespace Temp.Core.Teams
 
         public class Request
         {
-            [Required] 
+            [Required]
             public int GroupId { get; set; }
 
-            [MinLength(2)] 
-            [MaxLength(50)] 
+            [MinLength(2)]
+            [MaxLength(50)]
             public string Name { get; set; }
         }
 

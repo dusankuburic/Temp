@@ -1,9 +1,9 @@
+using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
 using Temp.API.Data;
 using Temp.Database;
 
@@ -11,14 +11,11 @@ namespace Temp.API
 {
     public class Program
     {
-        public static void Main(string[] args)
-        {
+        public static void Main(string[] args) {
             var host =  CreateHostBuilder(args).Build();
-            using(var scope = host.Services.CreateScope())
-            {
+            using (var scope = host.Services.CreateScope()) {
                 var services = scope.ServiceProvider;
-                try
-                {
+                try {
                     var ctx = services.GetRequiredService<ApplicationDbContext>();
                     ctx.Database.Migrate();
 
@@ -32,9 +29,7 @@ namespace Temp.API
                     Seed.SeedUsers(ctx);
                     Seed.SeedModerators(ctx);
 
-                }
-                catch(Exception exMsg)
-                {
+                } catch (Exception exMsg) {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(exMsg, "Migration error");
                 }
@@ -45,8 +40,7 @@ namespace Temp.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
+                .ConfigureWebHostDefaults(webBuilder => {
                     webBuilder.UseStartup<Startup>();
                 });
     }

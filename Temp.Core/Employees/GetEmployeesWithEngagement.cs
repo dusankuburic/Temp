@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Temp.Core.Helpers;
 using Temp.Database;
 
@@ -13,14 +12,12 @@ namespace Temp.Core.Employees
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetEmployeesWithEngagement(ApplicationDbContext ctx)
-        {
+        public GetEmployeesWithEngagement(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
         public Task<PagedList<EmployeesWithEngagementViewModel>> Do(Request request) =>
-            TryCatch(async () =>
-            {
+            TryCatch(async () => {
                 var currentDateTime = DateTime.Now;
 
                 var employeesWithEngagement = _ctx.Employees
@@ -36,44 +33,41 @@ namespace Temp.Core.Employees
                         Role = x.Role,
                         Salary = _ctx.Engagements
                             .Where(e => e.EmployeeId == x.Id)
-                            .Select(e => e.Salary),
+                            .Select(e => e.Salary)
+                            .ToList(),
                         Workplace = _ctx.Engagements
                             .Where(e => e.EmployeeId == x.Id)
-                            .Select(e => e.Workplace.Name),
+                            .Select(e => e.Workplace.Name)
+                            .ToList(),
                         EmploymentStatus = _ctx.Engagements
                             .Where(e => e.EmployeeId == x.Id)
                             .Select(e => e.EmploymentStatus.Name)
+                            .ToList()
                     })
                    .AsQueryable();
-                
-                if (request.MinSalary != 0 || request.MaxSalary != 5000)
-                {
+
+                if (request.MinSalary != 0 || request.MaxSalary != 5000) {
                     employeesWithEngagement = employeesWithEngagement
-                        .Where(x => x.Salary.All(sal => sal >= request.MinSalary && sal <= request.MaxSalary ))
+                        .Where(x => x.Salary.All(sal => sal >= request.MinSalary && sal <= request.MaxSalary))
                         .AsQueryable();
                 }
-                
-                if (!string.IsNullOrEmpty(request.Workplace) && !string.IsNullOrEmpty(request.EmploymentStatus))
-                {
+
+                if (!string.IsNullOrEmpty(request.Workplace) && !string.IsNullOrEmpty(request.EmploymentStatus)) {
                     employeesWithEngagement = employeesWithEngagement
                         .Where(x => x.Workplace.Any(w => w.Contains(request.Workplace)) &&
                                     x.EmploymentStatus.Any(e => e.Contains(request.EmploymentStatus)))
                         .AsQueryable();
-                }
-                else if (!string.IsNullOrEmpty(request.Workplace))
-                {
+                } else if (!string.IsNullOrEmpty(request.Workplace)) {
                     employeesWithEngagement = employeesWithEngagement
                         .Where(x => x.Workplace.Any(w => w.Contains(request.Workplace)))
                         .AsQueryable();
-                    
-                }
-                else if (!string.IsNullOrEmpty(request.EmploymentStatus))
-                {
+
+                } else if (!string.IsNullOrEmpty(request.EmploymentStatus)) {
                     employeesWithEngagement = employeesWithEngagement
                         .Where(x => x.EmploymentStatus.Any(es => es.Contains(request.EmploymentStatus)))
                         .AsQueryable();
                 }
-                
+
                 ValidateGetEmployeeWithEngagementViewModel(employeesWithEngagement);
 
                 return await PagedList<EmployeesWithEngagementViewModel>.CreateAsync(employeesWithEngagement,
@@ -107,7 +101,7 @@ namespace Temp.Core.Employees
             public string LastName { get; set; }
             public string Role { get; set; }
 
-            public IEnumerable<string> Workplace { get; set; } 
+            public IEnumerable<string> Workplace { get; set; }
             public IEnumerable<string> EmploymentStatus { get; set; }
             public IEnumerable<int> Salary { get; set; }
         }

@@ -1,38 +1,33 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Temp.Core.Organizations.Service;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Temp.Core.Organizations.Service;
 using Temp.Database;
 using Temp.Domain.Models;
 
 namespace Temp.Core.Organizations
 {
-    public class CreateOrganization :  OrganizationService
+    public class CreateOrganization : OrganizationService
     {
         private readonly ApplicationDbContext _ctx;
 
-        public CreateOrganization(ApplicationDbContext ctx)
-        {
+        public CreateOrganization(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        private async Task<bool> OrganizationExists(string name)
-        {
-            if(await _ctx.Organizations.AnyAsync(x => x.Name == name))  
+        private async Task<bool> OrganizationExists(string name) {
+            if (await _ctx.Organizations.AnyAsync(x => x.Name == name))
                 return true;
-            
+
             return false;
         }
 
         public Task<Response> Do(Request request) =>
-        TryCatch(async () =>
-        {
+        TryCatch(async () => {
             var organizationExists = await OrganizationExists(request.Name);
 
-            if (organizationExists)
-            {
-                return new Response
-                {
+            if (organizationExists) {
+                return new Response {
                     Message = $"Error {request.Name} already exists",
                     Status = false
                 };
@@ -48,13 +43,12 @@ namespace Temp.Core.Organizations
             _ctx.Organizations.Add(organization);
             await _ctx.SaveChangesAsync();
 
-            return new Response
-            {
+            return new Response {
                 Message = $"Success {request.Name} is added",
                 Status = true
             };
         });
-       
+
         public class Request
         {
             [Required]

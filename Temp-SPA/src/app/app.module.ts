@@ -72,8 +72,10 @@ import { ApplicationUserListComponent } from './application/application-user-lis
 import { ApplicationUserListResolver } from './_resolvers/application/application-user-list.resolver';
 import { ApplicationUserResolver } from './_resolvers/application/application-user.resolver';
 import { ApplicationUserComponent } from './application/application-user/application-user.component';
+import { ApplicationModeratorComponent } from './application/application-moderator/application-moderator.component';
 import { EngagementUserListComponent } from './engagement/engagement-user-list/engagement-user-list.component';
 import { EngagementUserListReslover } from './_resolvers/engagement/engagement-user-list.resolver';
+import { ApplicationModeratorResolver } from './_resolvers/application/application-moderator.resolver';
 
 
 export function tokenGetter(): any {
@@ -117,7 +119,8 @@ export function tokenGetter(): any {
     ApplicationCreateComponent,
     ApplicationModeratorListComponent,
     ApplicationUserListComponent,
-    ApplicationUserComponent
+    ApplicationUserComponent,
+    ApplicationModeratorComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -163,7 +166,8 @@ export function tokenGetter(): any {
     ApplicationCreateResolver,
     ApplicationModeratorListResolver,
     ApplicationUserListResolver,
-    ApplicationUserResolver
+    ApplicationUserResolver,
+    ApplicationModeratorResolver,
   ],
   bootstrap: [AppComponent]
 })

@@ -11,8 +11,7 @@ namespace Temp.Core.Applications
     {
         private readonly ApplicationDbContext _ctx;
 
-        public CreateApplication(ApplicationDbContext ctx)
-        {
+        public CreateApplication(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
@@ -30,14 +29,13 @@ namespace Temp.Core.Applications
             ValidateApplicationOnCreate(application);
 
             _ctx.Applications.Add(application);
-                await _ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
 
-            return new Response
-            {
+            return new Response {
                 Status = true
             };
         });
- 
+
 
         public class Request
         {

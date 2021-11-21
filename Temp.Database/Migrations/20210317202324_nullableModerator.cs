@@ -4,8 +4,7 @@ namespace Temp.Database.Migrations
 {
     public partial class nullableModerator : Migration
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropForeignKey(
                 name: "FK_Applications_Moderators_ModeratorId",
                 table: "Applications");
@@ -26,8 +25,7 @@ namespace Temp.Database.Migrations
                 onDelete: ReferentialAction.Restrict);
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropForeignKey(
                 name: "FK_Applications_Moderators_ModeratorId",
                 table: "Applications");

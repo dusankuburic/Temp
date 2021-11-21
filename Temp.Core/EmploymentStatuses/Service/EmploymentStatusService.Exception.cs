@@ -1,7 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Temp.Core.Helpers;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 
@@ -15,132 +15,85 @@ namespace Temp.Core.EmploymentStatuses.Service
         public delegate Task<GetEmploymentStatus.EmploymentStatusViewModel> ReturningGetEmploymentStatusFunction();
         public delegate Task<UpdateEmploymentStatus.Response> ReturningUpdateEmploymentStatusFunction();
 
-        public async Task<CreateEmploymentStatus.Response> TryCatch(ReturningEmploymentStatusFunction returningEmploymentStatusFunction)
-        {
-            try
-            {
+        public async Task<CreateEmploymentStatus.Response> TryCatch(ReturningEmploymentStatusFunction returningEmploymentStatusFunction) {
+            try {
                 return await returningEmploymentStatusFunction();
-            }
-            catch(NullEmploymentStatusException nullEmploymentStatusException)
-            {
+            } catch (NullEmploymentStatusException nullEmploymentStatusException) {
                 throw CreateAndLogValidationException(nullEmploymentStatusException);
-            }
-            catch(InvalidEmploymentStatusException invalidEmploymentStatusException)
-            {
+            } catch (InvalidEmploymentStatusException invalidEmploymentStatusException) {
                 throw CreateAndLogValidationException(invalidEmploymentStatusException);
-            }
-            catch(SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch(Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
         }
-        
-        public async Task<IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel>> TryCatch(ReturningEmploymentStatusesFunction returningEmploymentStatusesFunction)
-        {
-            try
-            {
+
+        public async Task<IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel>> TryCatch(ReturningEmploymentStatusesFunction returningEmploymentStatusesFunction) {
+            try {
                 return await returningEmploymentStatusesFunction();
-            }
-            catch(EmploymentStatusEmptyStorageException employmentStatusEmptyStorageException)
-            {
+            } catch (EmploymentStatusEmptyStorageException employmentStatusEmptyStorageException) {
                 throw CreateAndLogValidationException(employmentStatusEmptyStorageException);
-            }
-            catch(SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch(Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
 
         }
 
-        public async Task<PagedList<GetEmploymentStatuses.EmploymentStatusViewModel>> TryCatch(ReturningEmploymentStatusesFunctionPage returningEmploymentStatusesFunctionPage)
-        {
-            try
-            {
+        public async Task<PagedList<GetEmploymentStatuses.EmploymentStatusViewModel>> TryCatch(ReturningEmploymentStatusesFunctionPage returningEmploymentStatusesFunctionPage) {
+            try {
                 return await returningEmploymentStatusesFunctionPage();
-            }
-            catch(EmploymentStatusEmptyStorageException employmentStatusEmptyStorageException)
-            {
+            } catch (EmploymentStatusEmptyStorageException employmentStatusEmptyStorageException) {
                 throw CreateAndLogValidationException(employmentStatusEmptyStorageException);
-            }
-            catch(SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch(Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
 
         }
 
-        public async Task<GetEmploymentStatus.EmploymentStatusViewModel> TryCatch(ReturningGetEmploymentStatusFunction returningGetEmploymentStatusFunction)
-        {
-            try
-            {
+        public async Task<GetEmploymentStatus.EmploymentStatusViewModel> TryCatch(ReturningGetEmploymentStatusFunction returningGetEmploymentStatusFunction) {
+            try {
                 return await returningGetEmploymentStatusFunction();
-            }
-            catch (NullEmploymentStatusException nullEmploymentStatusException)
-            {
+            } catch (NullEmploymentStatusException nullEmploymentStatusException) {
                 throw CreateAndLogValidationException(nullEmploymentStatusException);
-            }
-            catch (SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch(Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
         }
 
-        public async Task<UpdateEmploymentStatus.Response> TryCatch(ReturningUpdateEmploymentStatusFunction returningUpdateEmploymentStatusFunction)
-        {
-            try
-            {
+        public async Task<UpdateEmploymentStatus.Response> TryCatch(ReturningUpdateEmploymentStatusFunction returningUpdateEmploymentStatusFunction) {
+            try {
                 return await returningUpdateEmploymentStatusFunction();
-            }
-            catch(NullEmploymentStatusException nullEmploymentStatusException)
-            {
+            } catch (NullEmploymentStatusException nullEmploymentStatusException) {
                 throw CreateAndLogValidationException(nullEmploymentStatusException);
-            }
-            catch(InvalidEmploymentStatusException invalidEmploymentStatusException)
-            {
+            } catch (InvalidEmploymentStatusException invalidEmploymentStatusException) {
                 throw CreateAndLogValidationException(invalidEmploymentStatusException);
-            }
-            catch (SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch(Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
         }
 
-        private EmploymentStatusServiceException CreateAndLogServiceException(Exception exception)
-        {
+        private EmploymentStatusServiceException CreateAndLogServiceException(Exception exception) {
             var employmentStatusServiceException = new EmploymentStatusServiceException(exception);
             //LOG
             return employmentStatusServiceException;
         }
 
-        private EmploymentStatusValidationException CreateAndLogValidationException(Exception exception)
-        {
+        private EmploymentStatusValidationException CreateAndLogValidationException(Exception exception) {
             var employmentStatusValidationException = new EmploymentStatusValidationException(exception);
 
             return employmentStatusValidationException;
         }
 
-        private EmploymentStatusDependencyException CreateAndLogCriticalDependencyException(Exception exception)
-        {
+        private EmploymentStatusDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
             var employmentStatusDependencyException = new EmploymentStatusDependencyException(exception);
             //LOG
             return employmentStatusDependencyException;
