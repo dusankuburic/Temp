@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.Workplaces.Service;
 using Temp.Database;
 
@@ -11,13 +11,11 @@ namespace Temp.Core.Workplaces
     {
         private readonly ApplicationDbContext _ctx;
 
-        public UpdateWorkplace(ApplicationDbContext ctx)
-        {
+        public UpdateWorkplace(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        private async Task<bool> WorkplaceExists(string name)
-        {
+        private async Task<bool> WorkplaceExists(string name) {
             if (await _ctx.Workplaces.AnyAsync(x => x.Name == name))
                 return true;
 
@@ -25,14 +23,11 @@ namespace Temp.Core.Workplaces
         }
 
         public Task<Response> Do(int id, Request request) =>
-        TryCatch(async () => 
-        {
+        TryCatch(async () => {
             var workplace = _ctx.Workplaces.FirstOrDefault(x => x.Id == id);
 
-            if(workplace.Name.Equals(request.Name))
-            {
-                return new Response
-                {
+            if (workplace.Name.Equals(request.Name)) {
+                return new Response {
                     Id = workplace.Id,
                     Name = workplace.Name,
                     Message = "Workplace name is same",
@@ -42,10 +37,8 @@ namespace Temp.Core.Workplaces
 
             var workplaceExists = await WorkplaceExists(request.Name);
 
-            if(workplaceExists)
-            {
-                return new Response
-                {
+            if (workplaceExists) {
+                return new Response {
                     Id = workplace.Id,
                     Name = workplace.Name,
                     Message = $"Workplace already exists with {request.Name} name",
@@ -59,8 +52,7 @@ namespace Temp.Core.Workplaces
 
             await _ctx.SaveChangesAsync();
 
-            return new Response
-            {
+            return new Response {
                 Id = workplace.Id,
                 Name = workplace.Name,
                 Message = "Success",
@@ -72,15 +64,15 @@ namespace Temp.Core.Workplaces
         {
             [MinLength(2)]
             [MaxLength(50)]
-            public string Name {get; set;}
+            public string Name { get; set; }
         }
 
         public class Response
         {
-            public int  Id {get; set;}
-            public string Name {get; set;}
-            public string Message {get; set;}
-            public bool Status {get; set;}
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public string Message { get; set; }
+            public bool Status { get; set; }
         }
     }
 }

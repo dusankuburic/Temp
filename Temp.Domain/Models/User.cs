@@ -12,8 +12,8 @@ namespace Temp.Domain.Models
         public bool IsActive { get; set; }
 
 
-        public int? EmployeeId {get; set;}
-        public Employee Employee {get; set;}
+        public int? EmployeeId { get; set; }
+        public Employee Employee { get; set; }
 
         public ICollection<Application> Applications { get; set; }
     }

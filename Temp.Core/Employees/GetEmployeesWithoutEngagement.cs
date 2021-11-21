@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.Helpers;
 using Temp.Database;
 
@@ -9,17 +9,15 @@ namespace Temp.Core.Employees
 {
     public class GetEmployeesWithoutEngagement : EmployeeService
     {
-        
+
         private readonly ApplicationDbContext _ctx;
 
-        public GetEmployeesWithoutEngagement(ApplicationDbContext ctx)
-        {
+        public GetEmployeesWithoutEngagement(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
         public Task<PagedList<EmployeesWithoutEngagementViewModel>> Do(Request request) =>
-        TryCatch(async () =>
-        {
+        TryCatch(async () => {
 
             var currentDateTime = DateTime.Now;
 
@@ -33,16 +31,16 @@ namespace Temp.Core.Employees
                     FirstName = x.FirstName,
                     LastName = x.LastName,
                     Role = x.Role
-                })             
+                })
                 .AsQueryable();
-                
+
 
             ValidateGetEmployeeWithoutEngagementViewModel(employeesWithoutEngagement);
 
             return await PagedList<EmployeesWithoutEngagementViewModel>.CreateAsync(employeesWithoutEngagement,
                 request.PageNumber, request.PageSize);
         });
-        
+
         public class Request
         {
             private const int MaxPageSize = 20;

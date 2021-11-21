@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.EmploymentStatuses.Service;
 using Temp.Database;
 
@@ -11,28 +11,23 @@ namespace Temp.Core.EmploymentStatuses
     {
         private readonly ApplicationDbContext _ctx;
 
-        public UpdateEmploymentStatus(ApplicationDbContext ctx)
-        {
+        public UpdateEmploymentStatus(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        private async Task<bool> EmploymentStatusExists(string name)
-        {
-            if(await _ctx.EmploymentStatuses.AnyAsync(x => x.Name == name))      
+        private async Task<bool> EmploymentStatusExists(string name) {
+            if (await _ctx.EmploymentStatuses.AnyAsync(x => x.Name == name))
                 return true;
-            
+
             return false;
         }
 
         public Task<Response> Do(int id, Request request) =>
-        TryCatch(async() =>
-        {
+        TryCatch(async () => {
             var employmentStatus = _ctx.EmploymentStatuses.FirstOrDefault(x => x.Id == id);
 
-            if (employmentStatus.Name.Equals(request.Name))
-            {
-                return new Response
-                {
+            if (employmentStatus.Name.Equals(request.Name)) {
+                return new Response {
                     Id = employmentStatus.Id,
                     Name = employmentStatus.Name,
                     Message = "Employment Status is same",
@@ -42,10 +37,8 @@ namespace Temp.Core.EmploymentStatuses
 
             var employmentStatusExists = await EmploymentStatusExists(request.Name);
 
-            if(employmentStatusExists)
-            {
-                return new Response
-                {
+            if (employmentStatusExists) {
+                return new Response {
                     Id = employmentStatus.Id,
                     Name = employmentStatus.Name,
                     Message = $"Employment Status already exists with {request.Name} name",
@@ -59,8 +52,7 @@ namespace Temp.Core.EmploymentStatuses
 
             await _ctx.SaveChangesAsync();
 
-            return new Response
-            {
+            return new Response {
                 Id = employmentStatus.Id,
                 Name = employmentStatus.Name,
                 Message = "Success",
@@ -71,19 +63,19 @@ namespace Temp.Core.EmploymentStatuses
         public class Request
         {
             [Required]
-            public int Id {get; set;}
+            public int Id { get; set; }
 
             [Required]
             [MaxLength(30)]
-            public string Name {get; set;}
+            public string Name { get; set; }
         }
 
         public class Response
         {
-            public int Id {get; set;}
-            public string Name {get; set;}
-            public string Message {get; set;}
-            public bool Status {get; set;}
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public string Message { get; set; }
+            public bool Status { get; set; }
         }
     }
 }

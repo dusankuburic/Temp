@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.Helpers;
 using Temp.Core.Workplaces.Service;
 using Temp.Database;
@@ -12,41 +12,41 @@ namespace Temp.Core.Workplaces
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetWorkplaces(ApplicationDbContext ctx)
-        {
+        public GetWorkplaces(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
-        
+
         public Task<IEnumerable<WorkplacesViewModel>> Do() =>
-        TryCatch(async () => 
-        { 
+        TryCatch(async () => {
             var workplaces = await _ctx.Workplaces
+                .Where(x => x.IsActive)
                 .Select(x =>  new WorkplacesViewModel
                 {
                     Id = x.Id,
                     Name = x.Name
                 }).ToListAsync();
-        
-            ValidateStorageWorkplaces(workplaces);        
+
+            ValidateStorageWorkplaces(workplaces);
 
             return workplaces;
         });
 
         public Task<PagedList<WorkplacesViewModel>> Do(Request request) =>
-        TryCatch(async () => 
-        { 
+        TryCatch(async () => {
             var workplaces =_ctx.Workplaces
-            .Select(x =>  new WorkplacesViewModel
-            {
-                Id = x.Id,
-                Name = x.Name
-            }).AsQueryable();
-            
-            ValidateStorageWorkplaces(workplaces);        
+                .Where(x => x.IsActive)
+                .Select(x =>  new WorkplacesViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                })
+                .AsQueryable();
+
+            ValidateStorageWorkplaces(workplaces);
 
             return await PagedList<WorkplacesViewModel>.CreateAsync(workplaces, request.PageNumber, request.PageSize);
         });
-        
+
         public class Request
         {
             private const int MaxPageSize = 20;
@@ -63,8 +63,8 @@ namespace Temp.Core.Workplaces
 
         public class WorkplacesViewModel
         {
-            public int Id {get; set;}
-            public string Name {get; set;}
+            public int Id { get; set; }
+            public string Name { get; set; }
         }
     }
 }

@@ -46,5 +46,9 @@ updateModeratorGroups(id: number, groups): any {
   return this.http.put(this.baseUrl + 'moderators/update-groups/' + id, groups);
 }
 
+changeStatus(id: number): any {
+  return this.http.put(this.baseUrl + 'groups/change-status/' + id, id);
+}
+
 
 }

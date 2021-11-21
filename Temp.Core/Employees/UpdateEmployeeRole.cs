@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Database;
 
 namespace Temp.Core.Employees
@@ -9,24 +9,22 @@ namespace Temp.Core.Employees
     {
         private readonly ApplicationDbContext _ctx;
 
-        public UpdateEmployeeRole(ApplicationDbContext ctx)
-        {
+        public UpdateEmployeeRole(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        public async Task<bool> Do(string RoleName, int EmployeeId)
-        {
+        public async Task<bool> Do(string RoleName, int EmployeeId) {
             var empolyee = await _ctx.Employees
                 .Where(x => x.Id == EmployeeId)
-                .FirstOrDefaultAsync();    
+                .FirstOrDefaultAsync();
 
             empolyee.Role = RoleName;
             await _ctx.SaveChangesAsync();
 
-            if(empolyee.Role != RoleName)    
-               return false;
-       
-            return true;    
+            if (empolyee.Role != RoleName)
+                return false;
+
+            return true;
         }
     }
 }

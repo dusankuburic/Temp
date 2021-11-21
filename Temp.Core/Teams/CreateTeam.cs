@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.Teams.Service;
 using Temp.Database;
 using Temp.Domain.Models;
@@ -11,28 +11,23 @@ namespace Temp.Core.Teams
     {
         private readonly ApplicationDbContext _ctx;
 
-        public CreateTeam(ApplicationDbContext ctx)
-        {
+        public CreateTeam(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        private async Task<bool> TeamExists(string name, int groupId)
-        {
-            if(await _ctx.Teams.AnyAsync(x => x.Name == name && x.GroupId == groupId))
+        private async Task<bool> TeamExists(string name, int groupId) {
+            if (await _ctx.Teams.AnyAsync(x => x.Name == name && x.GroupId == groupId))
                 return true;
-            
+
             return false;
         }
 
         public Task<Response> Do(Request request) =>
-        TryCatch(async () =>
-        {
+        TryCatch(async () => {
             var teamExists = await TeamExists(request.Name, request.GroupId);
 
-            if (teamExists)
-            {
-                return new Response
-                {
+            if (teamExists) {
+                return new Response {
                     Message = $"Error {request.Name} already exists",
                     Status = false
                 };
@@ -49,8 +44,7 @@ namespace Temp.Core.Teams
             _ctx.Teams.Add(team);
             await _ctx.SaveChangesAsync();
 
-            return new Response
-            {
+            return new Response {
                 Message = $"Success {request.Name} is added",
                 Status = true
             };

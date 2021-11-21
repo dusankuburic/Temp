@@ -35,4 +35,8 @@ getUserTeam(userId: number): any {
   return this.http.get(this.baseUrl + 'teams/employee/team/' + userId);
 }
 
+changeStatus(id: number): any {
+  return this.http.put(this.baseUrl + 'teams/change-status/' + id, id);
+}
+
 }

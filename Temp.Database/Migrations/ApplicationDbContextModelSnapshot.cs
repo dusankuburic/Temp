@@ -15,8 +15,8 @@ namespace Temp.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Temp.Domain.Models.Admin", b =>
@@ -127,6 +127,9 @@ namespace Temp.Database.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -178,6 +181,9 @@ namespace Temp.Database.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -215,7 +221,9 @@ namespace Temp.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmployeeId")
+                        .IsUnique()
+                        .HasFilter("[EmployeeId] IS NOT NULL");
 
                     b.ToTable("Moderators");
                 });
@@ -242,6 +250,9 @@ namespace Temp.Database.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -259,6 +270,9 @@ namespace Temp.Database.Migrations
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -308,6 +322,9 @@ namespace Temp.Database.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -321,6 +338,8 @@ namespace Temp.Database.Migrations
                     b.HasOne("Temp.Domain.Models.Employee", "Employee")
                         .WithOne("Admin")
                         .HasForeignKey("Temp.Domain.Models.Admin", "EmployeeId");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Temp.Domain.Models.Application", b =>
@@ -340,6 +359,12 @@ namespace Temp.Database.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Moderator");
+
+                    b.Navigation("Team");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Temp.Domain.Models.Employee", b =>
@@ -347,6 +372,8 @@ namespace Temp.Database.Migrations
                     b.HasOne("Temp.Domain.Models.Team", "Team")
                         .WithMany("Employees")
                         .HasForeignKey("TeamId");
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("Temp.Domain.Models.Engagement", b =>
@@ -368,6 +395,12 @@ namespace Temp.Database.Migrations
                         .HasForeignKey("WorkplaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("EmploymentStatus");
+
+                    b.Navigation("Workplace");
                 });
 
             modelBuilder.Entity("Temp.Domain.Models.Group", b =>
@@ -377,13 +410,17 @@ namespace Temp.Database.Migrations
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("Temp.Domain.Models.Moderator", b =>
                 {
                     b.HasOne("Temp.Domain.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .WithOne("Moderator")
+                        .HasForeignKey("Temp.Domain.Models.Moderator", "EmployeeId");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Temp.Domain.Models.ModeratorGroup", b =>
@@ -399,6 +436,10 @@ namespace Temp.Database.Migrations
                         .HasForeignKey("ModeratorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Moderator");
                 });
 
             modelBuilder.Entity("Temp.Domain.Models.Team", b =>
@@ -408,6 +449,8 @@ namespace Temp.Database.Migrations
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("Temp.Domain.Models.User", b =>
@@ -415,6 +458,60 @@ namespace Temp.Database.Migrations
                     b.HasOne("Temp.Domain.Models.Employee", "Employee")
                         .WithOne("User")
                         .HasForeignKey("Temp.Domain.Models.User", "EmployeeId");
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("Temp.Domain.Models.Employee", b =>
+                {
+                    b.Navigation("Admin");
+
+                    b.Navigation("Engagements");
+
+                    b.Navigation("Moderator");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Temp.Domain.Models.EmploymentStatus", b =>
+                {
+                    b.Navigation("Engagements");
+                });
+
+            modelBuilder.Entity("Temp.Domain.Models.Group", b =>
+                {
+                    b.Navigation("ModeratorGroups");
+
+                    b.Navigation("Teams");
+                });
+
+            modelBuilder.Entity("Temp.Domain.Models.Moderator", b =>
+                {
+                    b.Navigation("Applications");
+
+                    b.Navigation("ModeratorGroups");
+                });
+
+            modelBuilder.Entity("Temp.Domain.Models.Organization", b =>
+                {
+                    b.Navigation("Groups");
+                });
+
+            modelBuilder.Entity("Temp.Domain.Models.Team", b =>
+                {
+                    b.Navigation("Applications");
+
+                    b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("Temp.Domain.Models.User", b =>
+                {
+                    b.Navigation("Applications");
+                });
+
+            modelBuilder.Entity("Temp.Domain.Models.Workplace", b =>
+                {
+                    b.Navigation("Engagements");
                 });
 #pragma warning restore 612, 618
         }

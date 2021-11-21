@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Temp.Database;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Threading.Tasks;
 using Temp.Core.Organizations.Service;
+using Temp.Database;
 
 namespace Temp.Core.Organizations
 {
@@ -13,17 +13,15 @@ namespace Temp.Core.Organizations
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetInnerGroups(ApplicationDbContext ctx)
-        {
+        public GetInnerGroups(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
         public Task<string> Do(int id) =>
-            TryCatch(async () =>
-            {
+            TryCatch(async () => {
                 var innerGroups = await _ctx.Organizations
                 .Include(x => x.Groups)
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == id && x.IsActive)
                 .Select(x => new Response
                 {
                     Name = x.Name,
@@ -37,8 +35,7 @@ namespace Temp.Core.Organizations
 
                 ValidateStorageOrganizationInnerGroups(innerGroups.Groups);
 
-                return JsonConvert.SerializeObject(innerGroups, Formatting.Indented, new JsonSerializerSettings
-                {
+                return JsonConvert.SerializeObject(innerGroups, Formatting.Indented, new JsonSerializerSettings {
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                 });
             });

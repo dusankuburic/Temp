@@ -6,25 +6,23 @@ using Temp.Database;
 
 namespace Temp.Core.Teams
 {
-    public class GetFullTeamTree: TeamService
+    public class GetFullTeamTree : TeamService
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetFullTeamTree(ApplicationDbContext ctx)
-        {
+        public GetFullTeamTree(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
         public Task<TeamTreeViewModel> Do(int id) =>
-        TryCatch(async () =>
-        {
+        TryCatch(async () => {
             var team = await _ctx.Teams
                 .Include(x => x.Group)
                 .Include(x => x.Group.Organization)
-                .Where(x => x.Id == id).FirstOrDefaultAsync();
-            
-            return new TeamTreeViewModel
-            {
+                .Where(x => x.Id == id && x.IsActive)
+                .FirstOrDefaultAsync();
+
+            return new TeamTreeViewModel {
                 Id = team.Id,
                 OrganizationName = team.Group.Organization.Name,
                 OrganizationId = team.Group.Organization.Id,
@@ -40,6 +38,6 @@ namespace Temp.Core.Teams
             public int OrganizationId { get; set; }
             public string GroupName { get; set; }
             public string TeamName { get; set; }
-        } 
+        }
     }
 }

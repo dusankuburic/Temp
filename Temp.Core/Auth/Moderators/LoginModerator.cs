@@ -18,19 +18,15 @@ namespace Temp.Core.Auth.Moderators
         private readonly ApplicationDbContext _ctx;
         private readonly IConfiguration _config;
 
-        public LoginModerator(ApplicationDbContext ctx, IConfiguration config)
-        {
+        public LoginModerator(ApplicationDbContext ctx, IConfiguration config) {
             _ctx = ctx;
             _config = config;
         }
 
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt) {
+            using (var hmac = new HMACSHA512(passwordSalt)) {
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                for (int i = 0; i < computedHash.Length; i++)
-                {
+                for (int i = 0; i < computedHash.Length; i++) {
                     if (computedHash[i] != passwordHash[i])
                         return false;
                 }
@@ -38,8 +34,7 @@ namespace Temp.Core.Auth.Moderators
             return true;
         }
 
-        public async Task<Response> Do(Request request)
-        {
+        public async Task<Response> Do(Request request) {
             var moderator = await _ctx.Moderators.FirstOrDefaultAsync(x => x.Username == request.Username);
 
             if (moderator is null)
@@ -47,7 +42,7 @@ namespace Temp.Core.Auth.Moderators
 
             if (moderator.IsActive == false)
                 return null;
- 
+
             if (!VerifyPasswordHash(request.Password, moderator.PasswordHash, moderator.PasswordSalt))
                 return null;
 
@@ -71,38 +66,36 @@ namespace Temp.Core.Auth.Moderators
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return new Response
-            {   
-                User = new ModeratorResponse
-                {
+            return new Response {
+                User = new ModeratorResponse {
                     Id = moderator.Id,
                     Username = moderator.Username
                 },
                 Token = tokenHandler.WriteToken(token)
             };
         }
-        
+
 
         public class Request
         {
             [Required]
             [MaxLength(30)]
-            public  string Username { get; set; }
-            
+            public string Username { get; set; }
+
             [Required]
             [MaxLength(30)]
-            public  string Password { get; set; }
+            public string Password { get; set; }
         }
 
         public class ModeratorResponse
         {
-            public  int Id { get; set; }
+            public int Id { get; set; }
             public string Username { get; set; }
         }
 
         public class Response
         {
-            public  string Token { get; set; }
+            public string Token { get; set; }
             public ModeratorResponse User { get; set; }
         }
     }

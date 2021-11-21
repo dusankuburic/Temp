@@ -9,7 +9,7 @@
             <th>Team Options</th>
           </tr>
       </thead>
-      <tbody *ngIf="groups.length !== 0"> 
+      <tbody *ngIf="groups"> 
         <tr *ngFor="let group of groups">
           <td>{{group.name}}</td>
           <td><a class="btn btn-success"[routerLink]="['/assigned-groups/inner-teams/', group.id]" ><i class="fas fa-users"></i></a></td>
@@ -17,7 +17,7 @@
       </tbody>
     </table>
   </div>
-  <div class="col-lg-6" *ngIf="groups.length === 0">
+  <div class="col-lg-6" *ngIf="!groups">
     <div class="alert alert-info text-center" role="alert">
       <h5>There are no assigned groups</h5>
     </div>

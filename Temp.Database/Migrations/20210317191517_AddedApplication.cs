@@ -5,12 +5,10 @@ namespace Temp.Database.Migrations
 {
     public partial class AddedApplication : Migration
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "Applications",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(nullable: false),
@@ -22,8 +20,7 @@ namespace Temp.Database.Migrations
                     Status = table.Column<bool>(nullable: false),
                     StatusUpdatedAt = table.Column<DateTime>(nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Applications", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Applications_Moderators_ModeratorId",
@@ -61,8 +58,7 @@ namespace Temp.Database.Migrations
                 column: "UserId");
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "Applications");
         }

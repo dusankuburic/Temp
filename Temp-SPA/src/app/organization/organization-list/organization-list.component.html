@@ -6,17 +6,24 @@
                 <tr>
                     <th>Name</th>
                     <th>Options</th>
-                    <th colspan="2">Group Options</th>
+                    <th colspan="3">Group Options</th>
                 </tr>
             </thead>
             <tbody>
             <tr *ngFor="let organization of organizations">
                 <td>{{organization.name}}</td>
                 <td>
-                <a class="btn btn-primary" [routerLink]="['/organizations/', organization.id]"><i class="fa fa-edit"></i></a>
-            </td>
-            <td><a class="btn btn-warning" [routerLink]="['/organization/inner-groups/', organization.id]"><i class="fas fa-users"></i> </a></td>
-            <td><a class="btn btn-info" [routerLink]="['/group/create/', organization.id]"> <i class="fas fa-project-diagram"></i> </a></td>
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-primary" [routerLink]="['/organizations/', organization.id]"><i class="fa fa-edit"></i></a>
+                        <a class="btn btn-success" (click)="changeStatus(organization.id)" ><i class="fas fa-pen-nib"></i></a>
+                    </div>
+                </td>       
+                <td>
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-warning" [routerLink]="['/organization/inner-groups/', organization.id]"><i class="fas fa-users"></i></a>
+                        <a class="btn btn-info" [routerLink]="['/group/create/', organization.id]"> <i class="fas fa-project-diagram"></i></a>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>

@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Temp.Domain.Models.Teams.Exceptions;
 
 namespace Temp.Core.Teams.Service
@@ -14,129 +14,84 @@ namespace Temp.Core.Teams.Service
         public delegate Task<GetFullTeamTree.TeamTreeViewModel> ReturningTeamTreeFunction();
 
 
-        public async Task<GetFullTeamTree.TeamTreeViewModel> TryCatch(ReturningTeamTreeFunction returningTeamTreeFunction)
-        {
-            try
-            {
+        public async Task<GetFullTeamTree.TeamTreeViewModel> TryCatch(ReturningTeamTreeFunction returningTeamTreeFunction) {
+            try {
                 return await returningTeamTreeFunction();
-            }
-            catch (SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch (Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
-            
+
         }
 
 
-        public async Task<CreateTeam.Response> TryCatch(ReturningCreateTeamFunction returningCreateTeamFunction)
-        {
-            try
-            {
+        public async Task<CreateTeam.Response> TryCatch(ReturningCreateTeamFunction returningCreateTeamFunction) {
+            try {
                 return await returningCreateTeamFunction();
-            }
-            catch (NullTeamException nullTeamException)
-            {
+            } catch (NullTeamException nullTeamException) {
                 throw CreateAndLogValidationException(nullTeamException);
-            }
-            catch (InvalidTeamException invalidTeamException)
-            {
+            } catch (InvalidTeamException invalidTeamException) {
                 throw CreateAndLogValidationException(invalidTeamException);
-            }
-            catch (SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch (Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
         }
 
-        public async Task<GetTeam.TeamViewModel> TryCatch(ReturningGetTeamFunction returningGetTeamFunction)
-        {
-            try
-            {
+        public async Task<GetTeam.TeamViewModel> TryCatch(ReturningGetTeamFunction returningGetTeamFunction) {
+            try {
                 return await returningGetTeamFunction();
-            }
-            catch(NullTeamException nullTeamException)
-            {
+            } catch (NullTeamException nullTeamException) {
                 throw CreateAndLogServiceException(nullTeamException);
-            }
-            catch (SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch (Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
         }
 
 
-        public async Task<GetUserTeam.TeamViewModel> TryCatch(ReturningGetUserTeamFunction returningGetUserTeamFunction)
-        {
-            try
-            {
+        public async Task<GetUserTeam.TeamViewModel> TryCatch(ReturningGetUserTeamFunction returningGetUserTeamFunction) {
+            try {
                 return await returningGetUserTeamFunction();
-            }
-            catch(NullTeamException nullTeamException)
-            {
+            } catch (NullTeamException nullTeamException) {
                 throw CreateAndLogServiceException(nullTeamException);
-            }
-            catch (SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch (Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
         }
 
-        public async Task<UpdateTeam.Response> TryCatch(ReturningUpdateFunction returningUpdateFunction)
-        {
-            try
-            {
+        public async Task<UpdateTeam.Response> TryCatch(ReturningUpdateFunction returningUpdateFunction) {
+            try {
                 return await returningUpdateFunction();
-            }
-            catch (NullTeamException nullTeamException)
-            {
+            } catch (NullTeamException nullTeamException) {
                 throw CreateAndLogValidationException(nullTeamException);
-            }
-            catch (InvalidTeamException invalidTeamException)
-            {
+            } catch (InvalidTeamException invalidTeamException) {
                 throw CreateAndLogValidationException(invalidTeamException);
-            }
-            catch (SqlException sqlException)
-            {
+            } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
-            }
-            catch (Exception exception)
-            {
+            } catch (Exception exception) {
                 throw CreateAndLogServiceException(exception);
             }
         }
 
-        private TeamValidationException CreateAndLogValidationException(Exception exception)
-        {
+        private TeamValidationException CreateAndLogValidationException(Exception exception) {
             var teamValidationException = new TeamValidationException(exception);
             //LOG
             return teamValidationException;
         }
 
-        private TeamServiceException CreateAndLogServiceException(Exception exception)
-        {
+        private TeamServiceException CreateAndLogServiceException(Exception exception) {
             var teamServiceException = new TeamServiceException(exception);
             //LOG
             return teamServiceException;
         }
 
-        private TeamDependencyException CreateAndLogCriticalDependencyException(Exception exception)
-        {
+        private TeamDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
             var teamDependencyException = new TeamDependencyException(exception);
             //LOG
             return teamDependencyException;

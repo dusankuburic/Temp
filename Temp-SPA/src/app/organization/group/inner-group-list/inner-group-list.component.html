@@ -1,28 +1,35 @@
 <div class="row justify-content-center">
 
 <div class="col-lg-8">
-  <h1 class="text-center">Groups inside {{innerGroups.name}}</h1>
+  <h1 class="text-center" *ngIf="innerGroups">Groups inside {{innerGroups.name}}</h1>
   <table class="table table-striped table-hover text-center">
     <thead>
         <tr>
           <th>Name</th>
           <th>Options</th>
-          <th colspan="2">Team Options</th>
+          <th>Team Options</th>
         </tr>
-    </thead>
-    <tbody *ngIf="innerGroups.groups.length !== 0"> 
+    </thead>  
+    <tbody *ngIf="innerGroups"> 
       <tr *ngFor="let group of innerGroups.groups">
         <td>{{group.name}}</td>
         <td>
-          <a class="btn btn-primary" [routerLink]="['/groups/', group.id]"><i class="fa fa-edit"></i></a>
+          <div class="btn-group" role="group">
+            <a class="btn btn-primary" [routerLink]="['/groups/', group.id]"><i class="fa fa-edit"></i></a>
+            <a class="btn btn-success" (click)="changeStatus(group.id)" ><i class="fas fa-pen-nib"></i></a>
+          </div>
         </td>
-        <td><a class="btn btn-success"[routerLink]="['/groups/inner-teams/', group.id]" ><i class="fas fa-users"></i></a></td>
-        <td><a class="btn btn-info"  [routerLink]="['/team/create/', group.id]"><i class="fas fa-project-diagram"></i></a></td>
+        <td>
+          <div class="btn-group" role="group">
+            <a class="btn btn-warning"[routerLink]="['/groups/inner-teams/', group.id]" ><i class="fas fa-users"></i></a>
+            <a class="btn btn-info"  [routerLink]="['/team/create/', group.id]"><i class="fas fa-project-diagram"></i></a>  
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>
 </div>
-<div class="col-lg-6" *ngIf="innerGroups.groups.length === 0">
+<div class="col-lg-6" *ngIf="!innerGroups">
   <div class="alert alert-info text-center" role="alert">
     <h5>There are no groups inside organization</h5>
   </div>

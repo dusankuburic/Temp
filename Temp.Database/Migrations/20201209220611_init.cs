@@ -5,58 +5,49 @@ namespace Temp.Database.Migrations
 {
     public partial class init : Migration
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "EmploymentStatuses",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_EmploymentStatuses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Organizations",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Organizations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Workplaces",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Workplaces", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Groups",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
                     OrganizationId = table.Column<int>(nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Groups", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Groups_Organizations_OrganizationId",
@@ -68,15 +59,13 @@ namespace Temp.Database.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Teams",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
                     GroupId = table.Column<int>(nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Teams", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Teams_Groups_GroupId",
@@ -88,8 +77,7 @@ namespace Temp.Database.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Employees",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(nullable: true),
@@ -97,8 +85,7 @@ namespace Temp.Database.Migrations
                     Role = table.Column<string>(nullable: true, defaultValue: "None"),
                     TeamId = table.Column<int>(nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Employees", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Employees_Teams_TeamId",
@@ -110,8 +97,7 @@ namespace Temp.Database.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Admins",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(nullable: true),
@@ -119,8 +105,7 @@ namespace Temp.Database.Migrations
                     PasswordSalt = table.Column<byte[]>(nullable: true),
                     EmployeeId = table.Column<int>(nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Admins", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Admins_Employees_EmployeeId",
@@ -132,8 +117,7 @@ namespace Temp.Database.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Engagements",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<int>(nullable: false),
@@ -142,8 +126,7 @@ namespace Temp.Database.Migrations
                     DateFrom = table.Column<DateTime>(nullable: false),
                     DateTo = table.Column<DateTime>(nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Engagements", x => new { x.Id, x.EmployeeId, x.WorkplaceId });
                     table.ForeignKey(
                         name: "FK_Engagements_Employees_EmployeeId",
@@ -167,8 +150,7 @@ namespace Temp.Database.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Users",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(nullable: true),
@@ -176,8 +158,7 @@ namespace Temp.Database.Migrations
                     PasswordSalt = table.Column<byte[]>(nullable: true),
                     EmployeeId = table.Column<int>(nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Users_Employees_EmployeeId",
@@ -232,8 +213,7 @@ namespace Temp.Database.Migrations
                 filter: "[EmployeeId] IS NOT NULL");
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "Admins");
 

@@ -12,7 +12,10 @@
             <tr *ngFor="let workplace of workplaces">
                 <td>{{workplace.name}}</td>
                 <td>
-                    <a class="btn btn-primary" [routerLink]="['/workplaces/', workplace.id]"><i class="fa fa-edit"></i></a>
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-primary" [routerLink]="['/workplaces/', workplace.id]"><i class="fa fa-edit"></i></a>
+                        <a class="btn btn-success" (click)="changeStatus(workplace.id)"><i class="fas fa-pen-nib"></i></a>
+                    </div>
                 </td>
             </tr>
             </tbody>

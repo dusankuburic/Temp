@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.EmploymentStatuses.Service;
 using Temp.Database;
 using Temp.Domain.Models;
@@ -11,29 +11,24 @@ namespace Temp.Core.EmploymentStatuses
     {
         private readonly ApplicationDbContext _ctx;
 
-        public CreateEmploymentStatus(ApplicationDbContext ctx)
-        {
+        public CreateEmploymentStatus(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
 
-        private async Task<bool> EmploymentStatusExists(string name)
-        {
-            if(await _ctx.EmploymentStatuses.AnyAsync(x => x.Name == name))       
+        private async Task<bool> EmploymentStatusExists(string name) {
+            if (await _ctx.EmploymentStatuses.AnyAsync(x => x.Name == name))
                 return true;
-            
+
             return false;
         }
 
         public Task<Response> Do(Request request) =>
-        TryCatch(async () => 
-        {
+        TryCatch(async () => {
 
             var employmentStatusExists = await EmploymentStatusExists(request.Name);
 
-            if(employmentStatusExists)
-            {
-                return new Response
-                {
+            if (employmentStatusExists) {
+                return new Response {
                     Message = $"Error {request.Name} already exists",
                     Status = false
                 };
@@ -49,8 +44,7 @@ namespace Temp.Core.EmploymentStatuses
             _ctx.EmploymentStatuses.Add(employmentStatus);
             await _ctx.SaveChangesAsync();
 
-            return new Response
-            {
+            return new Response {
                 Message = $"Success {request.Name} is added",
                 Status = true
             };
@@ -58,17 +52,17 @@ namespace Temp.Core.EmploymentStatuses
 
         public class Request
         {
-         
+
             [Required]
             [MinLength(2)]
             [MaxLength(30)]
-            public string Name {get; set;}
+            public string Name { get; set; }
         }
 
         public class Response
         {
-            public string Message {get; set;}
-            public bool Status {get; set;}
+            public string Message { get; set; }
+            public bool Status { get; set; }
         }
     }
 }

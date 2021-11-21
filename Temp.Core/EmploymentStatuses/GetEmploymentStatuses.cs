@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Core.EmploymentStatuses.Service;
 using Temp.Core.Helpers;
 using Temp.Database;
@@ -12,15 +12,14 @@ namespace Temp.Core.EmploymentStatuses
     {
         private readonly ApplicationDbContext _ctx;
 
-        public GetEmploymentStatuses(ApplicationDbContext ctx)
-        {
+        public GetEmploymentStatuses(ApplicationDbContext ctx) {
             _ctx = ctx;
         }
-        
+
         public Task<IEnumerable<EmploymentStatusViewModel>> Do() =>
-            TryCatch(async () =>
-            {
+            TryCatch(async () => {
                 var employmentStatuses = await _ctx.EmploymentStatuses
+                    .Where(x => x.IsActive)
                     .Select(x => new EmploymentStatusViewModel
                     {
                         Id = x.Id,
@@ -31,23 +30,23 @@ namespace Temp.Core.EmploymentStatuses
 
                 return employmentStatuses;
             });
-        
+
 
         public Task<PagedList<EmploymentStatusViewModel>> Do(Request request) =>
-        TryCatch(async() =>
-        {
+        TryCatch(async () => {
             var employmentStatuses = _ctx.EmploymentStatuses
-            .Select(x => new EmploymentStatusViewModel
-            {
-                Id = x.Id,
-                Name = x.Name
-            }).AsQueryable();
+                .Where(x => x.IsActive)
+                .Select(x => new EmploymentStatusViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).AsQueryable();
 
             ValidateEmploymentStatuses(employmentStatuses);
 
             return await PagedList<EmploymentStatusViewModel>.CreateAsync(employmentStatuses, request.PageNumber, request.PageSize);
         });
-        
+
         public class Request
         {
             private const int MaxPageSize = 20;
@@ -64,9 +63,9 @@ namespace Temp.Core.EmploymentStatuses
 
         public class EmploymentStatusViewModel
         {
-            public int Id {get; set;}
+            public int Id { get; set; }
 
-            public string Name {get; set;}
+            public string Name { get; set; }
         }
     }
 }
