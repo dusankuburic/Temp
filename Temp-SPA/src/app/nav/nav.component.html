@@ -1,15 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark bg-primary">
   <div class="navbar-brand"  id="menu-toggle">Temp</div>
-  <div class="collapse navbar-collapse">
-      <ul *ngIf="loggedIn()" class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/users']" routerLinkActive="router-link-active" >Users only</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/moderators']" routerLinkActive="router-link-active" >Moderators only</a>
-        </li>
-      </ul>
-    </div>
+  <div class="collapse navbar-collapse"></div>
     <div *ngIf="loggedIn()" class="dropdown" dropdown>
       <span class="mr-1">
         <img height="46" width="46" src="{{'../../assets/user.png'}}" alt="user image">
@@ -19,10 +10,7 @@
         {{authService.decodedToken?.role}}
       </span>    
       <ul class="dropdown-menu mt-3" *dropdownMenu>
-        <li><a class="dropdown-item"><i class="fa fa-user"></i> Edit Profile</a></li>
-        <div class="dropdown-divider"></div>
         <li><a class="dropdown-item" href="#" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
       </ul>
     </div>
-
 </nav>
