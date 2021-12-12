@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
       if (this.loginForm.get('role').value === 'User') {
         this.user = Object.assign({}, this.loginForm.value);
         this.authService.loginUser(this.user).subscribe(() => {
+          this.loginForm.reset();
           this.router.navigate(['/home']);
           this.alertify.success('Login successful');
         }, error => {
@@ -62,6 +63,7 @@ export class LoginComponent implements OnInit {
       if (this.loginForm.get('role').value === 'Moderator') {
         this.moderator = Object.assign({}, this.loginForm.value);
         this.authService.loginModerator(this.moderator).subscribe(() => {
+          this.loginForm.reset();
           this.router.navigate(['/home']);
           this.alertify.success('Login successful');
         }, error => {
@@ -72,6 +74,7 @@ export class LoginComponent implements OnInit {
       if (this.loginForm.get('role').value === 'Admin') {
         this.admin = Object.assign({}, this.loginForm.value);
         this.authService.loginAdmin(this.admin).subscribe(() => {
+          this.loginForm.reset();
           this.router.navigate(['/home']);
           this.alertify.success('Login successful');
         }, error => {
