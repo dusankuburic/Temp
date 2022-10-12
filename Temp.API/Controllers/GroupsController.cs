@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Temp.Core.Groups;
-using Temp.Database;
+﻿using Temp.Core.Groups;
 using Temp.Domain.Models.Groups.Exceptions;
 
 namespace Temp.API.Controllers;

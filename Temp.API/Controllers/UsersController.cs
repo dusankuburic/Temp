@@ -1,8 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Temp.Core.Auth.Users;
-using Temp.Database;
+﻿using Temp.Core.Auth.Users;
 
 namespace Temp.API.Controllers;
 

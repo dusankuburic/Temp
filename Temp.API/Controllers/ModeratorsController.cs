@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Temp.Core.Auth.Moderators;
-using Temp.Database;
+﻿using Temp.Core.Auth.Moderators;
 using Temp.Domain.Models.ModeratorGroups.Exceptions;
 
 namespace Temp.API.Controllers;

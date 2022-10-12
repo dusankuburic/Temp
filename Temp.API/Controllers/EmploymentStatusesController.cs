@@ -1,10 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Temp.API.Helpers;
-using Temp.Core.EmploymentStatuses;
-using Temp.Database;
+﻿using Temp.Core.EmploymentStatuses;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 
 namespace Temp.API.Controllers;

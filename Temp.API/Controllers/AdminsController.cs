@@ -1,11 +1,6 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Temp.Core.Auth.Admins;
-using Temp.Database;
+﻿using Temp.Core.Auth.Admins;
 
 namespace Temp.API.Controllers;
-
 
 [Route("api/[controller]")]
 [ApiController]
