@@ -3,19 +3,19 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Temp.Database;
 
-namespace Temp.Core.Employees
+namespace Temp.Core.Employees;
+
+public class GetEmployee : EmployeeService
 {
-    public class GetEmployee : EmployeeService
-    {
-        private readonly ApplicationDbContext _ctx;
+    private readonly ApplicationDbContext _ctx;
 
-        public GetEmployee(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public GetEmployee(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public Task<EmployeeViewModel> Do(int id) =>
-        TryCatch(async () => {
-            var employee = await _ctx.Employees
+    public Task<EmployeeViewModel> Do(int id) =>
+    TryCatch(async () => {
+        var employee = await _ctx.Employees
                 .Where(x => x.Id == id)
                 .Select(x => new EmployeeViewModel
                 {
@@ -28,18 +28,17 @@ namespace Temp.Core.Employees
                 })
                 .FirstOrDefaultAsync();
 
-            ValidateGetEmployeeViewModel(employee);
+        ValidateGetEmployeeViewModel(employee);
 
-            return employee;
-        });
+        return employee;
+    });
 
-        public class EmployeeViewModel
-        {
-            public int Id { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public int? TeamId { get; set; }
-            public string Role { get; set; }
-        }
+    public class EmployeeViewModel
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public int? TeamId { get; set; }
+        public string Role { get; set; }
     }
 }

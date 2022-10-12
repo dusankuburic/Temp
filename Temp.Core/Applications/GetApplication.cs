@@ -5,19 +5,19 @@ using Microsoft.EntityFrameworkCore;
 using Temp.Core.Applications.Service;
 using Temp.Database;
 
-namespace Temp.Core.Applications
+namespace Temp.Core.Applications;
+
+public class GetApplication : ApplicationService
 {
-    public class GetApplication : ApplicationService
-    {
-        private readonly ApplicationDbContext _ctx;
+    private readonly ApplicationDbContext _ctx;
 
-        public GetApplication(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public GetApplication(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public Task<ApplicationViewModel> Do(int id) =>
-            TryCatch(async () => {
-                var application = await _ctx.Applications
+    public Task<ApplicationViewModel> Do(int id) =>
+        TryCatch(async () => {
+            var application = await _ctx.Applications
                .Where(x => x.Id == id)
                .Select(x => new ApplicationViewModel
                {
@@ -28,17 +28,17 @@ namespace Temp.Core.Applications
                })
                .FirstOrDefaultAsync();
 
-                ValidateGetApplicationViewModel(application);
+            ValidateGetApplicationViewModel(application);
 
-                return application;
-            });
+            return application;
+        });
 
-        public class ApplicationViewModel
-        {
-            public int Id { get; set; }
-            public string Category { get; set; }
-            public string Content { get; set; }
-            public DateTime CreatedAt { get; set; }
-        }
+    public class ApplicationViewModel
+    {
+        public int Id { get; set; }
+        public string Category { get; set; }
+        public string Content { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }
+

@@ -81,10 +81,15 @@ export class EmployeeEditComponent implements OnInit {
 
         this.groupService.getModeratorGroups(moderator.id).toPromise().then((currModerGroup) => {
           this.currentModeratorGroups = currModerGroup;
+        }, error => {
+          this.currentModeratorGroups = [];
+          this.alertify.error(error.error);
         });
 
         this.groupService.getModeratorFreeGroups(this.fullTeam.organizationId, moderatorMin).toPromise().then((res)=> {
           this.freeModeratorGroups = res;
+        }, error => {
+          this.alertify.error(error.error)
         });
       });
     });

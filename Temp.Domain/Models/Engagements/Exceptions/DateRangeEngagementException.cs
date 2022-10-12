@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Temp.Domain.Models.Engagements.Exceptions
+namespace Temp.Domain.Models.Engagements.Exceptions;
+
+public class DateRangeEngagementException : Exception
 {
-    public class DateRangeEngagementException : Exception
-    {
-        public DateRangeEngagementException() : base("Date from cant be higher than Date to") { }
-    }
+    public DateRangeEngagementException() : base("Date from cant be higher than Date to") { }
 }

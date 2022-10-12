@@ -4,19 +4,19 @@ using Microsoft.EntityFrameworkCore;
 using Temp.Core.Organizations.Service;
 using Temp.Database;
 
-namespace Temp.Core.Organizations
+namespace Temp.Core.Organizations;
+
+public class GetOrganization : OrganizationService
 {
-    public class GetOrganization : OrganizationService
-    {
-        private readonly ApplicationDbContext _ctx;
+    private readonly ApplicationDbContext _ctx;
 
-        public GetOrganization(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public GetOrganization(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public Task<OrganizationViewModel> Do(int id) =>
-        TryCatch(async () => {
-            var organization = await _ctx.Organizations
+    public Task<OrganizationViewModel> Do(int id) =>
+    TryCatch(async () => {
+        var organization = await _ctx.Organizations
                 .Where(x => x.Id == id && x.IsActive)
                 .Select(x => new OrganizationViewModel
                 {
@@ -25,15 +25,14 @@ namespace Temp.Core.Organizations
                 })
                 .FirstOrDefaultAsync();
 
-            ValidateGetOrganizationViewModel(organization);
+        ValidateGetOrganizationViewModel(organization);
 
-            return organization;
-        });
+        return organization;
+    });
 
-        public class OrganizationViewModel
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-        }
+    public class OrganizationViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

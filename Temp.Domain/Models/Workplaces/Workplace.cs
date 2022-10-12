@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace Temp.Domain.Models
+namespace Temp.Domain.Models;
+
+public class Workplace
 {
-    public class Workplace
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; }
 
-        public bool IsActive { get; set; }
+    public bool IsActive { get; set; }
 
-        public ICollection<Engagement> Engagements { get; set; }
-    }
+    public ICollection<Engagement> Engagements { get; set; }
 }

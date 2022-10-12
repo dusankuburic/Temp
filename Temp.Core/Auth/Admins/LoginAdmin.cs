@@ -11,93 +11,92 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Temp.Database;
 
-namespace Temp.Core.Auth.Admins
+namespace Temp.Core.Auth.Admins;
+
+public class LoginAdmin
 {
-    public class LoginAdmin
-    {
-        private readonly ApplicationDbContext _ctx;
-        private readonly IConfiguration _config;
+    private readonly ApplicationDbContext _ctx;
+    private readonly IConfiguration _config;
 
-        public LoginAdmin(ApplicationDbContext ctx, IConfiguration config) {
-            _ctx = ctx;
-            _config = config;
-        }
+    public LoginAdmin(ApplicationDbContext ctx, IConfiguration config) {
+        _ctx = ctx;
+        _config = config;
+    }
 
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt) {
-            using (var hmac = new HMACSHA512(passwordSalt)) {
-                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                for (int i = 0; i < computedHash.Length; i++) {
-                    if (computedHash[i] != passwordHash[i])
-                        return false;
-                }
+    private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt) {
+        using (var hmac = new HMACSHA512(passwordSalt)) {
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            for (int i = 0; i < computedHash.Length; i++) {
+                if (computedHash[i] != passwordHash[i])
+                    return false;
             }
-            return true;
         }
+        return true;
+    }
 
-        public async Task<Response> Do(Request request) {
-            var admin = await _ctx.Admins.FirstOrDefaultAsync(x => x.Username == request.Username);
+    public async Task<Response> Do(Request request) {
+        var admin = await _ctx.Admins.FirstOrDefaultAsync(x => x.Username == request.Username);
 
-            if (admin is null)
-                return null;
+        if (admin is null)
+            return null;
 
-            if (admin.IsActive == false)
-                return null;
+        if (admin.IsActive == false)
+            return null;
 
-            if (!VerifyPasswordHash(request.Password, admin.PasswordHash, admin.PasswordSalt))
-                return null;
+        if (!VerifyPasswordHash(request.Password, admin.PasswordHash, admin.PasswordSalt))
+            return null;
 
 
-            var adminClaims = new List<Claim>()
+        var adminClaims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, admin.Username),
                 new Claim(ClaimTypes.Role, "Admin")
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var adminIdentity = new ClaimsIdentity(adminClaims, "Admin_Identity");
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        var adminIdentity = new ClaimsIdentity(adminClaims, "Admin_Identity");
 
-            var tokenDescriptor = new SecurityTokenDescriptor
+        var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = adminIdentity,
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = creds
-            };
+            Subject = adminIdentity,
+            Expires = DateTime.Now.AddDays(1),
+            SigningCredentials = creds
+        };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return new Response {
-                User = new AdminResponse {
-                    Id = admin.Id,
-                    Username = admin.Username
-                },
-                Token = tokenHandler.WriteToken(token)
-            };
-        }
-
-
-        public class Request
-        {
-            [Required]
-            [MaxLength(30)]
-            public string Username { get; set; }
-            [Required]
-            [MaxLength(30)]
-            public string Password { get; set; }
-        }
-
-        public class AdminResponse
-        {
-            public int Id { get; set; }
-            public string Username { get; set; }
-        }
-
-        public class Response
-        {
-            public string Token { get; set; }
-            public AdminResponse User { get; set; }
-        }
-
+        return new Response {
+            User = new AdminResponse {
+                Id = admin.Id,
+                Username = admin.Username
+            },
+            Token = tokenHandler.WriteToken(token)
+        };
     }
+
+
+    public class Request
+    {
+        [Required]
+        [MaxLength(30)]
+        public string Username { get; set; }
+        [Required]
+        [MaxLength(30)]
+        public string Password { get; set; }
+    }
+
+    public class AdminResponse
+    {
+        public int Id { get; set; }
+        public string Username { get; set; }
+    }
+
+    public class Response
+    {
+        public string Token { get; set; }
+        public AdminResponse User { get; set; }
+    }
+
 }

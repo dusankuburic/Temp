@@ -3,26 +3,25 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Temp.Database;
 
-namespace Temp.Core.Organizations
+namespace Temp.Core.Organizations;
+
+public class UpdateOrganizationStatus
 {
-    public class UpdateOrganizationStatus
-    {
-        private readonly ApplicationDbContext _ctx;
+    private readonly ApplicationDbContext _ctx;
 
-        public UpdateOrganizationStatus(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public UpdateOrganizationStatus(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public async Task<bool> Do(int OrganizationId) {
-            var ortanization = await _ctx.Organizations
+    public async Task<bool> Do(int OrganizationId) {
+        var ortanization = await _ctx.Organizations
                 .Where(x => x.Id == OrganizationId)
                 .FirstOrDefaultAsync();
 
-            ortanization.IsActive = false;
+        ortanization.IsActive = false;
 
-            await _ctx.SaveChangesAsync();
+        await _ctx.SaveChangesAsync();
 
-            return true;
-        }
+        return true;
     }
 }

@@ -5,47 +5,46 @@ using Microsoft.EntityFrameworkCore;
 using Temp.Core.Applications.Service;
 using Temp.Database;
 
-namespace Temp.Core.Applications
+namespace Temp.Core.Applications;
+
+public class UpdateApplicationStatus : ApplicationService
 {
-    public class UpdateApplicationStatus : ApplicationService
-    {
-        private readonly ApplicationDbContext _ctx;
+    private readonly ApplicationDbContext _ctx;
 
 
-        public UpdateApplicationStatus(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public UpdateApplicationStatus(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public Task<Response> Do(int id, Request request) =>
-        TryCatch(async () => {
+    public Task<Response> Do(int id, Request request) =>
+    TryCatch(async () => {
 
-            var application = await _ctx.Applications
+        var application = await _ctx.Applications
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
 
-            ValidateApplication(application);
+        ValidateApplication(application);
 
-            application.ModeratorId = request.ModeratorId;
-            application.Status = true;
-            application.StatusUpdatedAt = DateTime.Now;
+        application.ModeratorId = request.ModeratorId;
+        application.Status = true;
+        application.StatusUpdatedAt = DateTime.Now;
 
-            await _ctx.SaveChangesAsync();
+        await _ctx.SaveChangesAsync();
 
-            return new Response {
-                Id = application.Id,
-                Status = true
-            };
-        });
+        return new Response {
+            Id = application.Id,
+            Status = true
+        };
+    });
 
-        public class Request
-        {
-            public int ModeratorId { get; set; }
-        }
+    public class Request
+    {
+        public int ModeratorId { get; set; }
+    }
 
-        public class Response
-        {
-            public int Id { get; set; }
-            public bool Status { get; set; }
-        }
+    public class Response
+    {
+        public int Id { get; set; }
+        public bool Status { get; set; }
     }
 }

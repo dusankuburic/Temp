@@ -5,20 +5,20 @@ using Microsoft.EntityFrameworkCore;
 using Temp.Core.Groups.Service;
 using Temp.Database;
 
-namespace Temp.Core.Groups
+namespace Temp.Core.Groups;
+
+public class GetModeratorGroups : GroupService
 {
-    public class GetModeratorGroups : GroupService
-    {
-        private readonly ApplicationDbContext _ctx;
+    private readonly ApplicationDbContext _ctx;
 
-        public GetModeratorGroups(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public GetModeratorGroups(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public Task<IEnumerable<ModeratorGroupViewModel>> Do(int id) =>
-        TryCatch(async () => {
+    public Task<IEnumerable<ModeratorGroupViewModel>> Do(int id) =>
+    TryCatch(async () => {
 
-            var moderatorGroups = await _ctx.ModeratorGroups
+        var moderatorGroups = await _ctx.ModeratorGroups
                 .Where(x => x.ModeratorId == id)
                 .Join(_ctx.Groups,
                     mg => mg.GroupId,
@@ -30,17 +30,16 @@ namespace Temp.Core.Groups
                     })
                 .ToListAsync();
 
-            ValidateGetModeratorGroupsViewModel(moderatorGroups);
+        ValidateGetModeratorGroupsViewModel(moderatorGroups);
 
-            return moderatorGroups;
+        return moderatorGroups;
 
-        });
+    });
 
 
-        public class ModeratorGroupViewModel
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-        }
+    public class ModeratorGroupViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

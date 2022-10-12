@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Temp.Domain.Models.Organizations.Exceptions
+namespace Temp.Domain.Models.Organizations.Exceptions;
+
+public class NullOrganizationException : Exception
 {
-    public class NullOrganizationException : Exception
-    {
-        public NullOrganizationException() : base("Organization is null") { }
-    }
+    public NullOrganizationException() : base("Organization is null") { }
 }

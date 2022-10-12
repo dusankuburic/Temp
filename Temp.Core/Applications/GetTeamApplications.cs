@@ -6,19 +6,19 @@ using Microsoft.EntityFrameworkCore;
 using Temp.Core.Applications.Service;
 using Temp.Database;
 
-namespace Temp.Core.Applications
+namespace Temp.Core.Applications;
+
+public class GetTeamApplications : ApplicationService
 {
-    public class GetTeamApplications : ApplicationService
-    {
-        private readonly ApplicationDbContext _ctx;
+    private readonly ApplicationDbContext _ctx;
 
-        public GetTeamApplications(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public GetTeamApplications(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public Task<IEnumerable<ApplicationViewModel>> Do(int teamId, int moderatorId) =>
-            TryCatch(async () => {
-                var applications = await _ctx.Applications
+    public Task<IEnumerable<ApplicationViewModel>> Do(int teamId, int moderatorId) =>
+        TryCatch(async () => {
+            var applications = await _ctx.Applications
                     .Include(x => x.User)
                     .Where(x => x.TeamId == teamId )
                     .Where(x => (x.ModeratorId == moderatorId) || (x.Status == false))
@@ -34,19 +34,18 @@ namespace Temp.Core.Applications
                     })
                     .ToListAsync();
 
-                ValidateGetTeamApplicationsViewModel(applications);
+            ValidateGetTeamApplicationsViewModel(applications);
 
-                return applications;
-            });
+            return applications;
+        });
 
-        public class ApplicationViewModel
-        {
-            public int Id { get; set; }
-            public int TeamId { get; set; }
-            public string Username { get; set; }
-            public string Category { get; set; }
-            public DateTime CreatedAt { get; set; }
-            public bool Status { get; set; }
-        }
+    public class ApplicationViewModel
+    {
+        public int Id { get; set; }
+        public int TeamId { get; set; }
+        public string Username { get; set; }
+        public string Category { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public bool Status { get; set; }
     }
 }

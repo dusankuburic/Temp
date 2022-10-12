@@ -6,19 +6,19 @@ using Microsoft.EntityFrameworkCore;
 using Temp.Core.Applications.Service;
 using Temp.Database;
 
-namespace Temp.Core.Applications
+namespace Temp.Core.Applications;
+
+public class GetUserApplications : ApplicationService
 {
-    public class GetUserApplications : ApplicationService
-    {
-        private readonly ApplicationDbContext _ctx;
+    private readonly ApplicationDbContext _ctx;
 
-        public GetUserApplications(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public GetUserApplications(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public Task<IEnumerable<ApplicationViewModel>> Do(int id) =>
-            TryCatch(async () => {
-                var applications = await _ctx.Applications
+    public Task<IEnumerable<ApplicationViewModel>> Do(int id) =>
+        TryCatch(async () => {
+            var applications = await _ctx.Applications
                     .Where(x => x.UserId == id)
                     .OrderByDescending(x => x.CreatedAt)
                     .ThenBy(x => x.Status)
@@ -31,17 +31,16 @@ namespace Temp.Core.Applications
                     })
                     .ToListAsync();
 
-                ValidateGetUserApplicationsViewModel(applications);
+            ValidateGetUserApplicationsViewModel(applications);
 
-                return applications;
-            });
+            return applications;
+        });
 
-        public class ApplicationViewModel
-        {
-            public int Id { get; set; }
-            public string Category { get; set; }
-            public DateTime CreatedAt { get; set; }
-            public bool Status { get; set; }
-        }
+    public class ApplicationViewModel
+    {
+        public int Id { get; set; }
+        public string Category { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public bool Status { get; set; }
     }
 }

@@ -6,19 +6,19 @@ using Temp.Core.EmploymentStatuses.Service;
 using Temp.Core.Helpers;
 using Temp.Database;
 
-namespace Temp.Core.EmploymentStatuses
+namespace Temp.Core.EmploymentStatuses;
+
+public class GetEmploymentStatuses : EmploymentStatusService
 {
-    public class GetEmploymentStatuses : EmploymentStatusService
-    {
-        private readonly ApplicationDbContext _ctx;
+    private readonly ApplicationDbContext _ctx;
 
-        public GetEmploymentStatuses(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public GetEmploymentStatuses(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public Task<IEnumerable<EmploymentStatusViewModel>> Do() =>
-            TryCatch(async () => {
-                var employmentStatuses = await _ctx.EmploymentStatuses
+    public Task<IEnumerable<EmploymentStatusViewModel>> Do() =>
+        TryCatch(async () => {
+            var employmentStatuses = await _ctx.EmploymentStatuses
                     .Where(x => x.IsActive)
                     .Select(x => new EmploymentStatusViewModel
                     {
@@ -26,15 +26,15 @@ namespace Temp.Core.EmploymentStatuses
                         Name = x.Name
                     }).ToListAsync();
 
-                ValidateEmploymentStatuses(employmentStatuses);
+            ValidateEmploymentStatuses(employmentStatuses);
 
-                return employmentStatuses;
-            });
+            return employmentStatuses;
+        });
 
 
-        public Task<PagedList<EmploymentStatusViewModel>> Do(Request request) =>
-        TryCatch(async () => {
-            var employmentStatuses = _ctx.EmploymentStatuses
+    public Task<PagedList<EmploymentStatusViewModel>> Do(Request request) =>
+    TryCatch(async () => {
+        var employmentStatuses = _ctx.EmploymentStatuses
                 .Where(x => x.IsActive)
                 .Select(x => new EmploymentStatusViewModel
                 {
@@ -42,30 +42,29 @@ namespace Temp.Core.EmploymentStatuses
                     Name = x.Name
                 }).AsQueryable();
 
-            ValidateEmploymentStatuses(employmentStatuses);
+        ValidateEmploymentStatuses(employmentStatuses);
 
-            return await PagedList<EmploymentStatusViewModel>.CreateAsync(employmentStatuses, request.PageNumber, request.PageSize);
-        });
+        return await PagedList<EmploymentStatusViewModel>.CreateAsync(employmentStatuses, request.PageNumber, request.PageSize);
+    });
 
-        public class Request
+    public class Request
+    {
+        private const int MaxPageSize = 20;
+        public int PageNumber { get; set; } = 1;
+
+        private int _pageSize = 10;
+
+        public int PageSize
         {
-            private const int MaxPageSize = 20;
-            public int PageNumber { get; set; } = 1;
-
-            private int _pageSize = 10;
-
-            public int PageSize
-            {
-                get { return _pageSize; }
-                set { _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
-            }
+            get { return _pageSize; }
+            set { _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
         }
+    }
 
-        public class EmploymentStatusViewModel
-        {
-            public int Id { get; set; }
+    public class EmploymentStatusViewModel
+    {
+        public int Id { get; set; }
 
-            public string Name { get; set; }
-        }
+        public string Name { get; set; }
     }
 }

@@ -7,78 +7,77 @@ using Temp.Core.Employees;
 using Temp.Database;
 using Temp.Domain.Models;
 
-namespace Temp.Core.Auth.Users
+namespace Temp.Core.Auth.Users;
+
+public class RegisterUser
 {
-    public class RegisterUser
-    {
 
-        private readonly ApplicationDbContext _ctx;
-        public RegisterUser(ApplicationDbContext ctx) {
-            _ctx = ctx;
+    private readonly ApplicationDbContext _ctx;
+    public RegisterUser(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
+
+    private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt) {
+        using (var hmac = new HMACSHA512()) {
+            passwordSalt = hmac.Key;
+            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
         }
+    }
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt) {
-            using (var hmac = new HMACSHA512()) {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            }
-        }
+    private async Task<bool> UserExists(string username) {
+        if (await _ctx.Users.AnyAsync(x => x.Username == username))
+            return true;
 
-        private async Task<bool> UserExists(string username) {
-            if (await _ctx.Users.AnyAsync(x => x.Username == username))
-                return true;
+        return false;
+    }
 
-            return false;
-        }
+    public async Task<Response> Do(Request request) {
+        var userExists = await UserExists(request.Username);
 
-        public async Task<Response> Do(Request request) {
-            var userExists = await UserExists(request.Username);
-
-            if (userExists) {
-                return new Response {
-                    Messsage = $"User already exists with {request.Username} username",
-                    Username = request.Username,
-                    Status = false
-                };
-            }
-
-            byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(request.Password, out passwordHash, out passwordSalt);
-
-            var user = new User
-            {
-                Username = request.Username,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
-                EmployeeId = request.EmployeeId
-            };
-
-            _ctx.Users.Add(user);
-            await _ctx.SaveChangesAsync();
-
-            var result = await new UpdateEmployeeRole(_ctx).Do("User",request.EmployeeId);
-
+        if (userExists) {
             return new Response {
-                Messsage = "Successful registration",
-                Username = user.Username,
-                Status = true
+                Messsage = $"User already exists with {request.Username} username",
+                Username = request.Username,
+                Status = false
             };
         }
 
-        public class Request
-        {
-            public int EmployeeId { get; set; }
-            [Required]
-            public string Username { get; set; }
-            [Required]
-            public string Password { get; set; }
-        }
+        byte[] passwordHash, passwordSalt;
+        CreatePasswordHash(request.Password, out passwordHash, out passwordSalt);
 
-        public class Response
-        {
-            public string Username { get; set; }
-            public string Messsage { get; set; }
-            public bool Status { get; set; }
-        }
+        var user = new User
+            {
+            Username = request.Username,
+            PasswordHash = passwordHash,
+            PasswordSalt = passwordSalt,
+            EmployeeId = request.EmployeeId
+        };
+
+        _ctx.Users.Add(user);
+        await _ctx.SaveChangesAsync();
+
+        var result = await new UpdateEmployeeRole(_ctx).Do("User",request.EmployeeId);
+
+        return new Response {
+            Messsage = "Successful registration",
+            Username = user.Username,
+            Status = true
+        };
+    }
+
+    public class Request
+    {
+        public int EmployeeId { get; set; }
+        [Required]
+        public string Username { get; set; }
+        [Required]
+        public string Password { get; set; }
+    }
+
+    public class Response
+    {
+        public string Username { get; set; }
+        public string Messsage { get; set; }
+        public bool Status { get; set; }
     }
 }

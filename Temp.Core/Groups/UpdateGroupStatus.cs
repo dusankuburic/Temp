@@ -3,28 +3,27 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Temp.Database;
 
-namespace Temp.Core.Groups
+namespace Temp.Core.Groups;
+
+public class UpdateGroupStatus
 {
-    public class UpdateGroupStatus
-    {
-        private ApplicationDbContext _ctx;
+    private ApplicationDbContext _ctx;
 
 
-        public UpdateGroupStatus(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public UpdateGroupStatus(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public async Task<bool> Do(int GroupId) {
-            var group = await _ctx.Groups
+    public async Task<bool> Do(int GroupId) {
+        var group = await _ctx.Groups
                 .Where(x => x.Id == GroupId)
                 .FirstOrDefaultAsync();
 
-            group.IsActive = false;
+        group.IsActive = false;
 
-            await _ctx.SaveChangesAsync();
+        await _ctx.SaveChangesAsync();
 
-            return true;
-        }
+        return true;
     }
-
 }
+
