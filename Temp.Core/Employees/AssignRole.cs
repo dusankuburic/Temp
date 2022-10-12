@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using Temp.Core.Auth.Admins;
+﻿using Temp.Core.Auth.Admins;
 using Temp.Core.Auth.Moderators;
 using Temp.Core.Auth.Users;
 using Temp.Database;

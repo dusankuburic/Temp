@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Temp.Database;
+﻿using Temp.Database;
 
 namespace Temp.Core.Employees;
 

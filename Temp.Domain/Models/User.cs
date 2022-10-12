@@ -1,7 +1,4 @@
-﻿
-using System.Collections.Generic;
-
-namespace Temp.Domain.Models;
+﻿namespace Temp.Domain.Models;
 
 public class User
 {

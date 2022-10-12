@@ -1,9 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Temp.Core.Employees;
+﻿using Temp.Core.Employees;
 using Temp.Database;
 using Temp.Domain.Models;
 

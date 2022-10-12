@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Temp.Domain.Models.Organizations.Exceptions;
+﻿namespace Temp.Domain.Models.Organizations.Exceptions;
 
 public class OrganizationServiceException : Exception
 {

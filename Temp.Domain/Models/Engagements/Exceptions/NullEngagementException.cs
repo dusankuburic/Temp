@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Temp.Domain.Models.Engagements.Exceptions;
+﻿namespace Temp.Domain.Models.Engagements.Exceptions;
 
 public class NullEngagementException : Exception
 {

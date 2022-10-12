@@ -1,5 +1,4 @@
-﻿using System;
-using Temp.Domain.Models;
+﻿using Temp.Domain.Models;
 using Temp.Domain.Models.Teams.Exceptions;
 
 namespace Temp.Core.Teams.Service;

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Temp.Core.EmploymentStatuses.Service;
+﻿using Temp.Core.EmploymentStatuses.Service;
 using Temp.Core.Helpers;
 using Temp.Database;
 

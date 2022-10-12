@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-using Temp.Domain.Models.Teams.Exceptions;
+﻿using Temp.Domain.Models.Teams.Exceptions;
 
 namespace Temp.Core.Teams.Service;
 

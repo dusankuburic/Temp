@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Temp.Domain.Models.Workplaces.Exceptions;
+﻿namespace Temp.Domain.Models.Workplaces.Exceptions;
 
 public class WorkplaceDependencyException : Exception
 {

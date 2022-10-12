@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Temp.Core.Workplaces.Service;
+﻿using Temp.Core.Workplaces.Service;
 using Temp.Database;
 
 namespace Temp.Core.Workplaces;

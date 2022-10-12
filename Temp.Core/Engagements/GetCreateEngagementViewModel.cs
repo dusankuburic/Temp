@@ -1,10 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Temp.Core.Employees;
+﻿using Temp.Core.Employees;
 using Temp.Core.EmploymentStatuses;
 using Temp.Core.Workplaces;
 using Temp.Database;

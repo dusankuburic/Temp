@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Temp.Core.Auth.Moderators.Service;
+﻿using Temp.Core.Auth.Moderators.Service;
 using Temp.Database;
 using Temp.Domain.Models;
 

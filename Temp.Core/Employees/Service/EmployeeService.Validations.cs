@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Temp.Domain.Models;
+﻿using Temp.Domain.Models;
 using Temp.Domain.Models.Employees.Exceptions;
 
 namespace Temp.Core.Employees;

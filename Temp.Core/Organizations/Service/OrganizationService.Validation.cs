@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Temp.Domain.Models;
+﻿using Temp.Domain.Models;
 using Temp.Domain.Models.Organizations.Exceptions;
 
 namespace Temp.Core.Organizations.Service;

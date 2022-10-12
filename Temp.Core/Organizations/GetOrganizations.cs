@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Temp.Core.Organizations.Service;
+﻿using Temp.Core.Organizations.Service;
 using Temp.Database;
 
 namespace Temp.Core.Organizations;

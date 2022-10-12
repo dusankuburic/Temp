@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-using Temp.Core.Helpers;
+﻿using Temp.Core.Helpers;
 using Temp.Domain.Models.Employees.Exceptions;
 
 namespace Temp.Core.Employees;

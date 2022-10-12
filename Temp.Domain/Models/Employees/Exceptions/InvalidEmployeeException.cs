@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Temp.Domain.Models.Employees.Exceptions;
+﻿namespace Temp.Domain.Models.Employees.Exceptions;
 
 public class InvalidEmployeeException : Exception
 {

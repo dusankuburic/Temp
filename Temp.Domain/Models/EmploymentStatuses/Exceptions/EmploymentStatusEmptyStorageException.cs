@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Temp.Domain.Models.EmploymentStatuses.Exceptions;
+﻿namespace Temp.Domain.Models.EmploymentStatuses.Exceptions;
 
 public class EmploymentStatusEmptyStorageException : Exception
 {

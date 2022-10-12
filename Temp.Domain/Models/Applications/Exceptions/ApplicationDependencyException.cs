@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Temp.Domain.Models.Applications.Exceptions;
+﻿namespace Temp.Domain.Models.Applications.Exceptions;
 
 public class ApplicationDependencyException : Exception
 {

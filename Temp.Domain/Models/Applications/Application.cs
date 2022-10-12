@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Temp.Domain.Models;
+﻿namespace Temp.Domain.Models;
 
 public class Application
 {

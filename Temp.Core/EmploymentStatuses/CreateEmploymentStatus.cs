@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Temp.Core.EmploymentStatuses.Service;
+﻿using Temp.Core.EmploymentStatuses.Service;
 using Temp.Database;
 using Temp.Domain.Models;
 

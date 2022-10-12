@@ -1,6 +1,5 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Engagements.Exceptions;
 
-namespace Temp.Domain.Models.Engagements.Exceptions;
 public class EngagementDependencyException : Exception
 {
     public EngagementDependencyException(Exception innerException)

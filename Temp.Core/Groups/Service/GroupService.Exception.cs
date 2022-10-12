@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-using Temp.Domain.Models.Groups.Exceptions;
+﻿using Temp.Domain.Models.Groups.Exceptions;
 
 namespace Temp.Core.Groups.Service;
 

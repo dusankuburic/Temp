@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-using Temp.Domain.Models.ModeratorGroups.Exceptions;
+﻿using Temp.Domain.Models.ModeratorGroups.Exceptions;
 
 namespace Temp.Core.Auth.Moderators.Service;
 

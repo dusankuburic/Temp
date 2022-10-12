@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-using Temp.Core.Helpers;
+﻿using Temp.Core.Helpers;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 
 namespace Temp.Core.EmploymentStatuses.Service;
