@@ -1,22 +1,19 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Temp.Core.EmploymentStatuses.Service;
+﻿using Temp.Core.EmploymentStatuses.Service;
 using Temp.Database;
 
-namespace Temp.Core.EmploymentStatuses
+namespace Temp.Core.EmploymentStatuses;
+
+public class GetEmploymentStatus : EmploymentStatusService
 {
-    public class GetEmploymentStatus : EmploymentStatusService
-    {
-        private readonly ApplicationDbContext _ctx;
+    private readonly ApplicationDbContext _ctx;
 
-        public GetEmploymentStatus(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public GetEmploymentStatus(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public Task<EmploymentStatusViewModel> Do(int id) =>
-        TryCatch(async () => {
-            var employmentStatus = await _ctx.EmploymentStatuses
+    public Task<EmploymentStatusViewModel> Do(int id) =>
+    TryCatch(async () => {
+        var employmentStatus = await _ctx.EmploymentStatuses
             .Where(x => x.Id == id && x.IsActive)
             .Select(x => new EmploymentStatusViewModel
             {
@@ -25,15 +22,14 @@ namespace Temp.Core.EmploymentStatuses
             })
             .FirstOrDefaultAsync();
 
-            ValidateGetEmploymentStatus(employmentStatus);
+        ValidateGetEmploymentStatus(employmentStatus);
 
-            return employmentStatus;
-        });
+        return employmentStatus;
+    });
 
-        public class EmploymentStatusViewModel
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-        }
+    public class EmploymentStatusViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

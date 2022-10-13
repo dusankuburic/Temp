@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.EmploymentStatuses.Exceptions;
 
-namespace Temp.Domain.Models.EmploymentStatuses.Exceptions
+public class EmploymentStatusDependencyException : Exception
 {
-    public class EmploymentStatusDependencyException : Exception
-    {
-        public EmploymentStatusDependencyException(Exception innerException)
-            : base("Service dependency error occurred, contact support", innerException) {
+    public EmploymentStatusDependencyException(Exception innerException)
+        : base("Service dependency error occurred, contact support", innerException) {
 
-        }
     }
 }

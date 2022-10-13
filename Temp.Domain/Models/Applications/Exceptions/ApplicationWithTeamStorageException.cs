@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Applications.Exceptions;
 
-namespace Temp.Domain.Models.Applications.Exceptions
+public class ApplicationWithTeamStorageException : Exception
 {
-    public class ApplicationWithTeamStorageException : Exception
-    {
-        public ApplicationWithTeamStorageException() :
-            base("No applications found in storage for chosen team") {
+    public ApplicationWithTeamStorageException() :
+        base("No applications found in storage for chosen team") {
 
-        }
     }
 }

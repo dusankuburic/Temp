@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Engagements.Exceptions;
 
-namespace Temp.Domain.Models.Engagements.Exceptions
+public class NullUserException : Exception
 {
-    public class NullUserException : Exception
-    {
-        public NullUserException() : base("The user is null") { }
-    }
+    public NullUserException() : base("The user is null") { }
 }

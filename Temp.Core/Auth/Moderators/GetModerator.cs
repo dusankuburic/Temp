@@ -1,20 +1,17 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Temp.Database;
+﻿using Temp.Database;
 
-namespace Temp.Core.Auth.Moderators
+namespace Temp.Core.Auth.Moderators;
+
+public class GetModerator
 {
-    public class GetModerator
-    {
-        private readonly ApplicationDbContext _ctx;
+    private readonly ApplicationDbContext _ctx;
 
-        public GetModerator(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public GetModerator(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public async Task<ModeratorViewModel> Do(int id) {
-            var moderator = await _ctx.Moderators
+    public async Task<ModeratorViewModel> Do(int id) {
+        var moderator = await _ctx.Moderators
                 .Where(x => x.EmployeeId == id)
                 .Select(x => new ModeratorViewModel
                 {
@@ -23,14 +20,14 @@ namespace Temp.Core.Auth.Moderators
                 })
                 .FirstOrDefaultAsync();
 
-            return moderator;
-        }
+        return moderator;
+    }
 
 
-        public class ModeratorViewModel
-        {
-            public int Id { get; set; }
-            public string Username { get; set; }
-        }
+    public class ModeratorViewModel
+    {
+        public int Id { get; set; }
+        public string Username { get; set; }
     }
 }
+

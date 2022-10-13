@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Applications.Exceptions;
 
-namespace Temp.Domain.Models.Applications.Exceptions
+public class ApplicationValidationException : Exception
 {
-    public class ApplicationValidationException : Exception
-    {
-        public ApplicationValidationException(Exception innerException)
-            : base("Invalid input, contact support.", innerException) {
+    public ApplicationValidationException(Exception innerException)
+        : base("Invalid input, contact support.", innerException) {
 
-        }
     }
 }

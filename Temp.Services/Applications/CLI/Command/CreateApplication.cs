@@ -1,13 +1,10 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using Temp.Core.Applications.Service;
+﻿using System.ComponentModel.DataAnnotations;
 using Temp.Database;
-using Temp.Domain.Models;
+using Temp.Domain.Models.Applications;
 
-namespace Temp.Core.Applications
+namespace Temp.Services.Applications.CLI.Command
 {
-    public class CreateApplication : ApplicationService
+    public class CreateApplication
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -15,18 +12,7 @@ namespace Temp.Core.Applications
             _ctx = ctx;
         }
 
-        public Task<Response> Do(Request request) =>
-        TryCatch(async () => {
-            var application = new Application
-            {
-                UserId = request.UserId,
-                TeamId = request.TeamId,
-                Content = request.Content,
-                Category = request.Category,
-                CreatedAt = DateTime.Now
-            };
-
-            ValidateApplicationOnCreate(application);
+        public async Task<Response> Do(Application application) {
 
             _ctx.Applications.Add(application);
             await _ctx.SaveChangesAsync();
@@ -34,7 +20,7 @@ namespace Temp.Core.Applications
             return new Response {
                 Status = true
             };
-        });
+        }
 
 
         public class Request

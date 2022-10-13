@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Temp.Domain.Models;
-using Temp.Domain.Models.Applications.Exceptions;
+﻿using Temp.Domain.Models.Applications;
+using Temp.Services.Applications.CLI.Query;
+using Temp.Services.Applications.Exceptions;
 
-namespace Temp.Core.Applications.Service
+namespace Temp.Services.Applications
 {
     public partial class ApplicationService
     {
-
         public void ValidateApplicationOnCreate(Application application) {
             ValidateApplication(application);
             ValidateApplicationInts(application);
@@ -58,7 +55,6 @@ namespace Temp.Core.Applications.Service
             if (application is null) {
                 throw new NullApplicationException();
             }
-
         }
 
         public void ValidateGetTeamApplicationsViewModel(IEnumerable<GetTeamApplications.ApplicationViewModel> applicationViewModels) {
@@ -72,7 +68,6 @@ namespace Temp.Core.Applications.Service
                 throw new ApplicationWithUserStorageException();
             }
         }
-
 
         public static bool IsInvalidInt(int input) {
             if (input > 0 && input <= int.MaxValue) {
@@ -88,6 +83,6 @@ namespace Temp.Core.Applications.Service
             return true;
         }
 
-        public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
+        public static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
     }
 }

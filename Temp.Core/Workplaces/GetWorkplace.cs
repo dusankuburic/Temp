@@ -1,22 +1,19 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Temp.Core.Workplaces.Service;
+﻿using Temp.Core.Workplaces.Service;
 using Temp.Database;
 
-namespace Temp.Core.Workplaces
+namespace Temp.Core.Workplaces;
+
+public class GetWorkplace : WorkplaceService
 {
-    public class GetWorkplace : WorkplaceService
-    {
-        readonly private ApplicationDbContext _ctx;
+    readonly private ApplicationDbContext _ctx;
 
-        public GetWorkplace(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public GetWorkplace(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
-        public Task<WorkplaceViewModel> Do(int id) =>
-        TryCatch(async () => {
-            var workplace = await _ctx.Workplaces
+    public Task<WorkplaceViewModel> Do(int id) =>
+    TryCatch(async () => {
+        var workplace = await _ctx.Workplaces
                 .Where(x => x.Id == id && x.IsActive)
                 .Select(x => new WorkplaceViewModel
                 {
@@ -25,15 +22,14 @@ namespace Temp.Core.Workplaces
                 })
                 .FirstOrDefaultAsync();
 
-            ValidateGetWorkplaceViewModel(workplace);
+        ValidateGetWorkplaceViewModel(workplace);
 
-            return workplace;
-        });
+        return workplace;
+    });
 
-        public class WorkplaceViewModel
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-        }
+    public class WorkplaceViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

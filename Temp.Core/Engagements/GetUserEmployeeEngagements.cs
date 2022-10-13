@@ -1,33 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Temp.Database;
+﻿using Temp.Database;
 
-namespace Temp.Core.Engagements
+namespace Temp.Core.Engagements;
+
+public class GetUserEmployeeEngagements : EngagementService
 {
-    public class GetUserEmployeeEngagements : EngagementService
-    {
-        private readonly ApplicationDbContext _ctx;
+    private readonly ApplicationDbContext _ctx;
 
-        public GetUserEmployeeEngagements(ApplicationDbContext ctx) {
-            _ctx = ctx;
-        }
+    public GetUserEmployeeEngagements(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
 
 
-        public Task<IEnumerable<Response>> Do(int id) =>
-        TryCatch(async () => {
+    public Task<IEnumerable<Response>> Do(int id) =>
+    TryCatch(async () => {
 
-            var user = await _ctx.Users
+        var user = await _ctx.Users
                 .Include(x => x.Employee)
                 .Where(x => x.Id == id)
                 .FirstOrDefaultAsync();
 
 
-            ValidateUser(user);
+        ValidateUser(user);
 
-            var response = await _ctx.Engagements
+        var response = await _ctx.Engagements
                 .Include(x => x.Workplace)
                 .Include(x => x.EmploymentStatus)
                 .Where(x => x.EmployeeId == user.Employee.Id)
@@ -41,19 +36,18 @@ namespace Temp.Core.Engagements
                 })
                 .ToListAsync();
 
-            ValidateUserEmployeeEngagements(response);
+        ValidateUserEmployeeEngagements(response);
 
-            return response;
-        });
+        return response;
+    });
 
 
-        public class Response
-        {
-            public string WorkplaceName { get; set; }
-            public string EmploymentStatusName { get; set; }
-            public DateTime DateFrom { get; set; }
-            public DateTime DateTo { get; set; }
-            public int Salary { get; set; }
-        }
+    public class Response
+    {
+        public string WorkplaceName { get; set; }
+        public string EmploymentStatusName { get; set; }
+        public DateTime DateFrom { get; set; }
+        public DateTime DateTo { get; set; }
+        public int Salary { get; set; }
     }
 }

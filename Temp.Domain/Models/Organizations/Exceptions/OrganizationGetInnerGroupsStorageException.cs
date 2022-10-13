@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Organizations.Exceptions;
 
-namespace Temp.Domain.Models.Organizations.Exceptions
+public class OrganizationGetInnerGroupsStorageException : Exception
 {
-    public class OrganizationGetInnerGroupsStorageException : Exception
-    {
-        public OrganizationGetInnerGroupsStorageException() :
-            base("There are no groups inside organization") {
+    public OrganizationGetInnerGroupsStorageException() :
+        base("There are no groups inside organization") {
 
-        }
     }
 }

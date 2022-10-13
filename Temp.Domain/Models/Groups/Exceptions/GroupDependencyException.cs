@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Groups.Exceptions;
 
-namespace Temp.Domain.Models.Groups.Exceptions
+public class GroupDependencyException : Exception
 {
-    public class GroupDependencyException : Exception
-    {
-        public GroupDependencyException(Exception innerException)
-            : base("Service dependency error occurred, contact support", innerException) {
+    public GroupDependencyException(Exception innerException)
+        : base("Service dependency error occurred, contact support", innerException) {
 
-        }
     }
 }
