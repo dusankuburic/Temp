@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Groups.Exceptions;
 
-namespace Temp.Domain.Models.Groups.Exceptions
+public class GroupValidationException : Exception
 {
-    public class GroupValidationException : Exception
-    {
-        public GroupValidationException(Exception innerException)
-            : base("Invalid input, contact support", innerException) {
+    public GroupValidationException(Exception innerException)
+        : base("Invalid input, contact support", innerException) {
 
-        }
     }
 }

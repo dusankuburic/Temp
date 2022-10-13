@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Organizations.Exceptions;
 
-namespace Temp.Domain.Models.Organizations.Exceptions
+public class OrganizationServiceException : Exception
 {
-    public class OrganizationServiceException : Exception
-    {
-        public OrganizationServiceException(Exception innerException)
-            : base("Service error, contact support", innerException) {
+    public OrganizationServiceException(Exception innerException)
+        : base("Service error, contact support", innerException) {
 
-        }
     }
 }

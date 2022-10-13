@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Groups.Exceptions;
 
-namespace Temp.Domain.Models.Groups.Exceptions
+public class GroupServiceException : Exception
 {
-    public class GroupServiceException : Exception
-    {
-        public GroupServiceException(Exception innerException)
-            : base("Service error, contact support", innerException) {
+    public GroupServiceException(Exception innerException)
+        : base("Service error, contact support", innerException) {
 
-        }
     }
 }

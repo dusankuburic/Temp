@@ -1,11 +1,8 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Employees.Exceptions;
 
-namespace Temp.Domain.Models.Employees.Exceptions
+public class EmployeeWithoutEngagementStorageException : Exception
 {
-    public class EmployeeWithoutEngagementStorageException : Exception
-    {
-        public EmployeeWithoutEngagementStorageException() : base("No employees found in storage without engagements") {
+    public EmployeeWithoutEngagementStorageException() : base("No employees found in storage without engagements") {
 
-        }
     }
 }

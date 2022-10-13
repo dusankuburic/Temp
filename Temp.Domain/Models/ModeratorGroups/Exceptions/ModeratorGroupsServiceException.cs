@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.ModeratorGroups.Exceptions;
 
-namespace Temp.Domain.Models.ModeratorGroups.Exceptions
+public class ModeratorGroupsServiceException : Exception
 {
-    public class ModeratorGroupsServiceException : Exception
-    {
-        public ModeratorGroupsServiceException(Exception innerException)
-            : base("Service error, contact support", innerException) {
+    public ModeratorGroupsServiceException(Exception innerException)
+        : base("Service error, contact support", innerException) {
 
-        }
     }
 }

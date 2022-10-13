@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Applications.Exceptions;
 
-namespace Temp.Domain.Models.Applications.Exceptions
+public class NullApplicationException : Exception
 {
-    public class NullApplicationException : Exception
-    {
-        public NullApplicationException() :
-            base("The application is null") {
+    public NullApplicationException() :
+        base("The application is null") {
 
-        }
     }
 }

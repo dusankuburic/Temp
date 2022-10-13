@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Groups.Exceptions;
 
-namespace Temp.Domain.Models.Groups.Exceptions
+public class ModeratorGroupsEmptyStorageException : Exception
 {
-    public class ModeratorGroupsEmptyStorageException : Exception
-    {
-        public ModeratorGroupsEmptyStorageException() :
-            base("Moderator doesn't have any assigned groups") {
+    public ModeratorGroupsEmptyStorageException() :
+        base("Moderator doesn't have any assigned groups") {
 
-        }
     }
 }

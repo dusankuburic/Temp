@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.Engagements.Exceptions;
 
-namespace Temp.Domain.Models.Engagements.Exceptions
+public class EngagementValidationException : Exception
 {
-    public class EngagementValidationException : Exception
-    {
-        public EngagementValidationException(Exception innerException)
-            : base("Invalid input, contact support.", innerException) {
+    public EngagementValidationException(Exception innerException)
+        : base("Invalid input, contact support.", innerException) {
 
-        }
     }
 }

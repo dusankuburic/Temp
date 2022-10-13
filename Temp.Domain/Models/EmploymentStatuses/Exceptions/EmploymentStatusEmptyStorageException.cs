@@ -1,11 +1,8 @@
-﻿using System;
+﻿namespace Temp.Domain.Models.EmploymentStatuses.Exceptions;
 
-namespace Temp.Domain.Models.EmploymentStatuses.Exceptions
+public class EmploymentStatusEmptyStorageException : Exception
 {
-    public class EmploymentStatusEmptyStorageException : Exception
-    {
-        public EmploymentStatusEmptyStorageException() : base("No EmploymentStatuses found in storage") {
+    public EmploymentStatusEmptyStorageException() : base("No EmploymentStatuses found in storage") {
 
-        }
     }
 }

@@ -1,20 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using Temp.Domain.Models.Applications;
 
-namespace Temp.Domain.Models
+namespace Temp.Domain.Models;
+
+public class Team
 {
-    public class Team
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public bool IsActive { get; set; }
+    public bool IsActive { get; set; }
 
-        public int GroupId { get; set; }
-        public Group Group { get; set; }
+    public int GroupId { get; set; }
+    public Group Group { get; set; }
 
-        public ICollection<Employee> Employees { get; set; }
+    public ICollection<Employee> Employees { get; set; }
 
-        public ICollection<Application> Applications { get; set; }
-    }
+    public ICollection<Application> Applications { get; set; }
 }

@@ -1,31 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-using Temp.Domain.Models.Applications.Exceptions;
+﻿using Microsoft.Data.SqlClient;
+using Temp.Services.Applications.CLI.Command;
+using Temp.Services.Applications.CLI.Query;
+using Temp.Services.Applications.Exceptions;
 
-namespace Temp.Core.Applications.Service
+namespace Temp.Services.Applications
 {
     public partial class ApplicationService
     {
         public delegate Task<CreateApplication.Response> ReturningCreateApplicationFunction();
+        public delegate Task<UpdateApplicationStatus.Response> ReturningUpdateApplicationStatusFunction();
         public delegate Task<GetApplication.ApplicationViewModel> ReturningGetApplicationFunction();
         public delegate Task<IEnumerable<GetTeamApplications.ApplicationViewModel>> ReturningGetTeamApplicationsFunction();
         public delegate Task<IEnumerable<GetUserApplications.ApplicationViewModel>> ReturningGetUserApplicationsFunction();
-        public delegate Task<UpdateApplicationStatus.Response> ReturningUpdateApplicationStatusFunction();
-
-
-        public async Task<UpdateApplicationStatus.Response> TryCatch(ReturningUpdateApplicationStatusFunction returningUpdateApplicationStatusFunction) {
-            try {
-                return await returningUpdateApplicationStatusFunction();
-            } catch (NullApplicationException nullApplicationException) {
-                throw CreateAndLogValidationException(nullApplicationException);
-            } catch (SqlException sqlException) {
-                throw CreateAndLogCriticalDependencyException(sqlException);
-            } catch (Exception exception) {
-                throw CreateAndLogServiceException(exception);
-            }
-        }
 
 
         public async Task<CreateApplication.Response> TryCatch(ReturningCreateApplicationFunction returningCreateApplicationFunction) {
@@ -35,6 +21,18 @@ namespace Temp.Core.Applications.Service
                 throw CreateAndLogValidationException(nullApplicationException);
             } catch (InvalidApplicationException invalidApplicationException) {
                 throw CreateAndLogValidationException(invalidApplicationException);
+            } catch (SqlException sqlException) {
+                throw CreateAndLogCriticalDependencyException(sqlException);
+            } catch (Exception exception) {
+                throw CreateAndLogServiceException(exception);
+            }
+        }
+
+        public async Task<UpdateApplicationStatus.Response> TryCatch(ReturningUpdateApplicationStatusFunction returningUpdateApplicationStatusFunction) {
+            try {
+                return await returningUpdateApplicationStatusFunction();
+            } catch (NullApplicationException nullApplicationException) {
+                throw CreateAndLogValidationException(nullApplicationException);
             } catch (SqlException sqlException) {
                 throw CreateAndLogCriticalDependencyException(sqlException);
             } catch (Exception exception) {
@@ -95,7 +93,5 @@ namespace Temp.Core.Applications.Service
             //LOG
             return applicationDependencyException;
         }
-
-
     }
 }
