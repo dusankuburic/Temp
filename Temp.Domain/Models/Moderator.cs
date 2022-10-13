@@ -1,4 +1,6 @@
-﻿namespace Temp.Domain.Models;
+﻿using Temp.Domain.Models.Applications;
+
+namespace Temp.Domain.Models;
 
 public class Moderator
 {

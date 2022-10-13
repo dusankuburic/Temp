@@ -1,9 +1,9 @@
-﻿using Temp.Core.Applications.Service;
+﻿using Microsoft.EntityFrameworkCore;
 using Temp.Database;
 
-namespace Temp.Core.Applications;
+namespace Temp.Services.Applications.CLI.Query;
 
-public class GetApplication : ApplicationService
+public class GetApplication
 {
     private readonly ApplicationDbContext _ctx;
 
@@ -11,9 +11,8 @@ public class GetApplication : ApplicationService
         _ctx = ctx;
     }
 
-    public Task<ApplicationViewModel> Do(int id) =>
-        TryCatch(async () => {
-            var application = await _ctx.Applications
+    public async Task<ApplicationViewModel> Do(int id) {
+        var application = await _ctx.Applications
                .Where(x => x.Id == id)
                .Select(x => new ApplicationViewModel
                {
@@ -24,10 +23,8 @@ public class GetApplication : ApplicationService
                })
                .FirstOrDefaultAsync();
 
-            ValidateGetApplicationViewModel(application);
-
-            return application;
-        });
+        return application;
+    }
 
     public class ApplicationViewModel
     {

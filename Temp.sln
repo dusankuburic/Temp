@@ -14,7 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Temp.API", "Temp.API\Temp.API.csproj", "{E729CB3E-DBBA-4E8B-88C4-401640CE157F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Temp.API", "Temp.API\Temp.API.csproj", "{E729CB3E-DBBA-4E8B-88C4-401640CE157F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Temp.Services", "Temp.Services\Temp.Services.csproj", "{FA9988F1-CF8E-41F2-A4DF-48CAD93BFC4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{E729CB3E-DBBA-4E8B-88C4-401640CE157F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E729CB3E-DBBA-4E8B-88C4-401640CE157F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E729CB3E-DBBA-4E8B-88C4-401640CE157F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA9988F1-CF8E-41F2-A4DF-48CAD93BFC4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA9988F1-CF8E-41F2-A4DF-48CAD93BFC4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA9988F1-CF8E-41F2-A4DF-48CAD93BFC4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA9988F1-CF8E-41F2-A4DF-48CAD93BFC4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

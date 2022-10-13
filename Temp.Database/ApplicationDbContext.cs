@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Temp.Domain.Models;
+using Temp.Domain.Models.Applications;
 
 namespace Temp.Database;
 

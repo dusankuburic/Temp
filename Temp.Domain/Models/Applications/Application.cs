@@ -1,4 +1,4 @@
-﻿namespace Temp.Domain.Models;
+﻿namespace Temp.Domain.Models.Applications;
 
 public class Application
 {

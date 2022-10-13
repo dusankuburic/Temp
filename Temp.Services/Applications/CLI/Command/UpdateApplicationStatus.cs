@@ -1,9 +1,9 @@
-﻿using Temp.Core.Applications.Service;
-using Temp.Database;
+﻿using Temp.Database;
+using Temp.Domain.Models.Applications;
 
-namespace Temp.Core.Applications;
+namespace Temp.Services.Applications.CLI.Command;
 
-public class UpdateApplicationStatus : ApplicationService
+public class UpdateApplicationStatus
 {
     private readonly ApplicationDbContext _ctx;
 
@@ -12,14 +12,7 @@ public class UpdateApplicationStatus : ApplicationService
         _ctx = ctx;
     }
 
-    public Task<Response> Do(int id, Request request) =>
-    TryCatch(async () => {
-
-        var application = await _ctx.Applications
-            .Where(x => x.Id == id)
-            .FirstOrDefaultAsync();
-
-        ValidateApplication(application);
+    public async Task<Response> Do(Application application, Request request) {
 
         application.ModeratorId = request.ModeratorId;
         application.Status = true;
@@ -31,7 +24,7 @@ public class UpdateApplicationStatus : ApplicationService
             Id = application.Id,
             Status = true
         };
-    });
+    }
 
     public class Request
     {
@@ -44,3 +37,4 @@ public class UpdateApplicationStatus : ApplicationService
         public bool Status { get; set; }
     }
 }
+

@@ -1,4 +1,10 @@
+using Temp.Services.Applications;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
 
 builder.Services.AddCors(opt => {
     opt.AddPolicy("CorsPolicy", policy => {
@@ -87,6 +93,7 @@ app.UseExceptionHandler(builder => {
         }
     });
 });
+
 
 app.UseHttpsRedirection();
 app.UseRouting();
