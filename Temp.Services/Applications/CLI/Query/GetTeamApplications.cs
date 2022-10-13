@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Temp.Database;
+﻿using Temp.Database;
 
 namespace Temp.Services.Applications.CLI.Query;
 
