@@ -1,4 +1,4 @@
-﻿namespace Temp.Domain.Models.Teams.Exceptions;
+﻿namespace Temp.Services.Teams.Exceptions;
 
 public class NullTeamException : Exception
 {
@@ -6,3 +6,4 @@ public class NullTeamException : Exception
 
     }
 }
+

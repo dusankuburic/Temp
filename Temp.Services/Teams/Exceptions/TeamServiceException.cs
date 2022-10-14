@@ -1,4 +1,4 @@
-﻿namespace Temp.Domain.Models.Teams.Exceptions;
+﻿namespace Temp.Services.Teams.Exceptions;
 
 public class TeamServiceException : Exception
 {
@@ -7,3 +7,4 @@ public class TeamServiceException : Exception
 
     }
 }
+

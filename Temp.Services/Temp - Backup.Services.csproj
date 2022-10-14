@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="Organizations\Mapping\" />
+    <Folder Include="Teams\CLI\Query\" />
     <Folder Include="Teams\Mapping\" />
   </ItemGroup>
 
