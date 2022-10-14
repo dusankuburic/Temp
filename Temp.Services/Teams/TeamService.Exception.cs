@@ -1,6 +1,9 @@
-﻿using Temp.Domain.Models.Teams.Exceptions;
+﻿using Microsoft.Data.SqlClient;
+using Temp.Services.Teams.CLI.Command;
+using Temp.Services.Teams.CLI.Query;
+using Temp.Services.Teams.Exceptions;
 
-namespace Temp.Core.Teams.Service;
+namespace Temp.Services.Teams;
 
 public partial class TeamService
 {
@@ -19,9 +22,7 @@ public partial class TeamService
         } catch (Exception exception) {
             throw CreateAndLogServiceException(exception);
         }
-
     }
-
 
     public async Task<CreateTeam.Response> TryCatch(ReturningCreateTeamFunction returningCreateTeamFunction) {
         try {
@@ -94,3 +95,4 @@ public partial class TeamService
         return teamDependencyException;
     }
 }
+

@@ -1,5 +1,6 @@
-﻿using Temp.Core.Teams;
-using Temp.Domain.Models.Teams.Exceptions;
+﻿using Temp.Services.Teams;
+using Temp.Services.Teams.CLI.Command;
+using Temp.Services.Teams.Exceptions;
 
 namespace Temp.API.Controllers;
 
@@ -8,18 +9,17 @@ namespace Temp.API.Controllers;
 [ApiController]
 public class TeamsController : ControllerBase
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly ITeamService _teamService;
 
-    public TeamsController(ApplicationDbContext ctx) {
-        _ctx = ctx;
+    public TeamsController(ITeamService teamService) {
+        _teamService = teamService;
     }
-
 
     [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> Create(CreateTeam.Request request) {
         try {
-            var response = await new CreateTeam(_ctx).Do(request);
+            var response = await _teamService.CreateTeam(request);
             if (response.Status)
                 return NoContent();
 
@@ -33,7 +33,7 @@ public class TeamsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTeam(int id) {
         try {
-            var response = await new GetTeam(_ctx).Do(id);
+            var response = await _teamService.GetTeam(id);
             return Ok(response);
         } catch (TeamValidationException teamValidationException) {
             return BadRequest(GetInnerMessage(teamValidationException));
@@ -44,7 +44,7 @@ public class TeamsController : ControllerBase
     [HttpGet("full/{id}")]
     public async Task<IActionResult> GetFullTeam(int id) {
         try {
-            var response = await new GetFullTeamTree(_ctx).Do(id);
+            var response = await _teamService.GetFullTeamTree(id);
             return Ok(response);
         } catch (TeamValidationException teamValidationException) {
             return BadRequest(GetInnerMessage(teamValidationException));
@@ -54,7 +54,7 @@ public class TeamsController : ControllerBase
     [HttpGet("employee/team/{userId}")]
     public async Task<IActionResult> GetUserTeam(int userId) {
         try {
-            var response = await new GetUserTeam(_ctx).Do(userId);
+            var response = await _teamService.GetUserTeam(userId);
             return Ok(response);
         } catch (TeamValidationException teamValidationException) {
             return BadRequest(GetInnerMessage(teamValidationException));
@@ -65,7 +65,7 @@ public class TeamsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTeam(int id, UpdateTeam.Request request) {
         try {
-            var response = await new UpdateTeam(_ctx).Do(id, request);
+            var response = await _teamService.UpdateTeam(id, request);
             if (response.Status)
                 return NoContent();
 
@@ -77,7 +77,7 @@ public class TeamsController : ControllerBase
 
     [HttpPut("change-status/{id}")]
     public async Task<IActionResult> UpdateTeamStatus(int id) {
-        var response = await new UpdateTeamStatus(_ctx).Do(id);
+        var response = await _teamService.UpdateTeamStatus(id);
         if (response)
             return NoContent();
 

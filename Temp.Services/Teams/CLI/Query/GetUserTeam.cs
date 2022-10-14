@@ -1,9 +1,8 @@
-﻿using Temp.Core.Teams.Service;
-using Temp.Database;
+﻿using Temp.Database;
 
-namespace Temp.Core.Teams;
+namespace Temp.Services.Teams.CLI.Query;
 
-public class GetUserTeam : TeamService
+public class GetUserTeam
 {
     private readonly ApplicationDbContext _ctx;
 
@@ -11,8 +10,7 @@ public class GetUserTeam : TeamService
         _ctx = ctx;
     }
 
-    public Task<TeamViewModel> Do(int id) =>
-    TryCatch(async () => {
+    public async Task<TeamViewModel> Do(int id) {
         var team = await _ctx.Users
             .Include(x => x.Employee)
             .Where(x => x.Id == id && x.IsActive)
@@ -23,11 +21,8 @@ public class GetUserTeam : TeamService
             })
             .FirstOrDefaultAsync();
 
-        ValidateGetUserTeamViewModel(team);
-
         return team;
-    });
-
+    }
 
     public class TeamViewModel
     {

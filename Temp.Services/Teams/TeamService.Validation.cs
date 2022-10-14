@@ -1,7 +1,8 @@
 ﻿using Temp.Domain.Models;
-using Temp.Domain.Models.Teams.Exceptions;
+using Temp.Services.Teams.CLI.Query;
+using Temp.Services.Teams.Exceptions;
 
-namespace Temp.Core.Teams.Service;
+namespace Temp.Services.Teams;
 
 public partial class TeamService
 {
@@ -44,5 +45,6 @@ public partial class TeamService
     }
 
 
-    public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
+    public static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
 }
+

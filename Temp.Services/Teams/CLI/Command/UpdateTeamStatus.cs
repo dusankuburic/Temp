@@ -1,6 +1,6 @@
 ﻿using Temp.Database;
 
-namespace Temp.Core.Teams;
+namespace Temp.Services.Teams.CLI.Command;
 
 public class UpdateTeamStatus
 {
@@ -8,6 +8,7 @@ public class UpdateTeamStatus
 
     public UpdateTeamStatus(ApplicationDbContext ctx) {
         _ctx = ctx;
+
     }
 
     public async Task<bool> Do(int TeamId) {
