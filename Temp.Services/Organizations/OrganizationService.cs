@@ -27,7 +27,8 @@ public partial class OrganizationService : IOrganizationService
 
         var organization = new Organization
         {
-            Name = request.Name
+            Name = request.Name,
+            IsActive = true
         };
 
         ValidateOrganizationOnCreate(organization);

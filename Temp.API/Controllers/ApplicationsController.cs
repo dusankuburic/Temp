@@ -1,6 +1,6 @@
-﻿using Temp.Domain.Models.Applications.Exceptions;
-using Temp.Services.Applications;
+﻿using Temp.Services.Applications;
 using Temp.Services.Applications.CLI.Command;
+using Temp.Services.Applications.Exceptions;
 
 namespace Temp.API.Controllers;
 
