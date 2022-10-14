@@ -1,0 +1,38 @@
+﻿using Temp.Database;
+
+namespace Temp.Services.Teams.CLI.Query;
+
+public class GetFullTeamTree
+{
+    private readonly ApplicationDbContext _ctx;
+
+    public GetFullTeamTree(ApplicationDbContext ctx) {
+        _ctx = ctx;
+    }
+
+    public async Task<TeamTreeViewModel> Do(int id) {
+        var team = await _ctx.Teams
+                .Include(x => x.Group)
+                .Include(x => x.Group.Organization)
+                .Where(x => x.Id == id && x.IsActive)
+                .FirstOrDefaultAsync();
+
+        return new TeamTreeViewModel {
+            Id = team.Id,
+            OrganizationName = team.Group.Organization.Name,
+            OrganizationId = team.Group.Organization.Id,
+            GroupName = team.Group.Name,
+            TeamName = team.Name
+        };
+    }
+
+    public class TeamTreeViewModel
+    {
+        public int Id { get; set; }
+        public string OrganizationName { get; set; }
+        public int OrganizationId { get; set; }
+        public string GroupName { get; set; }
+        public string TeamName { get; set; }
+    }
+}
+

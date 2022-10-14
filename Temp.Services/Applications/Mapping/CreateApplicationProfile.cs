@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Temp.Domain.Models.Applications;
+﻿using Temp.Domain.Models.Applications;
 using Temp.Services.Applications.CLI.Command;
 
 namespace Temp.Services.Applications.Mapping;

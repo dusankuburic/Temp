@@ -1,10 +1,16 @@
 using Temp.Services.Applications;
+using Temp.Services.Organizations;
+using Temp.Services.Teams;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IOrganizationService, OrganizationService>();
+builder.Services.AddScoped<ITeamService, TeamService>();
+
+
 
 builder.Services.AddCors(opt => {
     opt.AddPolicy("CorsPolicy", policy => {

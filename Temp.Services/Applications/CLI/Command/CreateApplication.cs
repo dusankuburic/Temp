@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models.Applications;
 
 namespace Temp.Services.Applications.CLI.Command
