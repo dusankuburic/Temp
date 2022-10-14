@@ -1,6 +1,6 @@
 ﻿using Temp.Database;
 
-namespace Temp.Core.Organizations;
+namespace Temp.Services.Organizations.CLI.Command;
 
 public class UpdateOrganizationStatus
 {
@@ -12,8 +12,8 @@ public class UpdateOrganizationStatus
 
     public async Task<bool> Do(int OrganizationId) {
         var ortanization = await _ctx.Organizations
-                .Where(x => x.Id == OrganizationId)
-                .FirstOrDefaultAsync();
+            .Where(x => x.Id == OrganizationId)
+            .FirstOrDefaultAsync();
 
         ortanization.IsActive = false;
 
@@ -22,3 +22,4 @@ public class UpdateOrganizationStatus
         return true;
     }
 }
+

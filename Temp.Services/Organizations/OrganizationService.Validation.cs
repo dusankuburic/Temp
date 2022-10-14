@@ -1,11 +1,11 @@
 ﻿using Temp.Domain.Models;
-using Temp.Domain.Models.Organizations.Exceptions;
+using Temp.Services.Organizations.CLI.Query;
+using Temp.Services.Organizations.Exceptions;
 
-namespace Temp.Core.Organizations.Service;
+namespace Temp.Services.Organizations;
 
 public partial class OrganizationService
 {
-
     public void ValidateOrganizationOnCreate(Organization organization) {
         ValidateOrganization(organization);
         ValidateOrganizationString(organization);
@@ -49,5 +49,6 @@ public partial class OrganizationService
         }
     }
 
-    public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
+    public static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
 }
+

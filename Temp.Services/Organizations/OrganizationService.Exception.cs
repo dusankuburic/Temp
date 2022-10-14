@@ -1,6 +1,9 @@
-﻿using Temp.Domain.Models.Organizations.Exceptions;
+﻿using Microsoft.Data.SqlClient;
+using Temp.Services.Organizations.CLI.Command;
+using Temp.Services.Organizations.CLI.Query;
+using Temp.Services.Organizations.Exceptions;
 
-namespace Temp.Core.Organizations.Service;
+namespace Temp.Services.Organizations;
 
 public partial class OrganizationService
 {
@@ -92,5 +95,5 @@ public partial class OrganizationService
         //LOG
         return organizationDependencyException;
     }
-
 }
+

@@ -1,4 +1,4 @@
-﻿namespace Temp.Domain.Models.Organizations.Exceptions;
+﻿namespace Temp.Services.Organizations.Exceptions;
 
 public class OrganizationValidationException : Exception
 {
@@ -7,3 +7,4 @@ public class OrganizationValidationException : Exception
 
     }
 }
+
