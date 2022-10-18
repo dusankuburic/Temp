@@ -3,6 +3,7 @@ using Temp.Domain.Models;
 using Temp.Services.Teams.CLI.Command;
 using Temp.Services.Teams.CLI.Query;
 
+
 namespace Temp.Services.Teams;
 
 public partial class TeamService : ITeamService
@@ -33,27 +34,67 @@ public partial class TeamService : ITeamService
         };
 
         ValidateTeamOnCreate(team);
-        return await new CreateTeam(_ctx).Do(team);
+
+        _ctx.Teams.Add(team);
+        await _ctx.SaveChangesAsync();
+
+        return new CreateTeam.Response {
+            Message = $"Success {team.Name} is added",
+            Status = true
+        };
     });
 
 
     public Task<GetFullTeamTree.TeamTreeViewModel> GetFullTeamTree(int id) =>
     TryCatch(async () => {
-        return await new GetFullTeamTree(_ctx).Do(id);
+        var team = await _ctx.Teams
+            .Include(x => x.Group)
+            .Include(x => x.Group.Organization)
+            .Where(x => x.Id == id && x.IsActive)
+            .FirstOrDefaultAsync();
+
+        return new GetFullTeamTree.TeamTreeViewModel {
+            Id = team.Id,
+            OrganizationName = team.Group.Organization.Name,
+            OrganizationId = team.Group.Organization.Id,
+            GroupName = team.Group.Name,
+            TeamName = team.Name
+        };
     });
 
 
     public Task<GetTeam.TeamViewModel> GetTeam(int id) =>
     TryCatch(async () => {
-        var team = await new GetTeam(_ctx).Do(id);
+        var team = await _ctx.Teams
+            .Include(x => x.Group)
+            .Where(x => x.Id == id && x.IsActive)
+            .Select(x => new GetTeam.TeamViewModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                GroupId = x.Group.Id
+            })
+            .FirstOrDefaultAsync();
+
         ValidateGetTeamViewModel(team);
+
         return team;
     });
 
     public Task<GetUserTeam.TeamViewModel> GetUserTeam(int id) =>
     TryCatch(async () => {
-        var team = await new GetUserTeam(_ctx).Do(id);
+        var team = await _ctx.Users
+            .Include(x => x.Employee)
+            .Where(x => x.Id == id && x.IsActive)
+            .Select(x => new GetUserTeam.TeamViewModel
+            {
+                Id = x.Employee.Team.Id,
+                Name = x.Employee.Team.Name
+            })
+            .FirstOrDefaultAsync();
+
         ValidateGetUserTeamViewModel(team);
+
         return team;
     });
 
@@ -82,11 +123,26 @@ public partial class TeamService : ITeamService
         team.Name = request.Name;
 
         ValidateTeamOnUpdate(team);
-        return await new UpdateTeam(_ctx).Do(team);
+        await _ctx.SaveChangesAsync();
+
+        return new UpdateTeam.Response {
+            Id = team.Id,
+            Name = team.Name,
+            Message = "Success",
+            Status = true
+        };
     });
 
-    public Task<bool> UpdateTeamStatus(int teamId) {
-        throw new NotImplementedException();
+    public async Task<bool> UpdateTeamStatus(int teamId) {
+        var team = await _ctx.Teams
+                .Where(x => x.Id == teamId)
+                .FirstOrDefaultAsync();
+
+        team.IsActive = false;
+
+        await _ctx.SaveChangesAsync();
+
+        return true;
     }
 
     private async Task<bool> TeamExists(string name, int groupId) {
