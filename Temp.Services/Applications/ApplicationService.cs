@@ -19,7 +19,13 @@ public partial class ApplicationService : IApplicationService
     TryCatch(async () => {
         var application = _mapper.Map<Application>(request);
         ValidateApplicationOnCreate(application);
-        return await new CreateApplication(_ctx).Do(application);
+
+        _ctx.Applications.Add(application);
+        await _ctx.SaveChangesAsync();
+
+        return new CreateApplication.Response {
+            Status = true
+        };
     });
 
     public Task<UpdateApplicationStatus.Response> UpdateApplicationStatus(int id, UpdateApplicationStatus.Request request) =>
@@ -28,27 +34,76 @@ public partial class ApplicationService : IApplicationService
                 .Where(x => x.Id == id)
                 .FirstOrDefaultAsync();
         ValidateApplication(res);
-        return await new UpdateApplicationStatus(_ctx).Do(res, request);
+
+        res.ModeratorId = request.ModeratorId;
+        res.Status = true;
+        res.StatusUpdatedAt = DateTime.Now;
+
+        await _ctx.SaveChangesAsync();
+
+        return new UpdateApplicationStatus.Response {
+            Id = res.Id,
+            Status = true
+        };
     });
 
     public Task<GetApplication.ApplicationViewModel> GetApplication(int id) =>
     TryCatch(async () => {
-        var res = await new GetApplication(_ctx).Do(id);
+        var res = await _ctx.Applications
+               .Where(x => x.Id == id)
+               .Select(x => new GetApplication.ApplicationViewModel
+               {
+                   Id = x.Id,
+                   Category = x.Category,
+                   Content = x.Content,
+                   CreatedAt = x.CreatedAt
+               })
+               .FirstOrDefaultAsync();
+
         ValidateGetApplicationViewModel(res);
+
         return res;
     });
 
     public Task<IEnumerable<GetUserApplications.ApplicationViewModel>> GetUserApplications(int id) =>
     TryCatch(async () => {
-        var res = await new GetUserApplications(_ctx).Do(id);
+        var res = await _ctx.Applications
+            .Where(x => x.UserId == id)
+            .OrderByDescending(x => x.CreatedAt)
+            .ThenBy(x => x.Status)
+            .Select(x => new GetUserApplications.ApplicationViewModel
+            {
+                Id = x.Id,
+                Category = x.Category,
+                CreatedAt = x.CreatedAt,
+                Status = x.Status
+            })
+            .ToListAsync();
+
         ValidateGetUserApplicationsViewModel(res);
         return res;
     });
 
     public Task<IEnumerable<GetTeamApplications.ApplicationViewModel>> GetTeamApplications(int teamId, int moderatorId) =>
     TryCatch(async () => {
-        var res = await new GetTeamApplications(_ctx).Do(teamId, moderatorId);
+        var res = await _ctx.Applications
+            .Include(x => x.User)
+            .Where(x => x.TeamId == teamId)
+            .Where(x => (x.ModeratorId == moderatorId) || (x.Status == false))
+            .OrderBy(x => x.Status)
+            .Select(x => new GetTeamApplications.ApplicationViewModel
+            {
+                Id = x.Id,
+                TeamId = x.TeamId,
+                Username = x.User.Username,
+                Category = x.Category,
+                CreatedAt = x.CreatedAt,
+                Status = x.Status
+            })
+            .ToListAsync();
+
         ValidateGetTeamApplicationsViewModel(res);
+
         return res;
     });
 }
