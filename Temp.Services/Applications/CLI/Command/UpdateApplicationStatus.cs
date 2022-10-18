@@ -13,4 +13,3 @@ public class UpdateApplicationStatus
         public bool Status { get; set; }
     }
 }
-

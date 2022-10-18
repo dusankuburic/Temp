@@ -50,6 +50,7 @@ public partial class ApplicationService : IApplicationService
     public Task<GetApplication.ApplicationViewModel> GetApplication(int id) =>
     TryCatch(async () => {
         var res = await _ctx.Applications
+               .AsNoTracking()
                .Where(x => x.Id == id)
                .Select(x => new GetApplication.ApplicationViewModel
                {
@@ -68,6 +69,7 @@ public partial class ApplicationService : IApplicationService
     public Task<IEnumerable<GetUserApplications.ApplicationViewModel>> GetUserApplications(int id) =>
     TryCatch(async () => {
         var res = await _ctx.Applications
+            .AsNoTracking()
             .Where(x => x.UserId == id)
             .OrderByDescending(x => x.CreatedAt)
             .ThenBy(x => x.Status)
@@ -87,6 +89,7 @@ public partial class ApplicationService : IApplicationService
     public Task<IEnumerable<GetTeamApplications.ApplicationViewModel>> GetTeamApplications(int teamId, int moderatorId) =>
     TryCatch(async () => {
         var res = await _ctx.Applications
+            .AsNoTracking()
             .Include(x => x.User)
             .Where(x => x.TeamId == teamId)
             .Where(x => (x.ModeratorId == moderatorId) || (x.Status == false))

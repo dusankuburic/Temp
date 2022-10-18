@@ -3,7 +3,6 @@ using Temp.Domain.Models;
 using Temp.Services.Teams.CLI.Command;
 using Temp.Services.Teams.CLI.Query;
 
-
 namespace Temp.Services.Teams;
 
 public partial class TeamService : ITeamService
@@ -48,6 +47,7 @@ public partial class TeamService : ITeamService
     public Task<GetFullTeamTree.TeamTreeViewModel> GetFullTeamTree(int id) =>
     TryCatch(async () => {
         var team = await _ctx.Teams
+            .AsNoTracking()
             .Include(x => x.Group)
             .Include(x => x.Group.Organization)
             .Where(x => x.Id == id && x.IsActive)
@@ -66,6 +66,7 @@ public partial class TeamService : ITeamService
     public Task<GetTeam.TeamViewModel> GetTeam(int id) =>
     TryCatch(async () => {
         var team = await _ctx.Teams
+            .AsNoTracking()
             .Include(x => x.Group)
             .Where(x => x.Id == id && x.IsActive)
             .Select(x => new GetTeam.TeamViewModel
@@ -84,6 +85,7 @@ public partial class TeamService : ITeamService
     public Task<GetUserTeam.TeamViewModel> GetUserTeam(int id) =>
     TryCatch(async () => {
         var team = await _ctx.Users
+            .AsNoTracking()
             .Include(x => x.Employee)
             .Where(x => x.Id == id && x.IsActive)
             .Select(x => new GetUserTeam.TeamViewModel
