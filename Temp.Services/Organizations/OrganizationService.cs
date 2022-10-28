@@ -18,6 +18,7 @@ public partial class OrganizationService : IOrganizationService
     public Task<CreateOrganization.Response> CreateOrganization(CreateOrganization.Request request) =>
     TryCatch(async () => {
         var organizationExists = await OrganizationExists(request.Name);
+
         if (organizationExists) {
             return new CreateOrganization.Response {
                 Message = $"Error {request.Name} already exists",
@@ -32,14 +33,36 @@ public partial class OrganizationService : IOrganizationService
         };
 
         ValidateOrganizationOnCreate(organization);
-        return await new CreateOrganization(_ctx).Do(organization);
+
+        _ctx.Organizations.Add(organization);
+        await _ctx.SaveChangesAsync();
+
+        return new CreateOrganization.Response {
+            Message = $"Success {organization.Name} is added",
+            Status = true
+        };
     });
 
 
     public Task<string> GetInnerGroups(int id) =>
     TryCatch(async () => {
-        var res = await new GetInnerGroups(_ctx).Do(id);
+        var res = await _ctx.Organizations
+            .AsNoTracking()
+            .Include(x => x.Groups)
+            .Where(x => x.Id == id && x.IsActive)
+            .Select(x => new GetInnerGroups.Response
+            {
+                Name = x.Name,
+                Groups = x.Groups.Select(g => new GetInnerGroups.InnerGroupViewModel
+                {
+                    Id = g.Id,
+                    Name = g.Name
+                })
+            })
+            .FirstOrDefaultAsync();
+
         ValidateStorageOrganizationInnerGroups(res.Groups);
+
         return JsonConvert.SerializeObject(res, Formatting.Indented, new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         });
@@ -47,17 +70,37 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<GetOrganization.OrganizationViewModel> GetOrganization(int id) =>
     TryCatch(async () => {
-        var res = await new GetOrganization(_ctx).Do(id);
+        var res = await _ctx.Organizations
+            .AsNoTracking()
+            .Where(x => x.Id == id && x.IsActive)
+            .Select(x => new GetOrganization.OrganizationViewModel
+            {
+                Id = x.Id,
+                Name = x.Name
+            })
+            .FirstOrDefaultAsync();
+
         ValidateGetOrganizationViewModel(res);
         return res;
     });
 
     public Task<IEnumerable<GetOrganizations.OrganizationViewModel>> GetOrganizations() =>
     TryCatch(async () => {
-        var res = await new GetOrganizations(_ctx).Do();
+        var res = await _ctx.Organizations
+            .AsNoTracking()
+            .Where(x => x.IsActive)
+            .Select(x => new GetOrganizations.OrganizationViewModel
+            {
+                Id = x.Id,
+                Name = x.Name
+            })
+            .ToListAsync();
+
         ValidateStorageOrganizations(res);
+
         return res;
     });
+
     public Task<UpdateOrganization.Response> UpdateOrganization(int id, UpdateOrganization.Request request) =>
     TryCatch(async () => {
         var organization = _ctx.Organizations
@@ -87,12 +130,28 @@ public partial class OrganizationService : IOrganizationService
 
         ValidateOrganizationOnUpdate(organization);
 
-        return await new UpdateOrganization(_ctx).Do(organization);
+        await _ctx.SaveChangesAsync();
+
+        return new UpdateOrganization.Response {
+            Id = organization.Id,
+            Name = organization.Name,
+            Message = "Success",
+            Status = true
+        };
     });
 
 
-    public async Task<bool> UpdateOrganizationStatus(int id) =>
-        await new UpdateOrganizationStatus(_ctx).Do(id);
+    public async Task<bool> UpdateOrganizationStatus(int id) {
+        var ortanization = await _ctx.Organizations
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
+
+        ortanization.IsActive = false;
+
+        await _ctx.SaveChangesAsync();
+
+        return true;
+    }
 
 
     private async Task<bool> OrganizationExists(string name) {
