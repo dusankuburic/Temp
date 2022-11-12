@@ -1,5 +1,4 @@
-﻿using Temp.Core.Employees;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models;
 
 namespace Temp.Core.Auth.Moderators;
@@ -20,10 +19,7 @@ public class RegisterModerator
     }
 
     private async Task<bool> ModeratorExists(string username) {
-        if (await _ctx.Moderators.AnyAsync(x => x.Username == username))
-            return true;
-
-        return false;
+        return await _ctx.Moderators.AnyAsync(x => x.Username == username);
     }
 
     public async Task<Response> Do(Request request) {
@@ -51,7 +47,7 @@ public class RegisterModerator
         _ctx.Moderators.Add(moderator);
         await _ctx.SaveChangesAsync();
 
-        var result = await new UpdateEmployeeRole(_ctx).Do("Moderator", request.EmployeeId);
+        //var result = await new UpdateEmployeeRole(_ctx).Do("Moderator", request.EmployeeId);
 
         return new Response {
             Message = "Successful registration",

@@ -17,10 +17,7 @@ public class AdminsController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAdmin(RegisterAdmin.Request request) {
         var response = await new RegisterAdmin(_ctx).Do(request);
-        if (response.Status)
-            return Ok(response);
-
-        return BadRequest(response.Message);
+        return response.Status ? Ok(response) : BadRequest(response.Message);
     }
 
     [HttpPost("login")]
@@ -29,9 +26,6 @@ public class AdminsController : ControllerBase
             return BadRequest(ModelState.Values);
 
         var response = await new LoginAdmin(_ctx, _config).Do(request);
-        if (response is null)
-            return Unauthorized();
-
-        return Ok(response);
+        return response is null ? Unauthorized() : Ok(response);
     }
 }

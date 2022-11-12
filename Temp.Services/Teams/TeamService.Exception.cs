@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
-using Temp.Services.Teams.CLI.Command;
-using Temp.Services.Teams.CLI.Query;
 using Temp.Services.Teams.Exceptions;
+using Temp.Services.Teams.Models.Command;
+using Temp.Services.Teams.Models.Query;
 
 namespace Temp.Services.Teams;
 

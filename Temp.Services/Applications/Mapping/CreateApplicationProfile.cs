@@ -1,5 +1,5 @@
 ﻿using Temp.Domain.Models.Applications;
-using Temp.Services.Applications.CLI.Command;
+using Temp.Services.Applications.Models.Command;
 
 namespace Temp.Services.Applications.Mapping;
 

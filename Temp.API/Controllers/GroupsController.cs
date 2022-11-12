@@ -19,10 +19,7 @@ public class GroupsController : ControllerBase
     public async Task<IActionResult> Create(CreateGroup.Request request) {
         try {
             var response = await new CreateGroup(_ctx).Do(request);
-            if (response.Status)
-                return NoContent();
-
-            return BadRequest(response.Message);
+            return response.Status ? NoContent() : BadRequest(response.Message);
         } catch (GroupValidationException groupValidationException) {
             return BadRequest(GetInnerMessage(groupValidationException));
         }
@@ -44,10 +41,7 @@ public class GroupsController : ControllerBase
     public async Task<IActionResult> UpdateGroup(int id, UpdateGroup.Request request) {
         try {
             var response = await new UpdateGroup(_ctx).Do(id, request);
-            if (response.Status)
-                return NoContent();
-
-            return BadRequest(response.Message);
+            return response.Status ? NoContent() : BadRequest(response.Message);
         } catch (GroupValidationException groupValidationException) {
             return BadRequest(GetInnerMessage(groupValidationException));
         }
@@ -88,12 +82,10 @@ public class GroupsController : ControllerBase
     [HttpPut("change-status/{id}")]
     public async Task<IActionResult> UpdateGroupStatus(int id) {
         var response = await new UpdateGroupStatus(_ctx).Do(id);
-        if (response)
-            return NoContent();
-
-        return BadRequest();
+        return response ? NoContent() : BadRequest();
     }
 
-    private static string GetInnerMessage(Exception exception) =>
-        exception.InnerException.Message;
+    private static string GetInnerMessage(Exception exception) {
+        return exception.InnerException.Message;
+    }
 }

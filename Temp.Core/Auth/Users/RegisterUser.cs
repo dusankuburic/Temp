@@ -1,5 +1,4 @@
-﻿using Temp.Core.Employees;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models;
 
 namespace Temp.Core.Auth.Users;
@@ -20,10 +19,7 @@ public class RegisterUser
     }
 
     private async Task<bool> UserExists(string username) {
-        if (await _ctx.Users.AnyAsync(x => x.Username == username))
-            return true;
-
-        return false;
+        return await _ctx.Users.AnyAsync(x => x.Username == username);
     }
 
     public async Task<Response> Do(Request request) {
@@ -51,7 +47,7 @@ public class RegisterUser
         _ctx.Users.Add(user);
         await _ctx.SaveChangesAsync();
 
-        var result = await new UpdateEmployeeRole(_ctx).Do("User",request.EmployeeId);
+        //var result = await new UpdateEmployeeRole(_ctx).Do("User",request.EmployeeId);
 
         return new Response {
             Messsage = "Successful registration",

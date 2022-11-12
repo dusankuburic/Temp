@@ -17,10 +17,7 @@ public class UsersController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> RegisterUser(RegisterUser.Request request) {
         var response = await new RegisterUser(_ctx).Do(request);
-        if (response.Status)
-            return Ok(response);
-
-        return BadRequest(response);
+        return response.Status ? Ok(response) : BadRequest(response);
     }
 
     [HttpPost("login")]
@@ -29,9 +26,6 @@ public class UsersController : ControllerBase
             return BadRequest(ModelState.Values);
 
         var response = await new LoginUser(_ctx, _config).Do(request);
-        if (response is null)
-            return Unauthorized();
-
-        return Ok(response);
+        return response is null ? Unauthorized() : Ok(response);
     }
 }

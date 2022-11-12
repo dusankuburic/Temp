@@ -1,5 +1,4 @@
 ﻿using Temp.Domain.Models;
-using Temp.Domain.Models.Employees.Exceptions;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 using Temp.Domain.Models.Engagements.Exceptions;
 using Temp.Domain.Models.Workplaces.Exceptions;
@@ -71,18 +70,18 @@ public partial class EngagementService
         }
     }
 
-    public void ValidateCreateEngagementViewModel(GetCreateEngagementViewModel.Response response) {
-        ValidateEmployee(response);
-        ValidateWorkplace(response);
-        ValidateEmploymentStatuses(response);
-    }
+    //public void ValidateCreateEngagementViewModel(GetCreateEngagementViewModel.Response response) {
+    //    ValidateEmployee(response);
+    //    ValidateWorkplace(response);
+    //    ValidateEmploymentStatuses(response);
+    //}
 
 
-    public void ValidateEmployee(GetCreateEngagementViewModel.Response response) {
-        if (response.Employee is null) {
-            throw new NullEmployeeException();
-        }
-    }
+    //public void ValidateEmployee(GetCreateEngagementViewModel.Response response) {
+    //    if (response.Employee is null) {
+    //        throw new NullEmployeeException();
+    //    }
+    //}
 
 
     public void ValidateWorkplace(GetCreateEngagementViewModel.Response response) {
@@ -99,16 +98,10 @@ public partial class EngagementService
 
 
     public static bool IsInvalidInt(int input) {
-        if (input > 0 && input <= int.MaxValue) {
-            return false;
-        }
-        return true;
+        return input <= 0 || input > int.MaxValue;
     }
 
     public static bool IsInvalidDate(DateTime input) {
-        if (input != DateTime.MinValue) {
-            return false;
-        }
-        return true;
+        return input == DateTime.MinValue;
     }
 }
