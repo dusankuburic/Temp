@@ -1,6 +1,6 @@
 ﻿using Temp.Services.Teams;
-using Temp.Services.Teams.CLI.Command;
 using Temp.Services.Teams.Exceptions;
+using Temp.Services.Teams.Models.Command;
 
 namespace Temp.API.Controllers;
 
@@ -20,10 +20,7 @@ public class TeamsController : ControllerBase
     public async Task<IActionResult> Create(CreateTeam.Request request) {
         try {
             var response = await _teamService.CreateTeam(request);
-            if (response.Status)
-                return NoContent();
-
-            return BadRequest(response.Message);
+            return response.Status ? NoContent() : BadRequest(response.Message);
         } catch (TeamValidationException teamValidationException) {
             return BadRequest(GetInnerMessage(teamValidationException));
         }
@@ -66,10 +63,7 @@ public class TeamsController : ControllerBase
     public async Task<IActionResult> UpdateTeam(int id, UpdateTeam.Request request) {
         try {
             var response = await _teamService.UpdateTeam(id, request);
-            if (response.Status)
-                return NoContent();
-
-            return BadRequest(response.Message);
+            return response.Status ? NoContent() : BadRequest(response.Message);
         } catch (TeamValidationException teamValidationException) {
             return BadRequest(GetInnerMessage(teamValidationException));
         }
@@ -78,12 +72,10 @@ public class TeamsController : ControllerBase
     [HttpPut("change-status/{id}")]
     public async Task<IActionResult> UpdateTeamStatus(int id) {
         var response = await _teamService.UpdateTeamStatus(id);
-        if (response)
-            return NoContent();
-
-        return BadRequest();
+        return response ? NoContent() : BadRequest();
     }
 
-    private static string GetInnerMessage(Exception exception) =>
-        exception.InnerException.Message;
+    private static string GetInnerMessage(Exception exception) {
+        return exception.InnerException.Message;
+    }
 }

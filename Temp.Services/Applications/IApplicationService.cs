@@ -1,5 +1,5 @@
-﻿using Temp.Services.Applications.CLI.Command;
-using Temp.Services.Applications.CLI.Query;
+﻿using Temp.Services.Applications.Models.Command;
+using Temp.Services.Applications.Models.Query;
 
 namespace Temp.Services.Applications;
 
