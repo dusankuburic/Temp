@@ -1,5 +1,4 @@
-﻿using Temp.Domain.Models.Employees.Exceptions;
-using Temp.Domain.Models.EmploymentStatuses.Exceptions;
+﻿using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 using Temp.Domain.Models.Engagements.Exceptions;
 using Temp.Domain.Models.Workplaces.Exceptions;
 
@@ -44,22 +43,22 @@ public partial class EngagementService
         }
     }
 
-    public async Task<string> TryCatch(ReturningCreateEngagementViewModelFunction returningCreateEngagementViewModelFunction) {
-        try {
-            return await returningCreateEngagementViewModelFunction();
-        } catch (NullEmployeeException nullEmployeeException) {
-            throw CreateAndLogServiceEmployeeException(nullEmployeeException);
-        } catch (NullWorkplaceException nullWorkplaceException) {
-            throw CreateAndLogValidationWorkplaceException(nullWorkplaceException);
-        } catch (NullEmploymentStatusException nullEmploymentStatusException) {
-            throw CreateAndLogValidationEmploymentStatusException(nullEmploymentStatusException);
-        } catch (SqlException sqlException) {
-            throw CreateAndLogCriticalDependencyException(sqlException);
-        } catch (Exception exception) {
-            throw CreateAndLogServiceException(exception);
-        }
+    //public async Task<string> TryCatch(ReturningCreateEngagementViewModelFunction returningCreateEngagementViewModelFunction) {
+    //    try {
+    //        return await returningCreateEngagementViewModelFunction();
+    //    } catch (NullEmployeeException nullEmployeeException) {
+    //        throw CreateAndLogServiceEmployeeException(nullEmployeeException);
+    //    } catch (NullWorkplaceException nullWorkplaceException) {
+    //        throw CreateAndLogValidationWorkplaceException(nullWorkplaceException);
+    //    } catch (NullEmploymentStatusException nullEmploymentStatusException) {
+    //        throw CreateAndLogValidationEmploymentStatusException(nullEmploymentStatusException);
+    //    } catch (SqlException sqlException) {
+    //        throw CreateAndLogCriticalDependencyException(sqlException);
+    //    } catch (Exception exception) {
+    //        throw CreateAndLogServiceException(exception);
+    //    }
 
-    }
+    //}
 
 
     private EngagementServiceException CreateAndLogServiceException(Exception exception) {
@@ -81,11 +80,11 @@ public partial class EngagementService
     }
 
 
-    private EmployeeValidationException CreateAndLogServiceEmployeeException(Exception exception) {
-        var employeeValidationException = new EmployeeValidationException(exception);
-        //LOG
-        return employeeValidationException;
-    }
+    //private EmployeeValidationException CreateAndLogServiceEmployeeException(Exception exception) {
+    //    var employeeValidationException = new EmployeeValidationException(exception);
+    //    //LOG
+    //    return employeeValidationException;
+    //}
 
     private WorkplaceValidationException CreateAndLogValidationWorkplaceException(Exception exception) {
         var workplaceValidationException = new WorkplaceValidationException(exception);

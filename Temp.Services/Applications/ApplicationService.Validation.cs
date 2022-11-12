@@ -1,6 +1,6 @@
 ﻿using Temp.Domain.Models.Applications;
-using Temp.Services.Applications.CLI.Query;
 using Temp.Services.Applications.Exceptions;
+using Temp.Services.Applications.Models.Query;
 
 namespace Temp.Services.Applications
 {

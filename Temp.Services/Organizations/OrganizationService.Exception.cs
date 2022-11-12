@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
-using Temp.Services.Organizations.CLI.Command;
-using Temp.Services.Organizations.CLI.Query;
 using Temp.Services.Organizations.Exceptions;
+using Temp.Services.Organizations.Models.Command;
+using Temp.Services.Organizations.Models.Query;
 
 namespace Temp.Services.Organizations;
 

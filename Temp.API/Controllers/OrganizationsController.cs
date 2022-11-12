@@ -1,6 +1,6 @@
 ﻿using Temp.Services.Organizations;
-using Temp.Services.Organizations.CLI.Command;
 using Temp.Services.Organizations.Exceptions;
+using Temp.Services.Organizations.Models.Command;
 
 namespace Temp.API.Controllers;
 
@@ -29,10 +29,7 @@ public class OrganizationsController : ControllerBase
     public async Task<IActionResult> Create(CreateOrganization.Request request) {
         try {
             var response = await _organizationService.CreateOrganization(request);
-            if (response.Status)
-                return NoContent();
-
-            return BadRequest(response.Message);
+            return response.Status ? NoContent() : BadRequest(response.Message);
         } catch (OrganizationValidationException organizationValidationException) {
             return BadRequest(GetInnerMessage(organizationValidationException));
         }
@@ -52,10 +49,7 @@ public class OrganizationsController : ControllerBase
     public async Task<IActionResult> UpdateOrganization(int id, UpdateOrganization.Request request) {
         try {
             var response = await _organizationService.UpdateOrganization(id, request);
-            if (response.Status)
-                return NoContent();
-
-            return BadRequest(response.Message);
+            return response.Status ? NoContent() : BadRequest(response.Message);
         } catch (OrganizationValidationException organizationValidationException) {
             return BadRequest(GetInnerMessage(organizationValidationException));
         }
@@ -74,12 +68,10 @@ public class OrganizationsController : ControllerBase
     [HttpPut("change-stauts/{id}")]
     public async Task<IActionResult> UpdateOrganizationStatus(int id) {
         var response = await _organizationService.UpdateOrganizationStatus(id);
-        if (response)
-            return NoContent();
-
-        return BadRequest();
+        return response ? NoContent() : BadRequest();
     }
 
-    private static string GetInnerMessage(Exception exception) =>
-        exception.InnerException.Message;
+    private static string GetInnerMessage(Exception exception) {
+        return exception.InnerException.Message;
+    }
 }

@@ -1,5 +1,4 @@
-﻿using Temp.Core.Employees;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models;
 
 namespace Temp.Core.Auth.Admins;
@@ -20,11 +19,7 @@ public class RegisterAdmin
     }
 
     private async Task<bool> AdminExists(string username) {
-        if (await _ctx.Admins.AnyAsync(x => x.Username == username)) {
-            return true;
-        }
-
-        return false;
+        return await _ctx.Admins.AnyAsync(x => x.Username == username);
     }
 
     public async Task<Response> Do(Request request) {
@@ -42,7 +37,7 @@ public class RegisterAdmin
         CreatePasswordHash(request.Password, out passwordHash, out passwordSalt);
 
         var admin = new Admin
-            {
+        {
             Username = request.Username,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
@@ -52,7 +47,7 @@ public class RegisterAdmin
         _ctx.Admins.Add(admin);
         await _ctx.SaveChangesAsync();
 
-        var result = await new UpdateEmployeeRole(_ctx).Do("Admin",request.EmployeeId);
+        //var result = await new UpdateEmployeeRole(_ctx).Do("Admin",request.EmployeeId);
 
         return new Response {
             Message = "Successful registration",

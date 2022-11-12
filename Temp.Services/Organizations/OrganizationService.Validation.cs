@@ -1,6 +1,6 @@
 ﻿using Temp.Domain.Models;
-using Temp.Services.Organizations.CLI.Query;
 using Temp.Services.Organizations.Exceptions;
+using Temp.Services.Organizations.Models.Query;
 
 namespace Temp.Services.Organizations;
 
@@ -49,6 +49,8 @@ public partial class OrganizationService
         }
     }
 
-    public static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
+    public static bool IsInvalid(string input) {
+        return string.IsNullOrWhiteSpace(input);
+    }
 }
 
