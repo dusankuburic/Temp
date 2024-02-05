@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UserListApplication } from 'src/app/_models/application';
@@ -7,7 +7,7 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 import { ApplicationService } from 'src/app/_services/application.service';
 
 @Injectable({ providedIn: 'root' })
-export class ApplicationUserListResolver implements Resolve<UserListApplication[]> {
+export class ApplicationUserListResolver  {
 
     constructor(
         private applicationService: ApplicationService,

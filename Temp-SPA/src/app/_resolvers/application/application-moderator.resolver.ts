@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Application } from 'src/app/_models/application';
@@ -7,7 +7,7 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 import { ApplicationService } from 'src/app/_services/application.service';
 
 @Injectable()
-export class ApplicationModeratorResolver implements Resolve<Application> {
+export class ApplicationModeratorResolver  {
 
     constructor(
         private applicationService: ApplicationService,

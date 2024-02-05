@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Employee } from '../../_models/employee';
@@ -7,7 +7,7 @@ import { AlertifyService } from '../../_services/alertify.service';
 import { EmployeeService } from '../../_services/employee.service';
 
 @Injectable()
-export class EmployeeListResolver implements Resolve<Employee[]> {
+export class EmployeeListResolver  {
 
     pageNumber = 1;
     pageSize = 5;
