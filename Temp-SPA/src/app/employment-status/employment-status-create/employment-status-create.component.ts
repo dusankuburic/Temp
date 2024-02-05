@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Form, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { EmploymentStatus } from 'src/app/_models/employmentStatus';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { EmploymentStatusService } from 'src/app/_services/employment-status.service';
@@ -9,13 +9,13 @@ import { EmploymentStatusService } from 'src/app/_services/employment-status.ser
   templateUrl: './employment-status-create.component.html'
 })
 export class EmploymentStatusCreateComponent implements OnInit {
-  createEmploymentStatusForm: FormGroup;
+  createEmploymentStatusForm: UntypedFormGroup;
   employmentStatus: EmploymentStatus;
 
   constructor(
     private employmentStatusService: EmploymentStatusService,
     private alertify: AlertifyService,
-    private fb: FormBuilder) { }
+    private fb: UntypedFormBuilder) { }
 
   ngOnInit(): void {
     this.createForm();

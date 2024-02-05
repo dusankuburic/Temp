@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Workplace } from 'src/app/_models/workplace';
 import { AlertifyService } from 'src/app/_services/alertify.service';
@@ -10,13 +10,13 @@ import { WorkplaceService } from 'src/app/_services/workplace.service';
   templateUrl: './workplace-edit.component.html'
 })
 export class WorkplaceEditComponent implements OnInit {
-  editWorkplaceForm: FormGroup;
+  editWorkplaceForm: UntypedFormGroup;
   workplace: Workplace;
 
   constructor(
     private workplaceService: WorkplaceService,
     private route: ActivatedRoute,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CreateApplication } from 'src/app/_models/application';
 import { Team } from 'src/app/_models/team';
@@ -11,7 +11,7 @@ import { ApplicationService } from 'src/app/_services/application.service';
   templateUrl: './application-create.component.html'
 })
 export class ApplicationCreateComponent implements OnInit {
-  createApplicationForm: FormGroup;
+  createApplicationForm: UntypedFormGroup;
   application: CreateApplication;
   team: Team;
   user: any;
@@ -20,7 +20,7 @@ export class ApplicationCreateComponent implements OnInit {
     private applicationService: ApplicationService,
     private route: ActivatedRoute,
     private alertify: AlertifyService,
-    private fb: FormBuilder) { }
+    private fb: UntypedFormBuilder) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {

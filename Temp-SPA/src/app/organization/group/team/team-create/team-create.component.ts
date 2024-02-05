@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/_models/group';
 import { Team } from 'src/app/_models/team';
@@ -11,7 +11,7 @@ import { TeamService } from 'src/app/_services/team.service';
   templateUrl: './team-create.component.html'
 })
 export class TeamCreateComponent implements OnInit {
-  createTeamForm: FormGroup;
+  createTeamForm: UntypedFormGroup;
   group: Group;
   team: Team;
 
@@ -19,7 +19,7 @@ export class TeamCreateComponent implements OnInit {
     private teamService: TeamService,
     private route: ActivatedRoute,
     private alertify: AlertifyService,
-    private fb: FormBuilder) { }
+    private fb: UntypedFormBuilder) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {

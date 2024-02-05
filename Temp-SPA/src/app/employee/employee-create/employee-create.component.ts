@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Employee } from 'src/app/_models/employee';
 import { Group } from 'src/app/_models/group';
@@ -15,7 +15,7 @@ import { OrganizationService } from 'src/app/_services/organization.service';
   templateUrl: './employee-create.component.html'
 })
 export class EmployeeCreateComponent implements OnInit {
-  createEmployeeForm: FormGroup;
+  createEmployeeForm: UntypedFormGroup;
   employee: Employee;
   organizations: Organization[];
   innerGroups = [] as Group[];
@@ -27,7 +27,7 @@ export class EmployeeCreateComponent implements OnInit {
     private organizationService: OrganizationService,
     private groupService: GroupService,
     private alertify: AlertifyService,
-    private fb: FormBuilder) { }
+    private fb: UntypedFormBuilder) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {

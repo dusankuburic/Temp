@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssignRoleDto } from 'src/app/_models/assignRoleDto';
 import { Employee } from 'src/app/_models/employee';
@@ -11,7 +11,7 @@ import { EmployeeService } from 'src/app/_services/employee.service';
   templateUrl: './employee-assign-role.component.html'
 })
 export class EmployeeAssignRoleComponent implements OnInit {
-  createAssignRoleForm: FormGroup;
+  createAssignRoleForm: UntypedFormGroup;
   employee: Employee;
   assignDto = {} as AssignRoleDto;
 
@@ -20,7 +20,7 @@ export class EmployeeAssignRoleComponent implements OnInit {
     private employeeService: EmployeeService,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -39,7 +39,7 @@ export class EmployeeAssignRoleComponent implements OnInit {
     }, {validator: this.passwordMatchValidator});
   }
 
-  passwordMatchValidator(form: FormGroup): any {
+  passwordMatchValidator(form: UntypedFormGroup): any {
     return form.get('password').value === form.get('confirmPassword').value ? null : {mismatch: true};
   }
 

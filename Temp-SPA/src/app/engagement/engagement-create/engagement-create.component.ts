@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Engagement } from 'src/app/_models/engagement';
@@ -12,14 +12,14 @@ import { EngagementService } from 'src/app/_services/engagement.service';
 })
 export class EngagementCreateComponent implements OnInit {
   employeeData: any;
-  createEngagementForm: FormGroup;
+  createEngagementForm: UntypedFormGroup;
   engagement: Engagement;
   bsConfig: Partial<BsDatepickerConfig>;
 
   constructor(
     private route: ActivatedRoute,
     private engagementService: EngagementService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {

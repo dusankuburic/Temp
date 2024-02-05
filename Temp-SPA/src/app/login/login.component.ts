@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Admin } from '../_models/admin';
 import { Moderator } from '../_models/moderator';
@@ -12,7 +12,7 @@ import { AuthService } from '../_services/auth.service';
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
   roleList = [
     {value: 'User', display: 'User'},
     {value: 'Admin', display: 'Admin'},
@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private alertify: AlertifyService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router) { }
 
   ngOnInit(): void {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Employee } from 'src/app/_models/employee';
 import { Group, ModeratorGroups } from 'src/app/_models/group';
@@ -17,7 +17,7 @@ import { TeamService } from 'src/app/_services/team.service';
   templateUrl: './employee-edit.component.html'
 })
 export class EmployeeEditComponent implements OnInit {
-  editEmployeeForm: FormGroup;
+  editEmployeeForm: UntypedFormGroup;
   employee: Employee;
   fullTeam: FullTeam;
   Moderator: Moderator;
@@ -33,7 +33,7 @@ export class EmployeeEditComponent implements OnInit {
     private groupService: GroupService,
     private teamService: TeamService,
     private route: ActivatedRoute,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {

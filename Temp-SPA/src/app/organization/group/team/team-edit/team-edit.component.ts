@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Team } from 'src/app/_models/team';
 import { AlertifyService } from 'src/app/_services/alertify.service';
@@ -10,13 +10,13 @@ import { TeamService } from 'src/app/_services/team.service';
   templateUrl: './team-edit.component.html'
 })
 export class TeamEditComponent implements OnInit {
-  editTeamForm: FormGroup;
+  editTeamForm: UntypedFormGroup;
   team: Team;
 
   constructor(
     private teamService: TeamService,
     private route: ActivatedRoute,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {

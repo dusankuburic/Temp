@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/_models/group';
 import { Organization } from 'src/app/_models/organization';
@@ -12,7 +12,7 @@ import { GroupService } from 'src/app/_services/group.service';
 })
 
 export class GroupCreateComponent implements OnInit {
-  createGroupForm: FormGroup;
+  createGroupForm: UntypedFormGroup;
   organization: Organization;
   group: Group;
 
@@ -20,7 +20,7 @@ export class GroupCreateComponent implements OnInit {
     private groupService: GroupService,
     private route: ActivatedRoute,
     private alertify: AlertifyService,
-    private fb: FormBuilder) { }
+    private fb: UntypedFormBuilder) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
