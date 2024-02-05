@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Employee } from '../../_models/employee';
 import { AlertifyService } from '../../_services/alertify.service';
 import { EmployeeService } from '../../_services/employee.service';
+import { PaginatedResult } from 'src/app/_models/pagination';
 
 @Injectable()
 export class EmployeeListResolver  {
@@ -17,7 +18,7 @@ export class EmployeeListResolver  {
         private router: Router,
         private alertify: AlertifyService){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<Employee[]> {
+    resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<Employee[]>> {
         return this.employeeService.getEmployees(this.pageNumber, this.pageSize).pipe(
             catchError(error => {
                 this.alertify.error('Problem retriving data');
