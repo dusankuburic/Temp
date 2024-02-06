@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Team } from 'src/app/_models/team';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { TeamService } from 'src/app/_services/team.service';
+import { Team } from 'src/app/models/team';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { TeamService } from 'src/app/services/team.service';
 
 @Component({
   selector: 'app-team-edit',

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './_guards/auth.guard';
-import { UserGuard } from './_guards/user.guard';
+import { AuthGuard } from './guards/auth.guard';
+import { UserGuard } from './guards/user.guard';
 import { EmployeeAssignRoleComponent } from './employee/employee-assign-role/employee-assign-role.component';
 import { EmployeeCreateComponent } from './employee/employee-create/employee-create.component';
 import { EmployeeEditComponent } from './employee/employee-edit/employee-edit.component';
@@ -36,7 +36,7 @@ import { TeamEditResolver } from './_resolvers/team/team-edit.resolver';
 import { TeamListResolver } from './_resolvers/team/team-list.resolver';
 import { WorkplaceEditResolver } from './_resolvers/workplace/workplace-edit.resolver';
 import { WorkplaceListResolver } from './_resolvers/workplace/workplace-list.resolver';
-import { ModeratorGuard } from './_guards/moderator.guard';
+import { ModeratorGuard } from './guards/moderator.guard';
 import { ModeratorComponent } from './moderator/moderator.component';
 import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.component';
 import { ModeratorAssignedGroupsResolver } from './_resolvers/group/moderator-assigned-groups.resolver';

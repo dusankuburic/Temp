@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AssignRoleDto } from 'src/app/_models/assignRoleDto';
-import { Employee } from 'src/app/_models/employee';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { EmployeeService } from 'src/app/_services/employee.service';
+import { AssignRoleDto } from 'src/app/models/assignRoleDto';
+import { Employee } from 'src/app/models/employee';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
   selector: 'app-employee-assign-role',

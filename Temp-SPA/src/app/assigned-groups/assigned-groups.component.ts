@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Group } from '../_models/group';
+import { Group } from '../models/group';
 
 @Component({
   selector: 'app-assigned-groups',

@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AssignRoleDto } from '../_models/assignRoleDto';
-import { Employee } from '../_models/employee';
-import { Moderator } from '../_models/moderator';
-import { PaginatedResult } from '../_models/pagination';
+import { AssignRoleDto } from '../models/assignRoleDto';
+import { Employee } from '../models/employee';
+import { Moderator } from '../models/moderator';
+import { PaginatedResult } from '../models/pagination';
 
 @Injectable({
   providedIn: 'root'

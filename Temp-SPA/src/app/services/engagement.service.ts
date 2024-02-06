@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Employee } from '../_models/employee';
-import { Engagement } from '../_models/engagement';
-import { PaginatedResult } from '../_models/pagination';
+import { Employee } from '../models/employee';
+import { Engagement } from '../models/engagement';
+import { PaginatedResult } from '../models/pagination';
 
 @Injectable({
   providedIn: 'root'

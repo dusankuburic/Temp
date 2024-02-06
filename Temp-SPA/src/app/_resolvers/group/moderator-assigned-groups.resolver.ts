@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Group } from 'src/app/_models/group';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { GroupService } from 'src/app/_services/group.service';
+import { Group } from 'src/app/models/group';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { GroupService } from 'src/app/services/group.service';
 
 @Injectable()
 export class ModeratorAssignedGroupsResolver  {

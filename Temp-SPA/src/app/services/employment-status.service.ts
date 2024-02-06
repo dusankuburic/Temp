@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { EmploymentStatus } from '../_models/employmentStatus';
-import { PaginatedResult } from '../_models/pagination';
+import { EmploymentStatus } from '../models/employmentStatus';
+import { PaginatedResult } from '../models/pagination';
 
 @Injectable({
   providedIn: 'root'

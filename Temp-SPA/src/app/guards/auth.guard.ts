@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertifyService } from '../_services/alertify.service';
-import { AuthService } from '../_services/auth.service';
+import { AlertifyService } from '../services/alertify.service';
+import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class UserGuard  {
-  role = 'User';
+export class AuthGuard  {
+  role = 'Admin';
 
   constructor(
     private authService: AuthService,

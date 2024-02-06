@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Organization } from '../../_models/organization';
-import { AlertifyService } from '../../_services/alertify.service';
-import { OrganizationService } from '../../_services/organization.service';
+import { Organization } from '../../models/organization';
+import { AlertifyService } from '../../services/alertify.service';
+import { OrganizationService } from '../../services/organization.service';
 
 @Injectable()
 export class OrganizationListResolver  {

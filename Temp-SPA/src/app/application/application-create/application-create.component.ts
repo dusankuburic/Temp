@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { CreateApplication } from 'src/app/_models/application';
-import { Team } from 'src/app/_models/team';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { ApplicationService } from 'src/app/_services/application.service';
+import { CreateApplication } from 'src/app/models/application';
+import { Team } from 'src/app/models/team';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { ApplicationService } from 'src/app/services/application.service';
 
 @Component({
   selector: 'app-application-create',

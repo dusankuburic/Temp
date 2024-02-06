@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { EmploymentStatus } from 'src/app/_models/employmentStatus';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { EmploymentStatusService } from 'src/app/_services/employment-status.service';
+import { EmploymentStatus } from 'src/app/models/employmentStatus';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { EmploymentStatusService } from 'src/app/services/employment-status.service';
 
 @Component({
   selector: 'app-employment-status-create',

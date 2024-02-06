@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { InnerGroups } from '../../_models/group';
-import { AlertifyService } from '../../_services/alertify.service';
-import { GroupService } from '../../_services/group.service';
+import { InnerGroups } from '../../models/group';
+import { AlertifyService } from '../../services/alertify.service';
+import { GroupService } from '../../services/group.service';
 
 @Injectable()
 export class GroupListResolver  {

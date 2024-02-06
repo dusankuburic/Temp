@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Group } from '../_models/group';
-import { ModeratorMin } from '../_models/moderator';
-import { Team } from '../_models/team';
+import { Group } from '../models/group';
+import { ModeratorMin } from '../models/moderator';
+import { Team } from '../models/team';
 
 @Injectable({
   providedIn: 'root'

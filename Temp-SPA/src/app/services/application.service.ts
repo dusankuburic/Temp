@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { CreateApplication, ModeratorListApplication, Application, UserListApplication, UpdateApplicationRequest } from '../_models/application';
+import { CreateApplication, ModeratorListApplication, Application, UserListApplication, UpdateApplicationRequest } from '../models/application';
 
 @Injectable({
   providedIn: 'root'

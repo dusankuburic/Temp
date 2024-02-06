@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Employee } from '../../_models/employee';
-import { AlertifyService } from '../../_services/alertify.service';
-import { EngagementService } from '../../_services/engagement.service';
-import { PaginatedResult } from 'src/app/_models/pagination';
+import { Employee } from '../../models/employee';
+import { AlertifyService } from '../../services/alertify.service';
+import { EngagementService } from '../../services/engagement.service';
+import { PaginatedResult } from 'src/app/models/pagination';
 
 @Injectable()
 export class EngagmentWithoutEmployeeResolver  {

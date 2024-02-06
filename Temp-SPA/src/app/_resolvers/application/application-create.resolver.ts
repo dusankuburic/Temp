@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Team } from 'src/app/_models/team';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { TeamService } from 'src/app/_services/team.service';
+import { Team } from 'src/app/models/team';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { TeamService } from 'src/app/services/team.service';
 
 @Injectable()
 export class ApplicationCreateResolver  {

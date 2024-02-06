@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Group } from '../_models/group';
-import { Organization } from '../_models/organization';
+import { Group } from '../models/group';
+import { Organization } from '../models/organization';
 
 @Injectable({
   providedIn: 'root'

@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Workplace } from '../../_models/workplace';
-import { AlertifyService } from '../../_services/alertify.service';
-import { WorkplaceService } from '../../_services/workplace.service';
+import { Workplace } from '../../models/workplace';
+import { AlertifyService } from '../../services/alertify.service';
+import { WorkplaceService } from '../../services/workplace.service';
 
 @Injectable()
 export class WorkplaceEditResolver  {
