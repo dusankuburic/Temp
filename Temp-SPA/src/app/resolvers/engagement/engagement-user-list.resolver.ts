@@ -7,7 +7,7 @@ import { AlertifyService } from 'src/app/services/alertify.service';
 import { EngagementService } from 'src/app/services/engagement.service';
 
 @Injectable()
-export class EngagementUserListReslover  {
+export class EngagementUserListResolver  {
 
     constructor(
         private engagementService: EngagementService,
@@ -15,9 +15,9 @@ export class EngagementUserListReslover  {
         private alertify: AlertifyService){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<UserEngagement[]> {
-        return this.engagementService.getUserEmployeeEngagments(route.params['id']).pipe(
+        return this.engagementService.getUserEmployeeEngagements(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retriving data');
+                this.alertify.error('Problem retrieving data');
                 this.route.navigate(['']);
                 return of(null);
             })

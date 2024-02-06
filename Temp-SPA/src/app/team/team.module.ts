@@ -5,6 +5,7 @@ import { TeamEditComponent } from './team-edit/team-edit.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
+import { AssignedInnerTeamsComponent } from './assigned-inner-teams/assigned-inner-teams.component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { AppRoutingModule } from '../app-routing.module';
         TeamListComponent,
         TeamCreateComponent,
         TeamEditComponent,
+        AssignedInnerTeamsComponent,
     ],
 })
 export class TeamModule { }

@@ -15,7 +15,7 @@ export class EngagementService {
 
 constructor(private http: HttpClient) { }
 
-getEmpoyeesWithEngagement(page?, itemsPerPage?, employeeParams?): Observable<PaginatedResult<Employee[]>> {
+getEmployeesWithEngagement(page?, itemsPerPage?, employeeParams?): Observable<PaginatedResult<Employee[]>> {
   const paginatedResult: PaginatedResult<Employee[]> = new PaginatedResult<Employee[]>();
 
   let params = new HttpParams();
@@ -57,7 +57,7 @@ getEmpoyeesWithEngagement(page?, itemsPerPage?, employeeParams?): Observable<Pag
     );
 }
 
-getEmpoyeesWithoutEngagement(page?, itemsPerPage?): Observable<PaginatedResult<Employee[]>> {
+getEmployeesWithoutEngagement(page?, itemsPerPage?): Observable<PaginatedResult<Employee[]>> {
   const paginatedResult: PaginatedResult<Employee[]> = new PaginatedResult<Employee[]>();
 
   let params = new HttpParams();
@@ -83,7 +83,7 @@ getEngagementForEmployee(id: number): any {
   return this.http.get(this.baseUrl + 'engagements/employee/' + id);
 }
 
-getUserEmployeeEngagments(id: number): any {
+getUserEmployeeEngagements(id: number): any {
   return this.http.get(this.baseUrl + 'engagements/user/' + id);
 }
 

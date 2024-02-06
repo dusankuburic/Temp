@@ -2,26 +2,21 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Employee } from '../../models/employee';
 import { AlertifyService } from '../../services/alertify.service';
 import { EngagementService } from '../../services/engagement.service';
-import { PaginatedResult } from 'src/app/models/pagination';
 
 @Injectable()
-export class EngagmentWithoutEmployeeResolver  {
-
-    pageNumber = 1
-    pageSize = 5
+export class EngagementCreateResolver  {
 
     constructor(
-        private engaementService: EngagementService,
+        private engagementService: EngagementService,
         private router: Router,
         private alertify: AlertifyService){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<Employee[]>> {
-        return this.engaementService.getEmpoyeesWithoutEngagement(this.pageNumber, this.pageSize).pipe(
+    resolve(route: ActivatedRouteSnapshot): Observable<any> {
+        return  this.engagementService.getEngagementForEmployee(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retriving data');
+                this.alertify.error('Problem retrieving data');
                 this.router.navigate(['']);
                 return of(null);
             })

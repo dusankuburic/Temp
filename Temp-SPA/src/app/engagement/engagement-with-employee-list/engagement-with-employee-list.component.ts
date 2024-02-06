@@ -32,7 +32,7 @@ export class EngagementWithEmployeeListComponent implements OnInit {
   }
 
   loadEmployeesWithEngagement(): void {
-    this.engagementService.getEmpoyeesWithEngagement(
+    this.engagementService.getEmployeesWithEngagement(
       this.pagination.currentPage,
       this.pagination.itemsPerPage,
       this.employeeParams)

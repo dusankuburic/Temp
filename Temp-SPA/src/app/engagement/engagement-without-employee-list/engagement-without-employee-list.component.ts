@@ -26,7 +26,7 @@ export class EngagementWithoutEmployeeListComponent implements OnInit {
   }
 
   loadEmployeesWithoutEngagement(): void {
-    this.engagementService.getEmpoyeesWithoutEngagement(this.pagination.currentPage, this.pagination.itemsPerPage)
+    this.engagementService.getEmployeesWithoutEngagement(this.pagination.currentPage, this.pagination.itemsPerPage)
       .subscribe((res: PaginatedResult<Employee[]>) => {
         this.employees = res.result;
         this.pagination = res.pagination;
