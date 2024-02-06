@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Form, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { EmploymentStatus } from 'src/app/_models/employmentStatus';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { EmploymentStatusService } from 'src/app/_services/employment-status.service';

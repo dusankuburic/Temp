@@ -12,12 +12,6 @@ import { EngagementCreateComponent } from './engagement/engagement-create/engage
 import { EngagementWithEmployeeListComponent } from './engagement/engagement-with-employee-list/engagement-with-employee-list.component';
 import { EngagementWithoutEmployeeListComponent } from './engagement/engagement-without-employee-list/engagement-without-employee-list.component';
 import { HomeComponent } from './home/home.component';
-import { GroupCreateComponent } from './organization/group/group-create/group-create.component';
-import { GroupEditComponent } from './organization/group/group-edit/group-edit.component';
-import { GroupListComponent } from './organization/group/inner-group-list/inner-group-list.component';
-import { TeamCreateComponent } from './organization/group/team/team-create/team-create.component';
-import { TeamEditComponent } from './organization/group/team/team-edit/team-edit.component';
-import { TeamListComponent } from './organization/group/team/inner-team-list/inner-team-list.component';
 import { OrganizationCreateComponent } from './organization/organization-create/organization-create.component';
 import { OrganizationEditComponent } from './organization/organization-edit/organization-edit.component';
 import { OrganizationListComponent } from './organization/organization-list/organization-list.component';
@@ -46,7 +40,7 @@ import { ModeratorGuard } from './_guards/moderator.guard';
 import { ModeratorComponent } from './moderator/moderator.component';
 import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.component';
 import { ModeratorAssignedGroupsResolver } from './_resolvers/group/moderator-assigned-groups.resolver';
-import { AssignedInnerTeamsComponent } from './assigned-groups/assigned-inner-teams/assigned-inner-teams.component';
+import { AssignedInnerTeamsComponent } from './assigned-inner-teams/assigned-inner-teams.component';
 import { ApplicationCreateComponent } from './application/application-create/application-create.component';
 import { ApplicationCreateResolver } from './_resolvers/application/application-create.resolver';
 import { ApplicationModeratorListComponent } from './application/application-moderator-list/application-moderator-list.component';
@@ -59,6 +53,12 @@ import { EngagementUserListComponent } from './engagement/engagement-user-list/e
 import { EngagementUserListReslover } from './_resolvers/engagement/engagement-user-list.resolver';
 import { ApplicationModeratorResolver } from './_resolvers/application/application-moderator.resolver';
 import { ApplicationModeratorComponent } from './application/application-moderator/application-moderator.component';
+import { GroupListComponent } from './group/inner-group-list/inner-group-list.component';
+import { GroupCreateComponent } from './group/group-create/group-create.component';
+import { GroupEditComponent } from './group/group-edit/group-edit.component';
+import { TeamListComponent } from './team/inner-team-list/inner-team-list.component';
+import { TeamCreateComponent } from './team/team-create/team-create.component';
+import { TeamEditComponent } from './team/team-edit/team-edit.component';
 
 export const appRoutes: Routes = [
 
