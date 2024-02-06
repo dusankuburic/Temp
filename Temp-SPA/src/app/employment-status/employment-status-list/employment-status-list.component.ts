@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EmploymentStatus } from 'src/app/_models/employmentStatus';
-import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { EmploymentStatusService } from 'src/app/_services/employment-status.service';
+import { EmploymentStatus } from 'src/app/models/employmentStatus';
+import { PaginatedResult, Pagination } from 'src/app/models/pagination';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { EmploymentStatusService } from 'src/app/services/employment-status.service';
 
 @Component({
   selector: 'app-employment-status-list',

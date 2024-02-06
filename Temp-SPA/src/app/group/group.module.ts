@@ -5,6 +5,7 @@ import { GroupCreateComponent } from './group-create/group-create.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
+import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.component';
 
 @NgModule({
     imports: [
@@ -17,6 +18,7 @@ import { AppRoutingModule } from '../app-routing.module';
         GroupCreateComponent,
         GroupEditComponent,
         GroupListComponent,
+        AssignedGroupsComponent,
     ],
 })
 export class GroupModule { }

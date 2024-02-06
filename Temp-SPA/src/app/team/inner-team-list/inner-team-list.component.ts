@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { InnerTeams } from 'src/app/_models/team';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { TeamService } from 'src/app/_services/team.service';
+import { InnerTeams } from 'src/app/models/team';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { TeamService } from 'src/app/services/team.service';
 
 @Component({
   selector: 'app-team-list',

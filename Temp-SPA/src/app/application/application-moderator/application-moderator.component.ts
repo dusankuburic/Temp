@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Application } from "src/app/_models/application";
+import { Application } from "src/app/models/application";
 
 
 @Component({

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { InnerGroups } from 'src/app/_models/group';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { GroupService } from 'src/app/_services/group.service';
+import { InnerGroups } from 'src/app/models/group';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { GroupService } from 'src/app/services/group.service';
 
 @Component({
   selector: 'app-group-list',

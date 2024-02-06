@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Organization } from 'src/app/_models/organization';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { OrganizationService } from 'src/app/_services/organization.service';
+import { Organization } from 'src/app/models/organization';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { OrganizationService } from 'src/app/services/organization.service';
 
 @Component({
   selector: 'app-organization-list',

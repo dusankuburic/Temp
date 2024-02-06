@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Admin } from '../_models/admin';
-import { Moderator } from '../_models/moderator';
-import { User } from '../_models/user';
-import { AlertifyService } from '../_services/alertify.service';
-import { AuthService } from '../_services/auth.service';
+import { Admin } from '../models/admin';
+import { Moderator } from '../models/moderator';
+import { User } from '../models/user';
+import { AlertifyService } from '../services/alertify.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',

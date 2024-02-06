@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Employee } from 'src/app/_models/employee';
-import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
-import { UnassignRoleDto } from 'src/app/_models/unassignRoleDto';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { EmployeeService } from 'src/app/_services/employee.service';
+import { Employee } from 'src/app/models/employee';
+import { PaginatedResult, Pagination } from 'src/app/models/pagination';
+import { UnassignRoleDto } from 'src/app/models/unassignRoleDto';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
   selector: 'app-employee-list',

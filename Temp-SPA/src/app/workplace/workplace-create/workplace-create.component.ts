@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Workplace } from 'src/app/_models/workplace';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { WorkplaceService } from 'src/app/_services/workplace.service';
+import { Workplace } from 'src/app/models/workplace';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { WorkplaceService } from 'src/app/services/workplace.service';
 
 @Component({
   selector: 'app-workplace-create',

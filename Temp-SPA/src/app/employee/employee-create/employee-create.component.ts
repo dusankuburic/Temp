@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Employee } from 'src/app/_models/employee';
-import { Group } from 'src/app/_models/group';
-import { Organization } from 'src/app/_models/organization';
-import { Team } from 'src/app/_models/team';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { EmployeeService } from 'src/app/_services/employee.service';
-import { GroupService } from 'src/app/_services/group.service';
-import { OrganizationService } from 'src/app/_services/organization.service';
+import { Employee } from 'src/app/models/employee';
+import { Group } from 'src/app/models/group';
+import { Organization } from 'src/app/models/organization';
+import { Team } from 'src/app/models/team';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { EmployeeService } from 'src/app/services/employee.service';
+import { GroupService } from 'src/app/services/group.service';
+import { OrganizationService } from 'src/app/services/organization.service';
 
 @Component({
   selector: 'app-employee-create',
