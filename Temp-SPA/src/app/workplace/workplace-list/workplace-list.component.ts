@@ -41,7 +41,7 @@ export class WorkplaceListComponent implements OnInit {
   }
 
   changeStatus(id: number) {
-    this.workplaceService.changeStatus(id).subscribe(() => {
+    this.workplaceService.changeStatus({id}).subscribe(() => {
       this.loadWorkplaces();
       this.alertify.success('Status change');
     }, error => {

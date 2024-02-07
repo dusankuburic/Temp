@@ -1,11 +1,10 @@
 ﻿using Temp.Domain.Models;
-using Temp.Domain.Models.Workplaces.Exceptions;
+using Temp.Services.Workplaces.Exceptions;
 
-namespace Temp.Core.Workplaces.Service;
+namespace Temp.Services.Workplaces;
 
 public partial class WorkplaceService
 {
-
     public void ValidateWorkplaceOnCreate(Workplace workplace) {
         ValidateWorkplace(workplace);
         ValidateWorkplaceStrings(workplace);
@@ -16,16 +15,13 @@ public partial class WorkplaceService
         ValidateWorkplaceStrings(workplace);
     }
 
-    public void ValidateWorkplace(Workplace workplace) {
-        if (workplace is null) {
-            throw new NullWorkplaceException();
-        }
+    public void ValidateWorkplaceOnStatusUpdate(Workplace workplace) {
+        ValidateWorkplace(workplace);
     }
 
-    public void ValidateGetWorkplaceViewModel(GetWorkplace.WorkplaceViewModel workplace) {
-        if (workplace is null) {
+    public void ValidateWorkplace(Workplace workplace) {
+        if (workplace is null)
             throw new NullWorkplaceException();
-        }
     }
 
     public void ValidateWorkplaceStrings(Workplace workplace) {
@@ -37,11 +33,6 @@ public partial class WorkplaceService
         }
     }
 
-    public void ValidateStorageWorkplaces(IEnumerable<GetWorkplaces.WorkplacesViewModel> storageWorkplaces) {
-        if (storageWorkplaces.Count() == 0) {
-            throw new WorkplaceEmptyStorageException();
-        }
-    }
-
-    public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
+    public static bool IsInvalid(string input)
+        => string.IsNullOrWhiteSpace(input);
 }

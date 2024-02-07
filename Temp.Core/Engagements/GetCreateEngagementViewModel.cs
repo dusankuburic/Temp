@@ -1,5 +1,4 @@
 ﻿using Temp.Core.EmploymentStatuses;
-using Temp.Core.Workplaces;
 using Temp.Database;
 
 namespace Temp.Core.Engagements;
@@ -41,7 +40,7 @@ public class GetCreateEngagementViewModel : EngagementService
     public class Response
     {
         //public GetEmployee.EmployeeViewModel Employee;
-        public IEnumerable<GetWorkplaces.WorkplacesViewModel> Workplaces;
+        // public IEnumerable<GetWorkplaces.WorkplacesViewModel> Workplaces;
         public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> EmploymentStatuses;
         public IEnumerable Engagements;
     }
