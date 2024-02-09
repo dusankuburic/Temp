@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Workplace } from 'src/app/_models/workplace';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { WorkplaceService } from 'src/app/_services/workplace.service';
+import { Workplace } from 'src/app/models/workplace';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { WorkplaceService } from 'src/app/services/workplace.service';
 
 @Component({
   selector: 'app-workplace-edit',
@@ -34,7 +34,8 @@ export class WorkplaceEditComponent implements OnInit {
 
   update(): any {
     const workplaceForm = Object.assign({}, this.editWorkplaceForm.value);
-    this.workplaceService.updateWorkplace(this.workplace.id, workplaceForm).subscribe(() => {
+    workplaceForm.id = this.workplace.id;
+    this.workplaceService.updateWorkplace(workplaceForm).subscribe(() => {
       this.alertify.success('Successfully updated');
     }, error => {
       this.alertify.error(error.error);

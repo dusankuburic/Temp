@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Employee } from 'src/app/_models/employee';
-import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { EngagementService } from 'src/app/_services/engagement.service';
+import { Employee } from 'src/app/models/employee';
+import { PaginatedResult, Pagination } from 'src/app/models/pagination';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { EngagementService } from 'src/app/services/engagement.service';
 
 @Component({
   selector: 'app-engagement-without-employee-list',
@@ -26,7 +26,7 @@ export class EngagementWithoutEmployeeListComponent implements OnInit {
   }
 
   loadEmployeesWithoutEngagement(): void {
-    this.engagementService.getEmpoyeesWithoutEngagement(this.pagination.currentPage, this.pagination.itemsPerPage)
+    this.engagementService.getEmployeesWithoutEngagement(this.pagination.currentPage, this.pagination.itemsPerPage)
       .subscribe((res: PaginatedResult<Employee[]>) => {
         this.employees = res.result;
         this.pagination = res.pagination;

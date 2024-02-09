@@ -12,8 +12,8 @@ import {PaginationModule} from 'ngx-bootstrap/pagination';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
-import { AuthService } from './_services/auth.service';
-import { AlertifyService } from './_services/alertify.service';
+import { AuthService } from './services/auth.service';
+import { AlertifyService } from './services/alertify.service';
 import { HomeComponent } from './home/home.component';
 import { appRoutes } from './routes';
 import { LoginComponent } from './login/login.component';
@@ -21,62 +21,39 @@ import { LoginComponent } from './login/login.component';
 
 import { UsersComponent } from './users/users.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { EmployeeListResolver } from './_resolvers/employee/employee-list.resolver';
-import { EmployeeEditResolver } from './_resolvers/employee/employee-edit.resolver';
-import { EmployeeCreateComponent } from './employee/employee-create/employee-create.component';
-import { EmployeeEditComponent } from './employee/employee-edit/employee-edit.component';
-import { EmployeeAssignRoleComponent } from './employee/employee-assign-role/employee-assign-role.component';
-import { WorkplaceListComponent } from './workplace/workplace-list/workplace-list.component';
-import { EmployeeListComponent } from './employee/employee-list/employee-list.component';
-import { WorkplaceListResolver } from './_resolvers/workplace/workplace-list.resolver';
-import { WorkplaceCreateComponent } from './workplace/workplace-create/workplace-create.component';
-import { WorkplaceEditComponent } from './workplace/workplace-edit/workplace-edit.component';
-import { WorkplaceEditResolver } from './_resolvers/workplace/workplace-edit.resolver';
-import { EmploymentStatusListComponent } from './employment-status/employment-status-list/employment-status-list.component';
-import { EmploymentStatusListResolver } from './_resolvers/employment-status/employment-status-list.resolver';
-import { EmploymentStatusCreateComponent } from './employment-status/employment-status-create/employment-status-create.component';
-import { EmploymentStatusEditComponent } from './employment-status/employment-status-edit/employment-status-edit.component';
-import { EmploymentStatusEditResolver } from './_resolvers/employment-status/employment-status-edit.resolver';
-import { EngagementWithEmployeeListComponent } from './engagement/engagement-with-employee-list/engagement-with-employee-list.component';
-import { EngagementWithoutEmployeeListComponent } from './engagement/engagement-without-employee-list/engagement-without-employee-list.component';
-import { EngagmentWithEmployeeResolver } from './_resolvers/engagement/engagement-with-employee-list.resolver';
-import { EngagmentWithoutEmployeeResolver } from './_resolvers/engagement/engagement-without-employee-list.resolver';
-import { EngagementCreateComponent } from './engagement/engagement-create/engagement-create.component';
-import { EngagmentCreateResolver } from './_resolvers/engagement/engagement-create.resolver';
-import { OrganizationListComponent } from './organization/organization-list/organization-list.component';
-import { OrganizationListResolver } from './_resolvers/organization/organization-list.resolver';
-import { OrganizationEditComponent } from './organization/organization-edit/organization-edit.component';
-import { OrganizationEditResolver } from './_resolvers/organization/organization-edit.resolver';
-import { OrganizationCreateComponent } from './organization/organization-create/organization-create.component';
-import { GroupListComponent } from './organization/group/inner-group-list/inner-group-list.component';
-import { GroupListResolver } from './_resolvers/group/group-list.resolver';
-import { GroupCreateComponent } from './organization/group/group-create/group-create.component';
-import { GroupCreateResolver } from './_resolvers/group/group-create.resolver';
-import { GroupEditComponent } from './organization/group/group-edit/group-edit.component';
-import { GroupEditResolver } from './_resolvers/group/group-edit.resolver';
-import { TeamListComponent } from './organization/group/team/inner-team-list/inner-team-list.component';
-import { TeamListResolver } from './_resolvers/team/team-list.resolver';
-import { TeamCreateComponent } from './organization/group/team/team-create/team-create.component';
-import { TeamCreateResolver } from './_resolvers/team/team-create.resolver';
-import { TeamEditComponent } from './organization/group/team/team-edit/team-edit.component';
-import { TeamEditResolver } from './_resolvers/team/team-edit.resolver';
+import { EmployeeListResolver } from './resolvers/employee/employee-list.resolver';
+import { EmployeeEditResolver } from './resolvers/employee/employee-edit.resolver';
+import { WorkplaceListResolver } from './resolvers/workplace/workplace-list.resolver';
+import { WorkplaceEditResolver } from './resolvers/workplace/workplace-edit.resolver';
+import { EmploymentStatusListResolver } from './resolvers/employment-status/employment-status-list.resolver';
+import { EmploymentStatusEditResolver } from './resolvers/employment-status/employment-status-edit.resolver';
+import { OrganizationListResolver } from './resolvers/organization/organization-list.resolver';
+import { OrganizationEditResolver } from './resolvers/organization/organization-edit.resolver';
+import { GroupListResolver } from './resolvers/group/group-list.resolver';
+import { GroupCreateResolver } from './resolvers/group/group-create.resolver';
+import { GroupEditResolver } from './resolvers/group/group-edit.resolver';
+import { TeamListResolver } from './resolvers/team/team-list.resolver';
+import { TeamCreateResolver } from './resolvers/team/team-create.resolver';
+import { TeamEditResolver } from './resolvers/team/team-edit.resolver';
 import { ModeratorComponent } from './moderator/moderator.component';
-import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.component';
-import { ModeratorAssignedGroupsResolver } from './_resolvers/group/moderator-assigned-groups.resolver';
-import { AssignedInnerTeamsComponent } from './assigned-groups/assigned-inner-teams/assigned-inner-teams.component';
-import { ApplicationCreateComponent } from './application/application-create/application-create.component';
-import { ApplicationCreateResolver } from './_resolvers/application/application-create.resolver';
-import { ApplicationModeratorListResolver } from './_resolvers/application/application-moderator-list.resolver';
-import { ApplicationModeratorListComponent } from './application/application-moderator-list/application-moderator-list.component';
-import { ApplicationUserListComponent } from './application/application-user-list/application-user-list.component';
-import { ApplicationUserListResolver } from './_resolvers/application/application-user-list.resolver';
-import { ApplicationUserResolver } from './_resolvers/application/application-user.resolver';
-import { ApplicationUserComponent } from './application/application-user/application-user.component';
-import { ApplicationModeratorComponent } from './application/application-moderator/application-moderator.component';
-import { EngagementUserListComponent } from './engagement/engagement-user-list/engagement-user-list.component';
-import { EngagementUserListReslover } from './_resolvers/engagement/engagement-user-list.resolver';
-import { ApplicationModeratorResolver } from './_resolvers/application/application-moderator.resolver';
-
+import { ModeratorAssignedGroupsResolver } from './resolvers/group/moderator-assigned-groups.resolver';
+import { ApplicationCreateResolver } from './resolvers/application/application-create.resolver';
+import { ApplicationModeratorListResolver } from './resolvers/application/application-moderator-list.resolver';
+import { ApplicationUserListResolver } from './resolvers/application/application-user-list.resolver';
+import { ApplicationUserResolver } from './resolvers/application/application-user.resolver';
+import { EngagementUserListResolver } from './resolvers/engagement/engagement-user-list.resolver';
+import { ApplicationModeratorResolver } from './resolvers/application/application-moderator.resolver';
+import { ApplicationModule } from './application/application.module';
+import { EmployeeModule } from './employee/employee.module';
+import { EmploymentStatusModule } from './employment-status/employment-status.module';
+import { EngagementModule } from './engagement/engagement.module';
+import { WorkplaceModule } from './workplace/workplace.module';
+import { GroupModule } from './group/group.module';
+import { TeamModule } from './team/team.module';
+import { OrganizationModule } from './organization/organization.module';
+import { EngagementWithEmployeeResolver } from './resolvers/engagement/engagement-with-employee-list.resolver';
+import { EngagementWithoutEmployeeResolver } from './resolvers/engagement/engagement-without-employee-list.resolver';
+import { EngagementCreateResolver } from './resolvers/engagement/engagement-create.resolver';
 
 export function tokenGetter(): any {
   return localStorage.getItem('token');
@@ -89,38 +66,8 @@ export function tokenGetter(): any {
     HomeComponent,
     LoginComponent,
     SidebarComponent,
-    UsersComponent,
-    EmployeeListComponent,
-    EmployeeCreateComponent,
-    EmployeeEditComponent,
-    EmployeeAssignRoleComponent,
-    WorkplaceListComponent,
-    WorkplaceCreateComponent,
-    WorkplaceEditComponent,
-    EmploymentStatusListComponent,
-    EmploymentStatusCreateComponent,
-    EmploymentStatusEditComponent,
-    EngagementWithEmployeeListComponent,
-    EngagementWithoutEmployeeListComponent,
-    EngagementUserListComponent,
-    EngagementCreateComponent,
-    OrganizationListComponent,
-    OrganizationEditComponent,
-    OrganizationCreateComponent,
-    GroupListComponent,
-    GroupCreateComponent,
-    GroupEditComponent,
-    TeamListComponent,
-    TeamCreateComponent,
-    TeamEditComponent,
+    UsersComponent,    
     ModeratorComponent,
-    AssignedGroupsComponent,
-    AssignedInnerTeamsComponent,
-    ApplicationCreateComponent,
-    ApplicationModeratorListComponent,
-    ApplicationUserListComponent,
-    ApplicationUserComponent,
-    ApplicationModeratorComponent
    ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -139,7 +86,15 @@ export function tokenGetter(): any {
         allowedDomains: ['localhost:5000'],
         disallowedRoutes: ['localhost:5000/api/admins/register', 'localhost:5000/api/users/register']
       }
-    })
+    }),
+    ApplicationModule,
+    EmployeeModule,
+    EmploymentStatusModule,
+    EngagementModule,
+    WorkplaceModule,
+    GroupModule,
+    TeamModule,
+    OrganizationModule,
   ],
   providers: [
     AuthService,
@@ -150,10 +105,10 @@ export function tokenGetter(): any {
     WorkplaceEditResolver,
     EmploymentStatusListResolver,
     EmploymentStatusEditResolver,
-    EngagmentWithEmployeeResolver,
-    EngagmentWithoutEmployeeResolver,
-    EngagementUserListReslover,
-    EngagmentCreateResolver,
+    EngagementWithEmployeeResolver,
+    EngagementWithoutEmployeeResolver,
+    EngagementUserListResolver,
+    EngagementCreateResolver,
     OrganizationListResolver,
     OrganizationEditResolver,
     GroupListResolver,

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
-import { Workplace } from 'src/app/_models/workplace';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import { WorkplaceService } from 'src/app/_services/workplace.service';
+import { PaginatedResult, Pagination } from 'src/app/models/pagination';
+import { Workplace } from 'src/app/models/workplace';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { WorkplaceService } from 'src/app/services/workplace.service';
 
 @Component({
   selector: 'app-workplace-list',
@@ -41,7 +41,7 @@ export class WorkplaceListComponent implements OnInit {
   }
 
   changeStatus(id: number) {
-    this.workplaceService.changeStatus(id).subscribe(() => {
+    this.workplaceService.changeStatus({id}).subscribe(() => {
       this.loadWorkplaces();
       this.alertify.success('Status change');
     }, error => {
