@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { PaginatedResult } from '../models/pagination';
-import { Workplace } from '../models/workplace';
+import { UpdateWorkplaceStatus, Workplace } from '../models/workplace';
 
 @Injectable({
   providedIn: 'root'
@@ -47,12 +47,12 @@ createWorkplace(workplace: Workplace): any {
   return this.http.post(this.baseUrl + 'workplaces', workplace);
 }
 
-updateWorkplace(id: any, workplace: Workplace): any {
-  return this.http.put(this.baseUrl + 'workplaces/' + id, workplace);
+updateWorkplace(workplace: Workplace): any {
+  return this.http.put(this.baseUrl + 'workplaces/', workplace);
 }
 
-changeStatus(id: number): any {
-  return this.http.put(this.baseUrl + 'workplaces/change-status/' + id, id);  
+changeStatus(workplace: UpdateWorkplaceStatus): any {
+  return this.http.put(this.baseUrl + 'workplaces/change-status/', workplace);  
 }
 
 

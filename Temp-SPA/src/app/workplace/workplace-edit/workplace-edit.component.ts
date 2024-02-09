@@ -34,7 +34,8 @@ export class WorkplaceEditComponent implements OnInit {
 
   update(): any {
     const workplaceForm = Object.assign({}, this.editWorkplaceForm.value);
-    this.workplaceService.updateWorkplace(this.workplace.id, workplaceForm).subscribe(() => {
+    workplaceForm.id = this.workplace.id;
+    this.workplaceService.updateWorkplace(workplaceForm).subscribe(() => {
       this.alertify.success('Successfully updated');
     }, error => {
       this.alertify.error(error.error);

@@ -1,8 +1,8 @@
 ﻿using Temp.Core.Engagements;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 using Temp.Domain.Models.Engagements.Exceptions;
-using Temp.Domain.Models.Workplaces.Exceptions;
 using Temp.Services.Employees.Exceptions;
+using Temp.Services.Workplaces.Exceptions;
 
 namespace Temp.API.Controllers;
 

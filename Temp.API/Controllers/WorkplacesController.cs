@@ -1,5 +1,7 @@
-﻿using Temp.Core.Workplaces;
-using Temp.Domain.Models.Workplaces.Exceptions;
+﻿using Temp.Services.Workplaces;
+using Temp.Services.Workplaces.Exceptions;
+using Temp.Services.Workplaces.Models.Command;
+using Temp.Services.Workplaces.Models.Query;
 
 namespace Temp.API.Controllers;
 
@@ -8,16 +10,16 @@ namespace Temp.API.Controllers;
 [ApiController]
 public class WorkplacesController : Controller
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly IWorkplaceService _workplaceService;
 
-    public WorkplacesController(ApplicationDbContext ctx) {
-        _ctx = ctx;
+    public WorkplacesController(IWorkplaceService workplaceService) {
+        _workplaceService = workplaceService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetWorkplaces([FromQuery] GetWorkplaces.Request request) {
+    public async Task<IActionResult> GetWorkplaces([FromQuery] GetWorkplacesRequest request) {
         try {
-            var response = await new GetWorkplaces(_ctx).Do(request);
+            var response = await _workplaceService.GetPagedWorkplaces(request);
             Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
 
             return Ok(response);
@@ -27,49 +29,47 @@ public class WorkplacesController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateWorkplace.Request request) {
+    public async Task<IActionResult> CreateWorkplace(CreateWorkplaceRequest request) {
         try {
-            var response = await new CreateWorkplace(_ctx).Do(request);
-            if (response.Status)
-                return NoContent();
+            var response = await _workplaceService.CreateWorkplace(request);
 
-            return BadRequest(response.Message);
+            return Ok(request);
         } catch (WorkplaceValidationException workplaceValidationException) {
             return BadRequest(GetInnerMessage(workplaceValidationException));
         }
     }
 
-
     [HttpGet("{id}")]
     public async Task<IActionResult> GetWorkplace(int id) {
         try {
-            var response = await new GetWorkplace(_ctx).Do(id);
+            var response = await _workplaceService.GetWorkplace(id);
+
             return Ok(response);
         } catch (WorkplaceValidationException workplaceValidationException) {
             return BadRequest(GetInnerMessage(workplaceValidationException));
         }
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateWorkplace(int id, UpdateWorkplace.Request request) {
+    [HttpPut]
+    public async Task<IActionResult> UpdateWorkplace(UpdateWorkplaceRequest request) {
         try {
-            var response = await new UpdateWorkplace(_ctx).Do(id, request);
-            if (response.Status)
-                return NoContent();
+            var response = await _workplaceService.UpdateWorkplace(request);
 
-            return BadRequest(response.Message);
+            return Ok(response);
         } catch (WorkplaceValidationException workplaceValidationException) {
             return BadRequest(GetInnerMessage(workplaceValidationException));
         }
     }
 
-    [HttpPut("change-status/{id}")]
-    public async Task<IActionResult> UpdateWorkplaceStatus(int id) {
-        var response = await new UpdateWorkplaceStatus(_ctx).Do(id);
-        if (response)
-            return NoContent();
+    [HttpPut("change-status/")]
+    public async Task<IActionResult> UpdateWorkplaceStatus(UpdateWorkplaceStatusRequest request) {
+        try {
+            var response = await _workplaceService.UpdateWorkplaceStatus(request);
 
-        return BadRequest();
+            return Ok(response);
+        } catch (WorkplaceValidationException workplaceValidationException) {
+            return BadRequest(GetInnerMessage(workplaceValidationException));
+        }
     }
 
     private static string GetInnerMessage(Exception exception) =>

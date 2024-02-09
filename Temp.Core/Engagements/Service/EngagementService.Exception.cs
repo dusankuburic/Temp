@@ -1,6 +1,5 @@
 ﻿using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 using Temp.Domain.Models.Engagements.Exceptions;
-using Temp.Domain.Models.Workplaces.Exceptions;
 
 namespace Temp.Core.Engagements;
 
@@ -86,11 +85,6 @@ public partial class EngagementService
     //    return employeeValidationException;
     //}
 
-    private WorkplaceValidationException CreateAndLogValidationWorkplaceException(Exception exception) {
-        var workplaceValidationException = new WorkplaceValidationException(exception);
-        //LOG
-        return workplaceValidationException;
-    }
 
     private EmploymentStatusValidationException CreateAndLogValidationEmploymentStatusException(Exception exception) {
         var employmentStatusValidationException = new EmploymentStatusValidationException(exception);

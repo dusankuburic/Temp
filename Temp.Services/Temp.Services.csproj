@@ -3,8 +3,17 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Organizations\Mapping\**" />
+    <Compile Remove="Teams\Mapping\**" />
+    <EmbeddedResource Remove="Organizations\Mapping\**" />
+    <EmbeddedResource Remove="Teams\Mapping\**" />
+    <None Remove="Organizations\Mapping\**" />
+    <None Remove="Teams\Mapping\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Temp.Database\Temp.Database.csproj" />
@@ -15,10 +24,4 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Organizations\Mapping\" />
-    <Folder Include="Teams\Mapping\" />
-  </ItemGroup>
-
 </Project>
- 

@@ -1,7 +1,6 @@
 ﻿using Temp.Domain.Models;
 using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 using Temp.Domain.Models.Engagements.Exceptions;
-using Temp.Domain.Models.Workplaces.Exceptions;
 
 namespace Temp.Core.Engagements;
 
@@ -84,11 +83,11 @@ public partial class EngagementService
     //}
 
 
-    public void ValidateWorkplace(GetCreateEngagementViewModel.Response response) {
-        if (response.Workplaces is null) {
-            throw new NullWorkplaceException();
-        }
-    }
+    //public void ValidateWorkplace(GetCreateEngagementViewModel.Response response) {
+    //    if (response.Workplaces is null) {
+    //        throw new Exception();
+    //    }
+    //}
 
     public void ValidateEmploymentStatuses(GetCreateEngagementViewModel.Response response) {
         if (response.EmploymentStatuses is null) {
