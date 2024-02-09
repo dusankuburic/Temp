@@ -1,5 +1,7 @@
-﻿using Temp.Core.Groups;
-using Temp.Domain.Models.Groups.Exceptions;
+﻿using Temp.Services.Groups;
+using Temp.Services.Groups.Exceptions;
+using Temp.Services.Groups.Models.Command;
+using Temp.Services.Groups.Models.Query;
 
 namespace Temp.API.Controllers;
 
@@ -8,61 +10,57 @@ namespace Temp.API.Controllers;
 [ApiController]
 public class GroupsController : ControllerBase
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly IGroupService _groupService;
 
-    public GroupsController(ApplicationDbContext ctx) {
-        _ctx = ctx;
+    public GroupsController(IGroupService groupService) {
+        _groupService = groupService;
     }
-
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateGroup.Request request) {
+    public async Task<IActionResult> Create(CreateGroupRequest request) {
         try {
-            var response = await new CreateGroup(_ctx).Do(request);
-            return response.Status ? NoContent() : BadRequest(response.Message);
-        } catch (GroupValidationException groupValidationException) {
-            return BadRequest(GetInnerMessage(groupValidationException));
-        }
-    }
+            var response = await _groupService.CreateGroup(request);
 
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetGroup(int id) {
-        try {
-            var group = await new GetGroup(_ctx).Do(id);
-            return Ok(group);
-        } catch (GroupValidationException groupValidationException) {
-            return BadRequest(GetInnerMessage(groupValidationException));
-        }
-    }
-
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateGroup(int id, UpdateGroup.Request request) {
-        try {
-            var response = await new UpdateGroup(_ctx).Do(id, request);
-            return response.Status ? NoContent() : BadRequest(response.Message);
-        } catch (GroupValidationException groupValidationException) {
-            return BadRequest(GetInnerMessage(groupValidationException));
-        }
-    }
-
-
-    [HttpGet("inner-teams/{id}")]
-    public async Task<IActionResult> InnerTeams(int id) {
-        try {
-            var response = await new GetInnerTeams(_ctx).Do(id);
             return Ok(response);
         } catch (GroupValidationException groupValidationException) {
             return BadRequest(GetInnerMessage(groupValidationException));
         }
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetGroup([FromQuery] GetGroupRequest request) {
+        try {
+            var group = await _groupService.GetGroup(request);
+            return Ok(group);
+        } catch (GroupValidationException groupValidationException) {
+            return BadRequest(GetInnerMessage(groupValidationException));
+        }
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateGroup(UpdateGroupRequest request) {
+        try {
+            var response = await _groupService.UpdateGroup(request);
+            return Ok(response);
+        } catch (GroupValidationException groupValidationException) {
+            return BadRequest(GetInnerMessage(groupValidationException));
+        }
+    }
+
+    [HttpGet("inner-teams/{id}")]
+    public async Task<IActionResult> InnerTeams([FromQuery] GetGroupInnerTeamsRequest request) {
+        try {
+            var response = await _groupService.GetGroupInnerTeams(request);
+            return Ok(response);
+        } catch (GroupValidationException groupValidationException) {
+            return BadRequest(GetInnerMessage(groupValidationException));
+        }
+    }
 
     [HttpGet("moderator-groups/{id}")]
-    public async Task<IActionResult> GetModeratorGroups(int id) {
+    public async Task<IActionResult> GetModeratorGroups([FromQuery] GetModeratorGroupsRequest request) {
         try {
-            var response = await new GetModeratorGroups(_ctx).Do(id);
+            var response = await _groupService.GetModeratorGroups(request);
             return Ok(response);
         } catch (GroupValidationException groupValidationException) {
             return BadRequest(GetInnerMessage(groupValidationException));
@@ -70,9 +68,9 @@ public class GroupsController : ControllerBase
     }
 
     [HttpGet("moderator-free-groups/{organizationId}/moderator/{moderatorId}")]
-    public async Task<IActionResult> GetModeratorFreeGroups(int organizationId, int moderatorId) {
+    public async Task<IActionResult> GetModeratorFreeGroups([FromQuery] GetModeratorFreeGroupsRequest request) {
         try {
-            var response = await new GetModeratorFreeGroups(_ctx).Do(organizationId, moderatorId);
+            var response = await _groupService.GetModeratorFreeGroups(request);
             return Ok(response);
         } catch (GroupValidationException groupValidationException) {
             return BadRequest(GetInnerMessage(groupValidationException));
@@ -80,9 +78,13 @@ public class GroupsController : ControllerBase
     }
 
     [HttpPut("change-status/{id}")]
-    public async Task<IActionResult> UpdateGroupStatus(int id) {
-        var response = await new UpdateGroupStatus(_ctx).Do(id);
-        return response ? NoContent() : BadRequest();
+    public async Task<IActionResult> UpdateGroupStatus([FromQuery] UpdateGroupStatusRequest request) {
+        try {
+            var response = await _groupService.UpdateGroupStatus(request);
+            return Ok(response);
+        } catch (GroupValidationException groupValidationException) {
+            return BadRequest(GetInnerMessage(groupValidationException));
+        }
     }
 
     private static string GetInnerMessage(Exception exception) {

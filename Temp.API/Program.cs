@@ -1,5 +1,6 @@
 using Temp.Services.Applications;
 using Temp.Services.Employees;
+using Temp.Services.Groups;
 using Temp.Services.Organizations;
 using Temp.Services.Teams;
 using Temp.Services.Workplaces;
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAutoMapper(typeof(Program));
 
+builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IWorkplaceService, WorkplaceService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();

@@ -88,6 +88,8 @@ public partial class WorkplaceService
     }
 
 
+
+
     private WorkplaceValidationException CreateAndLogValidationException(Exception exception) {
         var workplaceValidaitonException = new WorkplaceValidationException(exception);
 
