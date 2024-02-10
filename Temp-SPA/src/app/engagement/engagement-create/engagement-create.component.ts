@@ -9,6 +9,7 @@ import { Workplace } from 'src/app/models/workplace';
 import { AlertifyService } from 'src/app/services/alertify.service';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { EngagementService } from 'src/app/services/engagement.service';
+import { WorkplaceService } from 'src/app/services/workplace.service';
 
 @Component({
   selector: 'app-engagement-create',
@@ -30,8 +31,9 @@ export class EngagementCreateComponent implements OnInit {
     private route: ActivatedRoute,
     private engagementService: EngagementService,
     private employeeService: EmployeeService,
+    private workplaceService: WorkplaceService,
     private fb: UntypedFormBuilder,
-    private alertify: AlertifyService) {}
+    private alertify: AlertifyService) { }
 
   ngOnInit(): void {
     this.bsConfig = {
@@ -41,6 +43,7 @@ export class EngagementCreateComponent implements OnInit {
       this.existingEngagements = data['employeeData'];
     });
     this.createForm();
+    this.loadWorkplaces();
   }
 
   loadEmployee(): void {
@@ -52,9 +55,15 @@ export class EngagementCreateComponent implements OnInit {
     })
   }
 
-  //INFO: not paged
   loadWorkplaces(): void {
-
+    this.workplaceService.getWorkplaces().subscribe({
+      next: (res: Workplace[]) => {
+        this.workplaces = res;
+      },
+      error: () => {
+        this.alertify.error('Problem retrieving workplaces');
+      }
+    });
   }
 
   //INFO: not paged

@@ -48,7 +48,7 @@ public partial class WorkplaceService : IWorkplaceService
              return await PagedList<GetWorkplacesResponse>.CreateAsync(workplaces, request.PageNumber, request.PageSize);
          });
 
-    public Task<IEnumerable<GetWorkplaceResponse>> GetWorkplaces() =>
+    public Task<List<GetWorkplaceResponse>> GetWorkplaces() =>
         TryCatch(async () => {
             var workplaces = await _ctx.Workplaces
                 .Where(x => x.IsActive)

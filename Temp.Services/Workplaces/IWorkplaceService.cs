@@ -8,7 +8,7 @@ public interface IWorkplaceService
 {
     Task<CreateWorkplaceResponse> CreateWorkplace(CreateWorkplaceRequest request);
     Task<PagedList<GetWorkplacesResponse>> GetPagedWorkplaces(GetWorkplacesRequest request);
-    Task<IEnumerable<GetWorkplaceResponse>> GetWorkplaces();
+    Task<List<GetWorkplaceResponse>> GetWorkplaces();
     Task<GetWorkplaceResponse> GetWorkplace(int id);
     Task<UpdateWorkplaceResponse> UpdateWorkplace(UpdateWorkplaceRequest request);
     Task<UpdateWorkplaceStatusResponse> UpdateWorkplaceStatus(UpdateWorkplaceStatusRequest request);

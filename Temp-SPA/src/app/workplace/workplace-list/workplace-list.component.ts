@@ -26,7 +26,7 @@ export class WorkplaceListComponent implements OnInit {
   }
 
   loadWorkplaces(): void {
-    this.workplaceService.getWorkplaces(this.pagination.currentPage, this.pagination.itemsPerPage)
+    this.workplaceService.getPagedWorkplaces(this.pagination.currentPage, this.pagination.itemsPerPage)
       .subscribe((res: PaginatedResult<Workplace[]>) => {
         this.workplaces = res.result;
         this.pagination = res.pagination;
