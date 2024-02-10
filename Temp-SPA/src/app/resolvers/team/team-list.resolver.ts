@@ -17,7 +17,7 @@ export class TeamListResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<InnerTeams>  {
         return this.teamService.getTeams(route.params['id']).pipe(
             catchError(error => {    
-                this.alertify.error('Problem retriving data');
+                this.alertify.error('Problem retrieving data');
                 //this.router.navigate(['/organizations']);
                 return of(null);
             })
