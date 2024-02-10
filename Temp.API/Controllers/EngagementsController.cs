@@ -1,7 +1,11 @@
-﻿using Temp.Core.Engagements;
-using Temp.Domain.Models.EmploymentStatuses.Exceptions;
+﻿using Temp.Domain.Models.EmploymentStatuses.Exceptions;
 using Temp.Domain.Models.Engagements.Exceptions;
+using Temp.Services.Employees;
 using Temp.Services.Employees.Exceptions;
+using Temp.Services.Employees.Models.Query;
+using Temp.Services.Engagements;
+using Temp.Services.Engagements.Models.Commands;
+using Temp.Services.Engagements.Models.Queries;
 using Temp.Services.Workplaces.Exceptions;
 
 namespace Temp.API.Controllers;
@@ -11,58 +15,45 @@ namespace Temp.API.Controllers;
 [ApiController]
 public class EngagementsController : ControllerBase
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly IEngagementService _engagementService;
+    private readonly IEmployeeService _employeeService;
 
-    public EngagementsController(ApplicationDbContext ctx) {
-        _ctx = ctx;
+    public EngagementsController(
+        IEngagementService engagementService,
+        IEmployeeService employeeService) {
+        _engagementService = engagementService;
+        _employeeService = employeeService;
     }
 
-    //[HttpGet("without")]
-    //public async Task<IActionResult> WithoutEngagements([FromQuery] GetEmployeesWithoutEngagement.Request request) {
-    //    try {
-    //        var response = await new GetEmployeesWithoutEngagement(_ctx).Do(request);
-    //        Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
-    //        return Ok(response);
-    //    } catch (EmployeeValidationEsxception employeeValidationException) {
-    //        return BadRequest(GetInnerMessage(employeeValidationException));
-    //    } catch (WorkplaceValidationException workplaceValidationException) {
-    //        return BadRequest(GetInnerMessage(workplaceValidationException));
-    //    } catch (EmploymentStatusValidationException employmentStatusValidationException) {
-    //        return BadRequest(GetInnerMessage(employmentStatusValidationException));
-    //    }
-    //}
-
-    //[HttpGet("with")]
-    //public async Task<IActionResult> WithEngagements([FromQuery] GetEmployeesWithEngagement.Request request) {
-    //    try {
-    //        var response = await new GetEmployeesWithEngagement(_ctx).Do(request);
-    //        Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
-    //        return Ok(response);
-    //    } catch (EmployeeValidationException employeeValidationException) {
-    //        return BadRequest(GetInnerMessage(employeeValidationException));
-    //    } catch (WorkplaceValidationException workplaceValidationException) {
-    //        return BadRequest(GetInnerMessage(workplaceValidationException));
-    //    } catch (EmploymentStatusValidationException employmentStatusValidationException) {
-    //        return BadRequest(GetInnerMessage(employmentStatusValidationException));
-
-    //    }
-    //}
-
-    [Authorize(Roles = "User")]
-    [HttpGet("user/{id}")]
-    public async Task<IActionResult> GetUserEmployeeEngagments(int id) {
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateEngagementRequest request) {
         try {
-            var response = await new GetUserEmployeeEngagements(_ctx).Do(id);
+            var response = await _engagementService.CreateEngagement(request);
+
             return Ok(response);
         } catch (EngagementValidationException engagementValidationException) {
             return BadRequest(GetInnerMessage(engagementValidationException));
         }
     }
 
-    [HttpGet("employee/{id}")]
-    public async Task<IActionResult> GetEngagementForEmployee(int id) {
+    [Authorize(Roles = "User")]
+    [HttpGet("user/{id}")]
+    public async Task<IActionResult> GetUserEmployeeEngagments([FromQuery] GetUserEmployeeEngagementsRequest request) {
         try {
-            var response = await new GetCreateEngagementViewModel(_ctx).Do(id);
+            var response = await _engagementService.GetUserEmployeeEngagements(request);
+
+            return Ok(response);
+        } catch (EngagementValidationException engagementValidationException) {
+            return BadRequest(GetInnerMessage(engagementValidationException));
+        }
+    }
+
+    [HttpGet("without")]
+    public async Task<IActionResult> WithoutEngagements([FromQuery] GetEmployeesWithoutEngagement.Request request) {
+        try {
+            var response = await _employeeService.GetEmployeesWithoutEngagement(request);
+            Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
+
             return Ok(response);
         } catch (EmployeeValidationException employeeValidationException) {
             return BadRequest(GetInnerMessage(employeeValidationException));
@@ -73,14 +64,26 @@ public class EngagementsController : ControllerBase
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create(CreateEngagement.Request request) {
+    [HttpGet("with")]
+    public async Task<IActionResult> WithEngagements([FromQuery] GetEmployeesWithEngagement.Request request) {
         try {
-            var response = await new CreateEngagement(_ctx).Do(request);
-            return response.Status ? NoContent() : BadRequest();
-        } catch (EngagementValidationException engagementValidationException) {
-            return BadRequest(GetInnerMessage(engagementValidationException));
+            var response = await _employeeService.GetEmployeesWithEngagement(request);
+            Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
+            return Ok(response);
+        } catch (EmployeeValidationException employeeValidationException) {
+            return BadRequest(GetInnerMessage(employeeValidationException));
+        } catch (WorkplaceValidationException workplaceValidationException) {
+            return BadRequest(GetInnerMessage(workplaceValidationException));
+        } catch (EmploymentStatusValidationException employmentStatusValidationException) {
+            return BadRequest(GetInnerMessage(employmentStatusValidationException));
         }
+    }
+
+    [HttpGet("employee/{id}")]
+    public async Task<IActionResult> GetEngagementForEmployee([FromQuery] GetEngagementsForEmployeeRequest request) {
+        var response = await _engagementService.GetEngagementForEmployee(request);
+
+        return Ok(response);
     }
 
     private static string GetInnerMessage(Exception exception) {

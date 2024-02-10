@@ -17,7 +17,7 @@ export class GroupEditResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<Group> {
         return this.groupService.getGroup(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retriving data');
+                this.alertify.error('Problem retrieving data');
                 this.router.navigate(['/organizations']);
                 return of(null);
             })

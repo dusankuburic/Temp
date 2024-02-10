@@ -17,7 +17,7 @@ export class ApplicationUserListResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<UserListApplication[]>  {
         return this.applicationService.getUserApplications(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retriving data');
+                this.alertify.error('Problem retrieving data');
                 this.router.navigate(['']);
                 return of(null);
             })

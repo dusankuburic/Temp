@@ -3,7 +3,7 @@
 <div class="row justify-content-center">
     <div class="col-lg-5 pt-3">
       <div class="alert alert-info text-center" role="alert">
-        <h4>Name: {{employeeData.Employee.FirstName}}  {{employeeData.Employee.LastName}}</h4>
+        <h4>Name: {{employee.firstName}}  {{employee.lastName}}</h4>
     </div>
 
       <form [formGroup]="createEngagementForm" (ngSubmit)="create()">
@@ -103,8 +103,8 @@
                 <th>To</th>
             </tr>
           </thead>
-          <tbody *ngIf="employeeData.Engagements.length !== 0">
-            <tr *ngFor="let data of employeeData.Engagements">
+          <tbody *ngIf="existingEngagements.length !== 0">
+            <tr *ngFor="let data of existingEngagements">
               <td>{{data.workplaceName}}</td>
               <td>{{data.employmentStatusName}}</td>
               <td>{{data.salary}}</td>

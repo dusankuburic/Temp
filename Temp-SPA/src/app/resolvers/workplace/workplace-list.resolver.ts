@@ -21,7 +21,7 @@ export class WorkplaceListResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<Workplace[]>>  {
         return this.workplaceService.getWorkplaces(this.pageNumber, this.pageSize).pipe(
             catchError(error => {
-                this.alertify.error('Problem retriving data');
+                this.alertify.error('Problem retrieving data');
                 this.router.navigate(['']);
                 return of(null);
             })

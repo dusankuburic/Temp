@@ -21,7 +21,7 @@ export class EmployeeListResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<Employee[]>> {
         return this.employeeService.getEmployees(this.pageNumber, this.pageSize).pipe(
             catchError(error => {
-                this.alertify.error('Problem retriving data');
+                this.alertify.error('Problem retrieving data');
                 this.router.navigate(['']);
                 return of(null);
             })

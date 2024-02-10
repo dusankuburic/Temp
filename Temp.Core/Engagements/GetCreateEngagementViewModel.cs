@@ -1,9 +1,8 @@
-﻿using Temp.Core.EmploymentStatuses;
-using Temp.Database;
+﻿using Temp.Database;
 
 namespace Temp.Core.Engagements;
 
-public class GetCreateEngagementViewModel : EngagementService
+public class GetCreateEngagementViewModel
 {
     private readonly ApplicationDbContext _ctx;
 
@@ -11,14 +10,15 @@ public class GetCreateEngagementViewModel : EngagementService
         _ctx = ctx;
     }
 
-    public Task<string> Do(int id) => null;
+    //public Task<string> Do(int id) => null;
     //TryCatch(async () => {
     //    var response = new Response
     //        {
-    //        //Employee = await new GetEmployee(_ctx).Do(id),
+    //        Employee = await new GetEmployee(_ctx).Do(id),
     //        Workplaces = await new GetWorkplaces(_ctx).Do(),
     //        EmploymentStatuses = await new GetEmploymentStatuses(_ctx).Do(),
-    //        Engagements = await _ctx.Engagements.Where(x => x.Employee.Id == id)
+    //        Engagements = await _ctx.Engagements
+    //                .Where(x => x.Employee.Id == id)
     //                .Select(eng => new
     //                {
     //                    id = eng.Id,
@@ -33,15 +33,13 @@ public class GetCreateEngagementViewModel : EngagementService
     //    ValidateCreateEngagementViewModel(response);
 
     //    return JsonConvert.SerializeObject(response);
-
-
     //});
 
-    public class Response
-    {
-        //public GetEmployee.EmployeeViewModel Employee;
-        // public IEnumerable<GetWorkplaces.WorkplacesViewModel> Workplaces;
-        public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> EmploymentStatuses;
-        public IEnumerable Engagements;
-    }
+    //public class Response
+    //{
+    //    public GetEmployee.EmployeeViewModel Employee;
+    //    public IEnumerable<GetWorkplaces.WorkplacesViewModel> Workplaces;
+    //    public IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> EmploymentStatuses;
+    //    public IEnumerable Engagements;
+    //}
 }
