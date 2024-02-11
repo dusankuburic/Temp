@@ -1,8 +1,7 @@
 ﻿using Temp.Domain.Models;
-using Temp.Domain.Models.EmploymentStatuses.Exceptions;
-using Temp.Domain.Models.Engagements.Exceptions;
+using Temp.Services.Engagements.Exceptions;
 
-namespace Temp.Core.Engagements;
+namespace Temp.Services.Engagements;
 
 public partial class EngagementService
 {
@@ -13,22 +12,8 @@ public partial class EngagementService
         ValidateDateRange(engagement);
     }
 
-
-
     public void ValidateEngagement(Engagement engagement) {
         if (engagement is null) {
-            throw new NullEngagementException();
-        }
-    }
-
-    public void ValidateUser(User user) {
-        if (user is null) {
-            throw new NullUserException();
-        }
-    }
-
-    public void ValidateUserEmployeeEngagements(IEnumerable<GetUserEmployeeEngagements.Response> response) {
-        if (response is null) {
             throw new NullEngagementException();
         }
     }
@@ -68,33 +53,6 @@ public partial class EngagementService
             throw new DateRangeEngagementException();
         }
     }
-
-    //public void ValidateCreateEngagementViewModel(GetCreateEngagementViewModel.Response response) {
-    //    ValidateEmployee(response);
-    //    ValidateWorkplace(response);
-    //    ValidateEmploymentStatuses(response);
-    //}
-
-
-    //public void ValidateEmployee(GetCreateEngagementViewModel.Response response) {
-    //    if (response.Employee is null) {
-    //        throw new NullEmployeeException();
-    //    }
-    //}
-
-
-    //public void ValidateWorkplace(GetCreateEngagementViewModel.Response response) {
-    //    if (response.Workplaces is null) {
-    //        throw new Exception();
-    //    }
-    //}
-
-    public void ValidateEmploymentStatuses(GetCreateEngagementViewModel.Response response) {
-        if (response.EmploymentStatuses is null) {
-            throw new NullEmploymentStatusException();
-        }
-    }
-
 
     public static bool IsInvalidInt(int input) {
         return input <= 0 || input > int.MaxValue;

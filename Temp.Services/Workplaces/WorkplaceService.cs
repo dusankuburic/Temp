@@ -1,6 +1,6 @@
-﻿using Temp.Core._Helpers;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models;
+using Temp.Services._Helpers;
 using Temp.Services.Workplaces.Models.Command;
 using Temp.Services.Workplaces.Models.Query;
 
@@ -48,7 +48,7 @@ public partial class WorkplaceService : IWorkplaceService
              return await PagedList<GetWorkplacesResponse>.CreateAsync(workplaces, request.PageNumber, request.PageSize);
          });
 
-    public Task<IEnumerable<GetWorkplaceResponse>> GetWorkplaces() =>
+    public Task<List<GetWorkplaceResponse>> GetWorkplaces() =>
         TryCatch(async () => {
             var workplaces = await _ctx.Workplaces
                 .Where(x => x.IsActive)

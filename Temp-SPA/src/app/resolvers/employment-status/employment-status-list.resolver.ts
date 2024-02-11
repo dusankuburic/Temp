@@ -19,9 +19,9 @@ export class EmploymentStatusListResolver  {
         private alertify: AlertifyService) {}
 
     resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<EmploymentStatus[]>> {
-        return this.employmentStatusService.getEmploymentStatuses(this.pageNumber, this.pageSize).pipe(
+        return this.employmentStatusService.getPagedEmploymentStatuses(this.pageNumber, this.pageSize).pipe(
             catchError(error => {
-                this.alertify.error('Problem retriving data');
+                this.alertify.error('Problem retrieving data');
                 this.router.navigate(['']);
                 return of(null);
             })

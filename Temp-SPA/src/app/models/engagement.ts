@@ -14,3 +14,12 @@ export interface UserEngagement {
     dateTo: Date;
     salary: number;
 }
+
+export interface ExistingEngagement {
+    id: number;
+    workplaceName: string;
+    employmentStatusName: string;
+    salary: number;
+    dateFrom: Date;
+    dateTo: Date;
+}

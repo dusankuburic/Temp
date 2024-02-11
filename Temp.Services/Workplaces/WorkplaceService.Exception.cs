@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using Temp.Core._Helpers;
+using Temp.Services._Helpers;
 using Temp.Services.Workplaces.Exceptions;
 using Temp.Services.Workplaces.Models.Command;
 using Temp.Services.Workplaces.Models.Query;
@@ -10,7 +10,7 @@ public partial class WorkplaceService
 {
     public delegate Task<CreateWorkplaceResponse> ReturningWorkplaceResponse();
     public delegate Task<PagedList<GetWorkplacesResponse>> ReturningGetPagedWorkplacesFunction();
-    public delegate Task<IEnumerable<GetWorkplaceResponse>> ReturningGetWorkplacesFunction();
+    public delegate Task<List<GetWorkplaceResponse>> ReturningGetWorkplacesFunction();
     public delegate Task<GetWorkplaceResponse> ReturningGetWorkplaceFunction();
     public delegate Task<UpdateWorkplaceResponse> ReturningUpdateWorkplaceFunction();
     public delegate Task<UpdateWorkplaceStatusResponse> ReturningUpdateWorkplaceStatusFunction();
@@ -39,7 +39,7 @@ public partial class WorkplaceService
         }
     }
 
-    public async Task<IEnumerable<GetWorkplaceResponse>> TryCatch(ReturningGetWorkplacesFunction returningGetWorkplacesFunction) {
+    public async Task<List<GetWorkplaceResponse>> TryCatch(ReturningGetWorkplacesFunction returningGetWorkplacesFunction) {
         try {
             return await returningGetWorkplacesFunction();
         } catch (SqlException sqlException) {

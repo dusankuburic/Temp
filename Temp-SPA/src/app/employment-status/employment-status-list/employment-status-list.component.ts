@@ -26,7 +26,7 @@ export class EmploymentStatusListComponent implements OnInit {
   }
 
   loadEmploymentStatuses(): void {
-    this.employmentStatusService.getEmploymentStatuses(this.pagination.currentPage, this.pagination.itemsPerPage)
+    this.employmentStatusService.getPagedEmploymentStatuses(this.pagination.currentPage, this.pagination.itemsPerPage)
       .subscribe((res: PaginatedResult<EmploymentStatus[]>) => {
         this.employmentStatuses = res.result;
         this.pagination = res.pagination;

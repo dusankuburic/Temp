@@ -17,7 +17,7 @@ export class GroupListResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<InnerGroups> {
         return this.groupService.getGroups(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retriving data');
+                this.alertify.error('Problem retrieving data');
                 this.router.navigate(['/organizations']);
                 return of(null);
             })
