@@ -1,7 +1,7 @@
 ﻿using Temp.Domain.Models;
-using Temp.Domain.Models.EmploymentStatuses.Exceptions;
+using Temp.Services.EmploymentStatuses.Exceptions;
 
-namespace Temp.Core.EmploymentStatuses.Service;
+namespace Temp.Services.EmploymentStatuses;
 
 public partial class EmploymentStatusService
 {
@@ -21,12 +21,6 @@ public partial class EmploymentStatusService
         }
     }
 
-    public void ValidateGetEmploymentStatus(GetEmploymentStatus.EmploymentStatusViewModel employmentStatus) {
-        if (employmentStatus is null) {
-            throw new NullEmploymentStatusException();
-        }
-    }
-
     public void ValidateEmploymentStatusStrings(EmploymentStatus employmentStatus) {
         switch (employmentStatus) {
             case { } when IsInvalid(employmentStatus.Name):
@@ -36,11 +30,6 @@ public partial class EmploymentStatusService
         }
     }
 
-    public void ValidateEmploymentStatuses(IEnumerable<GetEmploymentStatuses.EmploymentStatusViewModel> storageEmploymentStatuses) {
-        if (storageEmploymentStatuses.Count() == 0) {
-            throw new EmploymentStatusEmptyStorageException();
-        }
-    }
-
-    public static bool IsInvalid(string input) => String.IsNullOrWhiteSpace(input);
+    public static bool IsInvalid(string input) =>
+        string.IsNullOrWhiteSpace(input);
 }

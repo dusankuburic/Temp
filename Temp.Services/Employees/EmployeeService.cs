@@ -1,6 +1,6 @@
-﻿using Temp.Core._Helpers;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models;
+using Temp.Services._Helpers;
 using Temp.Services.Employees.Models.Command;
 using Temp.Services.Employees.Models.Query;
 
@@ -72,15 +72,18 @@ public partial class EmployeeService : IEmployeeService
             }).AsQueryable();
 
         if (!string.IsNullOrEmpty(request.Role)) {
-            employees = employees.Where(x => x.Role == request.Role);
+            employees = employees.Where(x => x.Role == request.Role)
+                .AsQueryable();
         }
 
         if (!string.IsNullOrEmpty(request.FirstName)) {
-            employees = employees.Where(x => x.FirstName.Contains(request.FirstName));
+            employees = employees.Where(x => x.FirstName.Contains(request.FirstName))
+                .AsQueryable();
         }
 
         if (!string.IsNullOrEmpty(request.LastName)) {
-            employees = employees.Where(x => x.LastName.Contains(request.LastName));
+            employees = employees.Where(x => x.LastName.Contains(request.LastName))
+                .AsQueryable();
         }
 
 
@@ -129,8 +132,9 @@ public partial class EmployeeService : IEmployeeService
 
         if (!string.IsNullOrEmpty(request.Workplace) && !string.IsNullOrEmpty(request.EmploymentStatus)) {
             employeesWithEngagement = employeesWithEngagement
-                .Where(x => x.Workplace.Any(w => w.Contains(request.Workplace)) &&
-                            x.EmploymentStatus.Any(e => e.Contains(request.EmploymentStatus)))
+                .Where(x =>
+                    x.Workplace.Any(w => w.Contains(request.Workplace)) &&
+                    x.EmploymentStatus.Any(e => e.Contains(request.EmploymentStatus)))
                 .AsQueryable();
         } else if (!string.IsNullOrEmpty(request.Workplace)) {
             employeesWithEngagement = employeesWithEngagement
@@ -167,7 +171,6 @@ public partial class EmployeeService : IEmployeeService
             Role = x.Role
         })
         .AsQueryable();
-
 
         ValidateGetEmployeeWithoutEngagementViewModel(employeesWithoutEngagement);
 

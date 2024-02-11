@@ -14,7 +14,7 @@ export class EmploymentStatusService {
 
 constructor(private http: HttpClient) { }
 
-getEmploymentStatuses(page?, itemsPerPage?): Observable<PaginatedResult<EmploymentStatus[]>> {
+getPagedEmploymentStatuses(page?, itemsPerPage?): Observable<PaginatedResult<EmploymentStatus[]>> {
   const paginatedResult: PaginatedResult<EmploymentStatus[]> = new PaginatedResult<EmploymentStatus[]>();
 
   let params = new HttpParams();
@@ -24,7 +24,7 @@ getEmploymentStatuses(page?, itemsPerPage?): Observable<PaginatedResult<Employme
     params = params.append('pageSize', itemsPerPage);
   }
 
-  return this.http.get<EmploymentStatus[]>(this.baseUrl + 'employmentStatuses', {observe: 'response', params})
+  return this.http.get<EmploymentStatus[]>(this.baseUrl + 'employmentStatuses/paged-employmentstatuses', {observe: 'response', params})
     .pipe(
       map(response => {
         paginatedResult.result = response.body;
@@ -34,6 +34,10 @@ getEmploymentStatuses(page?, itemsPerPage?): Observable<PaginatedResult<Employme
         return paginatedResult;
       })
     );
+}
+
+getEmploymentStatuses(): Observable<EmploymentStatus[]> {
+  return this.http.get<EmploymentStatus[]>(this.baseUrl + 'employmentStatuses');
 }
 
 getEmploymentStatus(id: number): any {

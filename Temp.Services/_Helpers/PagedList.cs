@@ -1,4 +1,4 @@
-﻿namespace Temp.Core._Helpers;
+﻿namespace Temp.Services._Helpers;
 
 public class PagedList<T> : List<T>
 {
