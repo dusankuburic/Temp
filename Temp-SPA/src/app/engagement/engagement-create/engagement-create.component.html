@@ -3,7 +3,7 @@
 <div class="row justify-content-center">
     <div class="col-lg-5 pt-3">
       <div class="alert alert-info text-center" role="alert">
-        <h4>Name: {{employee.firstName}}  {{employee.lastName}}</h4>
+        <!-- <h4>Name: {{employee.firstName}}  {{employee.lastName}}</h4> -->
     </div>
 
       <form [formGroup]="createEngagementForm" (ngSubmit)="create()">
@@ -15,8 +15,8 @@
               formControlName="workplaceId"
               class="form-control">
               <option [ngValue]="null" disabled>Select Workplace</option>
-              <option *ngFor="let workplace of employeeData.Workplaces" [ngValue]="workplace.Id">
-                {{workplace.Name}}
+              <option *ngFor="let workplace of workplaces" [ngValue]="workplace.id">
+                {{workplace.name}}
               </option>
             </select>      
             <div class="invalid-feedback">Please choose a workplace</div>                                     
@@ -81,8 +81,8 @@
             formControlName="employmentStatusId"
             class="form-control">
             <option [ngValue]="null" disabled>Select Employment Status</option>
-            <option *ngFor="let epStatus of employeeData.EmploymentStatuses" [ngValue]="epStatus.Id">
-              {{epStatus.Name}}
+            <option *ngFor="let epStatus of employmentStatuses" [ngValue]="epStatus.id">
+              {{epStatus.name}}
             </option>
             </select>           
             <div class="invalid-feedback">Please choose a employment status</div>                     
@@ -114,7 +114,7 @@
           </tbody>                     
         </table>
       </div>
-        <div *ngIf="employeeData.Engagements.length === 0" class="alert alert-danger text-center" role="alert">
+        <div *ngIf="existingEngagements.length === 0" class="alert alert-danger text-center" role="alert">
             Employee doesn't have assigned engagement
         </div>                     
     </div>

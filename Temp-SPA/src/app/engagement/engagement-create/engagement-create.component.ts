@@ -8,7 +8,9 @@ import { Engagement, ExistingEngagement } from 'src/app/models/engagement';
 import { Workplace } from 'src/app/models/workplace';
 import { AlertifyService } from 'src/app/services/alertify.service';
 import { EmployeeService } from 'src/app/services/employee.service';
+import { EmploymentStatusService } from 'src/app/services/employment-status.service';
 import { EngagementService } from 'src/app/services/engagement.service';
+import { WorkplaceService } from 'src/app/services/workplace.service';
 
 @Component({
   selector: 'app-engagement-create',
@@ -29,9 +31,11 @@ export class EngagementCreateComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private engagementService: EngagementService,
+    private employmentStatusService: EmploymentStatusService,
     private employeeService: EmployeeService,
+    private workplaceService: WorkplaceService,
     private fb: UntypedFormBuilder,
-    private alertify: AlertifyService) {}
+    private alertify: AlertifyService) { }
 
   ngOnInit(): void {
     this.bsConfig = {
@@ -41,25 +45,39 @@ export class EngagementCreateComponent implements OnInit {
       this.existingEngagements = data['employeeData'];
     });
     this.createForm();
+    this.loadWorkplaces();
+    this.loadEmploymentStatuses();
   }
 
   loadEmployee(): void {
     this.employeeService.getEmployee(this.employeeData.Employee.Id).subscribe((res: any) => {
       this.employee = res;
-      console.log(res);
     }, error => {
       this.alertify.error('Problem retrieving data');
     })
   }
 
-  //INFO: not paged
   loadWorkplaces(): void {
-
+    this.workplaceService.getWorkplaces().subscribe({
+      next: (res: Workplace[]) => {
+        this.workplaces = res;
+      },
+      error: () => {
+        this.alertify.error('Problem retrieving workplaces');
+      }
+    });
   }
 
   //INFO: not paged
   loadEmploymentStatuses(): void {
-
+    this.employmentStatusService.getEmploymentStatuses().subscribe({
+      next: (res: EmploymentStatus[]) => {
+        this.employmentStatuses = res;
+      },
+      error: ()=> {
+        this.alertify.error('Problem retrieving Employment Statuses');
+      }
+    })
   }
 
   loadEngagements(): void {
@@ -88,7 +106,6 @@ export class EngagementCreateComponent implements OnInit {
 
     this.engagementService.createEngagement(this.engagement).subscribe(() => {
       this.loadEngagements();
-      console.log(this.employeeData);
       this.alertify.success('Successfully created');
       this.createEngagementForm.reset();
     }, error => {

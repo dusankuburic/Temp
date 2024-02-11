@@ -15,7 +15,7 @@ export class WorkplaceService {
 constructor(private http: HttpClient) { }
 
 
-getWorkplaces(page?, itemsPerPage?): Observable<PaginatedResult<Workplace[]>> {
+getPagedWorkplaces(page?, itemsPerPage?): Observable<PaginatedResult<Workplace[]>> {
   const paginatedResult: PaginatedResult<Workplace[]> = new PaginatedResult<Workplace[]>();
 
   let params = new HttpParams();
@@ -27,7 +27,7 @@ getWorkplaces(page?, itemsPerPage?): Observable<PaginatedResult<Workplace[]>> {
   }
   
 
-  return this.http.get<Workplace[]>(this.baseUrl + 'workplaces', {observe: 'response', params})
+  return this.http.get<Workplace[]>(this.baseUrl + 'workplaces/paged-workplaces', {observe: 'response', params})
     .pipe(
       map(response => {
         paginatedResult.result = response.body;
@@ -37,6 +37,10 @@ getWorkplaces(page?, itemsPerPage?): Observable<PaginatedResult<Workplace[]>> {
         return paginatedResult;
       })
     );
+}
+
+getWorkplaces(): Observable<Workplace[]> {
+  return this.http.get<Workplace[]>(this.baseUrl + 'workplaces');
 }
 
 getWorkplace(id: number): any {

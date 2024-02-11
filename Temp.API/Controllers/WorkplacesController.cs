@@ -16,11 +16,22 @@ public class WorkplacesController : Controller
         _workplaceService = workplaceService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetWorkplaces([FromQuery] GetWorkplacesRequest request) {
+    [HttpGet("paged-workplaces")]
+    public async Task<IActionResult> GetPagedWorkplaces([FromQuery] GetWorkplacesRequest request) {
         try {
             var response = await _workplaceService.GetPagedWorkplaces(request);
             Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
+
+            return Ok(response);
+        } catch (WorkplaceValidationException workplaceValidationException) {
+            return BadRequest(GetInnerMessage(workplaceValidationException));
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetWorkplaces() {
+        try {
+            var response = await _workplaceService.GetWorkplaces();
 
             return Ok(response);
         } catch (WorkplaceValidationException workplaceValidationException) {

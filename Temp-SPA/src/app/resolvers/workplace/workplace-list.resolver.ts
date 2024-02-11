@@ -19,7 +19,7 @@ export class WorkplaceListResolver  {
         private alertify: AlertifyService){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<Workplace[]>>  {
-        return this.workplaceService.getWorkplaces(this.pageNumber, this.pageSize).pipe(
+        return this.workplaceService.getPagedWorkplaces(this.pageNumber, this.pageSize).pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving data');
                 this.router.navigate(['']);

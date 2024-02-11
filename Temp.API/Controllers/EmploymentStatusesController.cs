@@ -1,5 +1,7 @@
-﻿using Temp.Core.EmploymentStatuses;
-using Temp.Domain.Models.EmploymentStatuses.Exceptions;
+﻿using Temp.Services.EmploymentStatuses;
+using Temp.Services.EmploymentStatuses.Exceptions;
+using Temp.Services.EmploymentStatuses.Models.Commands;
+using Temp.Services.EmploymentStatuses.Models.Queries;
 
 namespace Temp.API.Controllers;
 
@@ -8,16 +10,17 @@ namespace Temp.API.Controllers;
 [ApiController]
 public class EmploymentStatusesController : ControllerBase
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly IEmploymentStatusService _employmentStatusService;
 
-    public EmploymentStatusesController(ApplicationDbContext ctx) {
-        _ctx = ctx;
+    public EmploymentStatusesController(IEmploymentStatusService employmentStatusService) {
+        _employmentStatusService = employmentStatusService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetEmploymentStatuses([FromQuery] GetEmploymentStatuses.Request request) {
+
+    [HttpGet("paged-employmentstatuses")]
+    public async Task<IActionResult> GetPagedEmploymentStatuses([FromQuery] GetPagedEmploymentStatusesRequest request) {
         try {
-            var response = await new GetEmploymentStatuses(_ctx).Do(request);
+            var response = await _employmentStatusService.GetPagedEmploymentStatuses(request);
             Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
 
             return Ok(response);
@@ -26,23 +29,33 @@ public class EmploymentStatusesController : ControllerBase
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create(CreateEmploymentStatus.Request request) {
+    [HttpGet]
+    public async Task<IActionResult> GetPagedEmploymentStatuses() {
         try {
-            var response = await new CreateEmploymentStatus(_ctx).Do(request);
-            if (response.Status)
-                return NoContent();
+            var response = await _employmentStatusService.GetEmploymentStatuses();
 
-            return BadRequest(response.Message);
+            return Ok(response);
+        } catch (EmploymentStatusValidationException employmentStatusValidationException) {
+            return BadRequest(GetInnerMessage(employmentStatusValidationException));
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateEmploymentStatusRequest request) {
+        try {
+            var response = await _employmentStatusService.CreateEmploymentStatus(request);
+
+            return Ok(response);
         } catch (EmploymentStatusValidationException employmentStatusValidationException) {
             return BadRequest(GetInnerMessage(employmentStatusValidationException));
         }
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetEmploymentStatus(int id) {
+    public async Task<IActionResult> GetEmploymentStatus([FromQuery] GetEmploymentStatusRequest request) {
         try {
-            var response = await new GetEmploymentStatus(_ctx).Do(id);
+            var response = await _employmentStatusService.GetEmploymentStatus(request);
+
             return Ok(response);
         } catch (EmploymentStatusValidationException employmentStatusValidationException) {
             return BadRequest(GetInnerMessage(employmentStatusValidationException));
@@ -50,25 +63,25 @@ public class EmploymentStatusesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEmploymentStatus(int id, UpdateEmploymentStatus.Request request) {
+    public async Task<IActionResult> UpdateEmploymentStatus(UpdateEmploymentStatusRequest request) {
         try {
-            var response = await new UpdateEmploymentStatus(_ctx).Do(id, request);
-            if (response.Status)
-                NoContent();
+            var response = await _employmentStatusService.UpdateEmplymentStatus(request);
 
-            return BadRequest(response.Message);
+            return Ok(response);
         } catch (EmploymentStatusValidationException employmentStatusValidationException) {
             return BadRequest(GetInnerMessage(employmentStatusValidationException));
         }
     }
 
     [HttpPut("change-status/{id}")]
-    public async Task<IActionResult> UpdateEmploymentStatusStatus(int id) {
-        var response = await new UpdateEmploymentStatusStatus(_ctx).Do(id);
-        if (response)
-            return NoContent();
+    public async Task<IActionResult> UpdateEmploymentStatusStatus(UpdateEmploymentStatusStatusRequest request) {
+        try {
+            var response = await _employmentStatusService.UpdateEmploymentStatusStatus(request);
 
-        return BadRequest();
+            return Ok(response);
+        } catch (EmploymentStatusValidationException employmentStatusValidationException) {
+            return BadRequest(GetInnerMessage(employmentStatusValidationException));
+        }
     }
 
     private static string GetInnerMessage(Exception exception) =>
