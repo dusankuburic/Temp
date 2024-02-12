@@ -1,7 +1,7 @@
 ﻿using Temp.Services.Employees;
 using Temp.Services.Employees.Exceptions;
-using Temp.Services.Employees.Models.Command;
-using Temp.Services.Employees.Models.Query;
+using Temp.Services.Employees.Models.Commands;
+using Temp.Services.Employees.Models.Queries;
 
 namespace Temp.API.Controllers;
 

@@ -1,6 +1,6 @@
 ﻿using Temp.Domain.Models;
 using Temp.Services.Employees.Exceptions;
-using Temp.Services.Employees.Models.Query;
+using Temp.Services.Employees.Models.Queries;
 
 namespace Temp.Services.Employees;
 

@@ -1,5 +1,5 @@
-﻿using Temp.Services.Organizations.Models.Command;
-using Temp.Services.Organizations.Models.Query;
+﻿using Temp.Services.Organizations.Models.Commands;
+using Temp.Services.Organizations.Models.Queries;
 
 namespace Temp.Services.Organizations;
 

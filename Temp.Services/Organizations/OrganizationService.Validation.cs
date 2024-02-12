@@ -1,6 +1,6 @@
 ﻿using Temp.Domain.Models;
 using Temp.Services.Organizations.Exceptions;
-using Temp.Services.Organizations.Models.Query;
+using Temp.Services.Organizations.Models.Queries;
 
 namespace Temp.Services.Organizations;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Temp.Services.Groups.Exceptions;
-using Temp.Services.Groups.Models.Command;
-using Temp.Services.Groups.Models.Query;
+using Temp.Services.Groups.Models.Commands;
+using Temp.Services.Groups.Models.Queries;
 
 namespace Temp.Services.Groups;
 

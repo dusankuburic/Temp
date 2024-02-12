@@ -1,7 +1,7 @@
 ﻿using Temp.Database;
 using Temp.Domain.Models;
-using Temp.Services.Groups.Models.Command;
-using Temp.Services.Groups.Models.Query;
+using Temp.Services.Groups.Models.Commands;
+using Temp.Services.Groups.Models.Queries;
 
 namespace Temp.Services.Groups;
 

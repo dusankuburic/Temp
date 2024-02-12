@@ -1,6 +1,6 @@
 ﻿using Temp.Services.Teams;
 using Temp.Services.Teams.Exceptions;
-using Temp.Services.Teams.Models.Command;
+using Temp.Services.Teams.Models.Commands;
 
 namespace Temp.API.Controllers;
 

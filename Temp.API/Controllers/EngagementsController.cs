@@ -1,9 +1,10 @@
-﻿using Temp.Domain.Models.EmploymentStatuses.Exceptions;
-using Temp.Domain.Models.Engagements.Exceptions;
+﻿
 using Temp.Services.Employees;
 using Temp.Services.Employees.Exceptions;
-using Temp.Services.Employees.Models.Query;
+using Temp.Services.Employees.Models.Queries;
+using Temp.Services.EmploymentStatuses.Exceptions;
 using Temp.Services.Engagements;
+using Temp.Services.Engagements.Exceptions;
 using Temp.Services.Engagements.Models.Commands;
 using Temp.Services.Engagements.Models.Queries;
 using Temp.Services.Workplaces.Exceptions;

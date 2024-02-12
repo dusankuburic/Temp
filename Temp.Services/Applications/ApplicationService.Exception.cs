@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Temp.Services.Applications.Exceptions;
-using Temp.Services.Applications.Models.Command;
-using Temp.Services.Applications.Models.Query;
+using Temp.Services.Applications.Models.Commands;
+using Temp.Services.Applications.Models.Queries;
 
 namespace Temp.Services.Applications
 {

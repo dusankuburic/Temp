@@ -1,6 +1,6 @@
 ﻿using Temp.Domain.Models;
 using Temp.Services.Teams.Exceptions;
-using Temp.Services.Teams.Models.Query;
+using Temp.Services.Teams.Models.Queries;
 
 namespace Temp.Services.Teams;
 

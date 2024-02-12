@@ -1,6 +1,6 @@
 ﻿using Temp.Services.Organizations;
 using Temp.Services.Organizations.Exceptions;
-using Temp.Services.Organizations.Models.Command;
+using Temp.Services.Organizations.Models.Commands;
 
 namespace Temp.API.Controllers;
 
