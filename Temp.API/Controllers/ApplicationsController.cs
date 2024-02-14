@@ -1,6 +1,7 @@
 ﻿using Temp.Services.Applications;
 using Temp.Services.Applications.Exceptions;
 using Temp.Services.Applications.Models.Commands;
+using Temp.Services.Applications.Models.Queries;
 
 namespace Temp.API.Controllers;
 
@@ -16,22 +17,20 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateApplication.Request request) {
+    public async Task<IActionResult> Create(CreateApplicationRequest request) {
         try {
             var response = await _applicationService.CreateApplication(request);
-            if (response.Status)
-                return NoContent();
 
-            return BadRequest("Error");
+            return Ok(response);
         } catch (ApplicationValidationException applicationValidationException) {
             return BadRequest(GetInnerMessage(applicationValidationException));
         }
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetApplication(int id) {
+    public async Task<IActionResult> GetApplication([FromQuery] GetApplicationRequest request) {
         try {
-            var response = await _applicationService.GetApplication(id);
+            var response = await _applicationService.GetApplication(request);
             return Ok(response);
         } catch (ApplicationValidationException applicationValidationException) {
             return BadRequest(GetInnerMessage(applicationValidationException));
@@ -39,9 +38,9 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpGet("team/{teamId}/moderator/{moderatorId}")]
-    public async Task<IActionResult> GetTeamApplications(int teamId, int moderatorId) {
+    public async Task<IActionResult> GetTeamApplications([FromQuery] GetTeamApplicationsRequest request) {
         try {
-            var response = await _applicationService.GetTeamApplications(teamId, moderatorId);
+            var response = await _applicationService.GetTeamApplications(request);
             return Ok(response);
         } catch (ApplicationValidationException applicationValidationException) {
             return BadRequest(GetInnerMessage(applicationValidationException));
@@ -49,23 +48,21 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpGet("user/{id}")]
-    public async Task<IActionResult> GetUserApplications(int id) {
+    public async Task<IActionResult> GetUserApplications([FromQuery] GetUserApplicationsRequest request) {
         try {
-            var response = await _applicationService.GetUserApplications(id);
+            var response = await _applicationService.GetUserApplications(request);
             return Ok(response);
         } catch (ApplicationValidationException applicationValidationException) {
             return BadRequest(GetInnerMessage(applicationValidationException));
         }
     }
 
-    [HttpPut("change-status/{id}")]
-    public async Task<IActionResult> UpdateApplicationStatus(int id, UpdateApplicationStatus.Request request) {
+    [HttpPut("change-status/")]
+    public async Task<IActionResult> UpdateApplicationStatus(UpdateApplicationStatusRequest request) {
         try {
-            var response = await _applicationService.UpdateApplicationStatus(id, request);
-            if (response.Status)
-                return NoContent();
+            var response = await _applicationService.UpdateApplicationStatus(request);
 
-            return BadRequest();
+            return Ok(response);
         } catch (ApplicationServiceException applicationValidationException) {
             return BadRequest(GetInnerMessage(applicationValidationException));
         }

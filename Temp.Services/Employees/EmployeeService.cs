@@ -14,8 +14,8 @@ public partial class EmployeeService : IEmployeeService
         _ctx = ctx;
     }
 
-    public Task<CreateEmployee.Response>
-    CreateEmployee(CreateEmployee.Request request) =>
+    public Task<CreateEmployeeResponse>
+    CreateEmployee(CreateEmployeeRequest request) =>
     TryCatch(async () => {
         var employee = new Employee
         {
@@ -29,17 +29,20 @@ public partial class EmployeeService : IEmployeeService
         _ctx.Employees.Add(employee);
         await _ctx.SaveChangesAsync();
 
-        return new CreateEmployee.Response {
-            Message = $"Success {employee.FirstName} {employee.LastName} is added"
+        return new CreateEmployeeResponse {
+            Id = employee.Id,
+            FirstName = employee.FirstName,
+            LastName = employee.LastName,
+            TeamId = employee.TeamId ?? 0
         };
     });
 
-    public Task<GetEmployee.EmployeeViewModel>
+    public Task<GetEmployeeResponse>
     GetEmployee(int id) =>
     TryCatch(async () => {
         var employee = await _ctx.Employees
             .Where(x => x.Id == id)
-            .Select(x => new GetEmployee.EmployeeViewModel
+            .Select(x => new GetEmployeeResponse
             {
                 Id = x.Id,
                 FirstName = x.FirstName,
@@ -55,14 +58,14 @@ public partial class EmployeeService : IEmployeeService
         return employee;
     });
 
-    public Task<PagedList<GetEmployees.EmployeeViewModel>>
-    GetEmployees(GetEmployees.Request request) =>
+    public Task<PagedList<GetEmployeesResponse>>
+    GetEmployees(GetEmployeesRequest request) =>
     TryCatch(async () => {
         var employees = _ctx.Employees
             .Include(x => x.User)
             .Include(x => x.Moderator)
             .Include(x => x.Admin)
-            .Select(x => new GetEmployees.EmployeeViewModel
+            .Select(x => new GetEmployeesResponse
             {
                 Id = x.Id,
                 FirstName = x.FirstName,
@@ -89,11 +92,11 @@ public partial class EmployeeService : IEmployeeService
 
         ValidateStorageEmployees(employees);
 
-        return await PagedList<GetEmployees.EmployeeViewModel>.CreateAsync(employees, request.PageNumber, request.PageSize);
+        return await PagedList<GetEmployeesResponse>.CreateAsync(employees, request.PageNumber, request.PageSize);
     });
 
-    public Task<PagedList<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel>>
-    GetEmployeesWithEngagement(GetEmployeesWithEngagement.Request request) =>
+    public Task<PagedList<GetEmployeesWithEngagementResponse>>
+    GetEmployeesWithEngagement(GetEmployeesWithEngagementRequest request) =>
     TryCatch(async () => {
         var currentDateTime = DateTime.Now;
 
@@ -103,7 +106,7 @@ public partial class EmployeeService : IEmployeeService
         .Where(x => x.Engagements.Count != 0)
         .Where(x => x.Engagements.Any(n => n.DateTo > currentDateTime))
         .OrderByDescending(x => x.Id)
-        .Select(x => new GetEmployeesWithEngagement.EmployeesWithEngagementViewModel
+        .Select(x => new GetEmployeesWithEngagementResponse
         {
             Id = x.Id,
             FirstName = x.FirstName,
@@ -149,12 +152,12 @@ public partial class EmployeeService : IEmployeeService
 
         ValidateGetEmployeeWithEngagementViewModel(employeesWithEngagement);
 
-        return await PagedList<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel>.CreateAsync(employeesWithEngagement,
+        return await PagedList<GetEmployeesWithEngagementResponse>.CreateAsync(employeesWithEngagement,
             request.PageNumber, request.PageSize);
     });
 
-    public Task<PagedList<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel>>
-    GetEmployeesWithoutEngagement(GetEmployeesWithoutEngagement.Request request) =>
+    public Task<PagedList<GetEmployeesWithoutEngagementResponse>>
+    GetEmployeesWithoutEngagement(GetEmployeesWithoutEngagementRequest request) =>
     TryCatch(async () => {
 
         var currentDateTime = DateTime.Now;
@@ -163,7 +166,7 @@ public partial class EmployeeService : IEmployeeService
         .Include(x => x.Engagements)
         .Where(x => x.Engagements.All(n => n.DateTo < currentDateTime) || x.Engagements.Count == 0)
         .OrderByDescending(x => x.Id)
-        .Select(x => new GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel
+        .Select(x => new GetEmployeesWithoutEngagementResponse
         {
             Id = x.Id,
             FirstName = x.FirstName,
@@ -174,14 +177,14 @@ public partial class EmployeeService : IEmployeeService
 
         ValidateGetEmployeeWithoutEngagementViewModel(employeesWithoutEngagement);
 
-        return await PagedList<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel>.CreateAsync(employeesWithoutEngagement,
+        return await PagedList<GetEmployeesWithoutEngagementResponse>.CreateAsync(employeesWithoutEngagement,
             request.PageNumber, request.PageSize);
     });
 
-    public Task<UpdateEmployee.Response>
-    UpdateEmployee(int id, UpdateEmployee.Request request) =>
+    public Task<UpdateEmployeeResponse>
+    UpdateEmployee(UpdateEmployeeRequest request) =>
     TryCatch(async () => {
-        var employee = _ctx.Employees.FirstOrDefault(x => x.Id == id);
+        var employee = _ctx.Employees.FirstOrDefault(x => x.Id == request.Id);
 
         employee.FirstName = request.FirstName;
         employee.LastName = request.LastName;
@@ -191,28 +194,22 @@ public partial class EmployeeService : IEmployeeService
 
         await _ctx.SaveChangesAsync();
 
-        return new UpdateEmployee.Response() {
-            Id = employee.Id,
-            FirstName = employee.FirstName,
-            LastName = employee.LastName,
-            Status = true
+        return new UpdateEmployeeResponse() {
+            Success = true
         };
     });
 
-    public async Task<RemoveEmployeeRole.Response> RemoveEmployeeRole(RemoveEmployeeRole.Request request) {
+    public async Task<RemoveEmployeeRoleResponse> RemoveEmployeeRole(RemoveEmployeeRoleRequest request) {
         var employee = _ctx.Employees.FirstOrDefault(x => x.Id == request.Id);
-        string message = "";
 
         if (employee.Role == "Admin") {
             var admin = await _ctx.Admins.FirstOrDefaultAsync(x => x.EmployeeId == request.Id);
             _ctx.Admins.Remove(admin);
-            message = $"Removed Admin role for Id:{employee.Id} {employee.FirstName} {employee.LastName}";
         }
 
         if (employee.Role == "User") {
             var user = await _ctx.Users.FirstOrDefaultAsync(x => x.EmployeeId == request.Id);
             _ctx.Users.Remove(user);
-            message = $"Removed User role for Id:{employee.Id} {employee.FirstName} {employee.LastName}";
         }
 
         if (employee.Role == "Moderator") {
@@ -220,13 +217,11 @@ public partial class EmployeeService : IEmployeeService
             _ctx.Moderators.Remove(moderator);
         }
 
-
         employee.Role = "None";
         await _ctx.SaveChangesAsync();
 
-        return new RemoveEmployeeRole.Response {
-            Message = message,
-            Status = true
+        return new RemoveEmployeeRoleResponse {
+            Success = true
         };
     }
 
@@ -271,7 +266,7 @@ public partial class EmployeeService : IEmployeeService
         return empolyee.Role == RoleName;
     }
 
-    public Task<AssignRole.Response> AssignRole(AssignRole.Request request) {
+    public Task<AssignRoleResponse> AssignRole(AssignRoleRequest request) {
         //if (request.Role == "User") {
         //    var userRequest = new RegisterUser.Request
         //        {

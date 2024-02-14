@@ -6,7 +6,7 @@ namespace Temp.Services.Applications.Mapping;
 public class CreateApplicationProfile : Profile
 {
     public CreateApplicationProfile() {
-        CreateMap<CreateApplication.Request, Application>()
+        CreateMap<CreateApplicationRequest, Application>()
             .AfterMap((req, application) => {
                 application.CreatedAt = DateTime.Now;
             });

@@ -22,21 +22,21 @@ public partial class EmployeeService
         }
     }
 
-    public void ValidateGetEmployeeViewModel(GetEmployee.EmployeeViewModel employee) {
+    public void ValidateGetEmployeeViewModel(GetEmployeeResponse employee) {
         if (employee is null) {
             throw new NullEmployeeException();
         }
     }
 
     public void ValidateGetEmployeeWithoutEngagementViewModel
-        (IQueryable<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel> employeeWithoutEngagement) {
+        (IQueryable<GetEmployeesWithoutEngagementResponse> employeeWithoutEngagement) {
         if (employeeWithoutEngagement.Count() == 0) {
             throw new EmployeeWithoutEngagementStorageException();
         }
     }
 
     public void ValidateGetEmployeeWithEngagementViewModel
-        (IQueryable<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel> employeeWithEngagement) {
+        (IQueryable<GetEmployeesWithEngagementResponse> employeeWithEngagement) {
         if (employeeWithEngagement.Count() == 0) {
             throw new EmployeeWithEngagementStorageException();
         }
@@ -55,7 +55,7 @@ public partial class EmployeeService
         }
     }
 
-    public void ValidateStorageEmployees(IQueryable<GetEmployees.EmployeeViewModel> storageEmployees) {
+    public void ValidateStorageEmployees(IQueryable<GetEmployeesResponse> storageEmployees) {
         if (storageEmployees.Count() == 0) {
             throw new EmployeeEmptyStorageException();
         }

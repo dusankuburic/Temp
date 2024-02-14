@@ -50,7 +50,7 @@ public class EngagementsController : ControllerBase
     }
 
     [HttpGet("without")]
-    public async Task<IActionResult> WithoutEngagements([FromQuery] GetEmployeesWithoutEngagement.Request request) {
+    public async Task<IActionResult> WithoutEngagements([FromQuery] GetEmployeesWithoutEngagementRequest request) {
         try {
             var response = await _employeeService.GetEmployeesWithoutEngagement(request);
             Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
@@ -66,7 +66,7 @@ public class EngagementsController : ControllerBase
     }
 
     [HttpGet("with")]
-    public async Task<IActionResult> WithEngagements([FromQuery] GetEmployeesWithEngagement.Request request) {
+    public async Task<IActionResult> WithEngagements([FromQuery] GetEmployeesWithEngagementRequest request) {
         try {
             var response = await _employeeService.GetEmployeesWithEngagement(request);
             Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);

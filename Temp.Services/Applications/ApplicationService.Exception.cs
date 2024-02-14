@@ -7,14 +7,14 @@ namespace Temp.Services.Applications
 {
     public partial class ApplicationService
     {
-        public delegate Task<CreateApplication.Response> ReturningCreateApplicationFunction();
-        public delegate Task<UpdateApplicationStatus.Response> ReturningUpdateApplicationStatusFunction();
-        public delegate Task<GetApplication.ApplicationViewModel> ReturningGetApplicationFunction();
-        public delegate Task<IEnumerable<GetTeamApplications.ApplicationViewModel>> ReturningGetTeamApplicationsFunction();
-        public delegate Task<IEnumerable<GetUserApplications.ApplicationViewModel>> ReturningGetUserApplicationsFunction();
+        public delegate Task<CreateApplicationResponse> ReturningCreateApplicationFunction();
+        public delegate Task<UpdateApplicationStatusResponse> ReturningUpdateApplicationStatusFunction();
+        public delegate Task<GetApplicationResponse> ReturningGetApplicationFunction();
+        public delegate Task<IEnumerable<GetTeamApplicationsResponse>> ReturningGetTeamApplicationsFunction();
+        public delegate Task<IEnumerable<GetUserApplicationsResponse>> ReturningGetUserApplicationsFunction();
 
 
-        public async Task<CreateApplication.Response> TryCatch(ReturningCreateApplicationFunction returningCreateApplicationFunction) {
+        public async Task<CreateApplicationResponse> TryCatch(ReturningCreateApplicationFunction returningCreateApplicationFunction) {
             try {
                 return await returningCreateApplicationFunction();
             } catch (NullApplicationException nullApplicationException) {
@@ -28,7 +28,7 @@ namespace Temp.Services.Applications
             }
         }
 
-        public async Task<UpdateApplicationStatus.Response> TryCatch(ReturningUpdateApplicationStatusFunction returningUpdateApplicationStatusFunction) {
+        public async Task<UpdateApplicationStatusResponse> TryCatch(ReturningUpdateApplicationStatusFunction returningUpdateApplicationStatusFunction) {
             try {
                 return await returningUpdateApplicationStatusFunction();
             } catch (NullApplicationException nullApplicationException) {
@@ -40,7 +40,7 @@ namespace Temp.Services.Applications
             }
         }
 
-        public async Task<GetApplication.ApplicationViewModel> TryCatch(ReturningGetApplicationFunction returningGetApplicationFunction) {
+        public async Task<GetApplicationResponse> TryCatch(ReturningGetApplicationFunction returningGetApplicationFunction) {
             try {
                 return await returningGetApplicationFunction();
             } catch (NullApplicationException nullApplicationException) {
@@ -52,7 +52,7 @@ namespace Temp.Services.Applications
             }
         }
 
-        public async Task<IEnumerable<GetTeamApplications.ApplicationViewModel>> TryCatch(ReturningGetTeamApplicationsFunction returningGetTeamApplicationsFunction) {
+        public async Task<IEnumerable<GetTeamApplicationsResponse>> TryCatch(ReturningGetTeamApplicationsFunction returningGetTeamApplicationsFunction) {
             try {
                 return await returningGetTeamApplicationsFunction();
             } catch (ApplicationWithTeamStorageException applicationWithTeamStorageException) {
@@ -64,7 +64,7 @@ namespace Temp.Services.Applications
             }
         }
 
-        public async Task<IEnumerable<GetUserApplications.ApplicationViewModel>> TryCatch(ReturningGetUserApplicationsFunction returningGetUserApplicationsFunction) {
+        public async Task<IEnumerable<GetUserApplicationsResponse>> TryCatch(ReturningGetUserApplicationsFunction returningGetUserApplicationsFunction) {
             try {
                 return await returningGetUserApplicationsFunction();
             } catch (ApplicationWithUserStorageException applicationWithUserStorageException) {

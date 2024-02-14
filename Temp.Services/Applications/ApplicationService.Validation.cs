@@ -51,19 +51,19 @@ namespace Temp.Services.Applications
             }
         }
 
-        public void ValidateGetApplicationViewModel(GetApplication.ApplicationViewModel application) {
+        public void ValidateGetApplicationViewModel(GetApplicationResponse application) {
             if (application is null) {
                 throw new NullApplicationException();
             }
         }
 
-        public void ValidateGetTeamApplicationsViewModel(IEnumerable<GetTeamApplications.ApplicationViewModel> applicationViewModels) {
+        public void ValidateGetTeamApplicationsViewModel(IEnumerable<GetTeamApplicationsResponse> applicationViewModels) {
             if (applicationViewModels.Count() == 0) {
                 throw new ApplicationWithTeamStorageException();
             }
         }
 
-        public void ValidateGetUserApplicationsViewModel(IEnumerable<GetUserApplications.ApplicationViewModel> applicationViewModels) {
+        public void ValidateGetUserApplicationsViewModel(IEnumerable<GetUserApplicationsResponse> applicationViewModels) {
             if (applicationViewModels.Count() == 0) {
                 throw new ApplicationWithUserStorageException();
             }
