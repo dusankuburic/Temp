@@ -1,6 +1,7 @@
 ﻿using Temp.Services.Organizations;
 using Temp.Services.Organizations.Exceptions;
 using Temp.Services.Organizations.Models.Commands;
+using Temp.Services.Organizations.Models.Queries;
 
 namespace Temp.API.Controllers;
 
@@ -19,6 +20,7 @@ public class OrganizationsController : ControllerBase
     public async Task<IActionResult> GetOrganizations() {
         try {
             var response = await _organizationService.GetOrganizations();
+
             return Ok(response);
         } catch (OrganizationValidationException organizationValidationException) {
             return BadRequest(GetInnerMessage(organizationValidationException));
@@ -26,19 +28,21 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateOrganization.Request request) {
+    public async Task<IActionResult> Create(CreateOrganizationRequest request) {
         try {
             var response = await _organizationService.CreateOrganization(request);
-            return response.Status ? NoContent() : BadRequest(response.Message);
+
+            return Ok(response);
         } catch (OrganizationValidationException organizationValidationException) {
             return BadRequest(GetInnerMessage(organizationValidationException));
         }
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetOrganization(int id) {
+    public async Task<IActionResult> GetOrganization([FromQuery] GetOrganizationRequest request) {
         try {
-            var response = await _organizationService.GetOrganization(id);
+            var response = await _organizationService.GetOrganization(request);
+
             return Ok(response);
         } catch (OrganizationValidationException organizationValidationException) {
             return BadRequest(GetInnerMessage(organizationValidationException));
@@ -46,10 +50,11 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateOrganization(int id, UpdateOrganization.Request request) {
+    public async Task<IActionResult> UpdateOrganization(UpdateOrganizationRequest request) {
         try {
-            var response = await _organizationService.UpdateOrganization(id, request);
-            return response.Status ? NoContent() : BadRequest(response.Message);
+            var response = await _organizationService.UpdateOrganization(request);
+
+            return Ok(response);
         } catch (OrganizationValidationException organizationValidationException) {
             return BadRequest(GetInnerMessage(organizationValidationException));
         }
@@ -66,9 +71,10 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpPut("change-stauts/{id}")]
-    public async Task<IActionResult> UpdateOrganizationStatus(int id) {
-        var response = await _organizationService.UpdateOrganizationStatus(id);
-        return response ? NoContent() : BadRequest();
+    public async Task<IActionResult> UpdateOrganizationStatus([FromQuery] UpdateOrganizationStatusRequest request) {
+        var response = await _organizationService.UpdateOrganizationStatus(request);
+
+        return Ok(response);
     }
 
     private static string GetInnerMessage(Exception exception) {

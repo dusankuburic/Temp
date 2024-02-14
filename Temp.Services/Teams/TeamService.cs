@@ -15,17 +15,8 @@ public partial class TeamService : ITeamService
         _mapper = mapper;
     }
 
-    public Task<CreateTeam.Response> CreateTeam(CreateTeam.Request request) {
+    public Task<CreateTeamResponse> CreateTeam(CreateTeamRequest request) {
         return TryCatch(async () => {
-            var teamExists = await TeamExists(request.Name, request.GroupId);
-
-            if (teamExists) {
-                return new CreateTeam.Response {
-                    Message = $"Error {request.Name} already exists",
-                    Status = false
-                };
-            }
-
             var team = new Team
             {
                 Name = request.Name,
@@ -37,23 +28,24 @@ public partial class TeamService : ITeamService
             _ctx.Teams.Add(team);
             await _ctx.SaveChangesAsync();
 
-            return new CreateTeam.Response {
-                Message = $"Success {team.Name} is added",
-                Status = true
+            return new CreateTeamResponse {
+                Id = team.Id,
+                Name = team.Name,
+                GroupId = team.GroupId
             };
         });
     }
 
-    public Task<GetFullTeamTree.TeamTreeViewModel> GetFullTeamTree(int id) {
+    public Task<GetFullTeamTreeResponse> GetFullTeamTree(GetFullTeamTreeRequest requst) {
         return TryCatch(async () => {
             var team = await _ctx.Teams
-            .AsNoTracking()
-            .Include(x => x.Group)
-            .Include(x => x.Group.Organization)
-            .Where(x => x.Id == id && x.IsActive)
-            .FirstOrDefaultAsync();
+                .AsNoTracking()
+                .Include(x => x.Group)
+                .Include(x => x.Group.Organization)
+                .Where(x => x.Id == requst.Id && x.IsActive)
+                .FirstOrDefaultAsync();
 
-            return new GetFullTeamTree.TeamTreeViewModel {
+            return new GetFullTeamTreeResponse {
                 Id = team.Id,
                 OrganizationName = team.Group.Organization.Name,
                 OrganizationId = team.Group.Organization.Id,
@@ -63,19 +55,19 @@ public partial class TeamService : ITeamService
         });
     }
 
-    public Task<GetTeam.TeamViewModel> GetTeam(int id) {
+    public Task<GetTeamResponse> GetTeam(GetTeamRequest request) {
         return TryCatch(async () => {
             var team = await _ctx.Teams
-            .AsNoTracking()
-            .Include(x => x.Group)
-            .Where(x => x.Id == id && x.IsActive)
-            .Select(x => new GetTeam.TeamViewModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-                GroupId = x.Group.Id
-            })
-            .FirstOrDefaultAsync();
+                .AsNoTracking()
+                .Include(x => x.Group)
+                .Where(x => x.Id == request.Id && x.IsActive)
+                .Select(x => new GetTeamResponse
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    GroupId = x.Group.Id
+                })
+                .FirstOrDefaultAsync();
 
             ValidateGetTeamViewModel(team);
 
@@ -83,18 +75,18 @@ public partial class TeamService : ITeamService
         });
     }
 
-    public Task<GetUserTeam.TeamViewModel> GetUserTeam(int id) {
+    public Task<GetUserTeamResponse> GetUserTeam(GetUserTeamRequest request) {
         return TryCatch(async () => {
             var team = await _ctx.Users
-            .AsNoTracking()
-            .Include(x => x.Employee)
-            .Where(x => x.Id == id && x.IsActive)
-            .Select(x => new GetUserTeam.TeamViewModel
-            {
-                Id = x.Employee.Team.Id,
-                Name = x.Employee.Team.Name
-            })
-            .FirstOrDefaultAsync();
+                .AsNoTracking()
+                .Include(x => x.Employee)
+                .Where(x => x.Id == request.Id && x.IsActive)
+                .Select(x => new GetUserTeamResponse
+                {
+                    Id = x.Employee.Team.Id,
+                    Name = x.Employee.Team.Name
+                })
+                .FirstOrDefaultAsync();
 
             ValidateGetUserTeamViewModel(team);
 
@@ -102,52 +94,33 @@ public partial class TeamService : ITeamService
         });
     }
 
-    public Task<UpdateTeam.Response> UpdateTeam(int id, UpdateTeam.Request request) {
+    public Task<UpdateTeamResponse> UpdateTeam(UpdateTeamRequest request) {
         return TryCatch(async () => {
-            var team = _ctx.Teams.FirstOrDefault(x => x.Id == id);
-
-            if (team.Name.Equals(request.Name)) {
-                return new UpdateTeam.Response {
-                    Id = team.Id,
-                    Name = team.Name,
-                    Message = "Team name is same",
-                    Status = true
-                };
-            }
-
-            var teamExists = await TeamExists(request.Name, request.GroupId);
-
-            if (teamExists) {
-                return new UpdateTeam.Response {
-                    Message = $"{request.Name} already exists",
-                    Status = false
-                };
-            }
+            var team = _ctx.Teams.FirstOrDefault(x => x.Id == request.Id);
 
             team.Name = request.Name;
 
             ValidateTeamOnUpdate(team);
             await _ctx.SaveChangesAsync();
 
-            return new UpdateTeam.Response {
-                Id = team.Id,
-                Name = team.Name,
-                Message = "Success",
-                Status = true
+            return new UpdateTeamResponse {
+                Success = true
             };
         });
     }
 
-    public async Task<bool> UpdateTeamStatus(int teamId) {
+    public async Task<UpdateTeamStatusResponse> UpdateTeamStatus(UpdateTeamStatusRequest request) {
         var team = await _ctx.Teams
-                .Where(x => x.Id == teamId)
+                .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync();
 
-        team.IsActive = false;
+        team.IsActive = !team.IsActive;
 
         await _ctx.SaveChangesAsync();
 
-        return true;
+        return new UpdateTeamStatusResponse {
+            Success = true
+        };
     }
 
     private async Task<bool> TeamExists(string name, int groupId) {

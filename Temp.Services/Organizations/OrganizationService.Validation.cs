@@ -22,7 +22,7 @@ public partial class OrganizationService
         }
     }
 
-    public void ValidateGetOrganizationViewModel(GetOrganization.OrganizationViewModel organization) {
+    public void ValidateGetOrganizationViewModel(GetOrganizationResponse organization) {
         if (organization is null) {
             throw new NullOrganizationException();
         }
@@ -37,7 +37,7 @@ public partial class OrganizationService
         }
     }
 
-    public void ValidateStorageOrganizations(IEnumerable<GetOrganizations.OrganizationViewModel> storageOrganizations) {
+    public void ValidateStorageOrganizations(IEnumerable<GetOrganizationResponse> storageOrganizations) {
         if (storageOrganizations.Count() == 0) {
             throw new OrganizationEmptyStorageException();
         }

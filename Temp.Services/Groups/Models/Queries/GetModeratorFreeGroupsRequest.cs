@@ -2,6 +2,6 @@
 
 public class GetModeratorFreeGroupsRequest
 {
-    public int organizationId { get; set; }
-    public int moderatorId { get; set; }
+    public int OrganizationId { get; set; }
+    public int ModeratorId { get; set; }
 }

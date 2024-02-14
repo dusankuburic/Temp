@@ -7,13 +7,13 @@ namespace Temp.Services.Organizations;
 
 public partial class OrganizationService
 {
-    public delegate Task<CreateOrganization.Response> ReturningCreateOrganizationFunction();
-    public delegate Task<IEnumerable<GetOrganizations.OrganizationViewModel>> ReturningGetOrganizationsFunction();
-    public delegate Task<GetOrganization.OrganizationViewModel> ReturningGetOrganizationFunction();
-    public delegate Task<UpdateOrganization.Response> ReturningUpdateOrganizationFunction();
+    public delegate Task<CreateOrganizationResponse> ReturningCreateOrganizationFunction();
+    public delegate Task<IEnumerable<GetOrganizationResponse>> ReturningGetOrganizationsFunction();
+    public delegate Task<GetOrganizationResponse> ReturningGetOrganizationFunction();
+    public delegate Task<UpdateOrganizationResponse> ReturningUpdateOrganizationFunction();
     public delegate Task<string> ReturningGetInnerGroupsFunction();
 
-    public async Task<CreateOrganization.Response> TryCatch(ReturningCreateOrganizationFunction returningCreateOrganizationFunction) {
+    public async Task<CreateOrganizationResponse> TryCatch(ReturningCreateOrganizationFunction returningCreateOrganizationFunction) {
         try {
             return await returningCreateOrganizationFunction();
         } catch (NullOrganizationException nullOrganizationException) {
@@ -27,7 +27,7 @@ public partial class OrganizationService
         }
     }
 
-    public async Task<IEnumerable<GetOrganizations.OrganizationViewModel>> TryCatch(ReturningGetOrganizationsFunction returningGetOrganizationsFunction) {
+    public async Task<IEnumerable<GetOrganizationResponse>> TryCatch(ReturningGetOrganizationsFunction returningGetOrganizationsFunction) {
         try {
             return await returningGetOrganizationsFunction();
         } catch (OrganizationEmptyStorageException organizationEmptyStorageException) {
@@ -39,7 +39,7 @@ public partial class OrganizationService
         }
     }
 
-    public async Task<GetOrganization.OrganizationViewModel> TryCatch(ReturningGetOrganizationFunction returningGetOrganizationFunction) {
+    public async Task<GetOrganizationResponse> TryCatch(ReturningGetOrganizationFunction returningGetOrganizationFunction) {
         try {
             return await returningGetOrganizationFunction();
         } catch (NullOrganizationException nullOrganizationException) {
@@ -51,7 +51,7 @@ public partial class OrganizationService
         }
     }
 
-    public async Task<UpdateOrganization.Response> TryCatch(ReturningUpdateOrganizationFunction returningUpdateOrganizationFunction) {
+    public async Task<UpdateOrganizationResponse> TryCatch(ReturningUpdateOrganizationFunction returningUpdateOrganizationFunction) {
         try {
             return await returningUpdateOrganizationFunction();
         } catch (NullOrganizationException nullOrganizationException) {

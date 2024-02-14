@@ -15,19 +15,11 @@ public partial class OrganizationService : IOrganizationService
         _mapper = mapper;
     }
 
-    public Task<CreateOrganization.Response> CreateOrganization(CreateOrganization.Request request) {
+    public Task<CreateOrganizationResponse> CreateOrganization(CreateOrganizationRequest request) {
         return TryCatch(async () => {
-            var organizationExists = await OrganizationExists(request.Name);
-
-            if (organizationExists) {
-                return new CreateOrganization.Response {
-                    Message = $"Error {request.Name} already exists",
-                    Status = false
-                };
-            }
 
             var organization = new Organization
-        {
+            {
                 Name = request.Name,
                 IsActive = true
             };
@@ -37,9 +29,9 @@ public partial class OrganizationService : IOrganizationService
             _ctx.Organizations.Add(organization);
             await _ctx.SaveChangesAsync();
 
-            return new CreateOrganization.Response {
-                Message = $"Success {organization.Name} is added",
-                Status = true
+            return new CreateOrganizationResponse {
+                Id = organization.Id,
+                Name = organization.Name
             };
         });
     }
@@ -69,12 +61,12 @@ public partial class OrganizationService : IOrganizationService
         });
     }
 
-    public Task<GetOrganization.OrganizationViewModel> GetOrganization(int id) {
+    public Task<GetOrganizationResponse> GetOrganization(GetOrganizationRequest request) {
         return TryCatch(async () => {
             var res = await _ctx.Organizations
             .AsNoTracking()
-            .Where(x => x.Id == id && x.IsActive)
-            .Select(x => new GetOrganization.OrganizationViewModel
+            .Where(x => x.Id == request.Id && x.IsActive)
+            .Select(x => new GetOrganizationResponse
             {
                 Id = x.Id,
                 Name = x.Name
@@ -86,12 +78,12 @@ public partial class OrganizationService : IOrganizationService
         });
     }
 
-    public Task<IEnumerable<GetOrganizations.OrganizationViewModel>> GetOrganizations() {
+    public Task<IEnumerable<GetOrganizationResponse>> GetOrganizations() {
         return TryCatch(async () => {
             var res = await _ctx.Organizations
             .AsNoTracking()
             .Where(x => x.IsActive)
-            .Select(x => new GetOrganizations.OrganizationViewModel
+            .Select(x => new GetOrganizationResponse
             {
                 Id = x.Id,
                 Name = x.Name
@@ -104,30 +96,10 @@ public partial class OrganizationService : IOrganizationService
         });
     }
 
-    public Task<UpdateOrganization.Response> UpdateOrganization(int id, UpdateOrganization.Request request) {
+    public Task<UpdateOrganizationResponse> UpdateOrganization(UpdateOrganizationRequest request) {
         return TryCatch(async () => {
             var organization = _ctx.Organizations
-            .FirstOrDefault(x => x.Id == id);
-
-            if (organization.Name.Equals(request.Name)) {
-                return new UpdateOrganization.Response {
-                    Id = organization.Id,
-                    Name = organization.Name,
-                    Message = "Organization name is same",
-                    Status = true
-                };
-            }
-
-            var organizationExists = await OrganizationExists(request.Name);
-
-            if (organizationExists) {
-                return new UpdateOrganization.Response {
-                    Id = organization.Id,
-                    Name = organization.Name,
-                    Message = $"Organization already exists with {request.Name} name",
-                    Status = false
-                };
-            }
+                .FirstOrDefault(x => x.Id == request.Id);
 
             organization.Name = request.Name;
 
@@ -135,25 +107,24 @@ public partial class OrganizationService : IOrganizationService
 
             await _ctx.SaveChangesAsync();
 
-            return new UpdateOrganization.Response {
-                Id = organization.Id,
-                Name = organization.Name,
-                Message = "Success",
-                Status = true
+            return new UpdateOrganizationResponse {
+                Success = true
             };
         });
     }
 
-    public async Task<bool> UpdateOrganizationStatus(int id) {
+    public async Task<UpdateOrganizationStatusResponse> UpdateOrganizationStatus(UpdateOrganizationStatusRequest request) {
         var ortanization = await _ctx.Organizations
-            .Where(x => x.Id == id)
+            .Where(x => x.Id == request.Id)
             .FirstOrDefaultAsync();
 
         ortanization.IsActive = false;
 
         await _ctx.SaveChangesAsync();
 
-        return true;
+        return new UpdateOrganizationStatusResponse {
+            Success = true
+        };
     }
 
 
