@@ -1,7 +1,7 @@
 ﻿using Temp.Database;
 using Temp.Domain.Models.Applications;
-using Temp.Services.Applications.Models.Command;
-using Temp.Services.Applications.Models.Query;
+using Temp.Services.Applications.Models.Commands;
+using Temp.Services.Applications.Models.Queries;
 
 namespace Temp.Services.Applications;
 
@@ -15,7 +15,7 @@ public partial class ApplicationService : IApplicationService
         _mapper = mapper;
     }
 
-    public Task<CreateApplication.Response> CreateApplication(CreateApplication.Request request) =>
+    public Task<CreateApplicationResponse> CreateApplication(CreateApplicationRequest request) =>
     TryCatch(async () => {
         var application = _mapper.Map<Application>(request);
         ValidateApplicationOnCreate(application);
@@ -23,15 +23,19 @@ public partial class ApplicationService : IApplicationService
         _ctx.Applications.Add(application);
         await _ctx.SaveChangesAsync();
 
-        return new CreateApplication.Response {
-            Status = true
+        return new CreateApplicationResponse {
+            Id = application.Id,
+            UserId = application.UserId,
+            TeamId = application.TeamId,
+            Content = application.Content,
+            Category = application.Category
         };
     });
 
-    public Task<UpdateApplicationStatus.Response> UpdateApplicationStatus(int id, UpdateApplicationStatus.Request request) =>
+    public Task<UpdateApplicationStatusResponse> UpdateApplicationStatus(UpdateApplicationStatusRequest request) =>
     TryCatch(async () => {
         var res = await _ctx.Applications
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync();
         ValidateApplication(res);
 
@@ -41,18 +45,18 @@ public partial class ApplicationService : IApplicationService
 
         await _ctx.SaveChangesAsync();
 
-        return new UpdateApplicationStatus.Response {
+        return new UpdateApplicationStatusResponse {
             Id = res.Id,
-            Status = true
+            Success = true
         };
     });
 
-    public Task<GetApplication.ApplicationViewModel> GetApplication(int id) =>
+    public Task<GetApplicationResponse> GetApplication(GetApplicationRequest request) =>
     TryCatch(async () => {
         var res = await _ctx.Applications
                .AsNoTracking()
-               .Where(x => x.Id == id)
-               .Select(x => new GetApplication.ApplicationViewModel
+               .Where(x => x.Id == request.Id)
+               .Select(x => new GetApplicationResponse
                {
                    Id = x.Id,
                    Category = x.Category,
@@ -66,14 +70,14 @@ public partial class ApplicationService : IApplicationService
         return res;
     });
 
-    public Task<IEnumerable<GetUserApplications.ApplicationViewModel>> GetUserApplications(int id) =>
+    public Task<IEnumerable<GetUserApplicationsResponse>> GetUserApplications(GetUserApplicationsRequest request) =>
     TryCatch(async () => {
         var res = await _ctx.Applications
             .AsNoTracking()
-            .Where(x => x.UserId == id)
+            .Where(x => x.UserId == request.Id)
             .OrderByDescending(x => x.CreatedAt)
             .ThenBy(x => x.Status)
-            .Select(x => new GetUserApplications.ApplicationViewModel
+            .Select(x => new GetUserApplicationsResponse
             {
                 Id = x.Id,
                 Category = x.Category,
@@ -86,15 +90,15 @@ public partial class ApplicationService : IApplicationService
         return res;
     });
 
-    public Task<IEnumerable<GetTeamApplications.ApplicationViewModel>> GetTeamApplications(int teamId, int moderatorId) =>
+    public Task<IEnumerable<GetTeamApplicationsResponse>> GetTeamApplications(GetTeamApplicationsRequest request) =>
     TryCatch(async () => {
         var res = await _ctx.Applications
             .AsNoTracking()
             .Include(x => x.User)
-            .Where(x => x.TeamId == teamId)
-            .Where(x => (x.ModeratorId == moderatorId) || (x.Status == false))
+            .Where(x => x.TeamId == request.TeamId)
+            .Where(x => (x.ModeratorId == request.ModeratorId) || (x.Status == false))
             .OrderBy(x => x.Status)
-            .Select(x => new GetTeamApplications.ApplicationViewModel
+            .Select(x => new GetTeamApplicationsResponse
             {
                 Id = x.Id,
                 TeamId = x.TeamId,

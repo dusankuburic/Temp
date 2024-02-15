@@ -1,8 +1,8 @@
 ﻿using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services._Helpers;
-using Temp.Services.Workplaces.Models.Command;
-using Temp.Services.Workplaces.Models.Query;
+using Temp.Services.Workplaces.Models.Commands;
+using Temp.Services.Workplaces.Models.Queries;
 
 namespace Temp.Services.Workplaces;
 

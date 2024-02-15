@@ -1,9 +1,10 @@
-﻿using Temp.Domain.Models.EmploymentStatuses.Exceptions;
-using Temp.Domain.Models.Engagements.Exceptions;
+﻿
 using Temp.Services.Employees;
 using Temp.Services.Employees.Exceptions;
-using Temp.Services.Employees.Models.Query;
+using Temp.Services.Employees.Models.Queries;
+using Temp.Services.EmploymentStatuses.Exceptions;
 using Temp.Services.Engagements;
+using Temp.Services.Engagements.Exceptions;
 using Temp.Services.Engagements.Models.Commands;
 using Temp.Services.Engagements.Models.Queries;
 using Temp.Services.Workplaces.Exceptions;
@@ -49,7 +50,7 @@ public class EngagementsController : ControllerBase
     }
 
     [HttpGet("without")]
-    public async Task<IActionResult> WithoutEngagements([FromQuery] GetEmployeesWithoutEngagement.Request request) {
+    public async Task<IActionResult> WithoutEngagements([FromQuery] GetEmployeesWithoutEngagementRequest request) {
         try {
             var response = await _employeeService.GetEmployeesWithoutEngagement(request);
             Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
@@ -65,7 +66,7 @@ public class EngagementsController : ControllerBase
     }
 
     [HttpGet("with")]
-    public async Task<IActionResult> WithEngagements([FromQuery] GetEmployeesWithEngagement.Request request) {
+    public async Task<IActionResult> WithEngagements([FromQuery] GetEmployeesWithEngagementRequest request) {
         try {
             var response = await _employeeService.GetEmployeesWithEngagement(request);
             Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);

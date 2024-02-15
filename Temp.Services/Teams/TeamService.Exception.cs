@@ -1,20 +1,20 @@
 ﻿using Microsoft.Data.SqlClient;
 using Temp.Services.Teams.Exceptions;
-using Temp.Services.Teams.Models.Command;
-using Temp.Services.Teams.Models.Query;
+using Temp.Services.Teams.Models.Commands;
+using Temp.Services.Teams.Models.Queries;
 
 namespace Temp.Services.Teams;
 
 public partial class TeamService
 {
-    public delegate Task<CreateTeam.Response> ReturningCreateTeamFunction();
-    public delegate Task<GetTeam.TeamViewModel> ReturningGetTeamFunction();
-    public delegate Task<GetUserTeam.TeamViewModel> ReturningGetUserTeamFunction();
-    public delegate Task<UpdateTeam.Response> ReturningUpdateFunction();
-    public delegate Task<GetFullTeamTree.TeamTreeViewModel> ReturningTeamTreeFunction();
+    public delegate Task<CreateTeamResponse> ReturningCreateTeamFunction();
+    public delegate Task<GetTeamResponse> ReturningGetTeamFunction();
+    public delegate Task<GetUserTeamResponse> ReturningGetUserTeamFunction();
+    public delegate Task<UpdateTeamResponse> ReturningUpdateFunction();
+    public delegate Task<GetFullTeamTreeResponse> ReturningTeamTreeFunction();
 
 
-    public async Task<GetFullTeamTree.TeamTreeViewModel> TryCatch(ReturningTeamTreeFunction returningTeamTreeFunction) {
+    public async Task<GetFullTeamTreeResponse> TryCatch(ReturningTeamTreeFunction returningTeamTreeFunction) {
         try {
             return await returningTeamTreeFunction();
         } catch (SqlException sqlException) {
@@ -24,7 +24,7 @@ public partial class TeamService
         }
     }
 
-    public async Task<CreateTeam.Response> TryCatch(ReturningCreateTeamFunction returningCreateTeamFunction) {
+    public async Task<CreateTeamResponse> TryCatch(ReturningCreateTeamFunction returningCreateTeamFunction) {
         try {
             return await returningCreateTeamFunction();
         } catch (NullTeamException nullTeamException) {
@@ -38,7 +38,7 @@ public partial class TeamService
         }
     }
 
-    public async Task<GetTeam.TeamViewModel> TryCatch(ReturningGetTeamFunction returningGetTeamFunction) {
+    public async Task<GetTeamResponse> TryCatch(ReturningGetTeamFunction returningGetTeamFunction) {
         try {
             return await returningGetTeamFunction();
         } catch (NullTeamException nullTeamException) {
@@ -51,7 +51,7 @@ public partial class TeamService
     }
 
 
-    public async Task<GetUserTeam.TeamViewModel> TryCatch(ReturningGetUserTeamFunction returningGetUserTeamFunction) {
+    public async Task<GetUserTeamResponse> TryCatch(ReturningGetUserTeamFunction returningGetUserTeamFunction) {
         try {
             return await returningGetUserTeamFunction();
         } catch (NullTeamException nullTeamException) {
@@ -63,7 +63,7 @@ public partial class TeamService
         }
     }
 
-    public async Task<UpdateTeam.Response> TryCatch(ReturningUpdateFunction returningUpdateFunction) {
+    public async Task<UpdateTeamResponse> TryCatch(ReturningUpdateFunction returningUpdateFunction) {
         try {
             return await returningUpdateFunction();
         } catch (NullTeamException nullTeamException) {
