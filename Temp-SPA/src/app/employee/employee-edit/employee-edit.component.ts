@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Employee } from 'src/app/models/employee';
-import { Group, ModeratorGroups } from 'src/app/models/group';
-import { Moderator, ModeratorMin } from 'src/app/models/moderator';
-import { Organization } from 'src/app/models/organization';
-import { FullTeam, Team } from 'src/app/models/team';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { EmployeeService } from 'src/app/services/employee.service';
-import { GroupService } from 'src/app/services/group.service';
-import { OrganizationService } from 'src/app/services/organization.service';
-import { TeamService } from 'src/app/services/team.service';
+import { Employee } from 'src/app/core/models/employee';
+import { Group, ModeratorGroups } from 'src/app/core/models/group';
+import { Moderator, ModeratorMin } from 'src/app/core/models/moderator';
+import { Organization } from 'src/app/core/models/organization';
+import { FullTeam, Team } from 'src/app/core/models/team';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { EmployeeService } from 'src/app/core/services/employee.service';
+import { GroupService } from 'src/app/core/services/group.service';
+import { OrganizationService } from 'src/app/core/services/organization.service';
+import { TeamService } from 'src/app/core/services/team.service';
 
 @Component({
   selector: 'app-employee-edit',
@@ -44,12 +44,9 @@ export class EmployeeEditComponent implements OnInit {
 
     this.createForm();
 
-    if (this.employee.role === 'Moderator')
-    {
+    if (this.employee.role === 'Moderator') {
       this.loadModeratorGroups(this.employee.teamId, this.employee.id);
-    }
-    else
-    {
+    } else {
       this.loadFullTeam(this.employee.teamId);
     }
   }
@@ -121,11 +118,11 @@ export class EmployeeEditComponent implements OnInit {
     });
   }
 
-  sliceStringId(str): number{
+  sliceStringId(str): number {
     return str.slice(3, str.length);
   }
 
-  updateGroup(moderatorId: number, newGroupId: number): any {
+  updateGroup(moderatorId: number, newGroupId: number): void {
     let moderatorGroups: ModeratorGroups = {} as ModeratorGroups;
     moderatorGroups.groups = [] as number[];
 
@@ -133,33 +130,37 @@ export class EmployeeEditComponent implements OnInit {
       moderatorGroups.groups.push(elem.id);
     });
 
-    if (!moderatorGroups.groups.includes(newGroupId)){
+    if (!moderatorGroups.groups.includes(newGroupId)) {
       moderatorGroups.groups.push(newGroupId);
-    }
-    else{
+    } else {
       moderatorGroups.groups = moderatorGroups.groups
       .filter(elem => elem !== newGroupId);
     }
 
-    this.groupService.updateModeratorGroups(moderatorId, moderatorGroups).subscribe(() => {
-      this.loadModeratorGroups(this.employee.teamId, this.employee.id);
-      this.alertify.success('Success');
-    }, error => {
-      this.alertify.error(error.error);
-    })
+    this.groupService.updateModeratorGroups(moderatorId, moderatorGroups).subscribe({
+      next: () => {
+        this.loadModeratorGroups(this.employee.teamId, this.employee.id);
+        this.alertify.success('Success');
+      },
+      error: (error) => {
+        this.alertify.error(error.error);
+      }
+    });
   }
 
-  update(): any {
+  update(): void {
     const employeeForm = Object.assign({}, this.editEmployeeForm.value);
-    if (employeeForm.teamId == null)
-    {
+    if (employeeForm.teamId == null) {
       employeeForm.teamId = this.employee.teamId;
     }
-    this.employeeService.updateEmployee(this.employee.id, employeeForm).subscribe(() => {
-      this.loadFullTeam(employeeForm.teamId);
-      this.alertify.success('Successfully updated');
-    }, error => {
-      this.alertify.error(error);
+    this.employeeService.updateEmployee(this.employee.id, employeeForm).subscribe({
+      next: () => {
+        this.loadFullTeam(employeeForm.teamId);
+        this.alertify.success('Successfully updated');
+      },
+      error: (error) => {
+        this.alertify.error(error);
+      }
     });
   }
 }

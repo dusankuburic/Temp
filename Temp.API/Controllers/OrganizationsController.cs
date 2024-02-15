@@ -39,7 +39,7 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetOrganization([FromQuery] GetOrganizationRequest request) {
+    public async Task<IActionResult> GetOrganization([FromRoute] GetOrganizationRequest request) {
         try {
             var response = await _organizationService.GetOrganization(request);
 
@@ -49,7 +49,7 @@ public class OrganizationsController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut]
     public async Task<IActionResult> UpdateOrganization(UpdateOrganizationRequest request) {
         try {
             var response = await _organizationService.UpdateOrganization(request);
@@ -61,7 +61,7 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpGet("inner-groups/{id}")]
-    public async Task<IActionResult> InnerGroups(int id) {
+    public async Task<IActionResult> InnerGroups([FromRoute] int id) {
         try {
             var innerGroups = await _organizationService.GetInnerGroups(id);
             return Ok(innerGroups);
@@ -70,8 +70,8 @@ public class OrganizationsController : ControllerBase
         }
     }
 
-    [HttpPut("change-stauts/{id}")]
-    public async Task<IActionResult> UpdateOrganizationStatus([FromQuery] UpdateOrganizationStatusRequest request) {
+    [HttpPut("change-status")]
+    public async Task<IActionResult> UpdateOrganizationStatus(UpdateOrganizationStatusRequest request) {
         var response = await _organizationService.UpdateOrganizationStatus(request);
 
         return Ok(response);

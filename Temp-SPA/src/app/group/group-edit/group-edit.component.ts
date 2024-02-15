@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Group } from 'src/app/models/group';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { GroupService } from 'src/app/services/group.service';
+import { Group } from 'src/app/core/models/group';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { GroupService } from 'src/app/core/services/group.service';
 
 @Component({
   selector: 'app-group-edit',
@@ -35,11 +35,15 @@ export class GroupEditComponent implements OnInit {
   update(): void {
     const groupForm = Object.assign({}, this.editGroupForm.value);
     this.group.name = groupForm.Name;
-    this.groupService.updateGroup(this.group.id, this.group).subscribe(() => {
-      this.alertify.success('Successfully updated');
-    }, error => {
-      this.alertify.error(error.error);
+    this.groupService.updateGroup(this.group.id, this.group).subscribe({
+      next: () => {
+        this.alertify.success('Successfully updated');
+      },
+      error: (error) => {
+        this.alertify.error(error.error);
+      }
     });
+    
   }
 
 }

@@ -51,7 +51,7 @@ public class WorkplacesController : Controller
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetWorkplace(int id) {
+    public async Task<IActionResult> GetWorkplace([FromRoute] int id) {
         try {
             var response = await _workplaceService.GetWorkplace(id);
 
@@ -72,7 +72,7 @@ public class WorkplacesController : Controller
         }
     }
 
-    [HttpPut("change-status/")]
+    [HttpPut("change-status")]
     public async Task<IActionResult> UpdateWorkplaceStatus(UpdateWorkplaceStatusRequest request) {
         try {
             var response = await _workplaceService.UpdateWorkplaceStatus(request);

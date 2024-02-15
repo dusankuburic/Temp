@@ -52,7 +52,7 @@ public class EmploymentStatusesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetEmploymentStatus([FromQuery] GetEmploymentStatusRequest request) {
+    public async Task<IActionResult> GetEmploymentStatus([FromRoute] GetEmploymentStatusRequest request) {
         try {
             var response = await _employmentStatusService.GetEmploymentStatus(request);
 
@@ -62,7 +62,7 @@ public class EmploymentStatusesController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut]
     public async Task<IActionResult> UpdateEmploymentStatus(UpdateEmploymentStatusRequest request) {
         try {
             var response = await _employmentStatusService.UpdateEmplymentStatus(request);
@@ -73,7 +73,7 @@ public class EmploymentStatusesController : ControllerBase
         }
     }
 
-    [HttpPut("change-status/{id}")]
+    [HttpPut("change-status")]
     public async Task<IActionResult> UpdateEmploymentStatusStatus(UpdateEmploymentStatusStatusRequest request) {
         try {
             var response = await _employmentStatusService.UpdateEmploymentStatusStatus(request);

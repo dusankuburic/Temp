@@ -39,7 +39,7 @@ public class EngagementsController : ControllerBase
 
     [Authorize(Roles = "User")]
     [HttpGet("user/{id}")]
-    public async Task<IActionResult> GetUserEmployeeEngagments([FromQuery] GetUserEmployeeEngagementsRequest request) {
+    public async Task<IActionResult> GetUserEmployeeEngagments([FromRoute] GetUserEmployeeEngagementsRequest request) {
         try {
             var response = await _engagementService.GetUserEmployeeEngagements(request);
 
@@ -81,7 +81,7 @@ public class EngagementsController : ControllerBase
     }
 
     [HttpGet("employee/{id}")]
-    public async Task<IActionResult> GetEngagementForEmployee([FromQuery] GetEngagementsForEmployeeRequest request) {
+    public async Task<IActionResult> GetEngagementForEmployee([FromRoute] GetEngagementsForEmployeeRequest request) {
         var response = await _engagementService.GetEngagementForEmployee(request);
 
         return Ok(response);

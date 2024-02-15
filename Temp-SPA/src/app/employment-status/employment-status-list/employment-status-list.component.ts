@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EmploymentStatus } from 'src/app/models/employmentStatus';
-import { PaginatedResult, Pagination } from 'src/app/models/pagination';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { EmploymentStatusService } from 'src/app/services/employment-status.service';
+import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
+import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { EmploymentStatusService } from 'src/app/core/services/employment-status.service';
 
 @Component({
   selector: 'app-employment-status-list',
@@ -27,12 +27,15 @@ export class EmploymentStatusListComponent implements OnInit {
 
   loadEmploymentStatuses(): void {
     this.employmentStatusService.getPagedEmploymentStatuses(this.pagination.currentPage, this.pagination.itemsPerPage)
-      .subscribe((res: PaginatedResult<EmploymentStatus[]>) => {
-        this.employmentStatuses = res.result;
-        this.pagination = res.pagination;
-      }, error => {
-        this.alertify.error(error.error);
-      })
+      .subscribe({
+        next: (res: PaginatedResult<EmploymentStatus[]>) => {
+          this.employmentStatuses = res.result;
+          this.pagination = res.pagination;
+        },
+        error: (error) => {
+          this.alertify.error(error.error);
+        }
+      });
   }
 
   pageChanged(event: any): void {

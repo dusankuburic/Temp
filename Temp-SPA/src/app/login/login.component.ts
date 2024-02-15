@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Admin } from '../models/admin';
-import { Moderator } from '../models/moderator';
-import { User } from '../models/user';
-import { AlertifyService } from '../services/alertify.service';
-import { AuthService } from '../services/auth.service';
+import { Admin } from '../core/models/admin';
+import { Moderator } from '../core/models/moderator';
+import { User } from '../core/models/user';
+import { AlertifyService } from '../core/services/alertify.service';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
     return this.authService.loggedIn();
   }
 
-  login(): any {
+  login(): void {
     if (this.loginForm.valid) {
 
       if (this.loginForm.get('role').value === 'User') {

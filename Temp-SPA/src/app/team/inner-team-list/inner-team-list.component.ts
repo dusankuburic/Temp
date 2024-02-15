@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { InnerTeams } from 'src/app/models/team';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { TeamService } from 'src/app/services/team.service';
+import { InnerTeams } from 'src/app/core/models/team';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { TeamService } from 'src/app/core/services/team.service';
 
 @Component({
   selector: 'app-team-list',
@@ -22,12 +22,15 @@ export class TeamListComponent implements OnInit {
     });
   }
 
-  changeStatus(id: number): any {
-    this.teamService.changeStatus(id).subscribe(() => {
-      this.alertify.success('Status changed');
-    }, error => {
-      this.alertify.error(error.error);
-    })
+  changeStatus(id: number): void {
+    this.teamService.changeStatus(id).subscribe({
+      next: () => {
+        this.alertify.success('Status changed');
+      },
+      error: (error) => {
+        this.alertify.error(error.error);
+      }
+    });
   }
 
 }

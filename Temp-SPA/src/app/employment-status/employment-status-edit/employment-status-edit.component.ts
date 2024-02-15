@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { EmploymentStatus } from 'src/app/models/employmentStatus';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { EmploymentStatusService } from 'src/app/services/employment-status.service';
+import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { EmploymentStatusService } from 'src/app/core/services/employment-status.service';
 
 @Component({
   selector: 'app-employment-status-edit',
@@ -32,12 +32,15 @@ export class EmploymentStatusEditComponent implements OnInit {
     });
   }
 
-  update(): any {
+  update(): void {
     const employmentStatusForm = Object.assign({}, this.editEmploymentStatusForm.value);
-    this.employmentStatusService.updateEmploymentStatus(this.employmentStatus.id, employmentStatusForm).subscribe(() => {
-      this.alertify.success('Successfully updated');
-    }, error => {
-      this.alertify.error(error.error);
+    this.employmentStatusService.updateEmploymentStatus(this.employmentStatus.id, employmentStatusForm).subscribe({
+      next: () => {
+        this.alertify.success('Successfully updated');
+      },
+      error: (error) => {
+        this.alertify.error(error.error);
+      }
     });
   }
 

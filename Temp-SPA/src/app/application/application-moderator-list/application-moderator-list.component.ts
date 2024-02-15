@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ModeratorListApplication, UpdateApplicationRequest } from 'src/app/models/application';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { ApplicationService } from 'src/app/services/application.service';
+import { ModeratorListApplication, UpdateApplicationRequest } from 'src/app/core/models/application';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { ApplicationService } from 'src/app/core/services/application.service';
 
 @Component({
   selector: 'app-application-moderator-list',
@@ -10,7 +10,6 @@ import { ApplicationService } from 'src/app/services/application.service';
 })
 export class ApplicationModeratorListComponent implements OnInit {
   applications: ModeratorListApplication[];
-  appStatusRequest = {} as UpdateApplicationRequest;
   user: any;
 
   constructor(
@@ -27,9 +26,12 @@ export class ApplicationModeratorListComponent implements OnInit {
   }
 
   updateStatus(applicationId: number, teamId: number): void {
-    this.appStatusRequest.moderatorId = this.user.id;
+    const request: UpdateApplicationRequest = {
+      id: applicationId, 
+      moderatorId: this.user.id
+    };
 
-    this.applicationService.updateApplicationStatus(applicationId, this.appStatusRequest).subscribe(() => {
+    this.applicationService.updateApplicationStatus(request).subscribe(() => {
       this.loadApplications(teamId);
       this.alertify.success('Successfully updated');
     }, error => {
