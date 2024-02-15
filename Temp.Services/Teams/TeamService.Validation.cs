@@ -1,6 +1,6 @@
 ﻿using Temp.Domain.Models;
 using Temp.Services.Teams.Exceptions;
-using Temp.Services.Teams.Models.Query;
+using Temp.Services.Teams.Models.Queries;
 
 namespace Temp.Services.Teams;
 
@@ -23,13 +23,13 @@ public partial class TeamService
     }
 
 
-    public void ValidateGetTeamViewModel(GetTeam.TeamViewModel team) {
+    public void ValidateGetTeamViewModel(GetTeamResponse team) {
         if (team is null) {
             throw new NullTeamException();
         }
     }
 
-    public void ValidateGetUserTeamViewModel(GetUserTeam.TeamViewModel team) {
+    public void ValidateGetUserTeamViewModel(GetUserTeamResponse team) {
         if (team is null) {
             throw new NullTeamException();
         }

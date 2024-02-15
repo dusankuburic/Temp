@@ -1,7 +1,7 @@
 ﻿using Temp.Services.Employees;
 using Temp.Services.Employees.Exceptions;
-using Temp.Services.Employees.Models.Command;
-using Temp.Services.Employees.Models.Query;
+using Temp.Services.Employees.Models.Commands;
+using Temp.Services.Employees.Models.Queries;
 
 namespace Temp.API.Controllers;
 
@@ -17,7 +17,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetEmployees([FromQuery] GetEmployees.Request request) {
+    public async Task<IActionResult> GetEmployees([FromQuery] GetEmployeesRequest request) {
         try {
             var response = await _employeeService.GetEmployees(request);
             Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
@@ -34,19 +34,21 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateEmployee.Request request) {
+    public async Task<IActionResult> Create(CreateEmployeeRequest request) {
         try {
             var response = await _employeeService.CreateEmployee(request);
-            return NoContent();
+
+            return Ok(response);
         } catch (EmployeeValidationException employeeValidationException) {
             return BadRequest(GetInnerMessage(employeeValidationException));
         }
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEmployee(int id, UpdateEmployee.Request request) {
-        var response = await _employeeService.UpdateEmployee(id, request);
-        return response.Status ? NoContent() : BadRequest();
+    public async Task<IActionResult> UpdateEmployee([FromQuery] UpdateEmployeeRequest request) {
+        var response = await _employeeService.UpdateEmployee(request);
+
+        return Ok(response);
     }
 
     [HttpPut("change-status/{id}")]
@@ -56,7 +58,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPost("assign")]
-    public async Task<IActionResult> AssignRole(AssignRole.Request request) {
+    public async Task<IActionResult> AssignRole(AssignRoleRequest request) {
 
         //var response = await new AssignRole(_ctx).Do(request);
         //return response.Status ? Ok() : BadRequest(response.Message);
@@ -64,7 +66,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPost("unassign")]
-    public async Task<IActionResult> RemoveRole(RemoveEmployeeRole.Request request) {
+    public async Task<IActionResult> RemoveRole(RemoveEmployeeRoleRequest request) {
         //var response = await new RemoveEmployeeRole(_ctx).Do(request);
         //return response.Status ? (IActionResult)Ok() : BadRequest(response.Message);
         return Ok();

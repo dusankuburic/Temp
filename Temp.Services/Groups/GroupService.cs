@@ -1,7 +1,7 @@
 ﻿using Temp.Database;
 using Temp.Domain.Models;
-using Temp.Services.Groups.Models.Command;
-using Temp.Services.Groups.Models.Query;
+using Temp.Services.Groups.Models.Commands;
+using Temp.Services.Groups.Models.Queries;
 
 namespace Temp.Services.Groups;
 
@@ -117,12 +117,12 @@ public partial class GroupService : IGroupService
     public Task<List<GetModeratorFreeGroupsResponse>> GetModeratorFreeGroups(GetModeratorFreeGroupsRequest request) =>
         TryCatch(async () => {
             var moderatorGroupIds = await _ctx.ModeratorGroups
-                .Where(x => x.ModeratorId == request.moderatorId)
+                .Where(x => x.ModeratorId == request.ModeratorId)
                 .Select(x => x.GroupId)
                 .ToListAsync();
 
             var moderatorFreeGroups = await _ctx.Groups
-                .Where(x => x.OrganizationId == request.organizationId && x.IsActive)
+                .Where(x => x.OrganizationId == request.OrganizationId && x.IsActive)
                 .Where(x => !moderatorGroupIds.Contains(x.Id))
                 .Select(x => new GetModeratorFreeGroupsResponse {
                     Id = x.Id,

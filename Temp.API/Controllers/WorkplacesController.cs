@@ -1,7 +1,7 @@
 ﻿using Temp.Services.Workplaces;
 using Temp.Services.Workplaces.Exceptions;
-using Temp.Services.Workplaces.Models.Command;
-using Temp.Services.Workplaces.Models.Query;
+using Temp.Services.Workplaces.Models.Commands;
+using Temp.Services.Workplaces.Models.Queries;
 
 namespace Temp.API.Controllers;
 

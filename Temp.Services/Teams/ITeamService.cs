@@ -1,15 +1,15 @@
-﻿using Temp.Services.Teams.Models.Command;
-using Temp.Services.Teams.Models.Query;
+﻿using Temp.Services.Teams.Models.Commands;
+using Temp.Services.Teams.Models.Queries;
 
 namespace Temp.Services.Teams;
 
 public interface ITeamService
 {
-    Task<CreateTeam.Response> CreateTeam(CreateTeam.Request request);
-    Task<GetFullTeamTree.TeamTreeViewModel> GetFullTeamTree(int id);
-    Task<GetTeam.TeamViewModel> GetTeam(int id);
-    Task<UpdateTeam.Response> UpdateTeam(int id, UpdateTeam.Request request);
-    Task<bool> UpdateTeamStatus(int teamId);
-    Task<GetUserTeam.TeamViewModel> GetUserTeam(int id);
+    Task<CreateTeamResponse> CreateTeam(CreateTeamRequest request);
+    Task<GetFullTeamTreeResponse> GetFullTeamTree(GetFullTeamTreeRequest request);
+    Task<GetTeamResponse> GetTeam(GetTeamRequest request);
+    Task<UpdateTeamResponse> UpdateTeam(UpdateTeamRequest request);
+    Task<UpdateTeamStatusResponse> UpdateTeamStatus(UpdateTeamStatusRequest request);
+    Task<GetUserTeamResponse> GetUserTeam(GetUserTeamRequest request);
 }
 

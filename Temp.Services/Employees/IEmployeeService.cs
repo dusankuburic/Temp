@@ -1,29 +1,29 @@
 ﻿using Temp.Services._Helpers;
-using Temp.Services.Employees.Models.Command;
-using Temp.Services.Employees.Models.Query;
+using Temp.Services.Employees.Models.Commands;
+using Temp.Services.Employees.Models.Queries;
 
 namespace Temp.Services.Employees;
 
 public interface IEmployeeService
 {
-    Task<CreateEmployee.Response> CreateEmployee(CreateEmployee.Request request);
+    Task<CreateEmployeeResponse> CreateEmployee(CreateEmployeeRequest request);
 
-    Task<GetEmployee.EmployeeViewModel> GetEmployee(int id);
+    Task<GetEmployeeResponse> GetEmployee(int id);
 
-    Task<PagedList<GetEmployees.EmployeeViewModel>> GetEmployees(GetEmployees.Request request);
+    Task<PagedList<GetEmployeesResponse>> GetEmployees(GetEmployeesRequest request);
 
-    Task<PagedList<GetEmployeesWithEngagement.EmployeesWithEngagementViewModel>> GetEmployeesWithEngagement(GetEmployeesWithEngagement.Request request);
+    Task<PagedList<GetEmployeesWithEngagementResponse>> GetEmployeesWithEngagement(GetEmployeesWithEngagementRequest request);
 
-    Task<PagedList<GetEmployeesWithoutEngagement.EmployeesWithoutEngagementViewModel>> GetEmployeesWithoutEngagement(GetEmployeesWithoutEngagement.Request request);
+    Task<PagedList<GetEmployeesWithoutEngagementResponse>> GetEmployeesWithoutEngagement(GetEmployeesWithoutEngagementRequest request);
 
-    Task<UpdateEmployee.Response> UpdateEmployee(int id, UpdateEmployee.Request request);
+    Task<UpdateEmployeeResponse> UpdateEmployee(UpdateEmployeeRequest request);
 
-    Task<RemoveEmployeeRole.Response> RemoveEmployeeRole(RemoveEmployeeRole.Request request);
+    Task<RemoveEmployeeRoleResponse> RemoveEmployeeRole(RemoveEmployeeRoleRequest request);
 
     Task<bool> UpdateEmployeeAccountStatus(int EmployeeId);
 
     Task<bool> UpdateEmployeeRole(string RoleName, int EmployeeId);
 
-    Task<AssignRole.Response> AssignRole(AssignRole.Request request);
+    Task<AssignRoleResponse> AssignRole(AssignRoleRequest request);
 }
 

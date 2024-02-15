@@ -1,15 +1,15 @@
-﻿using Temp.Services.Organizations.Models.Command;
-using Temp.Services.Organizations.Models.Query;
+﻿using Temp.Services.Organizations.Models.Commands;
+using Temp.Services.Organizations.Models.Queries;
 
 namespace Temp.Services.Organizations;
 
 public interface IOrganizationService
 {
-    Task<CreateOrganization.Response> CreateOrganization(CreateOrganization.Request request);
+    Task<CreateOrganizationResponse> CreateOrganization(CreateOrganizationRequest request);
     Task<string> GetInnerGroups(int id);
-    Task<GetOrganization.OrganizationViewModel> GetOrganization(int id);
-    Task<IEnumerable<GetOrganizations.OrganizationViewModel>> GetOrganizations();
-    Task<UpdateOrganization.Response> UpdateOrganization(int id, UpdateOrganization.Request request);
-    Task<bool> UpdateOrganizationStatus(int id);
+    Task<GetOrganizationResponse> GetOrganization(GetOrganizationRequest request);
+    Task<IEnumerable<GetOrganizationResponse>> GetOrganizations();
+    Task<UpdateOrganizationResponse> UpdateOrganization(UpdateOrganizationRequest request);
+    Task<UpdateOrganizationStatusResponse> UpdateOrganizationStatus(UpdateOrganizationStatusRequest request);
 }
 

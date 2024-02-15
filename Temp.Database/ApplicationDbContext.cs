@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Temp.Database.Configurations;
 using Temp.Domain.Models;
 using Temp.Domain.Models.Applications;
 
@@ -39,19 +40,14 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Engagement>()
-            .HasKey(x => new { x.Id, x.EmployeeId, x.WorkplaceId });
-
-        modelBuilder.Entity<Engagement>()
-            .Property(x => x.Id)
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<ModeratorGroup>()
-            .HasKey(x => new { x.ModeratorId, x.GroupId });
-
-        modelBuilder.Entity<Employee>()
-            .Property(x => x.Role)
-            .HasDefaultValue("None");
-
+        modelBuilder.ApplyConfiguration(new ApplicationConfiguration());
+        modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+        modelBuilder.ApplyConfiguration(new EmploymentStatusConfiguration());
+        modelBuilder.ApplyConfiguration(new EngagementConfiguration());
+        modelBuilder.ApplyConfiguration(new GroupConfiguration());
+        modelBuilder.ApplyConfiguration(new ModeratorGroupConfiguration());
+        modelBuilder.ApplyConfiguration(new OrganizationConfiguration());
+        modelBuilder.ApplyConfiguration(new TeamConfiguration());
+        modelBuilder.ApplyConfiguration(new WorkplaceConfiguration());
     }
 }
