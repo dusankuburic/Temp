@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { EmploymentStatus } from '../../models/employmentStatus';
 import { AlertifyService } from '../../services/alertify.service';
 import { EmploymentStatusService } from '../../services/employment-status.service';
-import { PaginatedResult } from 'src/app/models/pagination';
+import { PaginatedResult } from 'src/app/core/models/pagination';
 
 @Injectable()
 export class EmploymentStatusListResolver  {

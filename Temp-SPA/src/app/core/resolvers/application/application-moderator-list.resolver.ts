@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ModeratorListApplication } from 'src/app/models/application';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { ApplicationService } from 'src/app/services/application.service';
+import { ModeratorListApplication } from 'src/app/core/models/application';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { ApplicationService } from 'src/app/core/services/application.service';
 
 @Injectable()
 export class ApplicationModeratorListResolver  {

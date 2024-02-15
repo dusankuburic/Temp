@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Employee } from '../../models/employee';
 import { AlertifyService } from '../../services/alertify.service';
 import { EngagementService } from '../../services/engagement.service';
-import { PaginatedResult } from 'src/app/models/pagination';
+import { PaginatedResult } from 'src/app/core/models/pagination';
 
 @Injectable()
 export class EngagementWithEmployeeResolver  {

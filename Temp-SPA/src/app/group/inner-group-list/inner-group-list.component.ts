@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { InnerGroups } from 'src/app/models/group';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { GroupService } from 'src/app/services/group.service';
+import { InnerGroups } from 'src/app/core/models/group';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { GroupService } from 'src/app/core/services/group.service';
 
 @Component({
   selector: 'app-group-list',
@@ -27,13 +27,16 @@ export class GroupListComponent implements OnInit {
 
   }
 
-  changeStatus(id: number): any {
-    this.groupService.changeStatus(id).subscribe(() => {
-      this.loadGroups();
-      this.alertify.success('Status changed');
-    }, error => {
-      this.alertify.error(error.error);
-    })
+  changeStatus(id: number): void {
+    this.groupService.changeStatus(id).subscribe({
+      next: () => {
+        this.loadGroups();
+        this.alertify.success('Status changed');
+      },
+      error: (error) => {
+        this.alertify.error(error.error);
+      }
+    });
   }
 
 }

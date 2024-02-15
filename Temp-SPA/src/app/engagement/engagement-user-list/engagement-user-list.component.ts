@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UserEngagement } from 'src/app/models/engagement';
+import { UserEngagement } from 'src/app/core/models/engagement';
 
 @Component({
   selector: 'app-engagement-user-list',

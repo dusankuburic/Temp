@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Group } from 'src/app/models/group';
-import { Organization } from 'src/app/models/organization';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { GroupService } from 'src/app/services/group.service';
+import { Group } from 'src/app/core/models/group';
+import { Organization } from 'src/app/core/models/organization';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { GroupService } from 'src/app/core/services/group.service';
 
 @Component({
   selector: 'app-group-create',
@@ -35,15 +35,19 @@ export class GroupCreateComponent implements OnInit {
     });
   }
 
-  create(): any {
+  create(): void {
     this.group = Object.assign({}, this.createGroupForm.value);
     this.group.organizationId = this.organization.id;
 
-    this.groupService.createGroup(this.group).subscribe(() => {
-      this.alertify.success('Successfully created');
-      this.createGroupForm.reset();
-    }, error => {
-      this.alertify.error(error.error);
+    this.groupService.createGroup(this.group).subscribe({
+      next: () => {
+        this.alertify.success('Successfully created');
+        this.createGroupForm.reset();
+      },
+      error: (error) => {
+        this.alertify.error(error.error);
+      }
     });
+  
   }
 }

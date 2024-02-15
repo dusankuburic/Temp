@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Application } from 'src/app/models/application';
+import { Application } from 'src/app/core/models/application';
 
 @Component({
   selector: 'app-application-user',
@@ -8,7 +8,6 @@ import { Application } from 'src/app/models/application';
 })
 export class ApplicationUserComponent implements OnInit {
   application: Application;
-
 
   constructor(private route: ActivatedRoute) { }
 

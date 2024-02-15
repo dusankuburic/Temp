@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Organization } from 'src/app/models/organization';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { OrganizationService } from 'src/app/services/organization.service';
+import { Organization } from 'src/app/core/models/organization';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { OrganizationService } from 'src/app/core/services/organization.service';
 
 @Component({
   selector: 'app-organization-edit',
@@ -33,11 +33,14 @@ export class OrganizationEditComponent implements OnInit {
   }
 
   update(): void {
-    const organizatonForm = Object.assign({}, this.editOrganizationForm.value);
-    this.organizationService.updateOrganization(this.organization.id, organizatonForm).subscribe(() => {
-      this.alertify.success('Successfully updated');
-    }, error => {
-      this.alertify.error(error.error);
+    const organizationForm = Object.assign({}, this.editOrganizationForm.value);
+    this.organizationService.updateOrganization(this.organization.id, organizationForm).subscribe({
+      next: () => {
+        this.alertify.success('Successfully updated');
+      },
+      error: (error) => {
+        this.alertify.error(error.error);
+      }
     });
   }
 

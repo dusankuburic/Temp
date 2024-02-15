@@ -2,20 +2,20 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { UserListApplication } from 'src/app/models/application';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { ApplicationService } from 'src/app/services/application.service';
+import { Application } from 'src/app/core/models/application';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { ApplicationService } from 'src/app/core/services/application.service';
 
-@Injectable({ providedIn: 'root' })
-export class ApplicationUserListResolver  {
+@Injectable()
+export class ApplicationUserResolver  {
 
     constructor(
         private applicationService: ApplicationService,
         private router: Router,
-        private alertify: AlertifyService){}
+        private alertify: AlertifyService) {}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<UserListApplication[]>  {
-        return this.applicationService.getUserApplications(route.params['id']).pipe(
+    resolve(route: ActivatedRouteSnapshot): Observable<Application>  {
+        return this.applicationService.getApplication(route.params['id']).pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving data');
                 this.router.navigate(['']);

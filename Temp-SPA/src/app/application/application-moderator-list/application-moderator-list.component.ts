@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ModeratorListApplication, UpdateApplicationRequest } from 'src/app/models/application';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { ApplicationService } from 'src/app/services/application.service';
+import { ModeratorListApplication, UpdateApplicationRequest } from 'src/app/core/models/application';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { ApplicationService } from 'src/app/core/services/application.service';
 
 @Component({
   selector: 'app-application-moderator-list',
