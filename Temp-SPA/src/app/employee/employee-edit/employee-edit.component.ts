@@ -44,12 +44,9 @@ export class EmployeeEditComponent implements OnInit {
 
     this.createForm();
 
-    if (this.employee.role === 'Moderator')
-    {
+    if (this.employee.role === 'Moderator') {
       this.loadModeratorGroups(this.employee.teamId, this.employee.id);
-    }
-    else
-    {
+    } else {
       this.loadFullTeam(this.employee.teamId);
     }
   }

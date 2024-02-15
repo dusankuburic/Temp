@@ -40,8 +40,8 @@ public class TeamsController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpGet("full/{id}")]
-    public async Task<IActionResult> GetFullTeam([FromQuery] GetFullTeamTreeRequest request) {
+    [HttpGet("full/{Id}")]
+    public async Task<IActionResult> GetFullTeam([FromRoute] GetFullTeamTreeRequest request) {
         try {
             var response = await _teamService.GetFullTeamTree(request);
             return Ok(response);
@@ -51,7 +51,7 @@ public class TeamsController : ControllerBase
     }
 
     [HttpGet("employee/team/{Id}")]
-    public async Task<IActionResult> GetUserTeam([FromQuery] GetUserTeamRequest request) {
+    public async Task<IActionResult> GetUserTeam([FromRoute] GetUserTeamRequest request) {
         try {
             var response = await _teamService.GetUserTeam(request);
             return Ok(response);
@@ -72,8 +72,8 @@ public class TeamsController : ControllerBase
         }
     }
 
-    [HttpPut("change-status/{Id}")]
-    public async Task<IActionResult> UpdateTeamStatus([FromQuery] UpdateTeamStatusRequest request) {
+    [HttpPut("change-status")]
+    public async Task<IActionResult> UpdateTeamStatus(UpdateTeamStatusRequest request) {
         var response = await _teamService.UpdateTeamStatus(request);
 
         return Ok(response);

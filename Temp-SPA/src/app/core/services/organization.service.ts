@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Group } from '../models/group';
-import { Organization } from '../models/organization';
+import { Organization, UpdateOrganizationStatus } from '../models/organization';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +21,8 @@ getOrganization(id: number): any {
   return this.http.get<Organization>(this.baseUrl + 'organizations/' + id);
 }
 
-updateOrganization(id: any, organization: Organization): any {
-  return this.http.put(this.baseUrl + 'organizations/' + id, organization);
+updateOrganization(organization: Organization): any {
+  return this.http.put(this.baseUrl + 'organizations/', organization);
 }
 
 createOrganization(organization: Organization): any {
@@ -33,8 +33,8 @@ getInnerGroups(organizationId: number): any {
   return this.http.get<Group[]>(this.baseUrl + 'organizations/inner-groups/' + organizationId);
 }
 
-changeStatus(id: number): any {
-  return this.http.put(this.baseUrl + 'organizations/change-stauts/' + id, id);
+changeStatus(request: UpdateOrganizationStatus): any {
+  return this.http.put(this.baseUrl + 'organizations/change-status', request);
 }
 
 

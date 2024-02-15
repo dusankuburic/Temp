@@ -45,6 +45,7 @@ export class EngagementCreateComponent implements OnInit {
       this.existingEngagements = data['employeeData'];
     });
     this.createForm();
+    this.loadEmployee();
     this.loadWorkplaces();
     this.loadEmploymentStatuses();
   }
@@ -71,7 +72,6 @@ export class EngagementCreateComponent implements OnInit {
     });
   }
 
-  //INFO: not paged
   loadEmploymentStatuses(): void {
     this.employmentStatusService.getEmploymentStatuses().subscribe({
       next: (res: EmploymentStatus[]) => {

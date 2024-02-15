@@ -28,8 +28,8 @@ getUserApplications(userId: number): any {
   return this.http.get<UserListApplication[]>(this.baseUrl + 'applications/user/' + userId);
 }
 
-updateApplicationStatus(id: number, request: UpdateApplicationRequest): any {
-  return this.http.put(this.baseUrl + 'applications/change-status/' + id, request);
+updateApplicationStatus(request: UpdateApplicationRequest): any {
+  return this.http.put(this.baseUrl + 'applications/change-status/', request);
 }
 
 }

@@ -72,7 +72,7 @@ unassignRole(entity: any): any {
 }
 
 changeStatus(id: number): any {
-  return this.http.put(this.baseUrl + 'employees/change-status/' + id, id);
+  return this.http.put(this.baseUrl + 'employees/change-status/', id);
 }
 
 }

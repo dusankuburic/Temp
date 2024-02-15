@@ -28,7 +28,7 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetApplication([FromQuery] GetApplicationRequest request) {
+    public async Task<IActionResult> GetApplication([FromRoute] GetApplicationRequest request) {
         try {
             var response = await _applicationService.GetApplication(request);
             return Ok(response);
@@ -38,7 +38,7 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpGet("team/{teamId}/moderator/{moderatorId}")]
-    public async Task<IActionResult> GetTeamApplications([FromQuery] GetTeamApplicationsRequest request) {
+    public async Task<IActionResult> GetTeamApplications([FromRoute] GetTeamApplicationsRequest request) {
         try {
             var response = await _applicationService.GetTeamApplications(request);
             return Ok(response);
@@ -48,7 +48,7 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpGet("user/{id}")]
-    public async Task<IActionResult> GetUserApplications([FromQuery] GetUserApplicationsRequest request) {
+    public async Task<IActionResult> GetUserApplications([FromRoute] GetUserApplicationsRequest request) {
         try {
             var response = await _applicationService.GetUserApplications(request);
             return Ok(response);
@@ -57,7 +57,7 @@ public class ApplicationsController : ControllerBase
         }
     }
 
-    [HttpPut("change-status/")]
+    [HttpPut("change-status")]
     public async Task<IActionResult> UpdateApplicationStatus(UpdateApplicationStatusRequest request) {
         try {
             var response = await _applicationService.UpdateApplicationStatus(request);

@@ -32,7 +32,7 @@ export class OrganizationListComponent implements OnInit {
   }
 
   changeStatus(id: number): void {
-    this.organizationsService.changeStatus(id).subscribe({
+    this.organizationsService.changeStatus({id}).subscribe({
       next: () => {
         this.loadOrganizations();
         this.alertify.success('Status changed');

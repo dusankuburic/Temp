@@ -55,8 +55,8 @@ updateWorkplace(workplace: Workplace): any {
   return this.http.put(this.baseUrl + 'workplaces/', workplace);
 }
 
-changeStatus(workplace: UpdateWorkplaceStatus): any {
-  return this.http.put(this.baseUrl + 'workplaces/change-status/', workplace);  
+changeStatus(request: UpdateWorkplaceStatus): any {
+  return this.http.put(this.baseUrl + 'workplaces/change-status', request);  
 }
 
 

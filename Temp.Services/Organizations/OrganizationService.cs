@@ -61,9 +61,9 @@ public partial class OrganizationService : IOrganizationService
         });
     }
 
-    public Task<GetOrganizationResponse> GetOrganization(GetOrganizationRequest request) {
-        return TryCatch(async () => {
-            var res = await _ctx.Organizations
+    public Task<GetOrganizationResponse> GetOrganization(GetOrganizationRequest request) =>
+         TryCatch(async () => {
+             var res = await _ctx.Organizations
             .AsNoTracking()
             .Where(x => x.Id == request.Id && x.IsActive)
             .Select(x => new GetOrganizationResponse
@@ -73,10 +73,10 @@ public partial class OrganizationService : IOrganizationService
             })
             .FirstOrDefaultAsync();
 
-            ValidateGetOrganizationViewModel(res);
-            return res;
-        });
-    }
+             ValidateGetOrganizationViewModel(res);
+             return res;
+         });
+
 
     public Task<IEnumerable<GetOrganizationResponse>> GetOrganizations() {
         return TryCatch(async () => {
@@ -118,7 +118,7 @@ public partial class OrganizationService : IOrganizationService
             .Where(x => x.Id == request.Id)
             .FirstOrDefaultAsync();
 
-        ortanization.IsActive = false;
+        ortanization.IsActive = !ortanization.IsActive;
 
         await _ctx.SaveChangesAsync();
 

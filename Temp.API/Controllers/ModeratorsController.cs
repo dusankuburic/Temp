@@ -16,7 +16,7 @@ public class ModeratorsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetModerator(int id) {
+    public async Task<IActionResult> GetModerator([FromRoute] int id) {
         var response = await new GetModerator(_ctx).Do(id);
         return Ok(response);
     }

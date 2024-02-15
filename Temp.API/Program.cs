@@ -1,4 +1,6 @@
+using FluentValidation.AspNetCore;
 using Temp.Services.Applications;
+using Temp.Services.Applications.Models.Validators;
 using Temp.Services.Employees;
 using Temp.Services.EmploymentStatuses;
 using Temp.Services.Engagements;
@@ -30,9 +32,11 @@ builder.Services.AddCors(opt => {
     });
 });
 
-builder.Services.AddControllers().AddNewtonsoftJson(opt =>
-    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+    .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<CreateApplicationRequestValidator>());
+
+
 
 builder.Services.Configure<ApiBehaviorOptions>(opt => {
     opt.InvalidModelStateResponseFactory = ctx =>

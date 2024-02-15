@@ -36,7 +36,7 @@ getUserTeam(userId: number): any {
 }
 
 changeStatus(id: number): any {
-  return this.http.put(this.baseUrl + 'teams/change-status/' + id, id);
+  return this.http.put(this.baseUrl + 'teams/change-status', id);
 }
 
 }

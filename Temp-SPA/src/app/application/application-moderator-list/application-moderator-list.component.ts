@@ -10,7 +10,6 @@ import { ApplicationService } from 'src/app/core/services/application.service';
 })
 export class ApplicationModeratorListComponent implements OnInit {
   applications: ModeratorListApplication[];
-  appStatusRequest = {} as UpdateApplicationRequest;
   user: any;
 
   constructor(
@@ -27,9 +26,12 @@ export class ApplicationModeratorListComponent implements OnInit {
   }
 
   updateStatus(applicationId: number, teamId: number): void {
-    this.appStatusRequest.moderatorId = this.user.id;
+    const request: UpdateApplicationRequest = {
+      id: applicationId, 
+      moderatorId: this.user.id
+    };
 
-    this.applicationService.updateApplicationStatus(applicationId, this.appStatusRequest).subscribe(() => {
+    this.applicationService.updateApplicationStatus(request).subscribe(() => {
       this.loadApplications(teamId);
       this.alertify.success('Successfully updated');
     }, error => {

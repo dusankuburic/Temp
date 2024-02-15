@@ -28,7 +28,7 @@ public class GroupsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetGroup([FromQuery] GetGroupRequest request) {
+    public async Task<IActionResult> GetGroup([FromRoute] GetGroupRequest request) {
         try {
             var group = await _groupService.GetGroup(request);
             return Ok(group);
@@ -37,7 +37,7 @@ public class GroupsController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut]
     public async Task<IActionResult> UpdateGroup(UpdateGroupRequest request) {
         try {
             var response = await _groupService.UpdateGroup(request);
@@ -48,7 +48,7 @@ public class GroupsController : ControllerBase
     }
 
     [HttpGet("inner-teams/{id}")]
-    public async Task<IActionResult> InnerTeams([FromQuery] GetGroupInnerTeamsRequest request) {
+    public async Task<IActionResult> InnerTeams([FromRoute] GetGroupInnerTeamsRequest request) {
         try {
             var response = await _groupService.GetGroupInnerTeams(request);
             return Ok(response);
@@ -58,7 +58,7 @@ public class GroupsController : ControllerBase
     }
 
     [HttpGet("moderator-groups/{id}")]
-    public async Task<IActionResult> GetModeratorGroups([FromQuery] GetModeratorGroupsRequest request) {
+    public async Task<IActionResult> GetModeratorGroups([FromRoute] GetModeratorGroupsRequest request) {
         try {
             var response = await _groupService.GetModeratorGroups(request);
             return Ok(response);
@@ -68,7 +68,7 @@ public class GroupsController : ControllerBase
     }
 
     [HttpGet("moderator-free-groups/{organizationId}/moderator/{moderatorId}")]
-    public async Task<IActionResult> GetModeratorFreeGroups([FromQuery] GetModeratorFreeGroupsRequest request) {
+    public async Task<IActionResult> GetModeratorFreeGroups([FromRoute] GetModeratorFreeGroupsRequest request) {
         try {
             var response = await _groupService.GetModeratorFreeGroups(request);
             return Ok(response);
@@ -77,8 +77,8 @@ public class GroupsController : ControllerBase
         }
     }
 
-    [HttpPut("change-status/{id}")]
-    public async Task<IActionResult> UpdateGroupStatus([FromQuery] UpdateGroupStatusRequest request) {
+    [HttpPut("change-status")]
+    public async Task<IActionResult> UpdateGroupStatus(UpdateGroupStatusRequest request) {
         try {
             var response = await _groupService.UpdateGroupStatus(request);
             return Ok(response);

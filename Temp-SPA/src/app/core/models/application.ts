@@ -29,5 +29,6 @@ export interface UserListApplication {
 }
 
 export interface UpdateApplicationRequest {
+    id: number;
     moderatorId: number;
 }
