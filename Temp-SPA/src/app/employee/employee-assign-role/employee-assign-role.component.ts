@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AssignRoleDto } from 'src/app/models/assignRoleDto';
-import { Employee } from 'src/app/models/employee';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { EmployeeService } from 'src/app/services/employee.service';
+import { AssignRoleDto } from 'src/app/core/models/assignRoleDto';
+import { Employee } from 'src/app/core/models/employee';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { EmployeeService } from 'src/app/core/services/employee.service';
 
 @Component({
   selector: 'app-employee-assign-role',
@@ -40,32 +40,30 @@ export class EmployeeAssignRoleComponent implements OnInit {
   }
 
   passwordMatchValidator(form: UntypedFormGroup): any {
-    return form.get('password').value === form.get('confirmPassword').value ? null : {mismatch: true};
+    return form.get('password').value === form.get('confirmPassword').value 
+      ? null 
+      : {mismatch: true};
   }
 
-  register(): any {
-    if (this.createAssignRoleForm.valid)
-    {
+  register(): void {
+    if (this.createAssignRoleForm.valid) {
       const formData = Object.assign({}, this.createAssignRoleForm.value);
+      this.assignDto = {...formData};
       this.assignDto.id = this.employee.id;
-      this.assignDto.username = formData.username;
-      this.assignDto.password = formData.password;
-      this.assignDto.role = formData.role;
 
-      if (formData.role === 'Admin'){
+      if (formData.role === 'Admin') {
         this.employeeService.assignRole(this.assignDto).subscribe(() => {
           this.createAssignRoleForm.reset();
           this.router.navigate(['/employees']);
-          this.alertify.success('Successfull admin registration');
+          this.alertify.success('Successful admin registration');
         }, error => {
           this.alertify.error(error.error);
         });
-      }
-      else {
+      } else {
         this.employeeService.assignRole(this.assignDto).subscribe(() => {
           this.createAssignRoleForm.reset();
           this.router.navigate(['/employees']);
-          this.alertify.success('Successfull user registration');
+          this.alertify.success('Successful user registration');
         }, error => {
           this.alertify.error(error.error);
         });

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { InnerTeams } from 'src/app/models/team';
+import { InnerTeams } from 'src/app/core/models/team';
 
 @Component({
   selector: 'app-assigned-inner-teams',

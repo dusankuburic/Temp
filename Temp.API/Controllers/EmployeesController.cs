@@ -28,7 +28,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetEmployee(int id) {
+    public async Task<IActionResult> GetEmployee([FromRoute] int id) {
         var response = await _employeeService.GetEmployee(id);
         return Ok(response);
     }
@@ -44,14 +44,14 @@ public class EmployeesController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEmployee([FromQuery] UpdateEmployeeRequest request) {
+    [HttpPut]
+    public async Task<IActionResult> UpdateEmployee(UpdateEmployeeRequest request) {
         var response = await _employeeService.UpdateEmployee(request);
 
         return Ok(response);
     }
 
-    [HttpPut("change-status/{id}")]
+    [HttpPut("change-status")]
     public async Task<IActionResult> UpdateEmployeeAccountStatus(int id) {
         var response = await _employeeService.UpdateEmployeeAccountStatus(id);
         return response ? NoContent() : BadRequest();

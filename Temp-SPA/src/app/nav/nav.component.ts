@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertifyService } from '../services/alertify.service';
-import { AuthService } from '../services/auth.service';
+import { AlertifyService } from '../core/services/alertify.service';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-nav',

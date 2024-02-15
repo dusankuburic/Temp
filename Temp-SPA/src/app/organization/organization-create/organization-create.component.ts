@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Organization } from 'src/app/models/organization';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { OrganizationService } from 'src/app/services/organization.service';
+import { Organization } from 'src/app/core/models/organization';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { OrganizationService } from 'src/app/core/services/organization.service';
 
 @Component({
   selector: 'app-organization-create',
@@ -27,13 +27,16 @@ export class OrganizationCreateComponent implements OnInit {
     });
   }
 
-  create(): any {
+  create(): void {
     this.organization = Object.assign({}, this.createOrganizationForm.value);
-    this.organizationService.createOrganization(this.organization).subscribe(() => {
-      this.alertify.success('Successfully created');
-      this.createOrganizationForm.reset();
-    }, error => {
-      this.alertify.error(error.error);
+    this.organizationService.createOrganization(this.organization).subscribe({
+      next: () => {
+        this.alertify.success('Successfully created');
+        this.createOrganizationForm.reset();
+      },
+      error: (error) => {
+        this.alertify.error(error.error);
+      }
     });
   }
 }

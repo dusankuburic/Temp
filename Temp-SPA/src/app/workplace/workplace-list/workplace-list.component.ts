@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PaginatedResult, Pagination } from 'src/app/models/pagination';
-import { Workplace } from 'src/app/models/workplace';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { WorkplaceService } from 'src/app/services/workplace.service';
+import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
+import { Workplace } from 'src/app/core/models/workplace';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { WorkplaceService } from 'src/app/core/services/workplace.service';
 
 @Component({
   selector: 'app-workplace-list',
@@ -27,12 +27,15 @@ export class WorkplaceListComponent implements OnInit {
 
   loadWorkplaces(): void {
     this.workplaceService.getPagedWorkplaces(this.pagination.currentPage, this.pagination.itemsPerPage)
-      .subscribe((res: PaginatedResult<Workplace[]>) => {
-        this.workplaces = res.result;
-        this.pagination = res.pagination;
-      }, error => {
-        this.alertify.error(error.error);
-      })
+      .subscribe({
+        next: (res: PaginatedResult<Workplace[]>) => {
+          this.workplaces = res.result;
+          this.pagination = res.pagination;
+        },
+        error: (error) => {
+          this.alertify.error(error.error);
+        }
+      });
   }
 
   pageChanged(event: any): void {
@@ -40,14 +43,16 @@ export class WorkplaceListComponent implements OnInit {
     this.loadWorkplaces();
   }
 
-  changeStatus(id: number) {
-    this.workplaceService.changeStatus({id}).subscribe(() => {
-      this.loadWorkplaces();
-      this.alertify.success('Status change');
-    }, error => {
-      this.alertify.error(error.error);
+  changeStatus(id: number): void {
+    this.workplaceService.changeStatus({id}).subscribe({
+      next: () => {
+        this.loadWorkplaces();
+        this.alertify.success('Status is changed');
+      },
+      error: (error) => {
+        this.alertify.error(error.error);
+      }
     });
   }
-
 
 }

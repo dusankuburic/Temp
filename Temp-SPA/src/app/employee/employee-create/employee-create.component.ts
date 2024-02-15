@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Employee } from 'src/app/models/employee';
-import { Group } from 'src/app/models/group';
-import { Organization } from 'src/app/models/organization';
-import { Team } from 'src/app/models/team';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { EmployeeService } from 'src/app/services/employee.service';
-import { GroupService } from 'src/app/services/group.service';
-import { OrganizationService } from 'src/app/services/organization.service';
+import { Employee } from 'src/app/core/models/employee';
+import { Group } from 'src/app/core/models/group';
+import { Organization } from 'src/app/core/models/organization';
+import { Team } from 'src/app/core/models/team';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { EmployeeService } from 'src/app/core/services/employee.service';
+import { GroupService } from 'src/app/core/services/group.service';
+import { OrganizationService } from 'src/app/core/services/organization.service';
 
 @Component({
   selector: 'app-employee-create',
@@ -74,18 +74,20 @@ export class EmployeeCreateComponent implements OnInit {
   // input => 1: 4343, 3: 3, 2: 5
   // output => 4343, 3, 5
 
-  sliceStringId(str): number{
+  sliceStringId(str): number {
     return str.slice(3, str.length);
   }
 
-  create(): any {
+  create(): void {
     this.employee = Object.assign({}, this.createEmployeeForm.value);
-    this.employeeService.createEmployee(this.employee).subscribe(() => {
-     // this.router.navigate(['employee/create']);
+    this.employeeService.createEmployee(this.employee).subscribe({
+      next: () => {
       this.alertify.success('Successfully created');
       this.createEmployeeForm.reset();
-    }, error => {
-      this.alertify.error(error);
+      },
+      error: (error) => {
+        this.alertify.error(error);
+      }
     });
   }
 

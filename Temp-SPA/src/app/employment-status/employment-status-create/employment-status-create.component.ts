@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { EmploymentStatus } from 'src/app/models/employmentStatus';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { EmploymentStatusService } from 'src/app/services/employment-status.service';
+import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { EmploymentStatusService } from 'src/app/core/services/employment-status.service';
 
 @Component({
   selector: 'app-employment-status-create',
@@ -27,13 +27,16 @@ export class EmploymentStatusCreateComponent implements OnInit {
     });
   }
 
-  create(): any {
+  create(): void {
     this.employmentStatus = Object.assign({}, this.createEmploymentStatusForm.value);
-    this.employmentStatusService.createEmploymentStatus(this.employmentStatus).subscribe(() => {
-      this.alertify.success('Successfully created');
-      this.createEmploymentStatusForm.reset();
-    }, error => {
-      this.alertify.error(error.error);
+    this.employmentStatusService.createEmploymentStatus(this.employmentStatus).subscribe({
+      next: () => {
+        this.alertify.success('Successfully created');
+        this.createEmploymentStatusForm.reset();
+      },
+      error: (error) => {
+        this.alertify.error(error.error);
+      }
     });
   }
 

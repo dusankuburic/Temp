@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { CreateApplication } from 'src/app/models/application';
-import { Team } from 'src/app/models/team';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { ApplicationService } from 'src/app/services/application.service';
+import { CreateApplication } from 'src/app/core/models/application';
+import { Team } from 'src/app/core/models/team';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { ApplicationService } from 'src/app/core/services/application.service';
 
 @Component({
   selector: 'app-application-create',
@@ -37,15 +37,18 @@ export class ApplicationCreateComponent implements OnInit {
     });
   }
 
-  create(): any {
+  create(): void {
     this.application = Object.assign({}, this.createApplicationForm.value);
     this.application.teamId = this.team.id;
     this.application.userId = this.user.id;
-    this.applicationService.createApplication(this.application).subscribe(() => {
-      this.alertify.success('Successfully created');
-      this.createApplicationForm.reset();
-    }, error => {
-      this.alertify.error(error);
+    this.applicationService.createApplication(this.application).subscribe({
+      next: () => {
+        this.alertify.success('Successfully created');
+        this.createApplicationForm.reset();
+      },
+      error: (error) => {
+        this.alertify.error(error);
+      }
     });
   }
 }

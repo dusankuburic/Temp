@@ -14,7 +14,7 @@
                 <td>{{organization.name}}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn btn-primary" [routerLink]="['/organizations/', organization.id]"><i class="fa fa-edit"></i></a>
+                        <a class="btn btn-primary" [routerLink]="['/organizations/' , organization.id]"><i class="fa fa-edit"></i></a>
                         <a class="btn btn-success" (click)="changeStatus(organization.id)" ><i class="fas fa-pen-nib"></i></a>
                     </div>
                 </td>       

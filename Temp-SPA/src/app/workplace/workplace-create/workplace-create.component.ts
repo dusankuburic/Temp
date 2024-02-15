@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Workplace } from 'src/app/models/workplace';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { WorkplaceService } from 'src/app/services/workplace.service';
+import { Workplace } from 'src/app/core/models/workplace';
+import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { WorkplaceService } from 'src/app/core/services/workplace.service';
 
 @Component({
   selector: 'app-workplace-create',
@@ -27,13 +27,16 @@ export class WorkplaceCreateComponent implements OnInit {
     });
   }
 
-  create(): any {
+  create(): void {
     this.workplace = Object.assign({}, this.createWorkplaceForm.value);
-    this.workplaceService.createWorkplace(this.workplace).subscribe(() => {
-      this.alertify.success('Successfully created');
-      this.createWorkplaceForm.reset();
-    }, error => {
-      this.alertify.error(error.error);
+    this.workplaceService.createWorkplace(this.workplace).subscribe({
+      next: () => {
+        this.alertify.success('Successfully created');
+        this.createWorkplaceForm.reset();
+      },
+      error: (error) => {
+        this.alertify.error(error.error);
+      }
     });
   }
 
