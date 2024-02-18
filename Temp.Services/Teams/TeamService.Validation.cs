@@ -23,13 +23,13 @@ public partial class TeamService
     }
 
 
-    public void ValidateGetTeamViewModel(GetTeamResponse team) {
+    public void ValidateGetTeam(GetTeamResponse team) {
         if (team is null) {
             throw new NullTeamException();
         }
     }
 
-    public void ValidateGetUserTeamViewModel(GetUserTeamResponse team) {
+    public void ValidateGetUserTeam(GetUserTeamResponse team) {
         if (team is null) {
             throw new NullTeamException();
         }

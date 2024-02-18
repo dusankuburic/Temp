@@ -1,4 +1,5 @@
-﻿using Temp.Database;
+﻿using AutoMapper.QueryableExtensions;
+using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services.Engagements.Models.Commands;
 using Temp.Services.Engagements.Models.Queries;
@@ -8,36 +9,23 @@ namespace Temp.Services.Engagements;
 public partial class EngagementService : IEngagementService
 {
     private readonly ApplicationDbContext _ctx;
+    private readonly IMapper _mapper;
 
-    public EngagementService(ApplicationDbContext ctx) {
+    public EngagementService(ApplicationDbContext ctx, IMapper mapper) {
         _ctx = ctx;
+        _mapper = mapper;
     }
 
     public Task<CreateEngagementResponse> CreateEngagement(CreateEngagementRequest request) =>
         TryCatch(async () => {
-            var engagement = new Engagement {
-                EmployeeId = request.EmployeeId,
-                WorkplaceId = request.WorkplaceId,
-                EmploymentStatusId = request.EmploymentStatusId,
-                DateFrom = request.DateFrom,
-                DateTo = request.DateTo,
-                Salary = request.Salary
-            };
+            var engagement = _mapper.Map<Engagement>(request);
 
             ValidateEngagementOnCreate(engagement);
 
             _ctx.Engagements.Add(engagement);
             await _ctx.SaveChangesAsync();
 
-            return new CreateEngagementResponse {
-                Id = engagement.Id,
-                EmployeeId = request.EmployeeId,
-                WorkplaceId = request.WorkplaceId,
-                EmploymentStatusId = request.EmploymentStatusId,
-                DateFrom = request.DateFrom,
-                DateTo = request.DateTo,
-                Salary = request.Salary
-            };
+            return _mapper.Map<CreateEngagementResponse>(engagement);
         });
 
     public Task<List<GetUserEmployeeEngagementsResponse>> GetUserEmployeeEngagements(GetUserEmployeeEngagementsRequest request) =>
@@ -52,14 +40,8 @@ public partial class EngagementService : IEngagementService
                 .Include(x => x.Workplace)
                 .Include(x => x.EmploymentStatus)
                 .Where(x => x.EmployeeId == userEmployeeId)
-                .Select(x => new GetUserEmployeeEngagementsResponse {
-                    WorkplaceName = x.Workplace.Name,
-                    EmploymentStatusName = x.EmploymentStatus.Name,
-                    DateFrom = x.DateFrom,
-                    DateTo = x.DateTo,
-                    Salary = x.Salary
-                })
-                .AsNoTracking()
+                .ProjectTo<GetUserEmployeeEngagementsResponse>(_mapper.ConfigurationProvider)
+
                 .ToListAsync();
 
             return engagements;
@@ -71,15 +53,7 @@ public partial class EngagementService : IEngagementService
                 .Include(x => x.Workplace)
                 .Include(x => x.EmploymentStatus)
                 .Where(x => x.EmployeeId == request.Id)
-                .Select(x => new GetEngagementsForEmployeeResponse {
-                    Id = x.Id,
-                    WorkplaceName = x.Workplace.Name,
-                    EmploymentStatusName = x.EmploymentStatus.Name,
-                    DateFrom = x.DateFrom,
-                    DateTo = x.DateTo,
-                    Salary = x.Salary
-                })
-                .AsNoTracking()
+                .ProjectTo<GetEngagementsForEmployeeResponse>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
             return engagements;

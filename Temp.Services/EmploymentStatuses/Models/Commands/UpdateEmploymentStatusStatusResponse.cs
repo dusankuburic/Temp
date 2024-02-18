@@ -2,5 +2,5 @@
 
 public class UpdateEmploymentStatusStatusResponse
 {
-    public bool Success { get; set; }
+    public bool Success { get; set; } = true;
 }

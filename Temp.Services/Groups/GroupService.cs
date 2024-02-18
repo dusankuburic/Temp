@@ -1,4 +1,5 @@
-﻿using Temp.Database;
+﻿using AutoMapper.QueryableExtensions;
+using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services.Groups.Models.Commands;
 using Temp.Services.Groups.Models.Queries;
@@ -8,43 +9,30 @@ namespace Temp.Services.Groups;
 public partial class GroupService : IGroupService
 {
     private readonly ApplicationDbContext _ctx;
+    private readonly IMapper _mapper;
 
-    public GroupService(ApplicationDbContext ctx) {
+    public GroupService(ApplicationDbContext ctx, IMapper mapper) {
         _ctx = ctx;
+        _mapper = mapper;
     }
 
     public Task<CreateGroupResponse> CreateGroup(CreateGroupRequest request) =>
         TryCatch(async () => {
-
-            //TODO: group exists?
-
-            var group = new Group {
-                Name = request.Name,
-                OrganizationId = request.OrganizationId
-            };
+            var group = _mapper.Map<Group>(request);
 
             ValidateGroupOnCreate(group);
 
             _ctx.Groups.Add(group);
             await _ctx.SaveChangesAsync();
 
-
-            return new CreateGroupResponse {
-                Id = group.Id,
-                Name = group.Name,
-                OrganizationId = group.OrganizationId
-            };
+            return _mapper.Map<CreateGroupResponse>(group);
         });
 
     public Task<GetGroupResponse> GetGroup(GetGroupRequest request) =>
         TryCatch(async () => {
             var group = await _ctx.Groups
                 .Where(x => x.Id == request.Id && x.IsActive)
-                .Select(x => new GetGroupResponse {
-                    Id = x.Id,
-                    Name = x.Name,
-                    OrganizationId = x.OrganizationId
-                })
+                .ProjectTo<GetGroupResponse>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
             return group;
@@ -52,25 +40,20 @@ public partial class GroupService : IGroupService
 
     public Task<UpdateGroupResponse> UpdateGroup(UpdateGroupRequest request) =>
         TryCatch(async () => {
-            var groupExists = await GroupExists(request.Name, request.OrganizationId);
-            if (groupExists)
-                return new UpdateGroupResponse { Success = false };
+            var group = await _ctx.Groups
+                .Where(x => x.Id == request.Id)
+                .FirstOrDefaultAsync();
 
-            var group = _ctx.Groups.FirstOrDefault(x => x.Id == request.Id);
+            _mapper.Map(request, group);
 
-            group.Name = request.Name;
             ValidateGroupOnUpdate(group);
 
             await _ctx.SaveChangesAsync();
 
-            return new UpdateGroupResponse {
-                Id = group.Id,
-                Name = group.Name,
-                Success = true
-            };
+            return _mapper.Map<UpdateGroupResponse>(group);
         });
 
-    public Task<UpdateGroupResponse> UpdateGroupStatus(UpdateGroupStatusRequest request) =>
+    public Task<UpdateGroupStatusResponse> UpdateGroupStatus(UpdateGroupStatusRequest request) =>
         TryCatch(async () => {
             var group = await _ctx.Groups
                 .Where(x => x.Id == request.Id)
@@ -82,7 +65,7 @@ public partial class GroupService : IGroupService
 
             await _ctx.SaveChangesAsync();
 
-            return new UpdateGroupResponse { Success = true };
+            return new UpdateGroupStatusResponse();
         });
 
     public Task<GetGroupInnerTeamsResponse> GetGroupInnerTeams(GetGroupInnerTeamsRequest request) =>
@@ -93,7 +76,7 @@ public partial class GroupService : IGroupService
                 .Select(x => new GetGroupInnerTeamsResponse {
                     Id = x.Id,
                     Name = x.Name,
-                    Teams = x.Teams.Select(t => new InnerTeam{ Id = t.Id, Name = t.Name})
+                    Teams = x.Teams.Select(t => new InnerTeam{ Id = t.Id, Name = t.Name })
                 })
                 .FirstOrDefaultAsync();
 
@@ -103,12 +86,10 @@ public partial class GroupService : IGroupService
     public Task<List<GetModeratorGroupsResponse>> GetModeratorGroups(GetModeratorGroupsRequest request) =>
         TryCatch(async () => {
             var moderatorGroups = await _ctx.ModeratorGroups
-                .Where(x => x.ModeratorId == request.Id)
                 .Include(x => x.Group)
-                .Select(x => new GetModeratorGroupsResponse {
-                    Id = x.Group.Id,
-                    Name = x.Group.Name
-                })
+                .Where(x => x.ModeratorId == request.Id)
+                .ProjectTo<GetModeratorGroupsResponse>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
                 .ToListAsync();
 
             return moderatorGroups;
@@ -124,10 +105,8 @@ public partial class GroupService : IGroupService
             var moderatorFreeGroups = await _ctx.Groups
                 .Where(x => x.OrganizationId == request.OrganizationId && x.IsActive)
                 .Where(x => !moderatorGroupIds.Contains(x.Id))
-                .Select(x => new GetModeratorFreeGroupsResponse {
-                    Id = x.Id,
-                    Name = x.Name
-                })
+                .ProjectTo<GetModeratorFreeGroupsResponse>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
                 .ToListAsync();
 
             return moderatorFreeGroups;

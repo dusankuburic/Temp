@@ -51,7 +51,7 @@ namespace Temp.Services.Applications
             }
         }
 
-        public void ValidateGetApplicationViewModel(GetApplicationResponse application) {
+        public void ValidateGetApplication(GetApplicationResponse application) {
             if (application is null) {
                 throw new NullApplicationException();
             }
@@ -63,7 +63,7 @@ namespace Temp.Services.Applications
             }
         }
 
-        public void ValidateGetUserApplicationsViewModel(IEnumerable<GetUserApplicationsResponse> applicationViewModels) {
+        public void ValidateGetUserApplications(IEnumerable<GetUserApplicationsResponse> applicationViewModels) {
             if (applicationViewModels.Count() == 0) {
                 throw new ApplicationWithUserStorageException();
             }
