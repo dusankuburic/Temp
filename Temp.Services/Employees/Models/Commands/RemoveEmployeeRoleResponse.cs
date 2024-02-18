@@ -2,5 +2,5 @@
 
 public class RemoveEmployeeRoleResponse
 {
-    public bool Success { get; set; }
+    public bool Success { get; set; } = true;
 }

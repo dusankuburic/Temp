@@ -1,4 +1,5 @@
-﻿using Temp.Database;
+﻿using AutoMapper.QueryableExtensions;
+using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services.Organizations.Models.Commands;
 using Temp.Services.Organizations.Models.Queries;
@@ -17,22 +18,14 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<CreateOrganizationResponse> CreateOrganization(CreateOrganizationRequest request) {
         return TryCatch(async () => {
-
-            var organization = new Organization
-            {
-                Name = request.Name,
-                IsActive = true
-            };
+            var organization = _mapper.Map<Organization>(request);
 
             ValidateOrganizationOnCreate(organization);
 
             _ctx.Organizations.Add(organization);
             await _ctx.SaveChangesAsync();
 
-            return new CreateOrganizationResponse {
-                Id = organization.Id,
-                Name = organization.Name
-            };
+            return _mapper.Map<CreateOrganizationResponse>(organization);
         });
     }
 
@@ -63,53 +56,45 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<GetOrganizationResponse> GetOrganization(GetOrganizationRequest request) =>
          TryCatch(async () => {
-             var res = await _ctx.Organizations
-            .AsNoTracking()
-            .Where(x => x.Id == request.Id && x.IsActive)
-            .Select(x => new GetOrganizationResponse
-            {
-                Id = x.Id,
-                Name = x.Name
-            })
-            .FirstOrDefaultAsync();
+             var organizaiton = await _ctx.Organizations
+                .Where(x => x.Id == request.Id && x.IsActive)
+                .ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
 
-             ValidateGetOrganizationViewModel(res);
-             return res;
+             ValidateGetOrganizationViewModel(organizaiton);
+
+             return organizaiton;
          });
 
 
     public Task<IEnumerable<GetOrganizationResponse>> GetOrganizations() {
         return TryCatch(async () => {
-            var res = await _ctx.Organizations
-            .AsNoTracking()
-            .Where(x => x.IsActive)
-            .Select(x => new GetOrganizationResponse
-            {
-                Id = x.Id,
-                Name = x.Name
-            })
-            .ToListAsync();
+            var organizations = await _ctx.Organizations
+                .Where(x => x.IsActive)
+                .ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
+                .ToListAsync();
 
-            ValidateStorageOrganizations(res);
+            ValidateStorageOrganizations(organizations);
 
-            return res;
+            return organizations;
         });
     }
 
     public Task<UpdateOrganizationResponse> UpdateOrganization(UpdateOrganizationRequest request) {
         return TryCatch(async () => {
-            var organization = _ctx.Organizations
-                .FirstOrDefault(x => x.Id == request.Id);
+            var organization = await _ctx.Organizations
+                .Where(x => x.Id == request.Id)
+                .FirstOrDefaultAsync();
 
-            organization.Name = request.Name;
+            _mapper.Map(request, organization);
 
             ValidateOrganizationOnUpdate(organization);
 
             await _ctx.SaveChangesAsync();
 
-            return new UpdateOrganizationResponse {
-                Success = true
-            };
+            return new UpdateOrganizationResponse();
         });
     }
 
@@ -122,11 +107,8 @@ public partial class OrganizationService : IOrganizationService
 
         await _ctx.SaveChangesAsync();
 
-        return new UpdateOrganizationStatusResponse {
-            Success = true
-        };
+        return new UpdateOrganizationStatusResponse();
     }
-
 
     private async Task<bool> OrganizationExists(string name) {
         return await _ctx.Organizations.AnyAsync(x => x.Name == name);

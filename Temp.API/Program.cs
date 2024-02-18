@@ -1,17 +1,34 @@
 using FluentValidation.AspNetCore;
 using Temp.Services.Applications;
+using Temp.Services.Applications.Mappings;
 using Temp.Services.Applications.Models.Validators;
 using Temp.Services.Employees;
+using Temp.Services.Employees.Mappings;
 using Temp.Services.EmploymentStatuses;
+using Temp.Services.EmploymentStatuses.Mappings;
 using Temp.Services.Engagements;
+using Temp.Services.Engagements.Mappings;
 using Temp.Services.Groups;
+using Temp.Services.Groups.Mapping;
 using Temp.Services.Organizations;
+using Temp.Services.Organizations.Mapping;
 using Temp.Services.Teams;
+using Temp.Services.Teams.Mappings;
 using Temp.Services.Workplaces;
+using Temp.Services.Workplaces.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(cfg => {
+    cfg.AddProfile<ApplicationsMappingProfile>();
+    cfg.AddProfile<EmployeesMappingProfile>();
+    cfg.AddProfile<EmploymentStatusesMappingProfile>();
+    cfg.AddProfile<EngagementsMappingProfile>();
+    cfg.AddProfile<GroupsMappingProfile>();
+    cfg.AddProfile<OrganizationsMappingProfile>();
+    cfg.AddProfile<TeamsMappingProfile>();
+    cfg.AddProfile<WorkpacesMappingProfile>();
+});
 
 builder.Services.AddScoped<IEmploymentStatusService, EmploymentStatusService>();
 builder.Services.AddScoped<IEngagementService, EngagementService>();
@@ -21,7 +38,6 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
-
 
 builder.Services.AddCors(opt => {
     opt.AddPolicy("CorsPolicy", policy => {
@@ -95,8 +111,6 @@ using (var scope = app.Services.CreateScope()) {
     }
 }
 
-
-
 if (app.Environment.IsDevelopment()) {
     app.UseDeveloperExceptionPage();
 }
@@ -122,8 +136,7 @@ app.UseAuthorization();
 
 app.UseCors("CorsPolicy");
 
-app.UseEndpoints(endpoints => {
-    endpoints.MapControllers();
-});
+app.MapControllers();
+
 
 app.Run();

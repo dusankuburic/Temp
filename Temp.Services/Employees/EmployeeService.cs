@@ -1,4 +1,5 @@
-﻿using Temp.Database;
+﻿using AutoMapper.QueryableExtensions;
+using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services._Helpers;
 using Temp.Services.Employees.Models.Commands;
@@ -9,90 +10,70 @@ namespace Temp.Services.Employees;
 public partial class EmployeeService : IEmployeeService
 {
     private readonly ApplicationDbContext _ctx;
+    private readonly IMapper _mapper;
 
-    public EmployeeService(ApplicationDbContext ctx) {
+    public EmployeeService(ApplicationDbContext ctx, IMapper mapper) {
         _ctx = ctx;
+        _mapper = mapper;
     }
 
-    public Task<CreateEmployeeResponse>
-    CreateEmployee(CreateEmployeeRequest request) =>
+    public Task<CreateEmployeeResponse> CreateEmployee(CreateEmployeeRequest request) =>
     TryCatch(async () => {
-        var employee = new Employee
-        {
-            FirstName = request.FirstName,
-            LastName =  request.LastName,
-            TeamId = request.TeamId
-        };
+        var employee = _mapper.Map<Employee>(request);
 
         ValidateEmployeeOnCreate(employee);
 
         _ctx.Employees.Add(employee);
         await _ctx.SaveChangesAsync();
 
-        return new CreateEmployeeResponse {
-            Id = employee.Id,
-            FirstName = employee.FirstName,
-            LastName = employee.LastName,
-            TeamId = employee.TeamId ?? 0
-        };
+        return _mapper.Map<CreateEmployeeResponse>(employee);
     });
 
-    public Task<GetEmployeeResponse>
-    GetEmployee(int id) =>
+    public Task<GetEmployeeResponse> GetEmployee(int id) =>
     TryCatch(async () => {
         var employee = await _ctx.Employees
             .Where(x => x.Id == id)
-            .Select(x => new GetEmployeeResponse
-            {
-                Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                TeamId = x.TeamId,
-                Role = x.Role,
-
-            })
+            .ProjectTo<GetEmployeeResponse>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
 
-        ValidateGetEmployeeViewModel(employee);
+        ValidateGetEmployee(employee);
 
         return employee;
     });
 
-    public Task<PagedList<GetEmployeesResponse>>
-    GetEmployees(GetEmployeesRequest request) =>
+    public Task<PagedList<GetEmployeesResponse>> GetEmployees(GetEmployeesRequest request) =>
     TryCatch(async () => {
-        var employees = _ctx.Employees
+        var employeesQuery = _ctx.Employees
             .Include(x => x.User)
             .Include(x => x.Moderator)
             .Include(x => x.Admin)
-            .Select(x => new GetEmployeesResponse
-            {
-                Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                Role = x.Role,
-                IsActive = x.User.IsActive || x.Moderator.IsActive || x.Admin.IsActive
-            }).AsQueryable();
+            .ProjectTo<GetEmployeesResponse>(_mapper.ConfigurationProvider)
+            .AsNoTracking()
+            .AsQueryable();
 
         if (!string.IsNullOrEmpty(request.Role)) {
-            employees = employees.Where(x => x.Role == request.Role)
+            employeesQuery = employeesQuery.Where(x => x.Role == request.Role)
                 .AsQueryable();
         }
 
         if (!string.IsNullOrEmpty(request.FirstName)) {
-            employees = employees.Where(x => x.FirstName.Contains(request.FirstName))
+            employeesQuery = employeesQuery.Where(x => x.FirstName.Contains(request.FirstName))
                 .AsQueryable();
         }
 
         if (!string.IsNullOrEmpty(request.LastName)) {
-            employees = employees.Where(x => x.LastName.Contains(request.LastName))
+            employeesQuery = employeesQuery.Where(x => x.LastName.Contains(request.LastName))
                 .AsQueryable();
         }
 
+        var employees = await PagedList<GetEmployeesResponse>.CreateAsync(
+            employeesQuery,
+            request.PageNumber,
+            request.PageSize);
 
         ValidateStorageEmployees(employees);
 
-        return await PagedList<GetEmployeesResponse>.CreateAsync(employees, request.PageNumber, request.PageSize);
+        return employees;
     });
 
     public Task<PagedList<GetEmployeesWithEngagementResponse>>
@@ -102,30 +83,30 @@ public partial class EmployeeService : IEmployeeService
 
         //TODO fix this horror
         var employeesWithEngagement = _ctx.Employees
-        .Include(x => x.Engagements)
-        .Where(x => x.Engagements.Count != 0)
-        .Where(x => x.Engagements.Any(n => n.DateTo > currentDateTime))
-        .OrderByDescending(x => x.Id)
-        .Select(x => new GetEmployeesWithEngagementResponse
-        {
-            Id = x.Id,
-            FirstName = x.FirstName,
-            LastName = x.LastName,
-            Role = x.Role,
-            Salary = _ctx.Engagements
-                .Where(e => e.EmployeeId == x.Id)
-                .Select(e => e.Salary)
-                .ToList(),
-            Workplace = _ctx.Engagements
-                .Where(e => e.EmployeeId == x.Id)
-                .Select(e => e.Workplace.Name)
-                .ToList(),
-            EmploymentStatus = _ctx.Engagements
-                .Where(e => e.EmployeeId == x.Id)
-                .Select(e => e.EmploymentStatus.Name)
-                .ToList()
-        })
-        .AsQueryable();
+            .Include(x => x.Engagements)
+            .Where(x => x.Engagements.Count != 0)
+            .Where(x => x.Engagements.Any(n => n.DateTo > currentDateTime))
+            .OrderByDescending(x => x.Id)
+            .Select(x => new GetEmployeesWithEngagementResponse
+            {
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Role = x.Role,
+                Salary = _ctx.Engagements
+                    .Where(e => e.EmployeeId == x.Id)
+                    .Select(e => e.Salary)
+                    .ToList(),
+                Workplace = _ctx.Engagements
+                    .Where(e => e.EmployeeId == x.Id)
+                    .Select(e => e.Workplace.Name)
+                    .ToList(),
+                EmploymentStatus = _ctx.Engagements
+                    .Where(e => e.EmployeeId == x.Id)
+                    .Select(e => e.EmploymentStatus.Name)
+                    .ToList()
+            })
+            .AsQueryable();
 
         if (request.MinSalary != 0 || request.MaxSalary != 5000) {
             employeesWithEngagement = employeesWithEngagement
@@ -150,10 +131,14 @@ public partial class EmployeeService : IEmployeeService
                 .AsQueryable();
         }
 
-        ValidateGetEmployeeWithEngagementViewModel(employeesWithEngagement);
+        var employees = await PagedList<GetEmployeesWithEngagementResponse>.CreateAsync(
+            employeesWithEngagement,
+            request.PageNumber,
+            request.PageSize);
 
-        return await PagedList<GetEmployeesWithEngagementResponse>.CreateAsync(employeesWithEngagement,
-            request.PageNumber, request.PageSize);
+        ValidateGetEmployeeWithEngagement(employees);
+
+        return employees;
     });
 
     public Task<PagedList<GetEmployeesWithoutEngagementResponse>>
@@ -163,32 +148,28 @@ public partial class EmployeeService : IEmployeeService
         var currentDateTime = DateTime.Now;
 
         var employeesWithoutEngagement = _ctx.Employees
-        .Include(x => x.Engagements)
-        .Where(x => x.Engagements.All(n => n.DateTo < currentDateTime) || x.Engagements.Count == 0)
-        .OrderByDescending(x => x.Id)
-        .Select(x => new GetEmployeesWithoutEngagementResponse
-        {
-            Id = x.Id,
-            FirstName = x.FirstName,
-            LastName = x.LastName,
-            Role = x.Role
-        })
-        .AsQueryable();
+            .Include(x => x.Engagements.Where(n => n.DateTo < currentDateTime))
+            .OrderByDescending(x => x.Id)
+            .ProjectTo<GetEmployeesWithoutEngagementResponse>(_mapper.ConfigurationProvider)
+            .AsQueryable();
 
-        ValidateGetEmployeeWithoutEngagementViewModel(employeesWithoutEngagement);
+        var employees = await PagedList<GetEmployeesWithoutEngagementResponse>.CreateAsync(
+            employeesWithoutEngagement,
+            request.PageNumber,
+            request.PageSize);
 
-        return await PagedList<GetEmployeesWithoutEngagementResponse>.CreateAsync(employeesWithoutEngagement,
-            request.PageNumber, request.PageSize);
+        ValidateGetEmployeeWithoutEngagement(employees);
+
+        return employees;
     });
 
-    public Task<UpdateEmployeeResponse>
-    UpdateEmployee(UpdateEmployeeRequest request) =>
+    public Task<UpdateEmployeeResponse> UpdateEmployee(UpdateEmployeeRequest request) =>
     TryCatch(async () => {
-        var employee = _ctx.Employees.FirstOrDefault(x => x.Id == request.Id);
+        var employee = await _ctx.Employees
+            .Where(x => x.Id == request.Id)
+            .FirstOrDefaultAsync();
 
-        employee.FirstName = request.FirstName;
-        employee.LastName = request.LastName;
-        employee.TeamId = request.TeamId;
+        _mapper.Map(request, employee);
 
         ValidateEmployeeOnUpdate(employee);
 
@@ -205,24 +186,18 @@ public partial class EmployeeService : IEmployeeService
         if (employee.Role == "Admin") {
             var admin = await _ctx.Admins.FirstOrDefaultAsync(x => x.EmployeeId == request.Id);
             _ctx.Admins.Remove(admin);
-        }
-
-        if (employee.Role == "User") {
+        } else if (employee.Role == "User") {
             var user = await _ctx.Users.FirstOrDefaultAsync(x => x.EmployeeId == request.Id);
             _ctx.Users.Remove(user);
-        }
-
-        if (employee.Role == "Moderator") {
+        } else if (employee.Role == "Moderator") {
             var moderator = await _ctx.Moderators.FirstOrDefaultAsync(x => x.EmployeeId == request.Id);
             _ctx.Moderators.Remove(moderator);
+        } else {
+            employee.Role = "None";
         }
-
-        employee.Role = "None";
         await _ctx.SaveChangesAsync();
 
-        return new RemoveEmployeeRoleResponse {
-            Success = true
-        };
+        return new RemoveEmployeeRoleResponse();
     }
 
     public async Task<bool> UpdateEmployeeAccountStatus(int EmployeeId) {
@@ -231,21 +206,19 @@ public partial class EmployeeService : IEmployeeService
             .Include(x => x.Admin)
             .Include(x => x.Moderator)
             .Where(x => x.Id == EmployeeId)
+            .AsNoTracking()
             .FirstOrDefaultAsync();
 
         switch (employee.Role) {
             case "User":
                 employee.User.IsActive = !employee.User.IsActive;
                 break;
-
             case "Moderator":
                 employee.Moderator.IsActive = !employee.Moderator.IsActive;
                 break;
-
             case "Admin":
                 employee.Admin.IsActive = !employee.Admin.IsActive;
                 break;
-
             case "None":
                 break;
         }
@@ -257,8 +230,8 @@ public partial class EmployeeService : IEmployeeService
 
     public async Task<bool> UpdateEmployeeRole(string RoleName, int EmployeeId) {
         var empolyee = await _ctx.Employees
-                .Where(x => x.Id == EmployeeId)
-                .FirstOrDefaultAsync();
+            .Where(x => x.Id == EmployeeId)
+            .FirstOrDefaultAsync();
 
         empolyee.Role = RoleName;
         await _ctx.SaveChangesAsync();
