@@ -29,8 +29,8 @@ public class TeamsController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpGet]
-    public async Task<IActionResult> GetTeam([FromQuery] GetTeamRequest request) {
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetTeam([FromRoute] GetTeamRequest request) {
         try {
             var response = await _teamService.GetTeam(request);
             return Ok(response);

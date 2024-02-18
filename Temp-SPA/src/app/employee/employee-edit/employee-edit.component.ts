@@ -153,7 +153,8 @@ export class EmployeeEditComponent implements OnInit {
     if (employeeForm.teamId == null) {
       employeeForm.teamId = this.employee.teamId;
     }
-    this.employeeService.updateEmployee(this.employee.id, employeeForm).subscribe({
+    employeeForm.id = this.employee.id;
+    this.employeeService.updateEmployee(employeeForm).subscribe({
       next: () => {
         this.loadFullTeam(employeeForm.teamId);
         this.alertify.success('Successfully updated');

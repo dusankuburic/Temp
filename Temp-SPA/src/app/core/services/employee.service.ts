@@ -59,8 +59,8 @@ createEmployee(employee: Employee): any {
   return this.http.post(this.baseUrl + 'employees', employee);
 }
 
-updateEmployee(id: any, employee: Employee): any {
-  return this.http.put(this.baseUrl + 'employees/' + id, employee);
+updateEmployee(employee: Employee): any {
+  return this.http.put(this.baseUrl + 'employees', employee);
 }
 
 assignRole(entity: AssignRoleDto): any {

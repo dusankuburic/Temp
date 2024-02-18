@@ -1,4 +1,5 @@
-﻿using Temp.Database;
+﻿using AutoMapper.QueryableExtensions;
+using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services.Teams.Models.Commands;
 using Temp.Services.Teams.Models.Queries;
@@ -17,59 +18,39 @@ public partial class TeamService : ITeamService
 
     public Task<CreateTeamResponse> CreateTeam(CreateTeamRequest request) {
         return TryCatch(async () => {
-            var team = new Team
-            {
-                Name = request.Name,
-                GroupId = request.GroupId
-            };
+            var team = _mapper.Map<Team>(request);
 
             ValidateTeamOnCreate(team);
 
             _ctx.Teams.Add(team);
             await _ctx.SaveChangesAsync();
 
-            return new CreateTeamResponse {
-                Id = team.Id,
-                Name = team.Name,
-                GroupId = team.GroupId
-            };
+            return _mapper.Map<CreateTeamResponse>(team);
         });
     }
 
     public Task<GetFullTeamTreeResponse> GetFullTeamTree(GetFullTeamTreeRequest requst) {
         return TryCatch(async () => {
             var team = await _ctx.Teams
-                .AsNoTracking()
                 .Include(x => x.Group)
-                .Include(x => x.Group.Organization)
+                .ThenInclude(x => x.Organization)
                 .Where(x => x.Id == requst.Id && x.IsActive)
+                .ProjectTo<GetFullTeamTreeResponse>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
-            return new GetFullTeamTreeResponse {
-                Id = team.Id,
-                OrganizationName = team.Group.Organization.Name,
-                OrganizationId = team.Group.Organization.Id,
-                GroupName = team.Group.Name,
-                TeamName = team.Name
-            };
+            return team;
         });
     }
 
     public Task<GetTeamResponse> GetTeam(GetTeamRequest request) {
         return TryCatch(async () => {
             var team = await _ctx.Teams
-                .AsNoTracking()
                 .Include(x => x.Group)
                 .Where(x => x.Id == request.Id && x.IsActive)
-                .Select(x => new GetTeamResponse
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    GroupId = x.Group.Id
-                })
+                .ProjectTo<GetTeamResponse>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
-            ValidateGetTeamViewModel(team);
+            ValidateGetTeam(team);
 
             return team;
         });
@@ -78,17 +59,13 @@ public partial class TeamService : ITeamService
     public Task<GetUserTeamResponse> GetUserTeam(GetUserTeamRequest request) {
         return TryCatch(async () => {
             var team = await _ctx.Users
-                .AsNoTracking()
                 .Include(x => x.Employee)
+                .ThenInclude(x => x.Team)
                 .Where(x => x.Id == request.Id && x.IsActive)
-                .Select(x => new GetUserTeamResponse
-                {
-                    Id = x.Employee.Team.Id,
-                    Name = x.Employee.Team.Name
-                })
+                .ProjectTo<GetUserTeamResponse>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
-            ValidateGetUserTeamViewModel(team);
+            ValidateGetUserTeam(team);
 
             return team;
         });
@@ -96,16 +73,16 @@ public partial class TeamService : ITeamService
 
     public Task<UpdateTeamResponse> UpdateTeam(UpdateTeamRequest request) {
         return TryCatch(async () => {
-            var team = _ctx.Teams.FirstOrDefault(x => x.Id == request.Id);
+            var team = await _ctx.Teams
+                .Where(x => x.Id == request.Id)
+                .FirstOrDefaultAsync();
 
-            team.Name = request.Name;
+            _mapper.Map(request, team);
 
             ValidateTeamOnUpdate(team);
             await _ctx.SaveChangesAsync();
 
-            return new UpdateTeamResponse {
-                Success = true
-            };
+            return new UpdateTeamResponse();
         });
     }
 
@@ -118,9 +95,7 @@ public partial class TeamService : ITeamService
 
         await _ctx.SaveChangesAsync();
 
-        return new UpdateTeamStatusResponse {
-            Success = true
-        };
+        return new UpdateTeamStatusResponse();
     }
 
     private async Task<bool> TeamExists(string name, int groupId) {

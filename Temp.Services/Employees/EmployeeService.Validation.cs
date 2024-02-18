@@ -1,4 +1,5 @@
 ﻿using Temp.Domain.Models;
+using Temp.Services._Helpers;
 using Temp.Services.Employees.Exceptions;
 using Temp.Services.Employees.Models.Queries;
 
@@ -22,22 +23,22 @@ public partial class EmployeeService
         }
     }
 
-    public void ValidateGetEmployeeViewModel(GetEmployeeResponse employee) {
+    public void ValidateGetEmployee(GetEmployeeResponse employee) {
         if (employee is null) {
             throw new NullEmployeeException();
         }
     }
 
-    public void ValidateGetEmployeeWithoutEngagementViewModel
-        (IQueryable<GetEmployeesWithoutEngagementResponse> employeeWithoutEngagement) {
-        if (employeeWithoutEngagement.Count() == 0) {
+    public void ValidateGetEmployeeWithoutEngagement
+        (PagedList<GetEmployeesWithoutEngagementResponse> employeeWithoutEngagement) {
+        if (employeeWithoutEngagement.Count == 0) {
             throw new EmployeeWithoutEngagementStorageException();
         }
     }
 
-    public void ValidateGetEmployeeWithEngagementViewModel
-        (IQueryable<GetEmployeesWithEngagementResponse> employeeWithEngagement) {
-        if (employeeWithEngagement.Count() == 0) {
+    public void ValidateGetEmployeeWithEngagement
+        (PagedList<GetEmployeesWithEngagementResponse> employeeWithEngagement) {
+        if (employeeWithEngagement.Count == 0) {
             throw new EmployeeWithEngagementStorageException();
         }
     }
@@ -55,8 +56,8 @@ public partial class EmployeeService
         }
     }
 
-    public void ValidateStorageEmployees(IQueryable<GetEmployeesResponse> storageEmployees) {
-        if (storageEmployees.Count() == 0) {
+    public void ValidateStorageEmployees(PagedList<GetEmployeesResponse> storageEmployees) {
+        if (storageEmployees.Count == 0) {
             throw new EmployeeEmptyStorageException();
         }
     }
