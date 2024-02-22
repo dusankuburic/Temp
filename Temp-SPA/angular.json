@@ -70,18 +70,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Temp-SPA:build"
+            "buildTarget": "Temp-SPA:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "Temp-SPA:build:production"
+              "buildTarget": "Temp-SPA:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Temp-SPA:build"
+            "buildTarget": "Temp-SPA:build"
           }
         },
         "test": {
