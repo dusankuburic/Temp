@@ -13,9 +13,8 @@ import { EmployeeService } from 'src/app/core/services/employee.service';
 export class EmployeeAssignRoleComponent implements OnInit {
   createAssignRoleForm: UntypedFormGroup;
   employee: Employee;
-  assignDto = {} as AssignRoleDto;
-
-
+  assignDto: AssignRoleDto;
+  
   constructor(
     private employeeService: EmployeeService,
     private alertify: AlertifyService,
@@ -47,11 +46,9 @@ export class EmployeeAssignRoleComponent implements OnInit {
 
   register(): void {
     if (this.createAssignRoleForm.valid) {
-      const formData = Object.assign({}, this.createAssignRoleForm.value);
-      this.assignDto = {...formData};
-      this.assignDto.id = this.employee.id;
+      this.assignDto = { ...this.createAssignRoleForm.value, id: this.employee.id };
 
-      if (formData.role === 'Admin') {
+      if (this.assignDto.role === 'Admin') {
         this.employeeService.assignRole(this.assignDto).subscribe(() => {
           this.createAssignRoleForm.reset();
           this.router.navigate(['/employees']);

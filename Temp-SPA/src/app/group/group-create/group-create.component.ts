@@ -36,9 +36,7 @@ export class GroupCreateComponent implements OnInit {
   }
 
   create(): void {
-    this.group = Object.assign({}, this.createGroupForm.value);
-    this.group.organizationId = this.organization.id;
-
+    this.group = {...this.createGroupForm.value, organizationId: this.organization.id };
     this.groupService.createGroup(this.group).subscribe({
       next: () => {
         this.alertify.success('Successfully created');

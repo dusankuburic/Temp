@@ -33,7 +33,8 @@ export class TeamEditComponent implements OnInit {
   }
 
   update(): void {
-    const teamForm = Object.assign({}, this.editTeamForm.value);
+    //Todo: handle this
+    const teamForm = { ...this.editTeamForm.value };
     this.team.name = teamForm.Name;
     this.teamService.updateTeam(this.team.id, this.team).subscribe({
       next: () => {

@@ -54,6 +54,7 @@ import { OrganizationModule } from './organization/organization.module';
 import { EngagementWithEmployeeResolver } from './core/resolvers/engagement/engagement-with-employee-list.resolver';
 import { EngagementWithoutEmployeeResolver } from './core/resolvers/engagement/engagement-without-employee-list.resolver';
 import { EngagementCreateResolver } from './core/resolvers/engagement/engagement-create.resolver';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 export function tokenGetter(): any {
   return localStorage.getItem('token');
@@ -95,6 +96,7 @@ export function tokenGetter(): any {
     GroupModule,
     TeamModule,
     OrganizationModule,
+    FontAwesomeModule,
   ],
   providers: [
     AuthService,

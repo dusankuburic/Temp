@@ -28,7 +28,7 @@ export class OrganizationCreateComponent implements OnInit {
   }
 
   create(): void {
-    this.organization = Object.assign({}, this.createOrganizationForm.value);
+    this.organization = {...this.createOrganizationForm.value};
     this.organizationService.createOrganization(this.organization).subscribe({
       next: () => {
         this.alertify.success('Successfully created');

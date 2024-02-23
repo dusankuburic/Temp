@@ -38,9 +38,7 @@ export class ApplicationCreateComponent implements OnInit {
   }
 
   create(): void {
-    this.application = Object.assign({}, this.createApplicationForm.value);
-    this.application.teamId = this.team.id;
-    this.application.userId = this.user.id;
+    this.application = {...this.createApplicationForm.value, teamId: this.team.id, userId: this.user.id};
     this.applicationService.createApplication(this.application).subscribe({
       next: () => {
         this.alertify.success('Successfully created');

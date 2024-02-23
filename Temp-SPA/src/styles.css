@@ -1,7 +1,6 @@
 
 @import '../node_modules/bootstrap/dist/css/bootstrap.min.css'; 
-@import '../node_modules/bootswatch/dist/united//bootstrap.min.css';
-@import '../node_modules/font-awesome/css/font-awesome.min.css';
+@import '../node_modules/bootswatch/dist/united//bootstrap.min.css'; 
 @import '../node_modules/alertifyjs/build/css/alertify.min.css';
 @import '../node_modules/alertifyjs/build/css/themes/bootstrap.min.css'; 
 @import '../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css';
@@ -44,7 +43,7 @@ body {
     margin-left: 0;
 }
 
-/* Responsive part start */
+
 @media (min-width: 768px) {
     #sidebar-wrapper {
         margin-left: 0;
@@ -59,4 +58,3 @@ body {
         margin-left: -15rem;
     }
 }
-/* Responsive part end */

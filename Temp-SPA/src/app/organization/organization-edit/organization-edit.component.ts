@@ -33,8 +33,7 @@ export class OrganizationEditComponent implements OnInit {
   }
 
   update(): void {
-    const organizationForm = Object.assign({}, this.editOrganizationForm.value);
-    const request: Organization = {...organizationForm, id: this.organization.id};
+    const request: Organization = {...this.editOrganizationForm.value, id: this.organization.id};
     this.organizationService.updateOrganization(request).subscribe({
       next: () => {
         this.alertify.success('Successfully updated');

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { faEdit, faPenNib, faProjectDiagram, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { Organization } from 'src/app/core/models/organization';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
@@ -9,6 +10,11 @@ import { OrganizationService } from 'src/app/core/services/organization.service'
   templateUrl: './organization-list.component.html'
 })
 export class OrganizationListComponent implements OnInit {
+  editOrganizationIcon = faEdit
+  archiveOrganizationIcon = faPenNib
+  innerGroupsIcon = faUsers
+  createGroupIcon = faProjectDiagram
+
   organizations: Organization[];
 
   constructor(

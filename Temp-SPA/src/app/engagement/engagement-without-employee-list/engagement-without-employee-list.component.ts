@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
 import { Employee } from 'src/app/core/models/employee';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -10,6 +11,8 @@ import { EngagementService } from 'src/app/core/services/engagement.service';
   templateUrl: './engagement-without-employee-list.component.html'
 })
 export class EngagementWithoutEmployeeListComponent implements OnInit {
+  addEngagementIcon = faCodeBranch
+
   employees: Employee[];
   pagination: Pagination;
 

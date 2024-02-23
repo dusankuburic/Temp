@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     imports: [
@@ -16,6 +16,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
         AppRoutingModule,
         PaginationModule.forRoot(),
         FormsModule,
+        FontAwesomeModule,
     ],
     exports: [],
     declarations: [

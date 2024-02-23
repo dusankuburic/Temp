@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { faEdit, faPenNib } from '@fortawesome/free-solid-svg-icons';
 import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -10,6 +11,9 @@ import { EmploymentStatusService } from 'src/app/core/services/employment-status
   templateUrl: './employment-status-list.component.html'
 })
 export class EmploymentStatusListComponent implements OnInit {
+  editIcon = faEdit
+  archiveIcon = faPenNib
+
   employmentStatuses: EmploymentStatus[];
   pagination: Pagination;
 

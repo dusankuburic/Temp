@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 
@@ -18,6 +19,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
         AppRoutingModule,
         PaginationModule.forRoot(),
         BsDatepickerModule.forRoot(),
+        FontAwesomeModule,
         FormsModule,
     ],
     exports: [],

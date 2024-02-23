@@ -4,6 +4,8 @@ import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { Workplace } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
+import { faPenNib, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-workplace-list',
@@ -12,11 +14,14 @@ import { WorkplaceService } from 'src/app/core/services/workplace.service';
 export class WorkplaceListComponent implements OnInit {
   workplaces: Workplace[];
   pagination: Pagination;
+  archiveIcon = faPenNib;
+  editIcon = faPenToSquare
 
   constructor(
     private route: ActivatedRoute,
     private workplaceService: WorkplaceService,
-    private alertify: AlertifyService) { }
+    private alertify: AlertifyService) { 
+    }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {

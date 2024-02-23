@@ -13,8 +13,8 @@
                 <td>{{workplace.name}}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn btn-primary" [routerLink]="['/workplaces/', workplace.id]"><i class="fa fa-edit"></i></a>
-                        <a class="btn btn-success" (click)="changeStatus(workplace.id)"><i class="fas fa-pen-nib"></i></a>
+                        <a class="btn btn-primary" [routerLink]="['/workplaces/', workplace.id]"><fa-icon [icon]="editIcon"></fa-icon></a>
+                        <a class="btn btn-success" (click)="changeStatus(workplace.id)"><fa-icon [icon]="archiveIcon"></fa-icon></a>
                     </div>
                 </td>
             </tr>

@@ -16,15 +16,15 @@
                 <td>{{employee.firstName}}</td>
                 <td>{{employee.lastName}}</td>
                 <td>
-                    <span class="badge badge-pill" [ngClass]="{'badge-warning': employee.role === 'Admin',
-                                    'badge-info' : employee.role === 'User',
-                                    'badge-success' : employee.role === 'Moderator',
-                                    'badge-secondary': employee.role === 'None'}">
+                    <span class="badge rounded-pill" [ngClass]="{'text-bg-warning': employee.role === 'Admin',
+                                    'text-bg-info' : employee.role === 'User',
+                                    'text-bg-success' : employee.role === 'Moderator',
+                                    'text-bg-secondary': employee.role === 'None'}">
                         {{employee.role}}
                     </span>
                 </td>
                 <td>
-                <a class="btn btn-primary" [routerLink]="['/engagement/create/', employee.id]"><i class="fas fa-code-branch"></i></a>
+                <a class="btn btn-primary" [routerLink]="['/engagement/create/', employee.id]"><fa-icon [icon]="addEngagementIcon"></fa-icon></a>
                 </td>
             </tr>
             </tbody>

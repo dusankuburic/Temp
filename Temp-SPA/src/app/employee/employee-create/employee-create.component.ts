@@ -18,8 +18,8 @@ export class EmployeeCreateComponent implements OnInit {
   createEmployeeForm: UntypedFormGroup;
   employee: Employee;
   organizations: Organization[];
-  innerGroups = [] as Group[];
-  innerTeams = [] as Team[];
+  innerGroups: Group[];
+  innerTeams: Team[];
 
   constructor(
     private route: ActivatedRoute,
@@ -47,15 +47,13 @@ export class EmployeeCreateComponent implements OnInit {
   }
 
   loadInnerGroups(id): void {
-    this.innerTeams = [] as Team[];
+    this.innerTeams = [];
     this.organizationService.getInnerGroups(this.sliceStringId(id)).subscribe((res) => {
-      if (res !== null)
-      {
+      if (res !== null) {
         this.innerGroups = res.groups;
-      }
-      else {
-        this.innerGroups = [] as Group[];
-        this.innerTeams = [] as Team[];
+      } else {
+        this.innerGroups = [];
+        this.innerTeams = [];
       }
     });
   }
@@ -64,9 +62,8 @@ export class EmployeeCreateComponent implements OnInit {
     this.groupService.getInnerTeams(this.sliceStringId(id)).subscribe((res) => {
       if (res !== null) {
         this.innerTeams = res.teams;
-      }
-      else {
-        this.innerTeams = [] as Team[];
+      } else {
+        this.innerTeams = [];
       }
     });
   }
@@ -79,11 +76,11 @@ export class EmployeeCreateComponent implements OnInit {
   }
 
   create(): void {
-    this.employee = Object.assign({}, this.createEmployeeForm.value);
+    this.employee = { ...this.createEmployeeForm.value };
     this.employeeService.createEmployee(this.employee).subscribe({
       next: () => {
-      this.alertify.success('Successfully created');
-      this.createEmployeeForm.reset();
+        this.alertify.success('Successfully created');
+        this.createEmployeeForm.reset();
       },
       error: (error) => {
         this.alertify.error(error);
