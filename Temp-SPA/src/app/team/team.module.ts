@@ -6,12 +6,14 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
 import { AssignedInnerTeamsComponent } from './assigned-inner-teams/assigned-inner-teams.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
     imports: [
         CommonModule,
         ReactiveFormsModule,
+        FontAwesomeModule,
         AppRoutingModule,        
     ],
     exports: [],

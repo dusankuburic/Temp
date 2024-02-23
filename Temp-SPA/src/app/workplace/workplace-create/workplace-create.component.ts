@@ -28,7 +28,7 @@ export class WorkplaceCreateComponent implements OnInit {
   }
 
   create(): void {
-    this.workplace = Object.assign({}, this.createWorkplaceForm.value);
+    this.workplace = { ...this.createWorkplaceForm.value };
     this.workplaceService.createWorkplace(this.workplace).subscribe({
       next: () => {
         this.alertify.success('Successfully created');

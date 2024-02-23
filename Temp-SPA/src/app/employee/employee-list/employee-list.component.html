@@ -17,30 +17,28 @@
                 <td>{{employee.firstName}}</td>
                 <td>{{employee.lastName}}</td>
                 <td>
-                    <span class="badge badge-pill" 
-                    [ngClass]="{'badge-warning': employee.role === 'Admin',
-                                    'badge-info' : employee.role === 'User',
-                                    'badge-success' : employee.role === 'Moderator',
-                                    'badge-secondary': employee.role === 'None'}">
+                    <span class="badge rounded-pill" 
+                    [ngClass]="{'text-bg-warning': employee.role === 'Admin',
+                                    'text-bg-info' : employee.role === 'User',
+                                    'text-bg-success' : employee.role === 'Moderator',
+                                    'text-bg-secondary': employee.role === 'None'}">
                         {{employee.role}}
                     </span>
                 </td>
                 <td>
-                    <a class="btn btn-primary" [routerLink]="['/employees/', employee.id]"><i class="fa fa-edit"></i></a>
+                    <a class="btn btn-primary" [routerLink]="['/employees/', employee.id]"><fa-icon [icon]="editIcon"></fa-icon></a>
                 </td>
                 <td *ngIf="employee.role != 'Admin' && employee.role != 'User' && employee.role != 'Moderator'">
-                    <a class="btn btn-info" [routerLink]="['/employee/assign-role/', employee.id]"><i class="fa fa-sitemap"></i></a>
+                    <a class="btn btn-info" [routerLink]="['/employee/assign-role/', employee.id]"><fa-icon [icon]="assignRoleIcon"></fa-icon></a>
                 </td>
                 <td *ngIf="employee.role != 'None'">
                     <div class="btn-group">
                         <a (click)="changeStatus(employee.id)" class="btn" 
-                        [ngClass]="{'btn-success': employee.isActive,
+                            [ngClass]="{'btn-success': employee.isActive,
                         'btn-warning': !employee.isActive}">
-                            <i class="fas" 
-                            [ngClass]="{'fa-lock-open': employee.isActive,
-                            'fa-lock': !employee.isActive}"></i>
+                        <fa-icon [icon]="employee.isActive ? deactivateUserIcon : activateUserIcon"></fa-icon>
                         </a>
-                        <a (click)="removeRole(employee.id)" class="btn btn-danger"><i class="fa fa-user-times"></i></a> 
+                        <a (click)="removeRole(employee.id)" class="btn btn-danger"><fa-icon [icon]="removeRoleIcon"></fa-icon></a> 
                       </div>
                 </td>
             </tr>

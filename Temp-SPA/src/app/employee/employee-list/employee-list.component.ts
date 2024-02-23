@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { faEdit, faLock, faLockOpen, faSitemap, faUserTimes } from '@fortawesome/free-solid-svg-icons';
 import { Employee } from 'src/app/core/models/employee';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { UnassignRoleDto } from 'src/app/core/models/unassignRoleDto';
@@ -11,6 +12,12 @@ import { EmployeeService } from 'src/app/core/services/employee.service';
   templateUrl: './employee-list.component.html'
 })
 export class EmployeeListComponent implements OnInit {
+  editIcon = faEdit
+  assignRoleIcon = faSitemap
+  removeRoleIcon = faUserTimes
+  activateUserIcon = faLock
+  deactivateUserIcon = faLockOpen
+
   employees: Employee[];
   unassignRoleDto = {} as UnassignRoleDto;
   roles = [

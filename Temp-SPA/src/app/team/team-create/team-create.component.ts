@@ -35,9 +35,7 @@ export class TeamCreateComponent implements OnInit {
   }
 
   create(): void {
-    this.team = Object.assign({}, this.createTeamForm.value);
-    this.team.groupId = this.group.id;
-
+    this.team = {...this.createTeamForm.value, groupId: this.group.id};
     this.teamService.createTeam(this.team).subscribe({
       next: () => {
         this.alertify.success('Successfully created')

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { faEdit, faPenNib } from '@fortawesome/free-solid-svg-icons';
 import { InnerTeams } from 'src/app/core/models/team';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { TeamService } from 'src/app/core/services/team.service';
@@ -9,6 +10,10 @@ import { TeamService } from 'src/app/core/services/team.service';
   templateUrl: './inner-team-list.component.html'
 })
 export class TeamListComponent implements OnInit {
+  editTeamIcon = faEdit
+  archiveTeamIcon = faPenNib
+
+
   innerTeams: InnerTeams;
 
   constructor(

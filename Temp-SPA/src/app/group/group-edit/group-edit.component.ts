@@ -33,7 +33,8 @@ export class GroupEditComponent implements OnInit {
   }
 
   update(): void {
-    const groupForm = Object.assign({}, this.editGroupForm.value);
+    //TODO: rewrite this
+    const groupForm = { ...this.editGroupForm.value };
     this.group.name = groupForm.Name;
     this.groupService.updateGroup(this.group.id, this.group).subscribe({
       next: () => {
