@@ -22,10 +22,10 @@ export class EmployeeEditComponent implements OnInit {
   fullTeam: FullTeam;
   Moderator: Moderator;
   organizations: Organization[];
-  innerGroups = [] as Group[];
-  innerTeams = [] as Team[];
-  currentModeratorGroups = [] as Group[];
-  freeModeratorGroups = [] as Group[];
+  innerGroups: Group[];
+  innerTeams: Team[];
+  currentModeratorGroups: Group[];
+  freeModeratorGroups: Group[];
 
   constructor(
     private employeeService: EmployeeService,
@@ -94,15 +94,13 @@ export class EmployeeEditComponent implements OnInit {
 
 
   loadInnerGroups(id): void {
-    this.innerTeams = [] as Team[];
+    this.innerTeams = [];
     this.organizationService.getInnerGroups(this.sliceStringId(id)).subscribe((res) => {
-      if (res !== null)
-      {
+      if (res !== null) {
         this.innerGroups = res.groups;
-      }
-      else {
-        this.innerGroups = [] as Group[];
-        this.innerTeams = [] as Team[];
+      } else {
+        this.innerGroups = [];
+        this.innerTeams = [];
       }
     });
   }
@@ -111,9 +109,8 @@ export class EmployeeEditComponent implements OnInit {
     this.groupService.getInnerTeams(this.sliceStringId(id)).subscribe((res) => {
       if (res !== null) {
         this.innerTeams = res.teams;
-      }
-      else {
-        this.innerTeams = [] as Team[];
+      } else {
+        this.innerTeams = [];
       }
     });
   }
@@ -123,8 +120,8 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   updateGroup(moderatorId: number, newGroupId: number): void {
-    let moderatorGroups: ModeratorGroups = {} as ModeratorGroups;
-    moderatorGroups.groups = [] as number[];
+    let moderatorGroups = {} as ModeratorGroups;
+    moderatorGroups.groups = [];
 
     this.currentModeratorGroups.forEach((elem) => {
       moderatorGroups.groups.push(elem.id);
@@ -149,11 +146,12 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   update(): void {
-    const employeeForm = Object.assign({}, this.editEmployeeForm.value);
+    const employeeForm = { ...this.editEmployeeForm.value, id: this.employee.id };
+
     if (employeeForm.teamId == null) {
       employeeForm.teamId = this.employee.teamId;
     }
-    employeeForm.id = this.employee.id;
+
     this.employeeService.updateEmployee(employeeForm).subscribe({
       next: () => {
         this.loadFullTeam(employeeForm.teamId);

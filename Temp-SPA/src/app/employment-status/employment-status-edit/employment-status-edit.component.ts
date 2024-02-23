@@ -33,8 +33,7 @@ export class EmploymentStatusEditComponent implements OnInit {
   }
 
   update(): void {
-    const employmentStatusForm = Object.assign({}, this.editEmploymentStatusForm.value);
-    employmentStatusForm.id = this.employmentStatus.id;
+    const employmentStatusForm = { ...this.editEmploymentStatusForm.value, id: this.employmentStatus.id};
     this.employmentStatusService.updateEmploymentStatus(employmentStatusForm).subscribe({
       next: () => {
         this.alertify.success('Successfully updated');

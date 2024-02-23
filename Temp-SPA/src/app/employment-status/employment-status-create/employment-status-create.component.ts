@@ -28,7 +28,7 @@ export class EmploymentStatusCreateComponent implements OnInit {
   }
 
   create(): void {
-    this.employmentStatus = Object.assign({}, this.createEmploymentStatusForm.value);
+    this.employmentStatus = { ...this.createEmploymentStatusForm.value };
     this.employmentStatusService.createEmploymentStatus(this.employmentStatus).subscribe({
       next: () => {
         this.alertify.success('Successfully created');

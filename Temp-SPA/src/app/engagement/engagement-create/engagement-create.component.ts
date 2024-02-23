@@ -105,9 +105,7 @@ export class EngagementCreateComponent implements OnInit {
   }
 
   create(): void {
-    this.engagement = Object.assign({}, this.createEngagementForm.value);
-    this.engagement.employeeId = this.employeeData.Employee.Id;
-
+    this.engagement = { ...this.createEngagementForm.value, id: this.employeeData.Employee.Id };
     this.engagementService.createEngagement(this.engagement).subscribe({
       next: () => {
         this.loadEngagements();

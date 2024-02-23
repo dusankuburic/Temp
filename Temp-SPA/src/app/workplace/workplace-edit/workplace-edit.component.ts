@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { subtract } from 'ngx-bootstrap/chronos';
 import { Workplace } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
@@ -34,8 +33,7 @@ export class WorkplaceEditComponent implements OnInit {
   }
 
   update(): void {
-    const workplaceForm = Object.assign({}, this.editWorkplaceForm.value);
-    workplaceForm.id = this.workplace.id;
+    const workplaceForm = { ...this.editWorkplaceForm.value, id: this.workplace.id};
     this.workplaceService.updateWorkplace(workplaceForm).subscribe({
       next: () => {
         this.alertify.success('Successfully updated');

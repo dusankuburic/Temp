@@ -1,11 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../core/services/auth.service';
+import { faAddressBook, faAngleRight, faBriefcase, faClipboard, faFileAlt, faHotel, faIndustry, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html'
 })
 export class SidebarComponent implements OnInit {
+  arrowIcon = faAngleRight
+  employeeIcon = faAddressBook
+  workplaceIcon = faBriefcase
+  employmentStatusIcon = faClipboard
+  engagementIcon = faIndustry
+  organizationIcon = faHotel
+  applicationIcon = faFileAlt
+  groupsIcon = faUsers
 
   user: any;
   constructor(private authService: AuthService) {}
@@ -18,23 +27,14 @@ export class SidebarComponent implements OnInit {
   }
 
   isAdmin(): boolean {
-    if (this.authService.decodedToken.role === 'Admin'){
-      return true;
-    }
-    return false; 
+    return this.authService.decodedToken.role === 'Admin'? true : false;
   }
 
   isUser(): boolean {
-    if (this.authService.decodedToken.role === 'User'){
-      return true;
-    }
-    return false;
+    return this.authService.decodedToken.role === 'User' ? true : false;
   }
 
   isModerator(): boolean {
-    if (this.authService.decodedToken.role === 'Moderator'){
-      return true;
-    }
-    return false;
+    return this.authService.decodedToken.role === 'Moderator' ? true : false;
   }
 }

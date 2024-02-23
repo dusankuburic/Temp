@@ -5,12 +5,14 @@ import { OrganizationListComponent } from './organization-list/organization-list
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
     imports: [
         CommonModule,
         ReactiveFormsModule,
+        FontAwesomeModule,
         AppRoutingModule,
     ],
     exports: [],
