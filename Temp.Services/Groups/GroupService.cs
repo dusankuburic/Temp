@@ -3,6 +3,7 @@ using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services.Groups.Models.Commands;
 using Temp.Services.Groups.Models.Queries;
+using Temp.Services.Integrations.Loggings;
 
 namespace Temp.Services.Groups;
 
@@ -10,10 +11,15 @@ public partial class GroupService : IGroupService
 {
     private readonly ApplicationDbContext _ctx;
     private readonly IMapper _mapper;
+    private readonly ILoggingBroker _loggingBroker;
 
-    public GroupService(ApplicationDbContext ctx, IMapper mapper) {
+    public GroupService(
+        ApplicationDbContext ctx,
+        IMapper mapper,
+        ILoggingBroker loggingBroker) {
         _ctx = ctx;
         _mapper = mapper;
+        _loggingBroker = loggingBroker;
     }
 
     public Task<CreateGroupResponse> CreateGroup(CreateGroupRequest request) =>

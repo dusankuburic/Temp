@@ -2,6 +2,7 @@
 using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services._Helpers;
+using Temp.Services.Integrations.Loggings;
 using Temp.Services.Workplaces.Models.Commands;
 using Temp.Services.Workplaces.Models.Queries;
 
@@ -11,10 +12,15 @@ public partial class WorkplaceService : IWorkplaceService
 {
     private readonly ApplicationDbContext _ctx;
     private readonly IMapper _mapper;
+    private readonly ILoggingBroker _loggingBroker;
 
-    public WorkplaceService(ApplicationDbContext ctx, IMapper mapper) {
+    public WorkplaceService(
+        ApplicationDbContext ctx,
+        IMapper mapper,
+        ILoggingBroker loggingBroker) {
         _ctx = ctx;
         _mapper = mapper;
+        _loggingBroker = loggingBroker;
     }
 
     public Task<CreateWorkplaceResponse> CreateWorkplace(CreateWorkplaceRequest request) =>

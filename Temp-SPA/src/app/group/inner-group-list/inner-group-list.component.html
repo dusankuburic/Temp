@@ -15,14 +15,14 @@
         <td>{{group.name}}</td>
         <td>
           <div class="btn-group" role="group">
-            <a class="btn btn-primary" [routerLink]="['/groups/', group.id]"><fa-icon [icon]="editGroupIcon"></fa-icon></a>
+            <a class="btn btn-primary" [routerLink]="['/groups/', group.id, 'edit']"><fa-icon [icon]="editGroupIcon"></fa-icon></a>
             <a class="btn btn-success" (click)="changeStatus(group.id)"><fa-icon [icon]="archiveGroupIcon"></fa-icon></a>
           </div>
         </td>
         <td>
           <div class="btn-group" role="group">
-            <a class="btn btn-warning"[routerLink]="['/groups/inner-teams/', group.id]"><fa-icon [icon]="innerTeamsIcon"></fa-icon></a>
-            <a class="btn btn-info"  [routerLink]="['/team/create/', group.id]"><fa-icon [icon]="createTeamIcon"></fa-icon></a>  
+            <a class="btn btn-warning"[routerLink]="['/teams/group/', group.id]"><fa-icon [icon]="innerTeamsIcon"></fa-icon></a>
+            <a class="btn btn-info"  [routerLink]="['/teams/create/group/', group.id]"><fa-icon [icon]="createTeamIcon"></fa-icon></a>  
           </div>
         </td>
       </tr>

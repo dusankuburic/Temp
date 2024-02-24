@@ -13,7 +13,6 @@ export class TeamListComponent implements OnInit {
   editTeamIcon = faEdit
   archiveTeamIcon = faPenNib
 
-
   innerTeams: InnerTeams;
 
   constructor(

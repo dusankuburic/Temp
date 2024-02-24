@@ -3,6 +3,7 @@ using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services.Engagements.Models.Commands;
 using Temp.Services.Engagements.Models.Queries;
+using Temp.Services.Integrations.Loggings;
 
 namespace Temp.Services.Engagements;
 
@@ -10,10 +11,15 @@ public partial class EngagementService : IEngagementService
 {
     private readonly ApplicationDbContext _ctx;
     private readonly IMapper _mapper;
+    private readonly ILoggingBroker _loggingBroker;
 
-    public EngagementService(ApplicationDbContext ctx, IMapper mapper) {
+    public EngagementService(
+        ApplicationDbContext ctx,
+        IMapper mapper,
+        ILoggingBroker loggingBroker) {
         _ctx = ctx;
         _mapper = mapper;
+        _loggingBroker = loggingBroker;
     }
 
     public Task<CreateEngagementResponse> CreateEngagement(CreateEngagementRequest request) =>

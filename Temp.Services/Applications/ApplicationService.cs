@@ -3,6 +3,7 @@ using Temp.Database;
 using Temp.Domain.Models.Applications;
 using Temp.Services.Applications.Models.Commands;
 using Temp.Services.Applications.Models.Queries;
+using Temp.Services.Integrations.Loggings;
 
 namespace Temp.Services.Applications;
 
@@ -10,10 +11,15 @@ public partial class ApplicationService : IApplicationService
 {
     private readonly ApplicationDbContext _ctx;
     private readonly IMapper _mapper;
+    private readonly ILoggingBroker _loggingBroker;
 
-    public ApplicationService(ApplicationDbContext ctx, IMapper mapper) {
+    public ApplicationService(
+        ApplicationDbContext ctx,
+        IMapper mapper,
+        ILoggingBroker loggingBroker) {
         _ctx = ctx;
         _mapper = mapper;
+        _loggingBroker = loggingBroker;
     }
 
     public Task<CreateApplicationResponse> CreateApplication(CreateApplicationRequest request) =>

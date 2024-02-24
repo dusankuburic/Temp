@@ -8,7 +8,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { PaginatedResult } from 'src/app/core/models/pagination';
 
 @Injectable()
-export class EmployeeListResolver  {
+export class EmployeeListResolver {
 
     pageNumber = 1;
     pageSize = 5;

@@ -2,18 +2,19 @@ import { NgModule } from '@angular/core';
 import { GroupListComponent } from './inner-group-list/inner-group-list.component';
 import { GroupEditComponent } from './group-edit/group-edit.component';
 import { GroupCreateComponent } from './group-create/group-create.component';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from '../app-routing.module';
 import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { RouterModule } from '@angular/router';
+import { groupRoutes } from './group.routes';
+import { SharedModule } from '../shared/shared.module';
+import { GroupListResolver } from '../core/resolvers/group/group-list.resolver';
+import { GroupCreateResolver } from '../core/resolvers/group/group-create.resolver';
+import { GroupEditResolver } from '../core/resolvers/group/group-edit.resolver';
+import { ModeratorAssignedGroupsResolver } from '../core/resolvers/group/moderator-assigned-groups.resolver';
 
 @NgModule({
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FontAwesomeModule,
-        AppRoutingModule,
+        SharedModule,
+        RouterModule.forChild(groupRoutes)
     ],
     exports: [],
     declarations: [
@@ -22,5 +23,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         GroupListComponent,
         AssignedGroupsComponent,
     ],
+    providers: [
+        GroupListResolver,
+        GroupCreateResolver,
+        GroupEditResolver,
+        ModeratorAssignedGroupsResolver
+    ]
 })
 export class GroupModule { }

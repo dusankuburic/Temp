@@ -4,6 +4,7 @@ using Temp.Domain.Models;
 using Temp.Services._Helpers;
 using Temp.Services.Employees.Models.Commands;
 using Temp.Services.Employees.Models.Queries;
+using Temp.Services.Integrations.Loggings;
 
 namespace Temp.Services.Employees;
 
@@ -11,10 +12,15 @@ public partial class EmployeeService : IEmployeeService
 {
     private readonly ApplicationDbContext _ctx;
     private readonly IMapper _mapper;
+    private readonly ILoggingBroker _loggingBroker;
 
-    public EmployeeService(ApplicationDbContext ctx, IMapper mapper) {
+    public EmployeeService(
+        ApplicationDbContext ctx,
+        IMapper mapper,
+        ILoggingBroker loggingBroker) {
         _ctx = ctx;
         _mapper = mapper;
+        _loggingBroker = loggingBroker;
     }
 
     public Task<CreateEmployeeResponse> CreateEmployee(CreateEmployeeRequest request) =>

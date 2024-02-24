@@ -14,14 +14,14 @@
                 <td>{{organization.name}}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn btn-primary" [routerLink]="['/organizations/' , organization.id]"><fa-icon [icon]="editOrganizationIcon"></fa-icon></a>
+                        <a class="btn btn-primary" [routerLink]="['/organizations/' , organization.id, 'edit']"><fa-icon [icon]="editOrganizationIcon"></fa-icon></a>
                         <a class="btn btn-success" (click)="changeStatus(organization.id)"><fa-icon [icon]="archiveOrganizationIcon"></fa-icon></a>
                     </div>
                 </td>       
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn btn-warning" [routerLink]="['/organization/inner-groups/', organization.id]"><fa-icon [icon]="innerGroupsIcon"></fa-icon></a>
-                        <a class="btn btn-info" [routerLink]="['/group/create/', organization.id]"><fa-icon [icon]="createGroupIcon"></fa-icon></a>
+                        <a class="btn btn-warning" [routerLink]="['/groups/organization/', organization.id]"><fa-icon [icon]="innerGroupsIcon"></fa-icon></a>
+                        <a class="btn btn-info" [routerLink]="['/groups/create/organization/', organization.id]"><fa-icon [icon]="createGroupIcon"></fa-icon></a>
                     </div>
                 </td>
             </tr>

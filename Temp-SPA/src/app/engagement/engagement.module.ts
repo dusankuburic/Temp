@@ -3,24 +3,20 @@ import { EngagementCreateComponent } from './engagement-create/engagement-create
 import { EngagementUserListComponent } from './engagement-user-list/engagement-user-list.component';
 import { EngagementWithEmployeeListComponent } from './engagement-with-employee-list/engagement-with-employee-list.component';
 import { EngagementWithoutEmployeeListComponent } from './engagement-without-employee-list/engagement-without-employee-list.component';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from '../app-routing.module';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
-
+import { RouterModule } from '@angular/router';
+import { engagementRoutes } from './engagement.routes';
+import { SharedModule } from '../shared/shared.module';
+import { EngagementWithEmployeeResolver } from '../core/resolvers/engagement/engagement-with-employee-list.resolver';
+import { EngagementWithoutEmployeeResolver } from '../core/resolvers/engagement/engagement-without-employee-list.resolver';
+import { EngagementUserListResolver } from '../core/resolvers/engagement/engagement-user-list.resolver';
+import { EngagementCreateResolver } from '../core/resolvers/engagement/engagement-create.resolver';
 
 @NgModule({
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        AppRoutingModule,
-        PaginationModule.forRoot(),
+        SharedModule,
         BsDatepickerModule.forRoot(),
-        FontAwesomeModule,
-        FormsModule,
+        RouterModule.forChild(engagementRoutes)
     ],
     exports: [],
     declarations: [
@@ -29,5 +25,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         EngagementWithEmployeeListComponent,
         EngagementWithoutEmployeeListComponent,
     ],
+    providers: [
+        EngagementWithoutEmployeeResolver,
+        EngagementCreateResolver,
+        EngagementWithEmployeeResolver,
+        EngagementUserListResolver,
+    ]
 })
 export class EngagementModule { }

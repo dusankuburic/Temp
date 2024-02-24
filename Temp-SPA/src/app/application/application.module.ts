@@ -6,14 +6,20 @@ import { ApplicationUserComponent } from './application-user/application-user.co
 import { ApplicationUserListComponent } from './application-user-list/application-user-list.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from '../app-routing.module';
+import { RouterModule } from '@angular/router';
 
+import { applicationRoutes } from './application.routes';
+import { ApplicationCreateResolver } from '../core/resolvers/application/application-create.resolver';
+import { ApplicationModeratorListResolver } from '../core/resolvers/application/application-moderator-list.resolver';
+import { ApplicationUserListResolver } from '../core/resolvers/application/application-user-list.resolver';
+import { ApplicationUserResolver } from '../core/resolvers/application/application-user.resolver';
+import { ApplicationModeratorResolver } from '../core/resolvers/application/application-moderator.resolver';
 
 @NgModule({
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        AppRoutingModule,
+        RouterModule.forChild(applicationRoutes)
     ],
     exports: [],
     declarations: [
@@ -23,5 +29,12 @@ import { AppRoutingModule } from '../app-routing.module';
         ApplicationUserComponent,
         ApplicationUserListComponent,
     ],
+    providers: [
+        ApplicationCreateResolver,
+        ApplicationUserListResolver,
+        ApplicationUserResolver,
+        ApplicationModeratorListResolver,
+        ApplicationModeratorResolver,
+    ]
 })
 export class ApplicationModule { }

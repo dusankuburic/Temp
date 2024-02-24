@@ -1,8 +1,10 @@
-using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Temp.API.Bootstrap;
-using Temp.Services.Applications.Models.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.ConfigureLogging();
 
 builder.Services.AddMappingsCollection();
 
@@ -10,11 +12,9 @@ builder.Services.AddProgramServices();
 
 builder.Services.ConfigureCORS();
 
-
 builder.Services.AddControllers()
-    .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
-    .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<CreateApplicationRequestValidator>());
-
+    .ConfigureSerilizaiton()
+    .ConfigureFluentValidation();
 
 builder.Services.Configure<ApiBehaviorOptions>(opt => {
     opt.InvalidModelStateResponseFactory = ctx =>
@@ -26,6 +26,8 @@ builder.Services.AddAuthSetup(builder.Configuration);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -69,16 +71,22 @@ app.UseExceptionHandler(builder => {
     });
 });
 
-
 app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHealthChecks("/health", new HealthCheckOptions {
+    AllowCachingResponses = false,
+    ResultStatusCodes = {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Degraded] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    }
+});
+
 app.UseCors("CorsPolicy");
-
 app.MapControllers();
-
 
 app.Run();
