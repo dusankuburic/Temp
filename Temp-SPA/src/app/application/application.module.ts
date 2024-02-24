@@ -7,13 +7,16 @@ import { ApplicationUserListComponent } from './application-user-list/applicatio
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
+import { RouterModule } from '@angular/router';
 
+import { applicationRoutes } from './application.routes';
 
 @NgModule({
     imports: [
         CommonModule,
         ReactiveFormsModule,
         AppRoutingModule,
+        RouterModule.forChild(applicationRoutes)
     ],
     exports: [],
     declarations: [

@@ -6,7 +6,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
+import { RouterModule } from '@angular/router';
+import { organizationRoutes } from './organization.routes';
 
 @NgModule({
     imports: [
@@ -14,6 +15,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         ReactiveFormsModule,
         FontAwesomeModule,
         AppRoutingModule,
+        RouterModule.forChild(organizationRoutes)
     ],
     exports: [],
     declarations: [

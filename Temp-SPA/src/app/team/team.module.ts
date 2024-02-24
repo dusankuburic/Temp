@@ -7,14 +7,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
 import { AssignedInnerTeamsComponent } from './assigned-inner-teams/assigned-inner-teams.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
+import { RouterModule } from '@angular/router';
+import { teamRoutes } from './team.routes';
 
 @NgModule({
     imports: [
         CommonModule,
         ReactiveFormsModule,
         FontAwesomeModule,
-        AppRoutingModule,        
+        AppRoutingModule,      
+        RouterModule.forChild(teamRoutes)
     ],
     exports: [],
     declarations: [

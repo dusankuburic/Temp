@@ -7,6 +7,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
 import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { RouterModule } from '@angular/router';
+import { groupRoutes } from './group.routes';
 
 @NgModule({
     imports: [
@@ -14,6 +16,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         ReactiveFormsModule,
         FontAwesomeModule,
         AppRoutingModule,
+        RouterModule.forChild(groupRoutes)
     ],
     exports: [],
     declarations: [

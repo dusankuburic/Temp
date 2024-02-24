@@ -8,7 +8,8 @@ import { AppRoutingModule } from '../app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
+import { RouterModule } from '@angular/router';
+import { workplaceRoutes } from './workplace.routes';
 
 @NgModule({
     imports: [
@@ -17,7 +18,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         ReactiveFormsModule,
         PaginationModule.forRoot(),
         FormsModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        RouterModule.forChild(workplaceRoutes)
     ],
     exports: [],
     declarations: [

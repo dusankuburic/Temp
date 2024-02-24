@@ -7,7 +7,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
+import { RouterModule } from '@angular/router';
+import { employmentStatusRoutes } from './employment-status.routes';
 
 @NgModule({
     imports: [
@@ -17,6 +18,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         PaginationModule.forRoot(),
         FontAwesomeModule,
         FormsModule,
+        RouterModule.forChild(employmentStatusRoutes)
     ],
     exports: [],
     declarations: [

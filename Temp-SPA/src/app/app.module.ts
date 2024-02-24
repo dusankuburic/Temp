@@ -12,7 +12,7 @@ import {PaginationModule} from 'ngx-bootstrap/pagination';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
-import { AuthService } from './core/services/auth.service';
+import { AuthService } from './core/services/auth.service'; 
 import { AlertifyService } from './core/services/alertify.service';
 import { HomeComponent } from './home/home.component';
 import { appRoutes } from './routes';
@@ -101,8 +101,8 @@ export function tokenGetter(): any {
   providers: [
     AuthService,
     AlertifyService,
-    EmployeeListResolver,
     EmployeeEditResolver,
+    EmployeeListResolver,
     WorkplaceListResolver,
     WorkplaceEditResolver,
     EmploymentStatusListResolver,
