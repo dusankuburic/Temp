@@ -13,43 +13,34 @@ import { ApplicationModeratorComponent } from "./application-moderator/applicati
 import { ApplicationModeratorResolver } from "../core/resolvers/application/application-moderator.resolver";
 
 export const applicationRoutes: Routes = [
-    {
-        path: 'applications',
-        runGuardsAndResolvers: 'always',
+    { 
         canActivate: [UserGuard],
-        children: [
-            { 
-                path: 'create/:id', 
-                component: ApplicationCreateComponent, 
-                resolve: { team: ApplicationCreateResolver }
-            },
-            { 
-                path: 'list/:id',
-                component: ApplicationUserListComponent,
-                resolve: { applications: ApplicationUserListResolver }
-            },
-            {
-                path: 'user/:id',
-                component: ApplicationUserComponent,
-                resolve: { application: ApplicationUserResolver }
-            }
-        ]
+        path: 'create/:id', 
+        component: ApplicationCreateComponent, 
+        resolve: { team: ApplicationCreateResolver }
+    },
+    { 
+        canActivate: [UserGuard],
+        path: 'list/:id',
+        component: ApplicationUserListComponent,
+        resolve: { applications: ApplicationUserListResolver }
     },
     {
-        path: 'applications',
-        runGuardsAndResolvers: 'always',
+        canActivate: [UserGuard],
+        path: 'user/:id',
+        component: ApplicationUserComponent,
+        resolve: { application: ApplicationUserResolver }
+    },
+    {
         canActivate: [ModeratorGuard],
-        children: [
-            {
-                path: 'list/team/:id',
-                component: ApplicationModeratorListComponent,
-                resolve: { applications: ApplicationModeratorListResolver }
-            },
-            {
-                path: 'moderator/:id',
-                component: ApplicationModeratorComponent,
-                resolve: { application: ApplicationModeratorResolver }
-            }
-        ]
-    }
+        path: 'list/team/:id',
+        component: ApplicationModeratorListComponent,
+        resolve: { applications: ApplicationModeratorListResolver }
+    },
+    {
+        canActivate: [ModeratorGuard],
+        path: 'moderator/:id',
+        component: ApplicationModeratorComponent,
+        resolve: { application: ApplicationModeratorResolver }
+    } 
 ];

@@ -3,22 +3,15 @@ import { NgModule } from '@angular/core';
 import { WorkplaceCreateComponent } from './workplace-create/workplace-create.component';
 import { WorkplaceEditComponent } from './workplace-edit/workplace-edit.component';
 import { WorkplaceListComponent } from './workplace-list/workplace-list.component';
-import { CommonModule } from '@angular/common';
-import { AppRoutingModule } from '../app-routing.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
 import { workplaceRoutes } from './workplace.routes';
+import { SharedModule } from '../shared/shared.module';
+import { WorkplaceListResolver } from '../core/resolvers/workplace/workplace-list.resolver';
+import { WorkplaceEditResolver } from '../core/resolvers/workplace/workplace-edit.resolver';
 
 @NgModule({
     imports: [
-        CommonModule,
-        AppRoutingModule,
-        ReactiveFormsModule,
-        PaginationModule.forRoot(),
-        FormsModule,
-        FontAwesomeModule,
+        SharedModule,
         RouterModule.forChild(workplaceRoutes)
     ],
     exports: [],
@@ -27,5 +20,9 @@ import { workplaceRoutes } from './workplace.routes';
         WorkplaceEditComponent,
         WorkplaceListComponent,
     ],
+    providers: [
+        WorkplaceListResolver,
+        WorkplaceEditResolver,
+    ]
 })
 export class WorkplaceModule { }

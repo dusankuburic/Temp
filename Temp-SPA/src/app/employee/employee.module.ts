@@ -3,23 +3,17 @@ import { EmployeeAssignRoleComponent } from './employee-assign-role/employee-ass
 import { EmployeeCreateComponent } from './employee-create/employee-create.component';
 import { EmployeeEditComponent } from './employee-edit/employee-edit.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from '../app-routing.module';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
 
 import { employeeRoutes } from './employee.routes';
+import { SharedModule } from '../shared/shared.module';
+import { EmployeeListResolver } from '../core/resolvers/employee/employee-list.resolver';
+import { EmployeeEditResolver } from '../core/resolvers/employee/employee-edit.resolver';
+import { OrganizationListResolver } from '../core/resolvers/organization/organization-list.resolver';
 
 @NgModule({
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        AppRoutingModule,
-        PaginationModule.forRoot(),
-        FormsModule,
-        FontAwesomeModule,
+        SharedModule,
         RouterModule.forChild(employeeRoutes)
     ],
     exports: [],
@@ -28,6 +22,11 @@ import { employeeRoutes } from './employee.routes';
         EmployeeCreateComponent,
         EmployeeEditComponent,
         EmployeeListComponent,
+    ],
+    providers: [
+        EmployeeListResolver,
+        EmployeeEditResolver,
+        OrganizationListResolver,
     ]
 })
 export class EmployeeModule { }

@@ -11,39 +11,33 @@ import { EngagementUserListComponent } from "./engagement-user-list/engagement-u
 import { EngagementUserListResolver } from "../core/resolvers/engagement/engagement-user-list.resolver";
 
 export const engagementRoutes: Routes = [
-    {
-        path: 'engagements',
-        runGuardsAndResolvers: 'always',
+    { 
         canActivate: [AuthGuard],
-        children: [
-            { path: '', component: EngagementWithoutEmployeeListComponent, resolve: { employeesWithout: EngagementWithoutEmployeeResolver }},
-            { 
-                path: 'create/:id',
-                component: EngagementCreateComponent,
-                resolve: { employeeData: EngagementCreateResolver }
-            },
-            {
-                path: 'with-employee',
-                component: EngagementWithEmployeeListComponent,
-                resolve: { employeesWith: EngagementWithEmployeeResolver }
-            },
-            {
-                path: 'without-employee',
-                component: EngagementWithoutEmployeeListComponent,
-                resolve: {employeesWithout: EngagementWithoutEmployeeResolver}
-            }
-        ]
+        path: '', component: EngagementWithoutEmployeeListComponent, 
+        resolve: { employeesWithout: EngagementWithoutEmployeeResolver }
+    },
+    { 
+        canActivate: [AuthGuard],
+        path: 'create/:id',
+        component: EngagementCreateComponent,
+        resolve: { employeeData: EngagementCreateResolver }
     },
     {
-        path: 'engagements',
-        runGuardsAndResolvers: 'always',
+        canActivate: [AuthGuard],
+        path: 'with-employee',
+        component: EngagementWithEmployeeListComponent,
+        resolve: { employeesWith: EngagementWithEmployeeResolver }
+    },
+    {
+        canActivate: [AuthGuard],
+        path: 'without-employee',
+        component: EngagementWithoutEmployeeListComponent,
+        resolve: {employeesWithout: EngagementWithoutEmployeeResolver}
+    },
+    {
         canActivate: [UserGuard],
-        children: [
-            { 
-                path: 'user-list/:id',
-                component: EngagementUserListComponent,
-                resolve: { engagements: EngagementUserListResolver }
-            }
-        ]
+        path: 'user-list/:id',
+        component: EngagementUserListComponent,
+        resolve: { engagements: EngagementUserListResolver },
     }
 ];

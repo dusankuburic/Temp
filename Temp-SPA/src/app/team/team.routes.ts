@@ -11,37 +11,27 @@ import { AssignedInnerTeamsComponent } from "./assigned-inner-teams/assigned-inn
 
 export const teamRoutes: Routes = [
     {
-        path: 'teams',
-        runGuardsAndResolvers: 'always',
         canActivate: [AuthGuard],
-        children: [
-            {
-                path: 'group/:id',
-                component: TeamListComponent,
-                resolve: { innerteams: TeamListResolver }
-            },
-            {
-                path: 'create/group/:id',
-                component: TeamCreateComponent,
-                resolve: { group: TeamCreateResolver }
-            },
-            {
-                path: ':id/edit',
-                component: TeamEditComponent,
-                resolve: { team: TeamEditResolver}
-            }
-        ]
+        path: 'group/:id',
+        component: TeamListComponent,
+        resolve: { innerteams: TeamListResolver }
     },
     {
-        path: 'teams',
-        runGuardsAndResolvers: 'always',
+        canActivate: [AuthGuard],
+        path: 'create/group/:id',
+        component: TeamCreateComponent,
+        resolve: { group: TeamCreateResolver }
+    },
+    {
+        canActivate: [AuthGuard],
+        path: ':id/edit',
+        component: TeamEditComponent,
+        resolve: { team: TeamEditResolver}
+    },
+    { 
         canActivate: [ModeratorGuard],
-        children: [
-            { 
-                path: ':id/assigned-groups',
-                component: AssignedInnerTeamsComponent,
-                resolve: { teams: TeamListResolver }
-            }
-        ]
+        path: ':id/assigned-groups',
+        component: AssignedInnerTeamsComponent,
+        resolve: { teams: TeamListResolver }
     }
 ];

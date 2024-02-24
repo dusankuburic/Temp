@@ -2,19 +2,15 @@ import { NgModule } from '@angular/core';
 import { OrganizationCreateComponent } from './organization-create/organization-create.component';
 import { OrganizationEditComponent } from './organization-edit/organization-edit.component';
 import { OrganizationListComponent } from './organization-list/organization-list.component';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from '../app-routing.module';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
 import { organizationRoutes } from './organization.routes';
+import { SharedModule } from '../shared/shared.module';
+import { OrganizationListResolver } from '../core/resolvers/organization/organization-list.resolver';
+import { OrganizationEditResolver } from '../core/resolvers/organization/organization-edit.resolver';
 
 @NgModule({
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FontAwesomeModule,
-        AppRoutingModule,
+        SharedModule,
         RouterModule.forChild(organizationRoutes)
     ],
     exports: [],
@@ -23,5 +19,9 @@ import { organizationRoutes } from './organization.routes';
         OrganizationEditComponent,
         OrganizationListComponent,
     ],
+    providers: [
+        OrganizationListResolver,
+        OrganizationEditResolver,
+    ]
 })
 export class OrganizationModule { }

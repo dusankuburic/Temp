@@ -10,39 +10,29 @@ import { ModeratorGuard } from "../core/guards/moderator.guard";
 import { AssignedGroupsComponent } from "./assigned-groups/assigned-groups.component";
 import { ModeratorAssignedGroupsResolver } from "../core/resolvers/group/moderator-assigned-groups.resolver";
 
-export const groupRoutes: Routes = [
-    {
-        path: 'groups',
-        runGuardsAndResolvers: 'always',
+export const groupRoutes: Routes = [    
+    { 
         canActivate: [AuthGuard],
-        children: [
-            { 
-                path: 'organization/:id', 
-                component: GroupListComponent, 
-                resolve: { innergroups: GroupListResolver }
-            },
-            { 
-                path: 'create/organization/:id', 
-                component: GroupCreateComponent, 
-                resolve: { organization: GroupCreateResolver }
-            },
-            { 
-                path: ':id/edit', 
-                component: GroupEditComponent, 
-                resolve: { group: GroupEditResolver }
-            }
-        ]
+        path: 'organization/:id', 
+        component: GroupListComponent, 
+        resolve: { innergroups: GroupListResolver }
+    },
+    { 
+        canActivate: [AuthGuard],
+        path: 'create/organization/:id', 
+        component: GroupCreateComponent, 
+        resolve: { organization: GroupCreateResolver }
+    },
+    { 
+        canActivate: [AuthGuard],
+        path: ':id/edit', 
+        component: GroupEditComponent, 
+        resolve: { group: GroupEditResolver }
     },
     {
-        path: 'groups',
-        runGuardsAndResolvers: 'always',
         canActivate: [ModeratorGuard],
-        children: [
-            {
-                path: ':id/assigned-groups',
-                component: AssignedGroupsComponent,
-                resolve: { groups: ModeratorAssignedGroupsResolver }
-            }
-        ]
+        path: ':id/assigned-groups',
+        component: AssignedGroupsComponent,
+        resolve: { groups: ModeratorAssignedGroupsResolver }
     }
 ];
