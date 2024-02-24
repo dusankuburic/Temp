@@ -91,19 +91,19 @@ public partial class EmploymentStatusService
 
     private EmploymentStatusServiceException CreateAndLogServiceException(Exception exception) {
         var employmentStatusServiceException = new EmploymentStatusServiceException(exception);
-        //LOG
+        _loggingBroker.LogError(employmentStatusServiceException);
         return employmentStatusServiceException;
     }
 
     private EmploymentStatusValidationException CreateAndLogValidationException(Exception exception) {
         var employmentStatusValidationException = new EmploymentStatusValidationException(exception);
-
+        _loggingBroker.LogError(employmentStatusValidationException);
         return employmentStatusValidationException;
     }
 
     private EmploymentStatusDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
         var employmentStatusDependencyException = new EmploymentStatusDependencyException(exception);
-        //LOG
+        _loggingBroker.LogCritical(employmentStatusDependencyException);
         return employmentStatusDependencyException;
     }
 }

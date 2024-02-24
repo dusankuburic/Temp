@@ -1,6 +1,7 @@
 ﻿using AutoMapper.QueryableExtensions;
 using Temp.Database;
 using Temp.Domain.Models;
+using Temp.Services.Integrations.Loggings;
 using Temp.Services.Teams.Models.Commands;
 using Temp.Services.Teams.Models.Queries;
 
@@ -10,10 +11,15 @@ public partial class TeamService : ITeamService
 {
     private readonly ApplicationDbContext _ctx;
     private readonly IMapper _mapper;
+    private readonly ILoggingBroker _loggingBroker;
 
-    public TeamService(ApplicationDbContext ctx, IMapper mapper) {
+    public TeamService(
+        ApplicationDbContext ctx,
+        IMapper mapper,
+        ILoggingBroker loggingBroker) {
         _ctx = ctx;
         _mapper = mapper;
+        _loggingBroker = loggingBroker;
     }
 
     public Task<CreateTeamResponse> CreateTeam(CreateTeamRequest request) {

@@ -12,7 +12,7 @@
       <tbody *ngIf="groups"> 
         <tr *ngFor="let group of groups">
           <td>{{group.name}}</td>
-          <td><a class="btn btn-success"[routerLink]="['/assigned-groups/inner-teams/', group.id]" ><i class="fas fa-users"></i></a></td>
+          <td><a class="btn btn-success"[routerLink]="['/teams/', group.id, 'assigned-groups']" ><i class="fas fa-users"></i></a></td>
         </tr>
       </tbody>
     </table>

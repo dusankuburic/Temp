@@ -79,19 +79,19 @@ public partial class TeamService
 
     private TeamValidationException CreateAndLogValidationException(Exception exception) {
         var teamValidationException = new TeamValidationException(exception);
-        //LOG
+        _loggingBroker.LogError(teamValidationException);
         return teamValidationException;
     }
 
     private TeamServiceException CreateAndLogServiceException(Exception exception) {
         var teamServiceException = new TeamServiceException(exception);
-        //LOG
+        _loggingBroker.LogError(teamServiceException);
         return teamServiceException;
     }
 
     private TeamDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
         var teamDependencyException = new TeamDependencyException(exception);
-        //LOG
+        _loggingBroker.LogCritical(teamDependencyException);
         return teamDependencyException;
     }
 }

@@ -7,7 +7,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
               <a class="dropdown-item" [routerLink]="['/employees']"><fa-icon [icon]="arrowIcon"></fa-icon> Employees</a>
-              <a class="dropdown-item" [routerLink]="['/employee/create']"><fa-icon [icon]="arrowIcon"></fa-icon> Create Employee</a>
+              <a class="dropdown-item" [routerLink]="['/employees/create']"><fa-icon [icon]="arrowIcon"></fa-icon> Create Employee</a>
           </div>
       </div>
 
@@ -17,7 +17,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
               <a class="dropdown-item" [routerLink]="['/workplaces']"><fa-icon [icon]="arrowIcon"></fa-icon> Workplaces</a>
-              <a class="dropdown-item" [routerLink]="['/workplace/create']"><fa-icon [icon]="arrowIcon"></fa-icon> Create Workplace</a>
+              <a class="dropdown-item" [routerLink]="['/workplaces/create']"><fa-icon [icon]="arrowIcon"></fa-icon> Create Workplace</a>
           </div>
       </div>
 
@@ -28,7 +28,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
               <a class="dropdown-item" [routerLink]="['/employment-statuses']"><fa-icon [icon]="arrowIcon"></fa-icon> Statuses</a>
-              <a class="dropdown-item" [routerLink]="['/employment-status/create']"><fa-icon [icon]="arrowIcon"></fa-icon> Create Status</a>
+              <a class="dropdown-item" [routerLink]="['/employment-statuses/create']"><fa-icon [icon]="arrowIcon"></fa-icon> Create Status</a>
           </div>
       </div>
 
@@ -37,8 +37,8 @@
             <fa-icon [icon]="engagementIcon"></fa-icon> Engagement
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-              <a class="dropdown-item" [routerLink]="['/engagement/with-employee']"><fa-icon [icon]="arrowIcon"></fa-icon> With Engagements</a>
-              <a class="dropdown-item" [routerLink]="['/engagement/without-employee']"><fa-icon [icon]="arrowIcon"></fa-icon> Without Engagements</a>
+              <a class="dropdown-item" [routerLink]="['/engagements/with-employee']"><fa-icon [icon]="arrowIcon"></fa-icon> With Engagements</a>
+              <a class="dropdown-item" [routerLink]="['/engagements/without-employee']"><fa-icon [icon]="arrowIcon"></fa-icon> Without Engagements</a>
           </div>
       </div>
 
@@ -48,7 +48,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
               <a class="dropdown-item" [routerLink]="['/organizations']"><fa-icon [icon]="arrowIcon"></fa-icon> Organizations</a>
-              <a class="dropdown-item" [routerLink]="['/organization/create']"><fa-icon [icon]="arrowIcon"></fa-icon> Create Organization</a>
+              <a class="dropdown-item" [routerLink]="['/organizations/create']"><fa-icon [icon]="arrowIcon"></fa-icon> Create Organization</a>
           </div>
       </div>
 
@@ -64,8 +64,8 @@
             <fa-icon [icon]="applicationIcon"></fa-icon> Application
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-              <a class="dropdown-item" [routerLink]="['/application-list/', user.id]"><fa-icon [icon]="arrowIcon"></fa-icon> Applications</a>
-              <a class="dropdown-item" [routerLink]="['/application/create/',user.id]"><fa-icon [icon]="arrowIcon"></fa-icon> Create Application</a>
+              <a class="dropdown-item" [routerLink]="['/applications/list/', user.id]"><fa-icon [icon]="arrowIcon"></fa-icon> Applications</a>
+              <a class="dropdown-item" [routerLink]="['/applications/create/',user.id]"><fa-icon [icon]="arrowIcon"></fa-icon> Create Application</a>
           </div>
       </div>
 
@@ -75,7 +75,7 @@
             <fa-icon [icon]="engagementIcon"></fa-icon> Engagement
         </a>
         <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-            <a class="dropdown-item" [routerLink]="['/engagement-user-list/', user.id]"><fa-icon [icon]="arrowIcon"></fa-icon> Engagements</a>
+            <a class="dropdown-item" [routerLink]="['/engagements/user-list/', user.id]"><fa-icon [icon]="arrowIcon"></fa-icon> Engagements</a>
         </div>
     </div>
       
@@ -91,7 +91,7 @@
                 <fa-icon [icon]="groupsIcon"></fa-icon> Groups
             </a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-                <a class="dropdown-item" [routerLink]="['/assigned-groups/',user.id]"><fa-icon [icon]="arrowIcon"></fa-icon> Assigned groups</a>
+                <a class="dropdown-item" [routerLink]="['/groups/',user.id, 'assigned-groups']"><fa-icon [icon]="arrowIcon"></fa-icon> Assigned groups</a>
             </div>
         </div>
         
