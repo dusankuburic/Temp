@@ -78,19 +78,19 @@ namespace Temp.Services.Applications
 
         private ApplicationServiceException CreateAndLogServiceException(Exception exception) {
             var applicationServiceException = new ApplicationServiceException(exception);
-            //LOG
+            _loggingBroker.LogError(applicationServiceException);
             return applicationServiceException;
         }
 
         private ApplicationValidationException CreateAndLogValidationException(Exception exception) {
             var applicationValidationException = new ApplicationValidationException(exception);
-            //LOG
+            _loggingBroker.LogError(applicationValidationException);
             return applicationValidationException;
         }
 
         private ApplicationDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
             var applicationDependencyException = new ApplicationDependencyException(exception);
-            //LOG
+            _loggingBroker.LogCritical(applicationDependencyException);
             return applicationDependencyException;
         }
     }

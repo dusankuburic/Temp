@@ -4,6 +4,7 @@ using Temp.Domain.Models;
 using Temp.Services._Helpers;
 using Temp.Services.EmploymentStatuses.Models.Commands;
 using Temp.Services.EmploymentStatuses.Models.Queries;
+using Temp.Services.Integrations.Loggings;
 
 namespace Temp.Services.EmploymentStatuses;
 
@@ -11,10 +12,15 @@ public partial class EmploymentStatusService : IEmploymentStatusService
 {
     private readonly ApplicationDbContext _ctx;
     private readonly IMapper _mapper;
+    private readonly ILoggingBroker _loggingBroker;
 
-    public EmploymentStatusService(ApplicationDbContext ctx, IMapper mapper) {
+    public EmploymentStatusService(
+        ApplicationDbContext ctx,
+        IMapper mapper,
+        ILoggingBroker loggingBroker) {
         _ctx = ctx;
         _mapper = mapper;
+        _loggingBroker = loggingBroker;
     }
 
     public Task<CreateEmploymentStatusResponse> CreateEmploymentStatus(CreateEmploymentStatusRequest request) =>
