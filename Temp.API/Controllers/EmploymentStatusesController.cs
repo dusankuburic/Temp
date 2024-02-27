@@ -16,7 +16,6 @@ public class EmploymentStatusesController : ControllerBase
         _employmentStatusService = employmentStatusService;
     }
 
-
     [HttpGet("paged-employmentstatuses")]
     public async Task<IActionResult> GetPagedEmploymentStatuses([FromQuery] GetPagedEmploymentStatusesRequest request) {
         try {
@@ -30,20 +29,9 @@ public class EmploymentStatusesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPagedEmploymentStatuses() {
+    public async Task<IActionResult> GetEmploymentStatuses() {
         try {
             var response = await _employmentStatusService.GetEmploymentStatuses();
-
-            return Ok(response);
-        } catch (EmploymentStatusValidationException employmentStatusValidationException) {
-            return BadRequest(GetInnerMessage(employmentStatusValidationException));
-        }
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Create(CreateEmploymentStatusRequest request) {
-        try {
-            var response = await _employmentStatusService.CreateEmploymentStatus(request);
 
             return Ok(response);
         } catch (EmploymentStatusValidationException employmentStatusValidationException) {
@@ -62,10 +50,10 @@ public class EmploymentStatusesController : ControllerBase
         }
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateEmploymentStatus(UpdateEmploymentStatusRequest request) {
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateEmploymentStatusRequest request) {
         try {
-            var response = await _employmentStatusService.UpdateEmplymentStatus(request);
+            var response = await _employmentStatusService.CreateEmploymentStatus(request);
 
             return Ok(response);
         } catch (EmploymentStatusValidationException employmentStatusValidationException) {
@@ -73,12 +61,23 @@ public class EmploymentStatusesController : ControllerBase
         }
     }
 
-    [HttpPut("change-status")]
-    public async Task<IActionResult> UpdateEmploymentStatusStatus(UpdateEmploymentStatusStatusRequest request) {
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateEmploymentStatus([FromBody] UpdateEmploymentStatusRequest request) {
+        try {
+            var response = await _employmentStatusService.UpdateEmplymentStatus(request);
+
+            return NoContent();
+        } catch (EmploymentStatusValidationException employmentStatusValidationException) {
+            return BadRequest(GetInnerMessage(employmentStatusValidationException));
+        }
+    }
+
+    [HttpPut("change-status/{id}")]
+    public async Task<IActionResult> UpdateEmploymentStatusStatus([FromBody] UpdateEmploymentStatusStatusRequest request) {
         try {
             var response = await _employmentStatusService.UpdateEmploymentStatusStatus(request);
 
-            return Ok(response);
+            return NoContent();
         } catch (EmploymentStatusValidationException employmentStatusValidationException) {
             return BadRequest(GetInnerMessage(employmentStatusValidationException));
         }

@@ -19,7 +19,7 @@ getPagedEmploymentStatuses(page?, itemsPerPage?): Observable<PaginatedResult<Emp
 
   let params = new HttpParams();
 
-  if(page != null && itemsPerPage != null){
+  if (page != null && itemsPerPage != null) {
     params = params.append('pageNumber', page);
     params = params.append('pageSize', itemsPerPage);
   }
@@ -40,20 +40,20 @@ getEmploymentStatuses(): Observable<EmploymentStatus[]> {
   return this.http.get<EmploymentStatus[]>(this.baseUrl + 'employmentStatuses');
 }
 
-getEmploymentStatus(id: number): any {
+getEmploymentStatus(id: number): Observable<EmploymentStatus> {
   return this.http.get<EmploymentStatus>(this.baseUrl + 'employmentStatuses/' + id);
 }
 
-createEmploymentStatus(employmentStatus: EmploymentStatus): any {
-  return this.http.post(this.baseUrl + 'employmentStatuses', employmentStatus);
+createEmploymentStatus(employmentStatus: EmploymentStatus): Observable<EmploymentStatus> {
+  return this.http.post<EmploymentStatus>(this.baseUrl + 'employmentStatuses', employmentStatus);
 }
 
-updateEmploymentStatus(employmentStatus: EmploymentStatus): any {
-  return this.http.put(this.baseUrl + 'employmentStatuses/', employmentStatus);
+updateEmploymentStatus(employmentStatus: EmploymentStatus): Observable<void> {
+  return this.http.put<void>(this.baseUrl + 'employmentStatuses/' + employmentStatus.id, employmentStatus);
 }
 
-changeStatus(id: number): any {
-  return this.http.put(this.baseUrl + 'employmentStatuses/change-status', id);
+changeStatus(id: number): Observable<void> {
+  return this.http.put<void>(this.baseUrl + 'employmentStatuses/change-status/' + id, {id});
 }
 
 }

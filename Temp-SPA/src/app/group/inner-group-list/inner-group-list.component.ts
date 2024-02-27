@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faPenNib, faProjectDiagram, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { InnerGroups } from 'src/app/core/models/group';
+import { InnerGroup, PagedInnerGroups } from 'src/app/core/models/group';
+import { Organization } from 'src/app/core/models/organization';
+import { Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { GroupService } from 'src/app/core/services/group.service';
 
@@ -15,7 +17,9 @@ export class GroupListComponent implements OnInit {
   innerTeamsIcon = faUsers
   createTeamIcon = faProjectDiagram
 
-  innerGroups: InnerGroups;
+  innerGroups: InnerGroup[];
+  pagination: Pagination;
+  organization: Organization;
 
   constructor(
     private route: ActivatedRoute,
@@ -24,12 +28,28 @@ export class GroupListComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.innerGroups = data['innergroups'];
+      this.organization = { id: data['innergroups'].id, name: data['innergroups'].name };
+      this.innerGroups = data['innergroups'].groups.result;
+      this.pagination = data['innergroups'].groups.pagination;
     });
   }
 
   loadGroups(): void {
+    this.groupService.getInnerGroups(this.pagination.currentPage, this.pagination.itemsPerPage, this.organization.id)
+      .subscribe({
+        next: (res: PagedInnerGroups) => {
+          this.innerGroups = res.groups.result;
+          this.pagination = res.groups.pagination;
+        },
+        error: (error) => {
+          this.alertify.error('Unable to load groups');
+        }
+      })
+  }
 
+  pageChanged(event: any): void {
+    this.pagination.currentPage = event.page;
+    this.loadGroups();
   }
 
   changeStatus(id: number): void {

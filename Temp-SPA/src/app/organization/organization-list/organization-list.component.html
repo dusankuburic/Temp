@@ -1,6 +1,18 @@
 <div class="row justify-content-center">
     <div class="col-lg-8">
-        <h1 class="text-center">Organizations</h1>
+        <h3>Organizations</h3>
+        <form class="form">
+            <div class="input-group">
+                <input type="text" placeholder="Name" class="form-control">
+                <button type="button" class="btn btn-info float-right">Reset</button>
+                <button type="submit" class="btn btn-primary float-right">Apply</button>  
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <hr>
         <table class="table table-striped table-hover text-center">
             <thead>
                 <tr>
@@ -28,5 +40,19 @@
             </tbody>
         </table>
     </div>
+    <div class="col-lg-6" *ngIf="!organizations.length">
+        <div class="alert alert-info text-center" role="alert">
+            <h5>There is no organization</h5>
+        </div>
+    </div>
 </div>
-
+<div *ngIf="organizations.length" class="d-flex justify-content-center">
+    <pagination 
+      [boundaryLinks]="true" 
+      [totalItems]="pagination.totalItems" 
+      [itemsPerPage]="pagination.itemsPerPage" 
+      [(ngModel)]="pagination.currentPage"
+      (pageChanged)="pageChanged($event)" 
+      previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+    </pagination>
+  </div>

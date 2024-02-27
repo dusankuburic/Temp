@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
-        "Alertify"
+        "Alertify",
+        "innergroups"
     ],
     "typescript.tsdk": "node_modules\\typescript\\lib"
 }

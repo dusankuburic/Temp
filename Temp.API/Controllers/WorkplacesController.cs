@@ -39,17 +39,6 @@ public class WorkplacesController : Controller
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateWorkplace(CreateWorkplaceRequest request) {
-        try {
-            var response = await _workplaceService.CreateWorkplace(request);
-
-            return Ok(request);
-        } catch (WorkplaceValidationException workplaceValidationException) {
-            return BadRequest(GetInnerMessage(workplaceValidationException));
-        }
-    }
-
     [HttpGet("{id}")]
     public async Task<IActionResult> GetWorkplace([FromRoute] int id) {
         try {
@@ -61,23 +50,34 @@ public class WorkplacesController : Controller
         }
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateWorkplace(UpdateWorkplaceRequest request) {
+    [HttpPost]
+    public async Task<IActionResult> CreateWorkplace([FromBody] CreateWorkplaceRequest request) {
         try {
-            var response = await _workplaceService.UpdateWorkplace(request);
+            var response = await _workplaceService.CreateWorkplace(request);
 
-            return Ok(response);
+            return Ok(request);
         } catch (WorkplaceValidationException workplaceValidationException) {
             return BadRequest(GetInnerMessage(workplaceValidationException));
         }
     }
 
-    [HttpPut("change-status")]
-    public async Task<IActionResult> UpdateWorkplaceStatus(UpdateWorkplaceStatusRequest request) {
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateWorkplace([FromBody] UpdateWorkplaceRequest request) {
+        try {
+            var response = await _workplaceService.UpdateWorkplace(request);
+
+            return NoContent();
+        } catch (WorkplaceValidationException workplaceValidationException) {
+            return BadRequest(GetInnerMessage(workplaceValidationException));
+        }
+    }
+
+    [HttpPut("change-status/{id}")]
+    public async Task<IActionResult> UpdateWorkplaceStatus([FromBody] UpdateWorkplaceStatusRequest request) {
         try {
             var response = await _workplaceService.UpdateWorkplaceStatus(request);
 
-            return Ok(response);
+            return NoContent();
         } catch (WorkplaceValidationException workplaceValidationException) {
             return BadRequest(GetInnerMessage(workplaceValidationException));
         }

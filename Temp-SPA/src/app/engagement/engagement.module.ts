@@ -15,7 +15,7 @@ import { EngagementCreateResolver } from '../core/resolvers/engagement/engagemen
 @NgModule({
     imports: [
         SharedModule,
-        BsDatepickerModule.forRoot(),
+        BsDatepickerModule,
         RouterModule.forChild(engagementRoutes)
     ],
     exports: [],

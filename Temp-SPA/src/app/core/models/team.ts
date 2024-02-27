@@ -5,6 +5,7 @@ export interface Team {
 }
 
 export interface InnerTeams {
+    groupId: number;
     name: string;
     teams: Team[];
 }

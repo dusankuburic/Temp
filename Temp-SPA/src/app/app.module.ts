@@ -9,8 +9,6 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
-import { AuthService } from './core/services/auth.service'; 
-import { AlertifyService } from './core/services/alertify.service';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 
@@ -51,10 +49,7 @@ export function tokenGetter(): any {
     }),
     FontAwesomeModule,
   ],
-  providers: [
-    AuthService,
-    AlertifyService,
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

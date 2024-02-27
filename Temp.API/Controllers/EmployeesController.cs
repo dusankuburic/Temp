@@ -29,12 +29,17 @@ public class EmployeesController : ControllerBase
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetEmployee([FromRoute] int id) {
-        var response = await _employeeService.GetEmployee(id);
-        return Ok(response);
+        try {
+            var response = await _employeeService.GetEmployee(id);
+
+            return Ok(response);
+        } catch (EmployeeValidationException employeeValidationException) {
+            return BadRequest(GetInnerMessage(employeeValidationException));
+        }
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateEmployeeRequest request) {
+    public async Task<IActionResult> Create([FromBody] CreateEmployeeRequest request) {
         try {
             var response = await _employeeService.CreateEmployee(request);
 
@@ -44,29 +49,33 @@ public class EmployeesController : ControllerBase
         }
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateEmployee(UpdateEmployeeRequest request) {
-        var response = await _employeeService.UpdateEmployee(request);
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeRequest request) {
+        try {
+            var response = await _employeeService.UpdateEmployee(request);
 
-        return Ok(response);
+            return NoContent();
+        } catch (EmployeeValidationException employeeValidationException) {
+            return BadRequest(GetInnerMessage(employeeValidationException));
+        }
     }
 
-    [HttpPut("change-status")]
-    public async Task<IActionResult> UpdateEmployeeAccountStatus(int id) {
+    [HttpPut("change-status/{id}")]
+    public async Task<IActionResult> UpdateEmployeeAccountStatus([FromBody] int id) {
         var response = await _employeeService.UpdateEmployeeAccountStatus(id);
         return response ? NoContent() : BadRequest();
     }
 
-    [HttpPost("assign")]
-    public async Task<IActionResult> AssignRole(AssignRoleRequest request) {
+    [HttpPut("assign/{id}")]
+    public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequest request) {
 
         //var response = await new AssignRole(_ctx).Do(request);
         //return response.Status ? Ok() : BadRequest(response.Message);
         return Ok();
     }
 
-    [HttpPost("unassign")]
-    public async Task<IActionResult> RemoveRole(RemoveEmployeeRoleRequest request) {
+    [HttpPut("unassign/{id}")]
+    public async Task<IActionResult> RemoveRole([FromBody] RemoveEmployeeRoleRequest request) {
         //var response = await new RemoveEmployeeRole(_ctx).Do(request);
         //return response.Status ? (IActionResult)Ok() : BadRequest(response.Message);
         return Ok();

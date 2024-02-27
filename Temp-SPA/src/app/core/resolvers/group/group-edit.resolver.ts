@@ -6,7 +6,7 @@ import { Group } from '../../models/group';
 import { AlertifyService } from '../../services/alertify.service';
 import { GroupService } from '../../services/group.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class GroupEditResolver  {
 
     constructor(

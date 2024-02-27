@@ -5,6 +5,8 @@ import { Workplace } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
 import { faPenNib, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { debounceTime } from 'rxjs';
 
 
 @Component({
@@ -12,15 +14,31 @@ import { faPenNib, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './workplace-list.component.html'
 })
 export class WorkplaceListComponent implements OnInit {
+  filtersForm: FormGroup;
   workplaces: Workplace[];
   pagination: Pagination;
   archiveIcon = faPenNib;
   editIcon = faPenToSquare
+  workplaceParams: any = { name: '' };
 
   constructor(
     private route: ActivatedRoute,
     private workplaceService: WorkplaceService,
-    private alertify: AlertifyService) { 
+    private alertify: AlertifyService,
+    private fb: FormBuilder) { 
+      this.filtersForm = this.fb.group({
+        name: ['', Validators.minLength(1)],
+      })
+
+      const nameControl = this.filtersForm.get('name');
+      nameControl.valueChanges.pipe(
+        debounceTime(1000)
+      ).subscribe(() => {
+        if (nameControl.value !== null) {
+          this.workplaceParams.name = nameControl.value;
+          this.loadWorkplaces();
+        }
+      });
     }
 
   ngOnInit(): void {
@@ -41,6 +59,14 @@ export class WorkplaceListComponent implements OnInit {
           this.alertify.error(error.error);
         }
       });
+  }
+
+  resetFilters() {
+    this.workplaceParams.name = '';
+    this.filtersForm.patchValue({
+      name: ''
+    });
+    this.loadWorkplaces();
   }
 
   pageChanged(event: any): void {

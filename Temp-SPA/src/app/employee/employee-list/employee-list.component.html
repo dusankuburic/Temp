@@ -1,7 +1,25 @@
-<div class="row justify-content-center">
 
-    <div class="col-lg-9">
-        <h1 class="text-center">Employee search</h1>
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <h3>Employees</h3>
+        <form class="form" [formGroup]="filtersForm" (ngSubmit)="loadEmployees()">
+            <div class="input-group">
+                <select class="form-control" formControlName="role">
+                    <option [disabled]="role.value === null" *ngFor="let role of roles" [value]="role.value">
+                        {{role.display}}
+                    </option>
+                </select>
+                <input type="text" placeholder="First Name" class="form-control" formControlName="firstName">
+                <input type="text" placeholder="Last Name" class="form-control" formControlName="lastName">
+                <button type="button" (click)="resetFilters()" class="btn btn-info float-right">Reset</button>
+                <button type="submit" class="btn btn-primary float-right">Apply</button>      
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <hr>
         <div class="table-responsive">
         <table class="table table-striped table-hover text-center">
             <thead>
@@ -57,36 +75,6 @@
             </pagination>
           </div>
         
-    </div>
-    <div class="col-lg-3">
-        <h1 class="text-center">Filters</h1>
-        <form class="form" #form="ngForm" (ngSubmit)="loadEmployees()" novalidate>
-            <div class="form-group"> 
-                <label for="role">Role</label>
-                <select class="form-control ml-1" name="role"
-                [(ngModel)]="employeeParams.role">
-                <option value='' defaultSelected disabled>Select Role</option>
-                <option *ngFor="let role of roles" [value]="role.value">
-                    {{role.display}}
-                </option>
-                </select>
-            </div> 
-            <div class="form-group"> 
-                <label for="firstName">First Name</label>
-              <input type="text" class="form-control ml-1" 
-              name="firstName"
-              [(ngModel)]="employeeParams.firstName">
-            </div> 
-            <div class="form-group">
-                <label for="lastName">Last Name</label>
-              <input type="text" class="form-control ml-1" 
-              name="firstName"
-              [(ngModel)]="employeeParams.lastName">
-            </div>
-
-            <button type="button" (click)="resetFilters()" class="btn btn-info float-right ml-2">Reset</button>
-            <button type="submit" class="btn btn-primary float-right">Apply</button>      
-        </form>
     </div>
 </div>
 

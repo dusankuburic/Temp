@@ -31,16 +31,12 @@ getEmployeesWithEngagement(page?, itemsPerPage?, employeeParams?): Observable<Pa
     params = params.append('minSalary', employeeParams.minSalary);
     params = params.append('maxSalary', employeeParams.maxSalary);
 
-    if (employeeParams.workplace !== '' && employeeParams.employmentStatus !== '')
-    {
+    if (employeeParams.workplace !== '' && employeeParams.employmentStatus !== '') {
       params = params.append('workplace', employeeParams.workplace);
       params = params.append('employmentStatus', employeeParams.employmentStatus);
-    }
-    else if (employeeParams.workplace !== '')
-    {
+    } else if (employeeParams.workplace !== '') {
       params = params.append('workplace', employeeParams.workplace);
-    }
-    else if (employeeParams.employmentStatus !== ''){
+    } else if (employeeParams.employmentStatus !== '') {
       params = params.append('employmentStatus', employeeParams.employmentStatus);
     }
   }
@@ -62,7 +58,7 @@ getEmployeesWithoutEngagement(page?, itemsPerPage?): Observable<PaginatedResult<
 
   let params = new HttpParams();
 
-  if (page != null && itemsPerPage != null){
+  if (page != null && itemsPerPage != null) {
     params = params.append('pageNumber', page);
     params = params.append('pageSize', itemsPerPage);
   }
@@ -87,8 +83,8 @@ getUserEmployeeEngagements(id: number): any {
   return this.http.get(this.baseUrl + 'engagements/user/' + id);
 }
 
-createEngagement(engagement: Engagement): any {
-  return this.http.post(this.baseUrl + 'engagements', engagement);
+createEngagement(engagement: Engagement): Observable<Engagement> {
+  return this.http.post<Engagement>(this.baseUrl + 'engagements', engagement);
 }
 
 }

@@ -79,11 +79,8 @@
                   </select>           
                   <div class="invalid-feedback">Please choose a team</div>                     
                 </div>
-
-
                 <button type="submit" [disabled]="!editEmployeeForm.valid" class="btn btn-success float-right">Save</button>
               </form>
-
           </div>
       </div>
   </div>
@@ -103,7 +100,7 @@
             <tbody>
               <tr *ngFor="let group of currentModeratorGroups">
                 <td>{{group.name}}</td>
-                <td><a class="btn btn-danger" (click)="updateGroup(Moderator.id, group.id)"><i class="fas fa-minus-circle"></i></a></td>
+                <td><a class="btn btn-danger" (click)="updateGroup(Moderator.id, group.id)"><fa-icon [icon]="minusIcon"></fa-icon></a></td>
               </tr>
             </tbody>
           </table>
@@ -119,7 +116,7 @@
             <tbody>
               <tr *ngFor="let group of freeModeratorGroups">
                 <td>{{group.name}}</td>
-                <td><a class="btn btn-success" (click)="updateGroup(Moderator.id, group.id)"><i class="fas fa-plus-circle"></i></a></td>
+                <td><a class="btn btn-success" (click)="updateGroup(Moderator.id, group.id)"><fa-icon [icon]="plusIcon"></fa-icon></a></td>
               </tr>
               
             </tbody>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
 import { Group, ModeratorGroups } from 'src/app/core/models/group';
 import { Moderator, ModeratorMin } from 'src/app/core/models/moderator';
@@ -11,12 +12,16 @@ import { EmployeeService } from 'src/app/core/services/employee.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
 import { TeamService } from 'src/app/core/services/team.service';
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-employee-edit',
   templateUrl: './employee-edit.component.html'
 })
 export class EmployeeEditComponent implements OnInit {
+  minusIcon = faMinus;
+  plusIcon = faPlus;
+
   editEmployeeForm: UntypedFormGroup;
   employee: Employee;
   fullTeam: FullTeam;
@@ -67,27 +72,29 @@ export class EmployeeEditComponent implements OnInit {
     });
   }
 
-  loadModeratorGroups(id, EmployeeId: number): void {
+  async loadModeratorGroups(id, EmployeeId: number) {
     let moderatorMin = {} as ModeratorMin;
-    this.teamService.getFullTeam(id).toPromise().then((fullTeam) => {
+
+    await lastValueFrom(this.teamService.getFullTeam(id)).then((fullTeam) => {
       this.fullTeam = fullTeam;
 
-      this.employeeService.getModerator(EmployeeId).toPromise().then((moderator) => {
+      firstValueFrom(this.employeeService.getModerator(EmployeeId)).then((moderator) => {
         this.Moderator = moderator;
         moderatorMin.id = moderator.id;
 
-        this.groupService.getModeratorGroups(moderator.id).toPromise().then((currModerGroup) => {
+        firstValueFrom(this.groupService.getModeratorGroups(moderator.id)).then((currModerGroup) => {
           this.currentModeratorGroups = currModerGroup;
         }, error => {
           this.currentModeratorGroups = [];
           this.alertify.error(error.error);
-        });
+        })
 
-        this.groupService.getModeratorFreeGroups(this.fullTeam.organizationId, moderatorMin).toPromise().then((res)=> {
+        firstValueFrom(this.groupService.getModeratorFreeGroups(this.fullTeam.organizationId, moderatorMin)).then((res) => {
           this.freeModeratorGroups = res;
         }, error => {
-          this.alertify.error(error.error)
+          this.alertify.error(error.error);
         });
+
       });
     });
   }
