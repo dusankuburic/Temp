@@ -1,6 +1,7 @@
 ﻿using AutoMapper.QueryableExtensions;
 using Temp.Database;
 using Temp.Domain.Models;
+using Temp.Services._Helpers;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Organizations.Models.Commands;
 using Temp.Services.Organizations.Models.Queries;
@@ -22,8 +23,8 @@ public partial class OrganizationService : IOrganizationService
         _loggingBroker = loggingBroker;
     }
 
-    public Task<CreateOrganizationResponse> CreateOrganization(CreateOrganizationRequest request) {
-        return TryCatch(async () => {
+    public Task<CreateOrganizationResponse> CreateOrganization(CreateOrganizationRequest request) =>
+        TryCatch(async () => {
             var organization = _mapper.Map<Organization>(request);
 
             ValidateOrganizationOnCreate(organization);
@@ -33,32 +34,57 @@ public partial class OrganizationService : IOrganizationService
 
             return _mapper.Map<CreateOrganizationResponse>(organization);
         });
-    }
 
-    public Task<string> GetInnerGroups(int id) {
-        return TryCatch(async () => {
-            var res = await _ctx.Organizations
-            .AsNoTracking()
-            .Include(x => x.Groups)
-            .Where(x => x.Id == id && x.IsActive)
-            .Select(x => new GetInnerGroups.Response
-            {
-                Name = x.Name,
-                Groups = x.Groups.Select(g => new GetInnerGroups.InnerGroupViewModel
-                {
-                    Id = g.Id,
-                    Name = g.Name
-                })
-            })
-            .FirstOrDefaultAsync();
 
-            ValidateStorageOrganizationInnerGroups(res.Groups);
+    public Task<PagedList<GetOrganizationResponse>> GetPagedOrganizations(GetOrganizationsRequest request) =>
+        TryCatch(async () => {
+            var organizationsQuery = _ctx.Organizations
+                .Where(x => x.IsActive)
+                .ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider)
+                .AsQueryable();
 
-            return JsonConvert.SerializeObject(res, Formatting.Indented, new JsonSerializerSettings {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
+            return await PagedList<GetOrganizationResponse>.CreateAsync(
+                organizationsQuery,
+                request.PageNumber,
+                request.PageSize);
         });
-    }
+
+    public Task<GetPagedInnerGroupsResponse> GetPagedInnerGroups(GetOrganizationInnerGroupsRequest request) =>
+        TryCatch(async () => {
+            var innerGroupsQurey = _ctx.Groups
+                .Where(x => x.OrganizationId == request.OrganizationId && x.IsActive)
+                .ProjectTo<InnerGroup>(_mapper.ConfigurationProvider)
+                .AsQueryable();
+
+            var pagedGroups = await PagedList<InnerGroup>.CreateAsync(
+                innerGroupsQurey,
+                request.PageNumber,
+                request.PageSize);
+
+            var organizationName = await _ctx.Organizations
+                .Where(x => x.Id == request.OrganizationId && x.IsActive)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync();
+
+            return new GetPagedInnerGroupsResponse {
+                Id = request.OrganizationId,
+                Name = organizationName,
+                Groups = pagedGroups
+            };
+        });
+
+    public Task<GetInnerGroupsResponse> GetInnerGroups(int id) =>
+        TryCatch(async () => {
+            var innerGroups = await _ctx.Organizations
+                .AsNoTracking()
+                .Include(x => x.Groups)
+                .Where(x => x.Id == id && x.IsActive)
+                .ProjectTo<GetInnerGroupsResponse>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+
+            return innerGroups;
+        });
+
 
     public Task<GetOrganizationResponse> GetOrganization(GetOrganizationRequest request) =>
          TryCatch(async () => {
@@ -74,8 +100,8 @@ public partial class OrganizationService : IOrganizationService
          });
 
 
-    public Task<IEnumerable<GetOrganizationResponse>> GetOrganizations() {
-        return TryCatch(async () => {
+    public Task<IEnumerable<GetOrganizationResponse>> GetOrganizations() =>
+        TryCatch(async () => {
             var organizations = await _ctx.Organizations
                 .Where(x => x.IsActive)
                 .ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider)
@@ -86,23 +112,23 @@ public partial class OrganizationService : IOrganizationService
 
             return organizations;
         });
-    }
 
-    public Task<UpdateOrganizationResponse> UpdateOrganization(UpdateOrganizationRequest request) {
-        return TryCatch(async () => {
-            var organization = await _ctx.Organizations
+
+    public Task<UpdateOrganizationResponse> UpdateOrganization(UpdateOrganizationRequest request) =>
+         TryCatch(async () => {
+             var organization = await _ctx.Organizations
                 .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync();
 
-            _mapper.Map(request, organization);
+             _mapper.Map(request, organization);
 
-            ValidateOrganizationOnUpdate(organization);
+             ValidateOrganizationOnUpdate(organization);
 
-            await _ctx.SaveChangesAsync();
+             await _ctx.SaveChangesAsync();
 
-            return new UpdateOrganizationResponse();
-        });
-    }
+             return new UpdateOrganizationResponse();
+         });
+
 
     public async Task<UpdateOrganizationStatusResponse> UpdateOrganizationStatus(UpdateOrganizationStatusRequest request) {
         var ortanization = await _ctx.Organizations

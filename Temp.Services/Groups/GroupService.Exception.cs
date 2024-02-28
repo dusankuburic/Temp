@@ -11,6 +11,7 @@ public partial class GroupService
     public delegate Task<GetGroupResponse> ReturningGetGroupFunction();
     public delegate Task<UpdateGroupResponse> ReturningUpdateGroupFunction();
     public delegate Task<UpdateGroupStatusResponse> ReturningUpdateGroupStatusFunction();
+    public delegate Task<GetPagedGroupInnerTeamsResponse> ReturningPagedGroupInnerTeamsFunction();
     public delegate Task<GetGroupInnerTeamsResponse> ReturningGroupInnerTeamsFunction();
     public delegate Task<List<GetModeratorGroupsResponse>> ReturningModeratorGroupsFunction();
     public delegate Task<List<GetModeratorFreeGroupsResponse>> ReturningModeratorFreeGroupsFunction();
@@ -62,6 +63,16 @@ public partial class GroupService
             throw CreateAndLogServiceException(nullGroupException);
         } catch (InvalidGroupException invalidGroupException) {
             throw CreateAndLogValidationException(invalidGroupException);
+        } catch (SqlException sqlException) {
+            throw CreateAndLogCriticalDependencyException(sqlException);
+        } catch (Exception exception) {
+            throw CreateAndLogServiceException(exception);
+        }
+    }
+
+    public async Task<GetPagedGroupInnerTeamsResponse> TryCatch(ReturningPagedGroupInnerTeamsFunction returningPagedGroupInnerTeamsFunction) {
+        try {
+            return await returningPagedGroupInnerTeamsFunction();
         } catch (SqlException sqlException) {
             throw CreateAndLogCriticalDependencyException(sqlException);
         } catch (Exception exception) {

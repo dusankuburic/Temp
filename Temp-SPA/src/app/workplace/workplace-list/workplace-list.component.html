@@ -1,6 +1,24 @@
-<div class="row justify-content-center">
+<div class="row d-flex justify-content-around">
+    <div class="col-lg-2">
+        <h4>Workplaces</h4>
+    </div>
     <div class="col-lg-7">
-        <h1 class="text-center">Workplace list</h1>
+        <form class="form" [formGroup]="filtersForm" (ngSubmit)="loadWorkplaces()" >
+            <div class="input-group">
+                <input type="text" placeholder="Name" class="form-control" formControlName="name">
+                <button type="button" (click)="resetFilters()" class="btn btn-info float-right">Reset</button>
+                <button type="submit" class="btn btn-primary float-right">Apply</button>    
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-2">
+        <a class="btn btn-success float-end" [routerLink]="['/workplaces/create']"><fa-icon [icon]="plusIcon"></fa-icon></a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-12">
+        <hr>
         <table class="table table-striped table-hover text-center">
             <thead>
                 <tr>

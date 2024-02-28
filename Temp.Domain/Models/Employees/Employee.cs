@@ -1,6 +1,7 @@
-﻿namespace Temp.Domain.Models;
+﻿
+namespace Temp.Domain.Models;
 
-public class Employee
+public class Employee : BaseEntity
 {
     public int Id { get; set; }
 

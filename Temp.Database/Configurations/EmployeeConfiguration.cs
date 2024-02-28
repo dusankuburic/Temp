@@ -19,6 +19,5 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 
         builder.Property(x => x.Role)
             .HasDefaultValue("None");
-
     }
 }

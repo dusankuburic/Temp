@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Temp.Database.Configurations;
 using Temp.Domain.Models;
 using Temp.Domain.Models.Applications;
@@ -49,5 +53,24 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new OrganizationConfiguration());
         modelBuilder.ApplyConfiguration(new TeamConfiguration());
         modelBuilder.ApplyConfiguration(new WorkplaceConfiguration());
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
+
+        var entities = ChangeTracker.Entries()
+            .Where(x =>
+                x.Entity is BaseEntity &&
+                (x.State == EntityState.Added || x.State == EntityState.Modified));
+
+        foreach (var entity in entities) {
+            var now = DateTime.UtcNow;
+
+            if (entity.State == EntityState.Added) {
+                ((BaseEntity)entity.Entity).CreatedAt = now;
+            }
+            ((BaseEntity)entity.Entity).UpdatedAt = now;
+        }
+
+        return base.SaveChangesAsync(cancellationToken);
     }
 }

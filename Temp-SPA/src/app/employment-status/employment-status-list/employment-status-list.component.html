@@ -1,6 +1,23 @@
+<div class="row d-flex justify-content-center">
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <h4>Employment statuses</h4>
+    </div>
+    <div class="col-lg-5">
+        <form class="form" [formGroup]="filtersForm" (ngSubmit)="loadEmploymentStatuses()">
+            <div class="input-group">
+                <input type="text" placeholder="Name" class="form-control" formControlName="name">
+                <button type="button" (click)="resetFilters()" class="btn btn-info float-right">Reset</button>
+                <button type="submit" class="btn btn-primary float-right">Apply</button>
+            </div>
+        </form>
+    </div>    
+    <div class="col-lg-2">
+        <a class="btn btn-success float-end" [routerLink]="['/employment-statuses/create']"><fa-icon [icon]="plusIcon"></fa-icon></a>
+    </div>
+</div>
 <div class="row justify-content-center">
-    <div class="col-lg-8">
-        <h1 class="text-center">Employment status list</h1>
+    <div class="col-lg-12">
+        <hr>
         <table class="table table-striped table-hover text-center">
             <thead>
                 <tr>
@@ -22,8 +39,6 @@
         </table>
     </div>
 </div>
-
-
 <div class="d-flex justify-content-center">
     <pagination 
       [boundaryLinks]="true" 

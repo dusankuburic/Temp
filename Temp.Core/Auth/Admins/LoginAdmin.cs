@@ -47,9 +47,9 @@ public class LoginAdmin
         var adminIdentity = new ClaimsIdentity(adminClaims, "Admin_Identity");
 
         var tokenDescriptor = new SecurityTokenDescriptor
-            {
+        {
             Subject = adminIdentity,
-            Expires = DateTime.Now.AddDays(1),
+            Expires = DateTime.UtcNow.AddDays(1),
             SigningCredentials = creds
         };
 

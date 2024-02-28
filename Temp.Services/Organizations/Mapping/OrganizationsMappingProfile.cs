@@ -11,5 +11,6 @@ public class OrganizationsMappingProfile : Profile
         CreateMap<Organization, CreateOrganizationResponse>();
         CreateMap<Organization, GetOrganizationResponse>();
         CreateMap<UpdateOrganizationRequest, Organization>();
+        CreateMap<Group, InnerGroup>();
     }
 }

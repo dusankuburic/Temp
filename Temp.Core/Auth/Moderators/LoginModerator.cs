@@ -48,7 +48,7 @@ public class LoginModerator
         var tokenDescriptor = new SecurityTokenDescriptor
             {
             Subject = moderatorIdentity,
-            Expires = DateTime.Now.AddDays(1),
+            Expires = DateTime.UtcNow.AddDays(1),
             SigningCredentials = creds
         };
 

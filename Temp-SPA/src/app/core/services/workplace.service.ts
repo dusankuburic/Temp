@@ -20,8 +20,7 @@ getPagedWorkplaces(page?, itemsPerPage?): Observable<PaginatedResult<Workplace[]
 
   let params = new HttpParams();
 
-  if (page != null && itemsPerPage != null)
-  {
+  if (page != null && itemsPerPage != null) {
     params = params.append('pageNumber', page);
     params = params.append('pageSize', itemsPerPage);
   }
@@ -43,20 +42,20 @@ getWorkplaces(): Observable<Workplace[]> {
   return this.http.get<Workplace[]>(this.baseUrl + 'workplaces');
 }
 
-getWorkplace(id: number): any {
+getWorkplace(id: number): Observable<Workplace> {
   return this.http.get<Workplace>(this.baseUrl + 'workplaces/' + id);
 }
 
-createWorkplace(workplace: Workplace): any {
-  return this.http.post(this.baseUrl + 'workplaces', workplace);
+createWorkplace(workplace: Workplace): Observable<Workplace> {
+  return this.http.post<Workplace>(this.baseUrl + 'workplaces', workplace);
 }
 
-updateWorkplace(workplace: Workplace): any {
-  return this.http.put(this.baseUrl + 'workplaces/', workplace);
+updateWorkplace(workplace: Workplace): Observable<void> {
+  return this.http.put<void>(this.baseUrl + 'workplaces/' + workplace.id, workplace);
 }
 
-changeStatus(request: UpdateWorkplaceStatus): any {
-  return this.http.put(this.baseUrl + 'workplaces/change-status', request);  
+changeStatus(request: UpdateWorkplaceStatus): Observable<void> {
+  return this.http.put<void>(this.baseUrl + 'workplaces/change-status/' + request.id, request);  
 }
 
 

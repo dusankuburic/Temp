@@ -6,7 +6,7 @@ import { UserListApplication } from 'src/app/core/models/application';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { ApplicationService } from 'src/app/core/services/application.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ApplicationUserListResolver  {
 
     constructor(

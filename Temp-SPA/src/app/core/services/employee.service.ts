@@ -7,6 +7,7 @@ import { AssignRoleDto } from '../models/assignRoleDto';
 import { Employee } from '../models/employee';
 import { Moderator } from '../models/moderator';
 import { PaginatedResult } from '../models/pagination';
+import { UnassignRoleDto } from '../models/unassignRoleDto';
 
 @Injectable({
   providedIn: 'root'
@@ -22,14 +23,12 @@ getEmployees(page?, itemsPerPage?, employeeParams?): Observable<PaginatedResult<
 
   let params = new HttpParams();
 
-  if (page != null && itemsPerPage != null)
-  {
+  if (page != null && itemsPerPage != null) {
     params = params.append('pageNumber', page);
     params = params.append('pageSize', itemsPerPage);
   }
 
-  if (employeeParams != null)
-  {
+  if (employeeParams != null) {
     params = params.append('role', employeeParams.role);
     params = params.append('firstName', employeeParams.firstName);
     params = params.append('lastName', employeeParams.lastName);
@@ -47,32 +46,32 @@ getEmployees(page?, itemsPerPage?, employeeParams?): Observable<PaginatedResult<
     );
 }
 
-getModerator(EmployeeId: number): any {
+getModerator(EmployeeId: number): Observable<Moderator> {
   return this.http.get<Moderator>(this.baseUrl + 'moderators/' + EmployeeId);
 }
 
-getEmployee(id: number): any {
+getEmployee(id: number): Observable<Employee> {
   return this.http.get<Employee>(this.baseUrl + 'employees/' + id);
 }
 
-createEmployee(employee: Employee): any {
-  return this.http.post(this.baseUrl + 'employees', employee);
+createEmployee(employee: Employee): Observable<Employee> {
+  return this.http.post<Employee>(this.baseUrl + 'employees', employee);
 }
 
-updateEmployee(employee: Employee): any {
-  return this.http.put(this.baseUrl + 'employees', employee);
+updateEmployee(employee: Employee): Observable<void> {
+  return this.http.put<void>(this.baseUrl + 'employees/' + employee.id, employee);
 }
 
 assignRole(entity: AssignRoleDto): any {
-  return this.http.post(this.baseUrl + 'employees/assign', entity);
+  return this.http.post(this.baseUrl + 'employees/assign/' + entity.id, entity);
 }
 
-unassignRole(entity: any): any {
-  return this.http.post(this.baseUrl + 'employees/unassign', entity);
+unassignRole(entity: UnassignRoleDto): Observable<void> {
+  return this.http.put<void>(this.baseUrl + 'employees/unassign/' + entity.id, entity.id);
 }
 
-changeStatus(id: number): any {
-  return this.http.put(this.baseUrl + 'employees/change-status/', id);
+changeStatus(id: number): Observable<void> {
+  return this.http.put<void>(this.baseUrl + 'employees/change-status/' + id, id);
 }
 
 }

@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Temp.Domain\Temp.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+
 </Project>

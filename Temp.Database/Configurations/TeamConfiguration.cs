@@ -13,9 +13,6 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.Property(x => x.IsActive)
-            .HasDefaultValue(true);
-
         builder.Property(x => x.GroupId)
             .IsRequired();
     }
