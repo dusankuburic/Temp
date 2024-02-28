@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { faEdit, faPenNib } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faPenNib, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime } from 'rxjs';
 import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
@@ -14,8 +14,9 @@ import { EmploymentStatusService } from 'src/app/core/services/employment-status
 })
 export class EmploymentStatusListComponent implements OnInit {
   filtersForm: FormGroup;
-  editIcon = faEdit
-  archiveIcon = faPenNib
+  editIcon = faEdit;
+  archiveIcon = faPenNib;
+  plusIcon = faPlusCircle;
 
   employmentStatuses: EmploymentStatus[];
   pagination: Pagination;

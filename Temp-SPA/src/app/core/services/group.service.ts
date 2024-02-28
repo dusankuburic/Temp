@@ -6,7 +6,6 @@ import { ModeratorMin } from '../models/moderator';
 import { InnerTeams } from '../models/team';
 import { Observable, map } from 'rxjs';
 import { PaginatedResult } from '../models/pagination';
-import { Organization } from '../models/organization';
 
 @Injectable({
   providedIn: 'root'

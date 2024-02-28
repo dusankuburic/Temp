@@ -85,7 +85,7 @@ public partial class EmployeeService : IEmployeeService
     public Task<PagedList<GetEmployeesWithEngagementResponse>>
     GetEmployeesWithEngagement(GetEmployeesWithEngagementRequest request) =>
     TryCatch(async () => {
-        var currentDateTime = DateTime.Now;
+        var currentDateTime = DateTime.UtcNow;
 
         //TODO fix this horror
         var employeesWithEngagement = _ctx.Employees
@@ -151,7 +151,7 @@ public partial class EmployeeService : IEmployeeService
     GetEmployeesWithoutEngagement(GetEmployeesWithoutEngagementRequest request) =>
     TryCatch(async () => {
 
-        var currentDateTime = DateTime.Now;
+        var currentDateTime = DateTime.UtcNow;
 
         var employeesWithoutEngagement = _ctx.Employees
             .Include(x => x.Engagements.Where(n => n.DateTo < currentDateTime))

@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
+﻿using System.Security.Cryptography;
 using Newtonsoft.Json;
-using Temp.Database;
 using Temp.Domain.Models;
 
 namespace Temp.API.Data;
@@ -15,6 +10,11 @@ public class Seed
         if (!ctx.Organizations.Any()) {
             var organizationData = File.ReadAllText("Data/OrganizationSeedData.json");
             var organizations = JsonConvert.DeserializeObject<List<Organization>>(organizationData);
+
+            organizations.ForEach(x => {
+                x.CreatedAt = DateTime.UtcNow;
+                x.UpdatedAt = DateTime.UtcNow;
+            });
 
             ctx.Organizations.AddRange(organizations);
 
@@ -27,6 +27,11 @@ public class Seed
             var groupData = File.ReadAllText("Data/GroupSeedData.json");
             var groups = JsonConvert.DeserializeObject<List<Group>>(groupData);
 
+            groups.ForEach(x => {
+                x.CreatedAt = DateTime.UtcNow;
+                x.UpdatedAt = DateTime.UtcNow;
+            });
+
             ctx.Groups.AddRange(groups);
 
             ctx.SaveChanges();
@@ -37,6 +42,11 @@ public class Seed
         if (!ctx.Teams.Any()) {
             var teamData = File.ReadAllText("Data/TeamSeedData.json");
             var teams = JsonConvert.DeserializeObject<List<Team>>(teamData);
+
+            teams.ForEach(x => {
+                x.CreatedAt = DateTime.UtcNow;
+                x.UpdatedAt = DateTime.UtcNow;
+            });
 
             ctx.Teams.AddRange(teams);
 
@@ -49,6 +59,11 @@ public class Seed
             var employmentStatusData = File.ReadAllText("Data/EmploymentStatusSeedData.json");
             var employmentStatuses = JsonConvert.DeserializeObject<List<EmploymentStatus>>(employmentStatusData);
 
+            employmentStatuses.ForEach(x => {
+                x.CreatedAt = DateTime.UtcNow;
+                x.UpdatedAt = DateTime.UtcNow;
+            });
+
             ctx.EmploymentStatuses.AddRange(employmentStatuses);
 
             ctx.SaveChanges();
@@ -60,6 +75,11 @@ public class Seed
             var workplaceData = File.ReadAllText("Data/WorkplaceSeedData.json");
             var workplaces = JsonConvert.DeserializeObject<List<Workplace>>(workplaceData);
 
+            workplaces.ForEach(x => {
+                x.CreatedAt = DateTime.UtcNow;
+                x.UpdatedAt = DateTime.UtcNow;
+            });
+
             ctx.Workplaces.AddRange(workplaces);
 
             ctx.SaveChanges();
@@ -70,6 +90,11 @@ public class Seed
         if (!ctx.Employees.Any()) {
             var employeesData = File.ReadAllText("Data/EmployeeSeedData.json");
             var employees = JsonConvert.DeserializeObject<List<Employee>>(employeesData);
+
+            employees.ForEach(x => {
+                x.CreatedAt = DateTime.UtcNow;
+                x.UpdatedAt = DateTime.UtcNow;
+            });
 
             ctx.Employees.AddRange(employees);
 

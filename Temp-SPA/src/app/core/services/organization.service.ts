@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Group, InnerGroups } from '../models/group';
+import { InnerGroups } from '../models/group';
 import { Organization } from '../models/organization';
 import { Observable, map } from 'rxjs';
 import { PaginatedResult } from '../models/pagination';

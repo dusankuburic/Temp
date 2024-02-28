@@ -7,10 +7,7 @@ namespace Temp.Services.Applications.Mappings;
 public class ApplicationsMappingProfile : Profile
 {
     public ApplicationsMappingProfile() {
-        CreateMap<CreateApplicationRequest, Application>()
-            .AfterMap((req, application) => {
-                application.CreatedAt = DateTime.Now;
-            });
+        CreateMap<CreateApplicationRequest, Application>();
 
         CreateMap<Application, CreateApplicationResponse>();
         CreateMap<Application, GetApplicationResponse>();
@@ -21,7 +18,7 @@ public class ApplicationsMappingProfile : Profile
         CreateMap<UpdateApplicationStatusRequest, Application>()
             .AfterMap((x, y) => {
                 y.Status = true;
-                y.StatusUpdatedAt = DateTime.Now;
+                y.StatusUpdatedAt = DateTime.UtcNow;
             });
     }
 }

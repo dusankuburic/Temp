@@ -1,6 +1,7 @@
-﻿namespace Temp.Domain.Models;
+﻿
+namespace Temp.Domain.Models;
 
-public class ModeratorGroup
+public class ModeratorGroup : BaseEntity
 {
     public int ModeratorId { get; set; }
     public Moderator Moderator { get; set; }

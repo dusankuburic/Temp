@@ -13,7 +13,5 @@ public class EmploymentStatusConfiguration : IEntityTypeConfiguration<Employment
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.Property(x => x.IsActive)
-            .HasDefaultValue(true);
     }
 }

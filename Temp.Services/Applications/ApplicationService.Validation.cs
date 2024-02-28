@@ -76,7 +76,7 @@ namespace Temp.Services.Applications
             return true;
         }
 
-        public static bool IsInvalidDate(DateTime input) {
+        public static bool IsInvalidDate(DateTime? input) {
             if (input != DateTime.MinValue) {
                 return false;
             }

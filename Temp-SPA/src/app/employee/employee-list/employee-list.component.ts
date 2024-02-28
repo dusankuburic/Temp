@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { faEdit, faLock, faLockOpen, faSitemap, faUserTimes } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faLock, faLockOpen, faPlus, faPlusCircle, faPlusSquare, faSitemap, faUserTimes } from '@fortawesome/free-solid-svg-icons';
 import { debounce, debounceTime, last } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
@@ -19,6 +19,7 @@ export class EmployeeListComponent implements OnInit {
   removeRoleIcon = faUserTimes
   activateUserIcon = faLock
   deactivateUserIcon = faLockOpen
+  plusIcon = faPlusCircle;
 
   filtersForm: FormGroup;
   employees: Employee[];

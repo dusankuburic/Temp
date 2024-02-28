@@ -13,7 +13,10 @@ public class EmployeesMappingProfile : Profile
         CreateMap<Employee, GetEmployeesResponse>()
             .ForMember(a => a.IsActive, o => o.MapFrom(s => s.User.IsActive || s.Moderator.IsActive || s.Admin.IsActive));
         CreateMap<Employee, GetEmployeesWithoutEngagementResponse>();
-        CreateMap<UpdateEmployeeRequest, Employee>();
+        CreateMap<UpdateEmployeeRequest, Employee>()
+            .AfterMap((a, b) => {
+                b.UpdatedAt = DateTime.UtcNow;
+            });
 
     }
 }
