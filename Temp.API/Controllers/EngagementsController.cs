@@ -27,7 +27,7 @@ public class EngagementsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateEngagementRequest request) {
+    public async Task<IActionResult> Create([FromBody] CreateEngagementRequest request) {
         try {
             var response = await _engagementService.CreateEngagement(request);
 

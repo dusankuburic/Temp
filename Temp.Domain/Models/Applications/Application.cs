@@ -1,6 +1,6 @@
 ﻿namespace Temp.Domain.Models.Applications;
 
-public class Application
+public class Application : BaseEntity
 {
     public int Id { get; set; }
 
@@ -16,8 +16,7 @@ public class Application
     public string Category { get; set; }
 
     public string Content { get; set; }
-    public DateTime CreatedAt { get; set; }
 
-    public bool Status { get; set; }
+    public bool Status { get; set; } = true;
     public DateTime StatusUpdatedAt { get; set; }
 }

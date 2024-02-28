@@ -14,9 +14,6 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.Property(x => x.IsActive)
-            .HasDefaultValue(true);
-
         builder.Property(x => x.OrganizationId)
             .IsRequired();
     }

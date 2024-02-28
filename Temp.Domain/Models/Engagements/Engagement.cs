@@ -1,6 +1,6 @@
 ﻿namespace Temp.Domain.Models;
 
-public class Engagement
+public class Engagement : BaseEntity
 {
     public int Id { get; set; }
 
@@ -17,5 +17,4 @@ public class Engagement
     public DateTime DateTo { get; set; }
 
     public int Salary { get; set; }
-
 }

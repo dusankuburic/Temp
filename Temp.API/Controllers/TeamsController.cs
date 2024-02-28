@@ -17,8 +17,43 @@ public class TeamsController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetTeam([FromRoute] GetTeamRequest request) {
+        try {
+            var response = await _teamService.GetTeam(request);
+
+            return Ok(response);
+        } catch (TeamValidationException teamValidationException) {
+            return BadRequest(GetInnerMessage(teamValidationException));
+        }
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("full/{id}")]
+    public async Task<IActionResult> GetFullTeam([FromRoute] GetFullTeamTreeRequest request) {
+        try {
+            var response = await _teamService.GetFullTeamTree(request);
+
+            return Ok(response);
+        } catch (TeamValidationException teamValidationException) {
+            return BadRequest(GetInnerMessage(teamValidationException));
+        }
+    }
+
+    [HttpGet("employee/team/{id}")]
+    public async Task<IActionResult> GetUserTeam([FromRoute] GetUserTeamRequest request) {
+        try {
+            var response = await _teamService.GetUserTeam(request);
+
+            return Ok(response);
+        } catch (TeamValidationException teamValidationException) {
+            return BadRequest(GetInnerMessage(teamValidationException));
+        }
+    }
+
+    [Authorize(Roles = "Admin")]
     [HttpPost]
-    public async Task<IActionResult> Create(CreateTeamRequest request) {
+    public async Task<IActionResult> Create([FromBody] CreateTeamRequest request) {
         try {
             var response = await _teamService.CreateTeam(request);
 
@@ -29,54 +64,22 @@ public class TeamsController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetTeam([FromRoute] GetTeamRequest request) {
-        try {
-            var response = await _teamService.GetTeam(request);
-            return Ok(response);
-        } catch (TeamValidationException teamValidationException) {
-            return BadRequest(GetInnerMessage(teamValidationException));
-        }
-    }
-
-    [Authorize(Roles = "Admin")]
-    [HttpGet("full/{Id}")]
-    public async Task<IActionResult> GetFullTeam([FromRoute] GetFullTeamTreeRequest request) {
-        try {
-            var response = await _teamService.GetFullTeamTree(request);
-            return Ok(response);
-        } catch (TeamValidationException teamValidationException) {
-            return BadRequest(GetInnerMessage(teamValidationException));
-        }
-    }
-
-    [HttpGet("employee/team/{Id}")]
-    public async Task<IActionResult> GetUserTeam([FromRoute] GetUserTeamRequest request) {
-        try {
-            var response = await _teamService.GetUserTeam(request);
-            return Ok(response);
-        } catch (TeamValidationException teamValidationException) {
-            return BadRequest(GetInnerMessage(teamValidationException));
-        }
-    }
-
-    [Authorize(Roles = "Admin")]
-    [HttpPut]
-    public async Task<IActionResult> UpdateTeam(UpdateTeamRequest request) {
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateTeam([FromBody] UpdateTeamRequest request) {
         try {
             var response = await _teamService.UpdateTeam(request);
 
-            return Ok(response);
+            return NoContent();
         } catch (TeamValidationException teamValidationException) {
             return BadRequest(GetInnerMessage(teamValidationException));
         }
     }
 
-    [HttpPut("change-status")]
-    public async Task<IActionResult> UpdateTeamStatus(UpdateTeamStatusRequest request) {
+    [HttpPut("change-status/{id}")]
+    public async Task<IActionResult> UpdateTeamStatus([FromBody] UpdateTeamStatusRequest request) {
         var response = await _teamService.UpdateTeamStatus(request);
 
-        return Ok(response);
+        return NoContent();
     }
 
     private static string GetInnerMessage(Exception exception) {

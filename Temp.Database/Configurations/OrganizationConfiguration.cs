@@ -12,8 +12,5 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(x => x.Name)
             .HasMaxLength(100)
             .IsRequired();
-
-        builder.Property(x => x.IsActive)
-            .HasDefaultValue(true);
     }
 }

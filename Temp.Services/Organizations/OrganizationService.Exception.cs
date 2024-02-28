@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Temp.Services._Helpers;
 using Temp.Services.Organizations.Exceptions;
 using Temp.Services.Organizations.Models.Commands;
 using Temp.Services.Organizations.Models.Queries;
@@ -8,10 +9,12 @@ namespace Temp.Services.Organizations;
 public partial class OrganizationService
 {
     public delegate Task<CreateOrganizationResponse> ReturningCreateOrganizationFunction();
+    public delegate Task<PagedList<GetOrganizationResponse>> ReturningGetPagedOrganizationsFunction();
     public delegate Task<IEnumerable<GetOrganizationResponse>> ReturningGetOrganizationsFunction();
     public delegate Task<GetOrganizationResponse> ReturningGetOrganizationFunction();
     public delegate Task<UpdateOrganizationResponse> ReturningUpdateOrganizationFunction();
-    public delegate Task<string> ReturningGetInnerGroupsFunction();
+    public delegate Task<GetPagedInnerGroupsResponse> ReturningGetPagedInnerGroupsFunction();
+    public delegate Task<GetInnerGroupsResponse> ReturningGetInnerGroupsFunction();
 
     public async Task<CreateOrganizationResponse> TryCatch(ReturningCreateOrganizationFunction returningCreateOrganizationFunction) {
         try {
@@ -22,6 +25,26 @@ public partial class OrganizationService
             throw CreateAndLogValidationException(invalidOrganizationException);
         } catch (SqlException sqlExcepton) {
             throw CreateAndLogCriticalDependencyException(sqlExcepton);
+        } catch (Exception exception) {
+            throw CreateAndLogServiceException(exception);
+        }
+    }
+
+    public async Task<GetPagedInnerGroupsResponse> TryCatch(ReturningGetPagedInnerGroupsFunction returningGetPagedInnerGroupsFunction) {
+        try {
+            return await returningGetPagedInnerGroupsFunction();
+        } catch (SqlException sqlException) {
+            throw CreateAndLogValidationException(sqlException);
+        } catch (Exception exception) {
+            throw CreateAndLogServiceException(exception);
+        }
+    }
+
+    public async Task<PagedList<GetOrganizationResponse>> TryCatch(ReturningGetPagedOrganizationsFunction returningGetPagedOrganizationsFunction) {
+        try {
+            return await returningGetPagedOrganizationsFunction();
+        } catch (SqlException sqlException) {
+            throw CreateAndLogValidationException(sqlException);
         } catch (Exception exception) {
             throw CreateAndLogServiceException(exception);
         }
@@ -66,7 +89,7 @@ public partial class OrganizationService
     }
 
 
-    public async Task<string> TryCatch(ReturningGetInnerGroupsFunction returningGetInnerGroupsFunction) {
+    public async Task<GetInnerGroupsResponse> TryCatch(ReturningGetInnerGroupsFunction returningGetInnerGroupsFunction) {
         try {
             return await returningGetInnerGroupsFunction();
         } catch (OrganizationGetInnerGroupsStorageException organizationGetInnerGroupsStorageException) {

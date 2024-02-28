@@ -23,11 +23,5 @@ public class ApplicationConfiguration : IEntityTypeConfiguration<Application>
 
         builder.Property(x => x.Content)
             .HasMaxLength(610);
-
-        builder.Property(x => x.CreatedAt)
-            .IsRequired();
-
-        builder.Property(x => x.Status)
-            .HasDefaultValue(true);
     }
 }

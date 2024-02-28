@@ -47,7 +47,6 @@ public partial class EngagementService : IEngagementService
                 .Include(x => x.EmploymentStatus)
                 .Where(x => x.EmployeeId == userEmployeeId)
                 .ProjectTo<GetUserEmployeeEngagementsResponse>(_mapper.ConfigurationProvider)
-
                 .ToListAsync();
 
             return engagements;

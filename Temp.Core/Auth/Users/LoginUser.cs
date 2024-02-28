@@ -49,7 +49,7 @@ public class LoginUser
         var tokenDescriptor = new SecurityTokenDescriptor
             {
             Subject = userIdentity,
-            Expires = DateTime.Now.AddDays(1),
+            Expires = DateTime.UtcNow.AddDays(1),
             SigningCredentials = creds
         };
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper.QueryableExtensions;
 using Temp.Database;
 using Temp.Domain.Models;
+using Temp.Services._Helpers;
 using Temp.Services.Groups.Models.Commands;
 using Temp.Services.Groups.Models.Queries;
 using Temp.Services.Integrations.Loggings;
@@ -74,6 +75,30 @@ public partial class GroupService : IGroupService
             return new UpdateGroupStatusResponse();
         });
 
+    public Task<GetPagedGroupInnerTeamsResponse> GetPagedGroupInnerTeams(GetPagedGroupInnerTeamsRequest request) =>
+        TryCatch(async () => {
+            var innerTeamsQuery = _ctx.Teams
+                .Where(x => x.GroupId == request.GroupId && x.IsActive)
+                .ProjectTo<InnerTeam>(_mapper.ConfigurationProvider)
+                .AsQueryable();
+
+            var pagedTeams = await PagedList<InnerTeam>.CreateAsync(
+                innerTeamsQuery,
+                request.PageNumber,
+                request.PageSize);
+
+            var teamName = await _ctx.Groups
+                .Where(x => x.Id == request.GroupId && x.IsActive)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync();
+
+            return new GetPagedGroupInnerTeamsResponse {
+                Id = request.GroupId,
+                Name = teamName,
+                Teams = pagedTeams
+            };
+        });
+
     public Task<GetGroupInnerTeamsResponse> GetGroupInnerTeams(GetGroupInnerTeamsRequest request) =>
         TryCatch(async () => {
             var innerTeams = await _ctx.Groups
@@ -123,4 +148,5 @@ public partial class GroupService : IGroupService
         return await _ctx.Groups
             .AnyAsync(x => x.Name == name && x.OrganizationId == organizationId);
     }
+
 }

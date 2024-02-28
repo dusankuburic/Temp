@@ -1,12 +1,13 @@
-﻿namespace Temp.Domain.Models;
+﻿
+namespace Temp.Domain.Models;
 
-public class Group
+public class Group : BaseEntity
 {
     public int Id { get; set; }
 
     public string Name { get; set; }
 
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
 
     public int OrganizationId { get; set; }
 

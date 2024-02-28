@@ -13,8 +13,5 @@ public class WorkplaceConfiguration : IEntityTypeConfiguration<Workplace>
         builder.Property(x => x.Name)
             .HasMaxLength(100)
             .IsRequired();
-
-        builder.Property(x => x.IsActive)
-            .HasDefaultValue(true);
     }
 }

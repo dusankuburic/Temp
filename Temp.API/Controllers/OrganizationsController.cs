@@ -16,10 +16,11 @@ public class OrganizationsController : ControllerBase
         _organizationService = organizationService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetOrganizations() {
+    [HttpGet("paged-organizations")]
+    public async Task<IActionResult> GetPagedOrganizations([FromQuery] GetOrganizationsRequest request) {
         try {
-            var response = await _organizationService.GetOrganizations();
+            var response = await _organizationService.GetPagedOrganizations(request);
+            Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
 
             return Ok(response);
         } catch (OrganizationValidationException organizationValidationException) {
@@ -27,10 +28,10 @@ public class OrganizationsController : ControllerBase
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create(CreateOrganizationRequest request) {
+    [HttpGet]
+    public async Task<IActionResult> GetOrganizations() {
         try {
-            var response = await _organizationService.CreateOrganization(request);
+            var response = await _organizationService.GetOrganizations();
 
             return Ok(response);
         } catch (OrganizationValidationException organizationValidationException) {
@@ -49,10 +50,11 @@ public class OrganizationsController : ControllerBase
         }
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateOrganization(UpdateOrganizationRequest request) {
+    [HttpGet("paged-inner-groups")]
+    public async Task<IActionResult> GetPagedInnerGroups([FromQuery] GetOrganizationInnerGroupsRequest request) {
         try {
-            var response = await _organizationService.UpdateOrganization(request);
+            var response = await _organizationService.GetPagedInnerGroups(request);
+            Response.AddPagination(response.Groups.CurrentPage, response.Groups.PageSize, response.Groups.TotalCount, response.Groups.TotalPages);
 
             return Ok(response);
         } catch (OrganizationValidationException organizationValidationException) {
@@ -63,18 +65,41 @@ public class OrganizationsController : ControllerBase
     [HttpGet("inner-groups/{id}")]
     public async Task<IActionResult> InnerGroups([FromRoute] int id) {
         try {
-            var innerGroups = await _organizationService.GetInnerGroups(id);
-            return Ok(innerGroups);
+            var response = await _organizationService.GetInnerGroups(id);
+
+            return Ok(response);
         } catch (OrganizationValidationException organizationValidationException) {
             return BadRequest(GetInnerMessage(organizationValidationException));
         }
     }
 
-    [HttpPut("change-status")]
-    public async Task<IActionResult> UpdateOrganizationStatus(UpdateOrganizationStatusRequest request) {
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateOrganizationRequest request) {
+        try {
+            var response = await _organizationService.CreateOrganization(request);
+
+            return Ok(response);
+        } catch (OrganizationValidationException organizationValidationException) {
+            return BadRequest(GetInnerMessage(organizationValidationException));
+        }
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateOrganization([FromBody] UpdateOrganizationRequest request) {
+        try {
+            var response = await _organizationService.UpdateOrganization(request);
+
+            return NoContent();
+        } catch (OrganizationValidationException organizationValidationException) {
+            return BadRequest(GetInnerMessage(organizationValidationException));
+        }
+    }
+
+    [HttpPut("change-status/{id}")]
+    public async Task<IActionResult> UpdateOrganizationStatus([FromBody] UpdateOrganizationStatusRequest request) {
         var response = await _organizationService.UpdateOrganizationStatus(request);
 
-        return Ok(response);
+        return NoContent();
     }
 
     private static string GetInnerMessage(Exception exception) {

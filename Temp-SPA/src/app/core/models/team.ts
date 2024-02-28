@@ -1,3 +1,5 @@
+import { PaginatedResult } from "./pagination";
+
 export interface Team {
     id: number;
     name: string;
@@ -5,8 +7,20 @@ export interface Team {
 }
 
 export interface InnerTeams {
+    id: number;
     name: string;
     teams: Team[];
+}
+
+export interface InnerTeam {
+    id: number;
+    name: string;
+}
+
+export interface PagedInnerTeams {
+    id: number;
+    name: string;
+    teams: PaginatedResult<Team[]>;
 }
 
 export interface FullTeam {

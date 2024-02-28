@@ -17,7 +17,7 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateApplicationRequest request) {
+    public async Task<IActionResult> Create([FromBody] CreateApplicationRequest request) {
         try {
             var response = await _applicationService.CreateApplication(request);
 
@@ -31,6 +31,7 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> GetApplication([FromRoute] GetApplicationRequest request) {
         try {
             var response = await _applicationService.GetApplication(request);
+
             return Ok(response);
         } catch (ApplicationValidationException applicationValidationException) {
             return BadRequest(GetInnerMessage(applicationValidationException));
@@ -41,6 +42,7 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> GetTeamApplications([FromRoute] GetTeamApplicationsRequest request) {
         try {
             var response = await _applicationService.GetTeamApplications(request);
+
             return Ok(response);
         } catch (ApplicationValidationException applicationValidationException) {
             return BadRequest(GetInnerMessage(applicationValidationException));
@@ -51,18 +53,19 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> GetUserApplications([FromRoute] GetUserApplicationsRequest request) {
         try {
             var response = await _applicationService.GetUserApplications(request);
+
             return Ok(response);
         } catch (ApplicationValidationException applicationValidationException) {
             return BadRequest(GetInnerMessage(applicationValidationException));
         }
     }
 
-    [HttpPut("change-status")]
-    public async Task<IActionResult> UpdateApplicationStatus(UpdateApplicationStatusRequest request) {
+    [HttpPut("change-status/{id}")]
+    public async Task<IActionResult> UpdateApplicationStatus([FromBody] UpdateApplicationStatusRequest request) {
         try {
             var response = await _applicationService.UpdateApplicationStatus(request);
 
-            return Ok(response);
+            return NoContent();
         } catch (ApplicationServiceException applicationValidationException) {
             return BadRequest(GetInnerMessage(applicationValidationException));
         }
