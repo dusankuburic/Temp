@@ -15,5 +15,7 @@ public class GroupsMappingProfile : Profile
             .ForMember(a => a.Id, o => o.MapFrom(s => s.Group.Id))
             .ForMember(a => a.Name, o => o.MapFrom(s => s.Group.Name));
         CreateMap<Group, GetModeratorFreeGroupsResponse>();
+
+        CreateMap<Team, InnerTeam>();
     }
 }

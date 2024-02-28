@@ -18,9 +18,10 @@ export class GroupListResolver  {
         private alertify: AlertifyService){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<PagedInnerGroups> {
-        return this.groupService.getInnerGroups(this.pageNumber, this.pageSize, route.params['id']).pipe(
+        const organizationId = parseInt(route.params['id']);
+        return this.groupService.getInnerGroups(this.pageNumber, this.pageSize, organizationId).pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Problem retrieving groups');
                 this.router.navigate(['']);
                 return of(null);
             })

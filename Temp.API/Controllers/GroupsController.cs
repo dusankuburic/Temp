@@ -48,6 +48,18 @@ public class GroupsController : ControllerBase
         }
     }
 
+    [HttpGet("paged-inner-teams")]
+    public async Task<IActionResult> GetPagedInnerTeams([FromQuery] GetPagedGroupInnerTeamsRequest request) {
+        try {
+            var response = await _groupService.GetPagedGroupInnerTeams(request);
+            Response.AddPagination(response.Teams.CurrentPage, response.Teams.PageSize, response.Teams.TotalCount, response.Teams.TotalPages);
+
+            return Ok(response);
+        } catch (GroupValidationException groupValidationException) {
+            return BadRequest(GetInnerMessage(groupValidationException));
+        }
+    }
+
     [HttpGet("inner-teams/{id}")]
     public async Task<IActionResult> InnerTeams([FromRoute] GetGroupInnerTeamsRequest request) {
         try {

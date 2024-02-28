@@ -1,7 +1,9 @@
 {
     "cSpell.words": [
         "Alertify",
-        "innergroups"
+        "employmentstatuses",
+        "innergroups",
+        "innerteams"
     ],
     "typescript.tsdk": "node_modules\\typescript\\lib"
 }

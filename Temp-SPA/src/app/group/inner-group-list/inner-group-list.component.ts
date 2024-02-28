@@ -41,7 +41,7 @@ export class GroupListComponent implements OnInit {
           this.innerGroups = res.groups.result;
           this.pagination = res.groups.pagination;
         },
-        error: (error) => {
+        error: () => {
           this.alertify.error('Unable to load groups');
         }
       })

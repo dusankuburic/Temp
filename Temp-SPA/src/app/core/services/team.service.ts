@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { FullTeam, Team } from '../models/team';
-import { Observable } from 'rxjs';
+import { FullTeam, InnerTeams, PagedInnerTeams, Team } from '../models/team';
+import { Observable, map } from 'rxjs';
+import { PaginatedResult } from '../models/pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -16,13 +17,40 @@ getTeam(id: number): Observable<Team> {
   return this.http.get<Team>(this.baseUrl + 'teams/' + id);
 }
 
-getFullTeam(id: number): Observable<FullTeam> {
-  return this.http.get<FullTeam>(this.baseUrl + 'teams/full/' + id);
+getInnerTeams(page?, itemsPerPage?, groupId?): Observable<PagedInnerTeams> {
+  const paginatedResult: PaginatedResult<Team[]> = new PaginatedResult<Team[]>();
+
+  let params = new HttpParams();
+  if (page != null && itemsPerPage != null && groupId != null) {
+    params = params.append('pageNumber', page);
+    params = params.append('pageSize', itemsPerPage);
+    params = params.append('groupId', groupId);
+  }
+
+  return this.http.get<InnerTeams>(this.baseUrl + 'groups/paged-inner-teams', {observe: 'response', params})
+    .pipe(
+      map(response => {
+        paginatedResult.result = response.body.teams;
+        if (response.headers.get('Pagination') != null) {
+          paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+        }
+        return {
+          id: response.body.id,
+          name: response.body.name,
+          teams: paginatedResult
+        }
+      })
+    )
 }
 
 getTeams(groupId: number): Observable<Team[]> {
   return this.http.get<Team[]>(this.baseUrl + 'groups/inner-teams/' + groupId);
 }
+
+getFullTeam(id: number): Observable<FullTeam> {
+  return this.http.get<FullTeam>(this.baseUrl + 'teams/full/' + id);
+}
+
 
 createTeam(team: Team): Observable<Team> {
   return this.http.post<Team>(this.baseUrl + 'teams', team);
