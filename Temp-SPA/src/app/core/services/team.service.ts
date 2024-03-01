@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { FullTeam, InnerTeams, PagedInnerTeams, Team } from '../models/team';
+import { FullTeam, InnerTeams, PagedInnerTeams, Team, TeamParams } from '../models/team';
 import { Observable, map } from 'rxjs';
 import { PaginatedResult } from '../models/pagination';
 
@@ -10,21 +10,35 @@ import { PaginatedResult } from '../models/pagination';
 })
 export class TeamService {
   baseUrl = environment.apiUrl;
+  teamParams = new TeamParams();
 
 constructor(private http: HttpClient) { }
 
-getTeam(id: number): Observable<Team> {
-  return this.http.get<Team>(this.baseUrl + 'teams/' + id);
+setTeamParams(params: TeamParams) {
+  this.teamParams = params;
 }
 
-getInnerTeams(page?, itemsPerPage?, groupId?): Observable<PagedInnerTeams> {
+getTeamParams(): TeamParams {
+  return this.teamParams;
+}
+
+resetTeamParams(): void {
+  this.teamParams.pageNumber = 1;
+  this.teamParams.pageSize = 5;
+  this.teamParams.name = '';
+}
+
+getInnerTeams(groupId: number): Observable<PagedInnerTeams> {
   const paginatedResult: PaginatedResult<Team[]> = new PaginatedResult<Team[]>();
 
   let params = new HttpParams();
-  if (page != null && itemsPerPage != null && groupId != null) {
-    params = params.append('pageNumber', page);
-    params = params.append('pageSize', itemsPerPage);
-    params = params.append('groupId', groupId);
+
+  params = params.append('groupId', groupId);
+  params = params.append('pageNumber', this.teamParams.pageNumber);
+  params = params.append('pageSize', this.teamParams.pageSize);
+
+  if (this.teamParams.name) {
+    params = params.append('name', this.teamParams.name);
   }
 
   return this.http.get<InnerTeams>(this.baseUrl + 'groups/paged-inner-teams', {observe: 'response', params})
@@ -46,6 +60,12 @@ getInnerTeams(page?, itemsPerPage?, groupId?): Observable<PagedInnerTeams> {
 getTeams(groupId: number): Observable<Team[]> {
   return this.http.get<Team[]>(this.baseUrl + 'groups/inner-teams/' + groupId);
 }
+
+
+getTeam(id: number): Observable<Team> {
+  return this.http.get<Team>(this.baseUrl + 'teams/' + id);
+}
+
 
 getFullTeam(id: number): Observable<FullTeam> {
   return this.http.get<FullTeam>(this.baseUrl + 'teams/full/' + id);

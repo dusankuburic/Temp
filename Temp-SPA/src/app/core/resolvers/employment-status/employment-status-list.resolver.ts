@@ -9,17 +9,14 @@ import { PaginatedResult } from 'src/app/core/models/pagination';
 
 @Injectable()
 export class EmploymentStatusListResolver  {
-
-    pageNumber = 1;
-    pageSize = 5;
-
     constructor(
         private employmentStatusService: EmploymentStatusService,
         private router: Router,
         private alertify: AlertifyService) {}
 
     resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<EmploymentStatus[]>> {
-        return this.employmentStatusService.getPagedEmploymentStatuses(this.pageNumber, this.pageSize).pipe(
+        this.employmentStatusService.resetEmploymentStatusParams();
+        return this.employmentStatusService.getPagedEmploymentStatuses().pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving data');
                 this.router.navigate(['']);

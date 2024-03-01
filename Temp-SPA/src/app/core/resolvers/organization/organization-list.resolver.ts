@@ -9,18 +9,14 @@ import { PaginatedResult } from '../../models/pagination';
 
 @Injectable()
 export class OrganizationListResolver  {
-
-    pageNumber = 1;
-    pageSize = 5;
-
     constructor(
         private organizationService: OrganizationService,
         private router: Router,
         private alertify: AlertifyService) {}
-
     
     resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<Organization[]>> {
-        return this.organizationService.getPagedOrganizations(this.pageNumber, this.pageSize).pipe(
+        this.organizationService.resetOrganizationParams();
+        return this.organizationService.getPagedOrganizations().pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving data');
                 this.router.navigate(['']);

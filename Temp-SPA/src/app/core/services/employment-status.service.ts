@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { EmploymentStatus } from '../models/employmentStatus';
+import { EmploymentStatus, EmploymentStatusParams } from '../models/employmentStatus';
 import { PaginatedResult } from '../models/pagination';
 
 @Injectable({
@@ -11,17 +11,34 @@ import { PaginatedResult } from '../models/pagination';
 })
 export class EmploymentStatusService {
   baseUrl = environment.apiUrl;
+  employmentStatusParams = new EmploymentStatusParams();
 
 constructor(private http: HttpClient) { }
 
-getPagedEmploymentStatuses(page?, itemsPerPage?): Observable<PaginatedResult<EmploymentStatus[]>> {
+setEmploymentStatusParams(params: EmploymentStatusParams) {
+  this.employmentStatusParams = params;
+}
+
+getEmploymentStatusParams(): EmploymentStatusParams {
+  return this.employmentStatusParams;
+}
+
+resetEmploymentStatusParams(): void {
+  this.employmentStatusParams.pageNumber = 1;
+  this.employmentStatusParams.pageSize = 5;
+  this.employmentStatusParams.name = '';
+}
+
+getPagedEmploymentStatuses(): Observable<PaginatedResult<EmploymentStatus[]>> {
   const paginatedResult: PaginatedResult<EmploymentStatus[]> = new PaginatedResult<EmploymentStatus[]>();
 
   let params = new HttpParams();
 
-  if (page != null && itemsPerPage != null) {
-    params = params.append('pageNumber', page);
-    params = params.append('pageSize', itemsPerPage);
+  params = params.append('pageNumber', this.employmentStatusParams.pageNumber);
+  params = params.append('pageSize', this.employmentStatusParams.pageSize);
+
+  if (this.employmentStatusParams.name) {
+    params = params.append('name', this.employmentStatusParams.name);
   }
 
   return this.http.get<EmploymentStatus[]>(this.baseUrl + 'employmentStatuses/paged-employmentstatuses', {observe: 'response', params})

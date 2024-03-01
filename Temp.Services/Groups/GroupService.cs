@@ -82,6 +82,11 @@ public partial class GroupService : IGroupService
                 .ProjectTo<InnerTeam>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
+            if (!string.IsNullOrEmpty(request.Name)) {
+                innerTeamsQuery = innerTeamsQuery.Where(x => x.Name.Contains(request.Name))
+                    .AsQueryable();
+            }
+
             var pagedTeams = await PagedList<InnerTeam>.CreateAsync(
                 innerTeamsQuery,
                 request.PageNumber,

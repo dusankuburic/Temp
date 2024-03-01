@@ -62,6 +62,11 @@ public partial class EmploymentStatusService : IEmploymentStatusService
                 .ProjectTo<GetPagedEmploymentStatusesResponse>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
+            if (!string.IsNullOrEmpty(request.Name)) {
+                employmentStatuses = employmentStatuses.Where(x => x.Name.Contains(request.Name))
+                    .AsQueryable();
+            }
+
             return await PagedList<GetPagedEmploymentStatusesResponse>.CreateAsync(
                 employmentStatuses,
                 request.PageNumber,

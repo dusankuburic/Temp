@@ -42,6 +42,11 @@ public partial class WorkplaceService : IWorkplaceService
                 .ProjectTo<GetWorkplacesResponse>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
+             if (!string.IsNullOrEmpty(request.Name)) {
+                 workplacesQuery = workplacesQuery.Where(x => x.Name.Contains(request.Name))
+                    .AsQueryable();
+             }
+
              return await PagedList<GetWorkplacesResponse>.CreateAsync(
                  workplacesQuery,
                  request.PageNumber,

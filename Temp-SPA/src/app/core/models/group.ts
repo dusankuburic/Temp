@@ -26,3 +26,9 @@ export interface PagedInnerGroups {
 export interface ModeratorGroups {
     groups: number[];
 }
+
+export class GroupParams {
+    pageNumber: number = 1;
+    pageSize: number = 5;
+    name: string = '';
+}

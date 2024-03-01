@@ -3,11 +3,9 @@
         <h4>Workplaces</h4>
     </div>
     <div class="col-lg-7">
-        <form class="form" [formGroup]="filtersForm" (ngSubmit)="loadWorkplaces()" >
+        <form class="form" [formGroup]="filtersForm">
             <div class="input-group">
                 <input type="text" placeholder="Name" class="form-control" formControlName="name">
-                <button type="button" (click)="resetFilters()" class="btn btn-info float-right">Reset</button>
-                <button type="submit" class="btn btn-primary float-right">Apply</button>    
             </div>
         </form>
     </div>
@@ -42,12 +40,10 @@
 </div>
 
 <div class="d-flex justify-content-center">
-    <pagination 
-      [boundaryLinks]="true" 
-      [totalItems]="pagination.totalItems" 
-      [itemsPerPage]="pagination.itemsPerPage" 
-      [(ngModel)]="pagination.currentPage"
-      (pageChanged)="pageChanged($event)" 
-      previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
-    </pagination>
-  </div>
+    <tmp-pagination
+        [totalCount]="pagination.totalItems"
+        [pageSize]="pagination.itemsPerPage"
+        [pageNumber]="pagination.currentPage"
+        (pageChanged)="pageChanged($event)">
+    </tmp-pagination>
+</div>
