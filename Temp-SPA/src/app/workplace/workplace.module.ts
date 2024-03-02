@@ -8,6 +8,7 @@ import { workplaceRoutes } from './workplace.routes';
 import { SharedModule } from '../shared/shared.module';
 import { WorkplaceListResolver } from '../core/resolvers/workplace/workplace-list.resolver';
 import { WorkplaceEditResolver } from '../core/resolvers/workplace/workplace-edit.resolver';
+import { WorkplaceValidators } from './workplace-validators';
 
 @NgModule({
     imports: [
@@ -21,6 +22,7 @@ import { WorkplaceEditResolver } from '../core/resolvers/workplace/workplace-edi
         WorkplaceListComponent,
     ],
     providers: [
+        WorkplaceValidators,
         WorkplaceListResolver,
         WorkplaceEditResolver,
     ]

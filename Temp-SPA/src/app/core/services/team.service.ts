@@ -61,6 +61,9 @@ getTeams(groupId: number): Observable<Team[]> {
   return this.http.get<Team[]>(this.baseUrl + 'groups/inner-teams/' + groupId);
 }
 
+checkTeamExists(name: string, groupId: number): Observable<boolean> {
+  return this.http.get<boolean>(this.baseUrl + `teams/team-exists?name=${name}&groupId=${groupId}`);
+}
 
 getTeam(id: number): Observable<Team> {
   return this.http.get<Team>(this.baseUrl + 'teams/' + id);

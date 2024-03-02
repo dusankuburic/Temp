@@ -83,6 +83,17 @@ public class WorkplacesController : Controller
         }
     }
 
+    [HttpGet("workplace-exists")]
+    public async Task<IActionResult> WorkplaceExists([FromQuery] string name) {
+        try {
+            var response = await _workplaceService.WorkplaceExists(name);
+
+            return Ok(response);
+        } catch (WorkplaceValidationException workplaceValidationException) {
+            return BadRequest(GetInnerMessage(workplaceValidationException));
+        }
+    }
+
     private static string GetInnerMessage(Exception exception) =>
         exception.InnerException.Message;
 }

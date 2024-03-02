@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Organization } from 'src/app/core/models/organization';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -26,9 +26,15 @@ export class OrganizationEditComponent implements OnInit {
     this.createForm();
   }
 
+  name = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)
+  ]);
+
   createForm(): void {
     this.editOrganizationForm = this.fb.group({
-      Name: [this.organization.name, Validators.required]
+      name: this.name.setValue(this.organization.name)
     });
   }
 
@@ -43,5 +49,4 @@ export class OrganizationEditComponent implements OnInit {
       }
     });
   }
-
 }

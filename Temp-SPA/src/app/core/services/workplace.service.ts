@@ -53,6 +53,10 @@ getPagedWorkplaces(): Observable<PaginatedResult<Workplace[]>> {
     );
 }
 
+checkWorkplaceExists(name: string): Observable<boolean> {
+  return this.http.get<boolean>(this.baseUrl + 'workplaces/workplace-exists?name=' + name);
+}
+
 getWorkplaces(): Observable<Workplace[]> {
   return this.http.get<Workplace[]>(this.baseUrl + 'workplaces');
 }
@@ -72,6 +76,8 @@ updateWorkplace(workplace: Workplace): Observable<void> {
 changeStatus(request: UpdateWorkplaceStatus): Observable<void> {
   return this.http.put<void>(this.baseUrl + 'workplaces/change-status/' + request.id, request);  
 }
+
+
 
 
 }

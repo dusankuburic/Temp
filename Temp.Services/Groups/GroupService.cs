@@ -149,9 +149,9 @@ public partial class GroupService : IGroupService
         });
 
 
-    private async Task<bool> GroupExists(string name, int organizationId) {
-        return await _ctx.Groups
-            .AnyAsync(x => x.Name == name && x.OrganizationId == organizationId);
-    }
+    public Task<bool> GroupExists(string name, int organizationId) =>
+        TryCatch(async () => {
+            return await _ctx.Groups.AnyAsync(x => x.Name == name && x.OrganizationId == organizationId);
+        });
 
 }

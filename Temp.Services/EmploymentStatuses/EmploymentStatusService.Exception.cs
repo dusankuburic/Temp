@@ -14,6 +14,7 @@ public partial class EmploymentStatusService
     public delegate Task<GetEmploymentStatusResponse> ReturningGetEmploymentStatusFunction();
     public delegate Task<UpdateEmploymentStatusResponse> ReturningUpdateEmploymentStatusFunction();
     public delegate Task<UpdateEmploymentStatusStatusResponse> ReturningUpdateEmploymentStatusStatusFunction();
+    public delegate Task<bool> ReturningEmploymentStatusExistsFunction();
 
     public async Task<CreateEmploymentStatusResponse> TryCatch(ReturningEmploymentStatusFunction returningEmploymentStatusFunction) {
         try {
@@ -82,6 +83,16 @@ public partial class EmploymentStatusService
             throw CreateAndLogValidationException(nullEmploymentStatusException);
         } catch (InvalidEmploymentStatusException invalidEmploymentStatusException) {
             throw CreateAndLogValidationException(invalidEmploymentStatusException);
+        } catch (SqlException sqlException) {
+            throw CreateAndLogCriticalDependencyException(sqlException);
+        } catch (Exception exception) {
+            throw CreateAndLogServiceException(exception);
+        }
+    }
+
+    public async Task<bool> TryCatch(ReturningEmploymentStatusExistsFunction returningEmploymentStatusExistsFunction) {
+        try {
+            return await returningEmploymentStatusExistsFunction();
         } catch (SqlException sqlException) {
             throw CreateAndLogCriticalDependencyException(sqlException);
         } catch (Exception exception) {

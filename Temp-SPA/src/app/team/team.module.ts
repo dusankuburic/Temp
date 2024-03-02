@@ -9,6 +9,7 @@ import { SharedModule } from '../shared/shared.module';
 import { TeamListResolver } from '../core/resolvers/team/team-list.resolver';
 import { TeamCreateResolver } from '../core/resolvers/team/team-create.resolver';
 import { TeamEditResolver } from '../core/resolvers/team/team-edit.resolver';
+import { TeamValidators } from './team-validators';
 
 @NgModule({
     imports: [
@@ -23,6 +24,7 @@ import { TeamEditResolver } from '../core/resolvers/team/team-edit.resolver';
         AssignedInnerTeamsComponent,
     ],
     providers: [
+        TeamValidators,
         TeamListResolver,
         TeamCreateResolver,
         TeamEditResolver,

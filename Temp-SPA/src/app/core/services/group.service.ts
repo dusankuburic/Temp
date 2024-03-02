@@ -63,6 +63,11 @@ getGroups(organizationId: number): Observable<InnerGroups> {
   return this.http.get<InnerGroups>(this.baseUrl + 'organizations/inner-groups/' + organizationId);
 }
 
+checkGroupExists(name: string, organizationId: number): Observable<boolean> {
+  return this.http.get<boolean>(this.baseUrl + `groups/group-exists?name=${name}&organizationId=${organizationId}`);
+}
+
+
 getGroup(id: number): Observable<Group> {
   return this.http.get<Group>(this.baseUrl + 'groups/' + id);
 }

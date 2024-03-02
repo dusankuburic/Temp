@@ -57,6 +57,10 @@ getEmploymentStatuses(): Observable<EmploymentStatus[]> {
   return this.http.get<EmploymentStatus[]>(this.baseUrl + 'employmentStatuses');
 }
 
+checkEmploymentStatusExists(name: string): Observable<boolean> {
+  return this.http.get<boolean>(this.baseUrl + 'employmentStatuses/employment-status-exists?name=' + name);
+}
+
 getEmploymentStatus(id: number): Observable<EmploymentStatus> {
   return this.http.get<EmploymentStatus>(this.baseUrl + 'employmentStatuses/' + id);
 }

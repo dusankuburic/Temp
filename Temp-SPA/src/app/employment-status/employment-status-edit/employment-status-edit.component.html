@@ -3,13 +3,7 @@
     <h1 class="text-center">Edit Employment status</h1>
       <form [formGroup]="editEmploymentStatusForm" (ngSubmit)="update()">
         <div class="form-group">
-          <h4>First Name</h4>
-          <input [ngClass]="{'is-invalid' : editEmploymentStatusForm.get('name').errors 
-            && editEmploymentStatusForm.get('name').touched}"
-            type="text" 
-            class="form-control" 
-            formControlName="name">
-          <div class="invalid-feedback">Please enter a Name</div>
+          <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Name'"></tmp-input>
         </div>      
         <button type="submit" [disabled]="!editEmploymentStatusForm.valid" class="btn btn-success float-right">Save</button>
       </form>

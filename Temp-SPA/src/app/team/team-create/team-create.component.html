@@ -5,23 +5,13 @@
         <div class="col-lg-6 col-sm-6 col-8 alert alert-info text-center" role="alert">
           <h4> Group Name: {{group.name}}</h4>
         </div>
-
       </div>
       <div class="row justify-content-center">
-
           <div class="col-lg-6 col-sm-6 col-8">
-
             <form [formGroup]="createTeamForm" (ngSubmit)="create()">
               <div class="form-group">
-                <h4>Name</h4>
-                <input [ngClass]="{'is-invalid' : createTeamForm.get('Name').errors 
-                  && createTeamForm.get('Name').touched}"
-                  type="text" 
-                  class="form-control" 
-                  formControlName="Name">
-                <div class="invalid-feedback">Please enter a Name</div>
+                <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
               </div>
-                 
               <button type="submit" [disabled]="!createTeamForm.valid" class="btn btn-success float-right">Create</button>
             </form>
           </div>

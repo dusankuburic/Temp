@@ -57,6 +57,10 @@ getOrganizations(): Observable<Organization[]> {
   return this.http.get<Organization[]>(this.baseUrl + 'organizations');
 }
 
+checkOrganizationExists(name: string): Observable<boolean> {
+  return this.http.get<boolean>(this.baseUrl + 'organizations/organization-exists?name=' + name);
+}
+
 getOrganization(id: number): Observable<Organization> {
   return this.http.get<Organization>(this.baseUrl + 'organizations/' + id);
 }

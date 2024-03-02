@@ -4,10 +4,12 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { PaginationModule } from "ngx-bootstrap/pagination";
 import { TmpPaginationComponent } from "./tmp-pagination/tmp-pagination.component";
+import { TmpInputComponent } from "./tmp-input/tmp-input.component";
 
 @NgModule({
     declarations: [
-      TmpPaginationComponent
+      TmpPaginationComponent,
+      TmpInputComponent,
     ],
     imports: [
       CommonModule,
@@ -23,6 +25,7 @@ import { TmpPaginationComponent } from "./tmp-pagination/tmp-pagination.componen
       PaginationModule,
       FontAwesomeModule,
       TmpPaginationComponent,
+      TmpInputComponent,
     ]
   })
   export class SharedModule { }

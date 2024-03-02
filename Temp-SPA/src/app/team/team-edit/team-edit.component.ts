@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Team } from 'src/app/core/models/team';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -26,14 +26,19 @@ export class TeamEditComponent implements OnInit {
     this.createForm();
   }
 
+  name = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)
+  ]);
+
   createForm(): void {
     this.editTeamForm = this.fb.group({
-      Name: [this.team.name, Validators.required]
+      name: this.name.setValue(this.team.name)
     });
   }
 
   update(): void {
-    //Todo: handle this
     const teamForm = { ...this.editTeamForm.value };
     this.team.name = teamForm.Name;
     this.teamService.updateTeam(this.team.id, this.team).subscribe({

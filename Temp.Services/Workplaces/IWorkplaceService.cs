@@ -12,4 +12,5 @@ public interface IWorkplaceService
     Task<GetWorkplaceResponse> GetWorkplace(int id);
     Task<UpdateWorkplaceResponse> UpdateWorkplace(UpdateWorkplaceRequest request);
     Task<UpdateWorkplaceStatusResponse> UpdateWorkplaceStatus(UpdateWorkplaceStatusRequest request);
+    Task<bool> WorkplaceExists(string name);
 }

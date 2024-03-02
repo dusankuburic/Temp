@@ -11,6 +11,7 @@ public class GroupsMappingProfile : Profile
         CreateMap<Group, CreateGroupResponse>();
         CreateMap<Group, GetGroupResponse>();
         CreateMap<UpdateGroupRequest, Group>();
+        CreateMap<Group, UpdateGroupResponse>();
         CreateMap<ModeratorGroup, GetModeratorGroupsResponse>()
             .ForMember(a => a.Id, o => o.MapFrom(s => s.Group.Id))
             .ForMember(a => a.Name, o => o.MapFrom(s => s.Group.Name));

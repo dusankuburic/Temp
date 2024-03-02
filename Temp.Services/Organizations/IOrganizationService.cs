@@ -14,5 +14,6 @@ public interface IOrganizationService
     Task<IEnumerable<GetOrganizationResponse>> GetOrganizations();
     Task<UpdateOrganizationResponse> UpdateOrganization(UpdateOrganizationRequest request);
     Task<UpdateOrganizationStatusResponse> UpdateOrganizationStatus(UpdateOrganizationStatusRequest request);
+    Task<bool> OrganizationExists(string name);
 }
 

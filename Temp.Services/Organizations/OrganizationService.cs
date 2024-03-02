@@ -152,8 +152,10 @@ public partial class OrganizationService : IOrganizationService
         return new UpdateOrganizationStatusResponse();
     }
 
-    private async Task<bool> OrganizationExists(string name) {
-        return await _ctx.Organizations.AnyAsync(x => x.Name == name);
-    }
+    public Task<bool> OrganizationExists(string name) =>
+        TryCatch(async () => {
+            return await _ctx.Organizations.AnyAsync(x => x.Name == name);
+        });
+
 }
 

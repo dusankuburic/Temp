@@ -102,4 +102,9 @@ public partial class EmploymentStatusService : IEmploymentStatusService
 
             return new UpdateEmploymentStatusResponse();
         });
+
+    public Task<bool> EmploymentStatusExists(string name) =>
+        TryCatch(async () => {
+            return await _ctx.EmploymentStatuses.AnyAsync(x => x.Name == name);
+        });
 }

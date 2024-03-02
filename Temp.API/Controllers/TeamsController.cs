@@ -82,6 +82,17 @@ public class TeamsController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("team-exists")]
+    public async Task<IActionResult> TeamExists([FromQuery] string name, int groupId) {
+        try {
+            var response = await _teamService.TeamExists(name, groupId);
+
+            return Ok(response);
+        } catch (TeamValidationException teamValidationException) {
+            return BadRequest(GetInnerMessage(teamValidationException));
+        }
+    }
+
     private static string GetInnerMessage(Exception exception) {
         return exception.InnerException.Message;
     }
