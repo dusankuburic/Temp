@@ -8,10 +8,6 @@ import { GroupService } from '../../services/group.service';
 
 @Injectable()
 export class GroupListResolver  {
-
-    pageNumber = 1;
-    pageSize = 5;
-
     constructor(
         private groupService: GroupService,
         private router: Router,
@@ -19,7 +15,8 @@ export class GroupListResolver  {
 
     resolve(route: ActivatedRouteSnapshot): Observable<PagedInnerGroups> {
         const organizationId = parseInt(route.params['id']);
-        return this.groupService.getInnerGroups(this.pageNumber, this.pageSize, organizationId).pipe(
+        this.groupService.resetGroupParams();
+        return this.groupService.getInnerGroups(organizationId).pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving groups');
                 this.router.navigate(['']);

@@ -22,21 +22,21 @@ public partial class TeamService : ITeamService
         _loggingBroker = loggingBroker;
     }
 
-    public Task<CreateTeamResponse> CreateTeam(CreateTeamRequest request) {
-        return TryCatch(async () => {
-            var team = _mapper.Map<Team>(request);
+    public Task<CreateTeamResponse> CreateTeam(CreateTeamRequest request) =>
+         TryCatch(async () => {
+             var team = _mapper.Map<Team>(request);
 
-            ValidateTeamOnCreate(team);
+             ValidateTeamOnCreate(team);
 
-            _ctx.Teams.Add(team);
-            await _ctx.SaveChangesAsync();
+             _ctx.Teams.Add(team);
+             await _ctx.SaveChangesAsync();
 
-            return _mapper.Map<CreateTeamResponse>(team);
-        });
-    }
+             return _mapper.Map<CreateTeamResponse>(team);
+         });
 
-    public Task<GetFullTeamTreeResponse> GetFullTeamTree(GetFullTeamTreeRequest requst) {
-        return TryCatch(async () => {
+
+    public Task<GetFullTeamTreeResponse> GetFullTeamTree(GetFullTeamTreeRequest requst) =>
+        TryCatch(async () => {
             var team = await _ctx.Teams
                 .Include(x => x.Group)
                 .ThenInclude(x => x.Organization)
@@ -46,24 +46,22 @@ public partial class TeamService : ITeamService
 
             return team;
         });
-    }
 
-    public Task<GetTeamResponse> GetTeam(GetTeamRequest request) {
-        return TryCatch(async () => {
-            var team = await _ctx.Teams
+    public Task<GetTeamResponse> GetTeam(GetTeamRequest request) =>
+       TryCatch(async () => {
+           var team = await _ctx.Teams
                 .Include(x => x.Group)
                 .Where(x => x.Id == request.Id && x.IsActive)
                 .ProjectTo<GetTeamResponse>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
-            ValidateGetTeam(team);
+           ValidateGetTeam(team);
 
-            return team;
-        });
-    }
+           return team;
+       });
 
-    public Task<GetUserTeamResponse> GetUserTeam(GetUserTeamRequest request) {
-        return TryCatch(async () => {
+    public Task<GetUserTeamResponse> GetUserTeam(GetUserTeamRequest request) =>
+        TryCatch(async () => {
             var team = await _ctx.Users
                 .Include(x => x.Employee)
                 .ThenInclude(x => x.Team)
@@ -75,10 +73,10 @@ public partial class TeamService : ITeamService
 
             return team;
         });
-    }
 
-    public Task<UpdateTeamResponse> UpdateTeam(UpdateTeamRequest request) {
-        return TryCatch(async () => {
+
+    public Task<UpdateTeamResponse> UpdateTeam(UpdateTeamRequest request) =>
+        TryCatch(async () => {
             var team = await _ctx.Teams
                 .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync();
@@ -90,7 +88,7 @@ public partial class TeamService : ITeamService
 
             return new UpdateTeamResponse();
         });
-    }
+
 
     public async Task<UpdateTeamStatusResponse> UpdateTeamStatus(UpdateTeamStatusRequest request) {
         var team = await _ctx.Teams
@@ -104,8 +102,10 @@ public partial class TeamService : ITeamService
         return new UpdateTeamStatusResponse();
     }
 
-    private async Task<bool> TeamExists(string name, int groupId) {
-        return await _ctx.Teams.AnyAsync(x => x.Name == name && x.GroupId == groupId);
-    }
+    public Task<bool> TeamExists(string name, int groupId) =>
+        TryCatch(async () => {
+            return await _ctx.Teams.AnyAsync(x => x.Name == name && x.GroupId == groupId);
+        });
+
 }
 

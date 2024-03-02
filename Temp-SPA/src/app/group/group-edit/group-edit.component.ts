@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/core/models/group';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -26,9 +26,15 @@ export class GroupEditComponent implements OnInit {
     this.createForm();
   }
 
+  name = new FormControl('',[
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)
+  ]);
+
   createForm(): void {
     this.editGroupForm = this.fb.group({
-      Name: [this.group.name, Validators.required]
+      name: this.name.setValue(this.group.name)
     });
   }
 

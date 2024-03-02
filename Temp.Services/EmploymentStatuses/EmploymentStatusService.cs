@@ -62,6 +62,11 @@ public partial class EmploymentStatusService : IEmploymentStatusService
                 .ProjectTo<GetPagedEmploymentStatusesResponse>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
+            if (!string.IsNullOrEmpty(request.Name)) {
+                employmentStatuses = employmentStatuses.Where(x => x.Name.Contains(request.Name))
+                    .AsQueryable();
+            }
+
             return await PagedList<GetPagedEmploymentStatusesResponse>.CreateAsync(
                 employmentStatuses,
                 request.PageNumber,
@@ -96,5 +101,10 @@ public partial class EmploymentStatusService : IEmploymentStatusService
             await _ctx.SaveChangesAsync();
 
             return new UpdateEmploymentStatusResponse();
+        });
+
+    public Task<bool> EmploymentStatusExists(string name) =>
+        TryCatch(async () => {
+            return await _ctx.EmploymentStatuses.AnyAsync(x => x.Name == name);
         });
 }

@@ -7,6 +7,7 @@ import { employmentStatusRoutes } from './employment-status.routes';
 import { SharedModule } from '../shared/shared.module';
 import { EmploymentStatusListResolver } from '../core/resolvers/employment-status/employment-status-list.resolver';
 import { EmploymentStatusEditResolver } from '../core/resolvers/employment-status/employment-status-edit.resolver';
+import { EmploymentStatusValidators } from './employment-status-validators';
 
 @NgModule({
     imports: [
@@ -20,6 +21,7 @@ import { EmploymentStatusEditResolver } from '../core/resolvers/employment-statu
         EmploymentStatusListComponent,
     ],
     providers: [
+        EmploymentStatusValidators,
         EmploymentStatusListResolver,
         EmploymentStatusEditResolver,
     ]

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -26,9 +26,15 @@ export class EmploymentStatusEditComponent implements OnInit {
     this.createForm();
   }
 
+  name = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)
+  ])
+
   createForm(): void {
     this.editEmploymentStatusForm = this.fb.group({
-      name: [this.employmentStatus.name, Validators.required]
+      name: this.name.setValue(this.employmentStatus.name)
     });
   }
 

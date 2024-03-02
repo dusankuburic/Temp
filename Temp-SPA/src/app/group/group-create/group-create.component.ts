@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/core/models/group';
 import { Organization } from 'src/app/core/models/organization';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { GroupService } from 'src/app/core/services/group.service';
+import { GroupValidators } from '../group-validators';
 
 @Component({
   selector: 'app-group-create',
@@ -20,7 +21,8 @@ export class GroupCreateComponent implements OnInit {
     private groupService: GroupService,
     private route: ActivatedRoute,
     private alertify: AlertifyService,
-    private fb: UntypedFormBuilder) { }
+    private fb: UntypedFormBuilder,
+    private validators: GroupValidators) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -29,9 +31,14 @@ export class GroupCreateComponent implements OnInit {
     this.createForm();
   }
 
+  name = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)]);
+
   createForm(): void {
     this.createGroupForm = this.fb.group({
-      Name: ['', Validators.required]
+      name: this.name.setAsyncValidators(this.validators.validateNameNotTaken(this.organization.id))
     });
   }
 

@@ -1,44 +1,49 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
-import { Workplace } from 'src/app/core/models/workplace';
+import { Workplace, WorkplaceParams } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
 import { faPenNib, faPenToSquare, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { debounceTime } from 'rxjs';
-
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs';
 
 @Component({
   selector: 'app-workplace-list',
   templateUrl: './workplace-list.component.html'
 })
 export class WorkplaceListComponent implements OnInit {
-  filtersForm: FormGroup;
-  workplaces: Workplace[];
-  pagination: Pagination;
   archiveIcon = faPenNib;
   editIcon = faPenToSquare
   plusIcon = faPlusCircle;
-  workplaceParams: any = { name: '' };
+
+  filtersForm: FormGroup;
+  workplaces: Workplace[];
+  pagination: Pagination;
+  workplaceParams: WorkplaceParams;
 
   constructor(
     private route: ActivatedRoute,
     private workplaceService: WorkplaceService,
     private alertify: AlertifyService,
     private fb: FormBuilder) { 
+      this.workplaceParams = workplaceService.getWorkplaceParams();
+
       this.filtersForm = this.fb.group({
         name: ['', Validators.minLength(1)],
       })
 
       const nameControl = this.filtersForm.get('name');
       nameControl.valueChanges.pipe(
-        debounceTime(1000)
-      ).subscribe(() => {
-        if (nameControl.value !== null) {
-          this.workplaceParams.name = nameControl.value;
-          this.loadWorkplaces();
-        }
+        debounceTime(600),
+        distinctUntilChanged(),
+      ).subscribe((searchFor) => {
+        const params = this.workplaceService.getWorkplaceParams();
+        params.pageNumber = 1;
+        params.name = searchFor;
+        this.workplaceService.setWorkplaceParams(params);
+        this.workplaceParams = params;
+        this.loadWorkplaces();
       });
     }
 
@@ -50,29 +55,27 @@ export class WorkplaceListComponent implements OnInit {
   }
 
   loadWorkplaces(): void {
-    this.workplaceService.getPagedWorkplaces(this.pagination.currentPage, this.pagination.itemsPerPage)
+    this.workplaceService.getPagedWorkplaces()
       .subscribe({
         next: (res: PaginatedResult<Workplace[]>) => {
           this.workplaces = res.result;
           this.pagination = res.pagination;
         },
-        error: (error) => {
-          this.alertify.error(error.error);
+        error: () => {
+          this.alertify.error('Unable to load workplaces');
         }
       });
   }
 
-  resetFilters() {
-    this.workplaceParams.name = '';
-    this.filtersForm.patchValue({
-      name: ''
-    });
-    this.loadWorkplaces();
-  }
-
   pageChanged(event: any): void {
-    this.pagination.currentPage = event.page;
-    this.loadWorkplaces();
+    const params = this.workplaceService.getWorkplaceParams();
+    if (params.pageNumber !== event) {
+      this.pagination.currentPage = event;
+      params.pageNumber = event;
+      this.workplaceService.setWorkplaceParams(params);
+      this.workplaceParams = params;
+      this.loadWorkplaces();
+    }
   }
 
   changeStatus(id: number): void {
@@ -81,8 +84,8 @@ export class WorkplaceListComponent implements OnInit {
         this.loadWorkplaces();
         this.alertify.success('Status is changed');
       },
-      error: (error) => {
-        this.alertify.error(error.error);
+      error: () => {
+        this.alertify.error('Unable to archive');
       }
     });
   }

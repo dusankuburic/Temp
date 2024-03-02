@@ -7,6 +7,7 @@ import { organizationRoutes } from './organization.routes';
 import { SharedModule } from '../shared/shared.module';
 import { OrganizationListResolver } from '../core/resolvers/organization/organization-list.resolver';
 import { OrganizationEditResolver } from '../core/resolvers/organization/organization-edit.resolver';
+import { OrganizationValidators } from './organization-validators';
 
 @NgModule({
     imports: [
@@ -20,6 +21,7 @@ import { OrganizationEditResolver } from '../core/resolvers/organization/organiz
         OrganizationListComponent,
     ],
     providers: [
+        OrganizationValidators,
         OrganizationListResolver,
         OrganizationEditResolver,
     ]

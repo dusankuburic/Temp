@@ -1,15 +1,16 @@
 <div class="row justify-content-around">
-  <div class="col-lg-4 col-md-6 col-sm-6">
-    <h4 *ngIf="innerGroups">{{organization.name}} groups</h4>
+  <div class="col-lg-2 col-md-6 col-sm-6">
+    <h4 class="text-center" *ngIf="innerGroups">{{organization.name}} groups</h4>
   </div>
   <div class="col-lg-7">
-    <form class="form">
-      <div class="input-group">
-          <input type="text" placeholder="Name" class="form-control">
-          <button type="button" class="btn btn-info float-right">Reset</button>
-          <button type="submit" class="btn btn-primary float-right">Apply</button>  
-      </div>
-  </form>
+    <form class="form" [formGroup]="filtersForm">
+        <div class="input-group">
+            <input type="text" placeholder="Name" class="form-control" formControlName="name">
+        </div>
+    </form>
+  </div>
+  <div class="col-lg-2">
+    <a class="btn btn-success float-end" [routerLink]="['/groups/create/organization/', organization.id]"><fa-icon [icon]="plusIcon"></fa-icon></a>
   </div>
 </div>
 
@@ -50,12 +51,10 @@
   </div>
 </div>
 <div *ngIf="innerGroups.length" class="d-flex justify-content-center">
-  <pagination 
-    [boundaryLinks]="true" 
-    [totalItems]="pagination.totalItems" 
-    [itemsPerPage]="pagination.itemsPerPage" 
-    [(ngModel)]="pagination.currentPage"
-    (pageChanged)="pageChanged($event)" 
-    previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
-  </pagination>
-</div>
+  <tmp-pagination
+    [totalCount]="pagination.totalItems"
+    [pageSize]="pagination.itemsPerPage"
+    [pageNumber]="pagination.currentPage"
+    (pageChanged)="pageChanged($event)">
+  </tmp-pagination>
+</div>`

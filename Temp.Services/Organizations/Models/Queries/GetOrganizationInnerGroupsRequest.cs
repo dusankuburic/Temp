@@ -13,4 +13,6 @@ public class GetOrganizationInnerGroupsRequest
         get { return _pageSize; }
         set { _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
     }
+
+    public string Name { get; set; }
 }

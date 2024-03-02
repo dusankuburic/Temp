@@ -14,6 +14,7 @@ public partial class WorkplaceService
     public delegate Task<GetWorkplaceResponse> ReturningGetWorkplaceFunction();
     public delegate Task<UpdateWorkplaceResponse> ReturningUpdateWorkplaceFunction();
     public delegate Task<UpdateWorkplaceStatusResponse> ReturningUpdateWorkplaceStatusFunction();
+    public delegate Task<bool> ReturningWorkplaceExistsFunction();
 
     public async Task<CreateWorkplaceResponse> TryCatch(ReturningWorkplaceResponse returningWorkplaceResponse) {
         try {
@@ -80,6 +81,16 @@ public partial class WorkplaceService
             throw CreateAndLogValidationException(nullWorkplaceException);
         } catch (InvalidWorkplaceException invalidWorkplaceException) {
             throw CreateAndLogValidationException(invalidWorkplaceException);
+        } catch (SqlException sqlException) {
+            throw CreateAndLogCriticalDependencyException(sqlException);
+        } catch (Exception exception) {
+            throw CreateAndLogServiceException(exception);
+        }
+    }
+
+    public async Task<bool> TryCatch(ReturningWorkplaceExistsFunction returningWorkplaceExistsFunction) {
+        try {
+            return await returningWorkplaceExistsFunction();
         } catch (SqlException sqlException) {
             throw CreateAndLogCriticalDependencyException(sqlException);
         } catch (Exception exception) {

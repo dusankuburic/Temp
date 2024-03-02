@@ -83,6 +83,17 @@ public class EmploymentStatusesController : ControllerBase
         }
     }
 
+    [HttpGet("employment-status-exists")]
+    public async Task<IActionResult> EmploymentStatusExists([FromQuery] string name) {
+        try {
+            var response = await _employmentStatusService.EmploymentStatusExists(name);
+
+            return Ok(response);
+        } catch (EmploymentStatusValidationException employmentStatusValidationException) {
+            return BadRequest(GetInnerMessage(employmentStatusValidationException));
+        }
+    }
+
     private static string GetInnerMessage(Exception exception) =>
         exception.InnerException.Message;
 }

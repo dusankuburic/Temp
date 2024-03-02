@@ -77,8 +77,6 @@ public partial class EmployeeService : IEmployeeService
             request.PageNumber,
             request.PageSize);
 
-        ValidateStorageEmployees(employees);
-
         return employees;
     });
 
@@ -158,6 +156,21 @@ public partial class EmployeeService : IEmployeeService
             .OrderByDescending(x => x.Id)
             .ProjectTo<GetEmployeesWithoutEngagementResponse>(_mapper.ConfigurationProvider)
             .AsQueryable();
+
+        if (!string.IsNullOrEmpty(request.Role)) {
+            employeesWithoutEngagement = employeesWithoutEngagement.Where(x => x.Role == request.Role)
+               .AsQueryable();
+        }
+
+        if (!string.IsNullOrEmpty(request.FirstName)) {
+            employeesWithoutEngagement = employeesWithoutEngagement.Where(x => x.FirstName.Contains(request.FirstName))
+                .AsQueryable();
+        }
+
+        if (!string.IsNullOrEmpty(request.LastName)) {
+            employeesWithoutEngagement = employeesWithoutEngagement.Where(x => x.LastName.Contains(request.LastName))
+                .AsQueryable();
+        }
 
         var employees = await PagedList<GetEmployeesWithoutEngagementResponse>.CreateAsync(
             employeesWithoutEngagement,

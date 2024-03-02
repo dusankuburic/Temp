@@ -8,10 +8,7 @@ import { TeamService } from '../../services/team.service';
 
 @Injectable()
 export class TeamListResolver  {
-
-    pageNumber = 1;
-    pageSize = 5;
-
+    
     constructor(
         private teamService: TeamService,
         private router: Router,
@@ -19,7 +16,8 @@ export class TeamListResolver  {
 
     resolve(route: ActivatedRouteSnapshot): Observable<PagedInnerTeams>  {
         const groupId = parseInt(route.params['id']);
-        return this.teamService.getInnerTeams(this.pageNumber, this.pageSize, groupId).pipe(
+        this.teamService.resetTeamParams();
+        return this.teamService.getInnerTeams(groupId).pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving teams');
                 this.router.navigate(['']);
