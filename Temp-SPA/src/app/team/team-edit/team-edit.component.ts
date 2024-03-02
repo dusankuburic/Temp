@@ -13,6 +13,12 @@ export class TeamEditComponent implements OnInit {
   editTeamForm: UntypedFormGroup;
   team: Team;
 
+  name = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)
+  ]);
+
   constructor(
     private teamService: TeamService,
     private route: ActivatedRoute,
@@ -20,27 +26,28 @@ export class TeamEditComponent implements OnInit {
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {
+    this.editTeamForm = this.fb.group({
+      name: this.name
+    });
+
     this.route.data.subscribe(data => {
       this.team = data['team'];
+      this.setupForm(this.team);
     });
-    this.createForm();
   }
 
-  name = new FormControl('', [
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(60)
-  ]);
+  setupForm(team: Team) {
+    if (this.editTeamForm)
+      this.editTeamForm.reset();
 
-  createForm(): void {
-    this.editTeamForm = this.fb.group({
-      name: this.name.setValue(this.team.name)
-    });
+      this.editTeamForm.patchValue({
+        name: team.name
+      });
   }
 
   update(): void {
     const teamForm = { ...this.editTeamForm.value };
-    this.team.name = teamForm.Name;
+    this.team.name = teamForm.name;
     this.teamService.updateTeam(this.team.id, this.team).subscribe({
       next: () => {
         this.alertify.success('Successfully updated');

@@ -13,6 +13,12 @@ export class GroupEditComponent implements OnInit {
   editGroupForm: UntypedFormGroup;
   group: Group;
 
+  name = new FormControl('',[
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)
+  ]);
+
   constructor(
     private groupService: GroupService,
     private route: ActivatedRoute,
@@ -20,28 +26,29 @@ export class GroupEditComponent implements OnInit {
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {
+    this.editGroupForm = this.fb.group({
+      name: this.name
+    });
+
     this.route.data.subscribe(data => {
       this.group = data['group'];
+      this.setupForm(this.group);
     });
-    this.createForm();
   }
 
-  name = new FormControl('',[
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(60)
-  ]);
+  setupForm(group: Group): void {
+    if (this.editGroupForm)
+      this.editGroupForm.reset();
 
-  createForm(): void {
-    this.editGroupForm = this.fb.group({
-      name: this.name.setValue(this.group.name)
-    });
+      this.editGroupForm.patchValue({
+        name: group.name
+      });
   }
 
   update(): void {
     //TODO: rewrite this
     const groupForm = { ...this.editGroupForm.value };
-    this.group.name = groupForm.Name;
+    this.group.name = groupForm.name;
     this.groupService.updateGroup(this.group.id, this.group).subscribe({
       next: () => {
         this.alertify.success('Successfully updated');
@@ -50,7 +57,6 @@ export class GroupEditComponent implements OnInit {
         this.alertify.error(error.error);
       }
     });
-    
   }
 
 }

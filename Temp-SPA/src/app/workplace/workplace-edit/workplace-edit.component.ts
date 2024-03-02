@@ -13,6 +13,11 @@ export class WorkplaceEditComponent implements OnInit {
   editWorkplaceForm: UntypedFormGroup;
   workplace: Workplace;
 
+  name = new FormControl('', [
+    Validators.required, 
+    Validators.minLength(3), 
+    Validators.maxLength(60)])
+
   constructor(
     private workplaceService: WorkplaceService,
     private route: ActivatedRoute,
@@ -20,20 +25,22 @@ export class WorkplaceEditComponent implements OnInit {
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {
+    this.editWorkplaceForm = this.fb.group({
+      name: this.name
+    });
+
     this.route.data.subscribe(data => {
       this.workplace = data['workplace'];
+      this.setupForm(this.workplace);
     });
-    this.createForm();
   }
 
-  name = new FormControl('', [
-    Validators.required, 
-    Validators.minLength(3), 
-    Validators.maxLength(60)])
+  setupForm(workplace: Workplace): void {
+    if (this.editWorkplaceForm) 
+      this.editWorkplaceForm.reset();
 
-  createForm(): void {
-    this.editWorkplaceForm = this.fb.group({
-      name: this.name.setValue(this.workplace.name)
+    this.editWorkplaceForm.patchValue({
+      name: workplace.name
     });
   }
 

@@ -10,7 +10,7 @@
               <h4>Team: {{fullTeam.teamName}}</h4>
             </div>
             
-              <form [formGroup]="editEmployeeForm" (ngSubmit)="update()">
+              <form class="row g-2" [formGroup]="editEmployeeForm" (ngSubmit)="update()">
 
                 <div class="form-group">
                   <h4>First Name</h4>
@@ -79,7 +79,9 @@
                   </select>           
                   <div class="invalid-feedback">Please choose a team</div>                     
                 </div>
-                <button type="submit" [disabled]="!editEmployeeForm.valid" class="btn btn-success float-right">Save</button>
+                <div class="form-group">
+                  <button type="submit" [disabled]="!editEmployeeForm.valid" class="btn btn-success float-right">Save</button>
+                </div>
               </form>
           </div>
       </div>

@@ -6,7 +6,7 @@
         <!-- <h4>Name: {{employee.firstName}}  {{employee.lastName}}</h4> -->
     </div>
 
-      <form [formGroup]="createEngagementForm" (ngSubmit)="create()">
+      <form class="row g-2" [formGroup]="createEngagementForm" (ngSubmit)="create()">
 
           <div class="form-group">
               <h4>Workplaces</h4>
@@ -87,7 +87,9 @@
             </select>           
             <div class="invalid-feedback">Please choose a employment status</div>                     
           </div>
-          <button type="submit" [disabled]="!createEngagementForm.valid" class="btn btn-success float-right">Add</button>
+          <div class="form-gorup">
+            <button type="submit" [disabled]="!createEngagementForm.valid" class="btn btn-success float-right">Add</button>
+          </div>
       </form>          
     </div>
 
