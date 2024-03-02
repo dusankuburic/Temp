@@ -30,3 +30,9 @@ export interface FullTeam {
     groupName: string;
     teamName: string;
 }
+
+export class TeamParams {
+    pageNumber: number = 1;
+    pageSize: number = 5;
+    name: string = '';
+}

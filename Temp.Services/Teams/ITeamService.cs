@@ -11,5 +11,6 @@ public interface ITeamService
     Task<UpdateTeamResponse> UpdateTeam(UpdateTeamRequest request);
     Task<UpdateTeamStatusResponse> UpdateTeamStatus(UpdateTeamStatusRequest request);
     Task<GetUserTeamResponse> GetUserTeam(GetUserTeamRequest request);
+    Task<bool> TeamExists(string name, int groupId);
 }
 

@@ -15,6 +15,7 @@ public partial class OrganizationService
     public delegate Task<UpdateOrganizationResponse> ReturningUpdateOrganizationFunction();
     public delegate Task<GetPagedInnerGroupsResponse> ReturningGetPagedInnerGroupsFunction();
     public delegate Task<GetInnerGroupsResponse> ReturningGetInnerGroupsFunction();
+    public delegate Task<bool> ReturningOrganizationExistsFunction();
 
     public async Task<CreateOrganizationResponse> TryCatch(ReturningCreateOrganizationFunction returningCreateOrganizationFunction) {
         try {
@@ -88,12 +89,21 @@ public partial class OrganizationService
         }
     }
 
-
     public async Task<GetInnerGroupsResponse> TryCatch(ReturningGetInnerGroupsFunction returningGetInnerGroupsFunction) {
         try {
             return await returningGetInnerGroupsFunction();
         } catch (OrganizationGetInnerGroupsStorageException organizationGetInnerGroupsStorageException) {
             throw CreateAndLogServiceException(organizationGetInnerGroupsStorageException);
+        } catch (SqlException sqlException) {
+            throw CreateAndLogCriticalDependencyException(sqlException);
+        } catch (Exception exception) {
+            throw CreateAndLogServiceException(exception);
+        }
+    }
+
+    public async Task<bool> TryCatch(ReturningOrganizationExistsFunction returningOrganizationExistsFunction) {
+        try {
+            return await returningOrganizationExistsFunction();
         } catch (SqlException sqlException) {
             throw CreateAndLogCriticalDependencyException(sqlException);
         } catch (Exception exception) {

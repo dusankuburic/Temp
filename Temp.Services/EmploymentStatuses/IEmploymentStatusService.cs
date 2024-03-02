@@ -12,4 +12,5 @@ public interface IEmploymentStatusService
     Task<List<GetEmploymentStatusResponse>> GetEmploymentStatuses();
     Task<PagedList<GetPagedEmploymentStatusesResponse>> GetPagedEmploymentStatuses(GetPagedEmploymentStatusesRequest request);
     Task<UpdateEmploymentStatusStatusResponse> UpdateEmploymentStatusStatus(UpdateEmploymentStatusStatusRequest request);
+    Task<bool> EmploymentStatusExists(string name);
 }

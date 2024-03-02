@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
+import { EngagementParams } from 'src/app/core/models/engagement';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EngagementService } from 'src/app/core/services/engagement.service';
@@ -13,13 +16,70 @@ import { EngagementService } from 'src/app/core/services/engagement.service';
 export class EngagementWithoutEmployeeListComponent implements OnInit {
   addEngagementIcon = faCodeBranch
 
+  filtersForm: FormGroup;
   employees: Employee[];
+  roles = [
+    {value: '', display: 'Select Role', disabled: true},
+    {value: '', display: 'All', disabled: false},
+    {value: 'User', display: 'User',  disabled: false},
+    {value: 'Admin', display: 'Admin', disabled: false},
+    {value: 'Moderator', display: 'Moderator', disabled: false},
+    {value: 'None', display: 'None', disabled: false}];
+  engagementParams: EngagementParams;
   pagination: Pagination;
-
+  
   constructor(
     private route: ActivatedRoute,
     private engagementService: EngagementService,
-    private alertify: AlertifyService) { }
+    private alertify: AlertifyService,
+    private fb: FormBuilder) { 
+      this.engagementParams = engagementService.getEngagementParams();
+
+      this.filtersForm = this.fb.group({
+        role: ['', Validators.minLength(1)],
+        firstName: ['', Validators.minLength(1)],
+        lastName: ['', Validators.minLength(1)]
+      });
+
+      const roleControl = this.filtersForm.get('role');
+      roleControl.valueChanges.pipe(
+        debounceTime(100),
+        distinctUntilChanged(),
+      ).subscribe((searchFor) => {
+        const params = this.engagementService.getEngagementParams();
+        params.pageNumber = 1;
+        this.engagementParams.role = searchFor;
+        this.engagementService.setEngagementParams(params);
+        this.engagementParams = params;
+        this.loadEmployeesWithoutEngagement();
+      });
+
+      const firstNameControl = this.filtersForm.get('firstName');
+      firstNameControl.valueChanges.pipe(
+        debounceTime(600),
+        distinctUntilChanged()
+      ).subscribe((searchFor) => {
+        const params = this.engagementService.getEngagementParams();
+        params.pageNumber = 1;
+        params.firstName = searchFor;
+        this.engagementService.setEngagementParams(params);
+        this.engagementParams = params;
+        this.loadEmployeesWithoutEngagement();
+      });
+
+      const lastNameControl = this.filtersForm.get('lastName');
+      lastNameControl.valueChanges.pipe(
+        debounceTime(600),
+        distinctUntilChanged()
+      ).subscribe((searchFor) => {
+        const params = this.engagementService.getEngagementParams();
+        params.pageNumber = 1;
+        params.lastName = searchFor;
+        this.engagementService.setEngagementParams(params);
+        this.engagementParams = params;
+        this.loadEmployeesWithoutEngagement();
+      });
+    }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -29,7 +89,7 @@ export class EngagementWithoutEmployeeListComponent implements OnInit {
   }
 
   loadEmployeesWithoutEngagement(): void {
-    this.engagementService.getEmployeesWithoutEngagement(this.pagination.currentPage, this.pagination.itemsPerPage)
+    this.engagementService.getEmployeesWithoutEngagement()
     .subscribe({
       next: (res: PaginatedResult<Employee[]>) => {
         this.employees = res.result;
@@ -42,8 +102,14 @@ export class EngagementWithoutEmployeeListComponent implements OnInit {
   }
 
   pageChanged(event: any): void {
-    this.pagination.currentPage = event.page;
-    this.loadEmployeesWithoutEngagement();
+    const params = this.engagementService.getEngagementParams();
+    if (params.pageNumber !== event) {
+      this.pagination.currentPage = event;
+      params.pageNumber = event;
+      this.engagementService.setEngagementParams(params);
+      this.engagementParams = params;
+      this.loadEmployeesWithoutEngagement();
+    }
   }
 
 }

@@ -23,3 +23,15 @@ export interface ExistingEngagement {
     dateFrom: Date;
     dateTo: Date;
 }
+
+export class EngagementParams {
+    pageNumber: number = 1;
+    pageSize: number = 5;
+    firstName: string = '';
+    lastName: string = '';
+    role: string = '';
+    workplace: string = '';
+    employmentStatus: string = '';
+    minSalary: number = 0;
+    maxSalary: number = 5000;
+}

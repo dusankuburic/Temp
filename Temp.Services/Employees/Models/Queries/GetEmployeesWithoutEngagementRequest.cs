@@ -12,4 +12,8 @@ public class GetEmployeesWithoutEngagementRequest
         get { return _pageSize; }
         set { _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
     }
+
+    public string Role { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
 }

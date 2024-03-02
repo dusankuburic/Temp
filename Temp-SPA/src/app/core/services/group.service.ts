@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Group, InnerGroups, PagedInnerGroups } from '../models/group';
+import { Group, GroupParams, InnerGroups, PagedInnerGroups } from '../models/group';
 import { ModeratorMin } from '../models/moderator';
 import { InnerTeams } from '../models/team';
 import { Observable, map } from 'rxjs';
@@ -12,22 +12,35 @@ import { PaginatedResult } from '../models/pagination';
 })
 export class GroupService {
   baseUrl = environment.apiUrl;
+  groupParams = new GroupParams();
 
 constructor(private http: HttpClient) { }
 
-getGroup(id: number): Observable<Group> {
-  return this.http.get<Group>(this.baseUrl + 'groups/' + id);
+setGroupParams(params: GroupParams) {
+  this.groupParams = params;
 }
 
+getGroupParams(): GroupParams {
+  return this.groupParams;
+}
 
-getInnerGroups(page?, itemsPerPage?, organizationId?): Observable<PagedInnerGroups> {
+resetGroupParams(): void {
+  this.groupParams.pageNumber = 1;
+  this.groupParams.pageSize = 5;
+  this.groupParams.name = '';
+}
+
+getInnerGroups(organizationId: number): Observable<PagedInnerGroups> {
   const paginatedResult: PaginatedResult<Group[]> = new PaginatedResult<Group[]>();
 
   let params = new HttpParams();
-  if (page != null && itemsPerPage != null && organizationId != null) {
-    params = params.append('pageNumber', page);
-    params = params.append('pageSize', itemsPerPage);
-    params = params.append('organizationId', organizationId);
+
+  params = params.append('organizationId', organizationId);
+  params = params.append('pageNumber', this.groupParams.pageNumber);
+  params = params.append('pageSize', this.groupParams.pageSize);
+
+  if (this.groupParams.name) {
+    params = params.append('name', this.groupParams.name);
   }
 
   return this.http.get<InnerGroups>(this.baseUrl + 'organizations/paged-inner-groups', {observe: 'response', params})
@@ -49,6 +62,16 @@ getInnerGroups(page?, itemsPerPage?, organizationId?): Observable<PagedInnerGrou
 getGroups(organizationId: number): Observable<InnerGroups> {
   return this.http.get<InnerGroups>(this.baseUrl + 'organizations/inner-groups/' + organizationId);
 }
+
+checkGroupExists(name: string, organizationId: number): Observable<boolean> {
+  return this.http.get<boolean>(this.baseUrl + `groups/group-exists?name=${name}&organizationId=${organizationId}`);
+}
+
+
+getGroup(id: number): Observable<Group> {
+  return this.http.get<Group>(this.baseUrl + 'groups/' + id);
+}
+
 
 createGroup(group: Group): Observable<Group> {
   return this.http.post<Group>(this.baseUrl + 'groups', group);

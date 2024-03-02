@@ -9,17 +9,14 @@ import { PaginatedResult } from 'src/app/core/models/pagination';
 
 @Injectable()
 export class WorkplaceListResolver  {
-
-    pageNumber = 1;
-    pageSize = 5;
-
     constructor(
         private workplaceService: WorkplaceService,
         private router: Router,
         private alertify: AlertifyService){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<Workplace[]>>  {
-        return this.workplaceService.getPagedWorkplaces(this.pageNumber, this.pageSize).pipe(
+        this.workplaceService.resetWorkplaceParams();
+        return this.workplaceService.getPagedWorkplaces().pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving data');
                 this.router.navigate(['']);

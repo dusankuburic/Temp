@@ -7,3 +7,11 @@ export interface Employee {
     teamId: number;
     isActive: boolean;
 }
+
+export class EmployeeParams {
+    pageNumber: number = 1;
+    pageSize: number = 5;
+    role: string = '';
+    firstName: string = '';
+    lastName: string = '';
+}

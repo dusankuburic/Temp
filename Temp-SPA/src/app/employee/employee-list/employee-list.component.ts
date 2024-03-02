@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { faEdit, faLock, faLockOpen, faPlus, faPlusCircle, faPlusSquare, faSitemap, faUserTimes } from '@fortawesome/free-solid-svg-icons';
-import { debounce, debounceTime, last } from 'rxjs';
-import { Employee } from 'src/app/core/models/employee';
+import { faEdit, faLock, faLockOpen, faPlusCircle, faSitemap, faUserTimes } from '@fortawesome/free-solid-svg-icons';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { Employee, EmployeeParams } from 'src/app/core/models/employee';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { UnassignRoleDto } from 'src/app/core/models/unassignRoleDto';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -26,52 +26,64 @@ export class EmployeeListComponent implements OnInit {
   unassignRoleDto: UnassignRoleDto;
   roles = [
     {value: '', display: 'Select Role', disabled: true},
+    {value: '', display: 'All', disabled: false},
     {value: 'User', display: 'User',  disabled: false},
     {value: 'Admin', display: 'Admin', disabled: false},
     {value: 'Moderator', display: 'Moderator', disabled: false},
     {value: 'None', display: 'None', disabled: false}];
-  employeeParams: any = { role: '', firstName: '', lastName: '' };
+  employeeParams: EmployeeParams;
   pagination: Pagination;
 
   constructor(
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
     private alertify: AlertifyService,
-    private fb: FormBuilder) { 
+    private fb: FormBuilder) {  
+      this.employeeParams = employeeService.getEmployeeParams();
+
       this.filtersForm = this.fb.group({
-        role: ['', Validators.minLength(2)],
+        role: ['', Validators.minLength(1)],
         firstName: ['', Validators.minLength(1)],
         lastName: ['', Validators.minLength(1)]
       });
 
       const roleControl = this.filtersForm.get('role');
       roleControl.valueChanges.pipe(
-        debounceTime(100)
-      ).subscribe(() => {
-        if (roleControl.value !== null) {
-          this.employeeParams.role = roleControl.value;
+        debounceTime(100),
+        distinctUntilChanged()
+      ).subscribe((searchFor) => {
+          const params = this.employeeService.getEmployeeParams();
+          params.pageNumber = 1;
+          this.employeeParams.role = searchFor;
+          this.employeeService.setEmployeeParams(params);
+          this.employeeParams = params;
           this.loadEmployees();
-        }
       });
       
       const firstNameControl = this.filtersForm.get('firstName');
       firstNameControl.valueChanges.pipe(
-        debounceTime(1000)
-      ).subscribe(() => {
-        if (firstNameControl.value !== null) {
-          this.employeeParams.firstName = firstNameControl.value;
+        debounceTime(600),
+        distinctUntilChanged(),
+      ).subscribe((searchFor) => {
+          const params = this.employeeService.getEmployeeParams();
+          params.pageNumber = 1;
+          params.firstName = searchFor;
+          this.employeeService.setEmployeeParams(params);
+          this.employeeParams = params;
           this.loadEmployees();
-        }
       });
 
       const lastNameControl = this.filtersForm.get('lastName');
       lastNameControl.valueChanges.pipe(
-        debounceTime(1000)
-      ).subscribe(() => {
-        if (lastNameControl.value !== null) {
-          this.employeeParams.lastName = lastNameControl.value;
-          this.loadEmployees();
-        }
+        debounceTime(600),
+        distinctUntilChanged(),
+      ).subscribe((searchFor) => {
+        const params = this.employeeService.getEmployeeParams();
+        params.pageNumber = 1;
+        params.lastName = searchFor;
+        this.employeeService.setEmployeeParams(params);
+        this.employeeParams = params;
+        this.loadEmployees();
       });
     }
 
@@ -83,7 +95,7 @@ export class EmployeeListComponent implements OnInit {
   }
 
   loadEmployees(): void {
-    this.employeeService.getEmployees(this.pagination.currentPage, this.pagination.itemsPerPage, this.employeeParams)
+    this.employeeService.getEmployees()
       .subscribe({
         next: (res: PaginatedResult<Employee[]>) => {
           this.employees = res.result;
@@ -95,21 +107,15 @@ export class EmployeeListComponent implements OnInit {
       });
   }
 
-  resetFilters(): void {
-    this.employeeParams.role = '';
-    this.employeeParams.firstName = '';
-    this.employeeParams.lastName = '';
-    this.filtersForm.patchValue({
-      role: '',
-      firstName: '',
-      lastName: ''
-    });
-    this.loadEmployees();
-  }
-
   pageChanged(event: any): void {
-    this.pagination.currentPage = event.page;
-    this.loadEmployees();
+    const params = this.employeeService.getEmployeeParams();
+    if (params.pageNumber !== event) {
+      this.pagination.currentPage = event;
+      params.pageNumber = event;
+      this.employeeService.setEmployeeParams(params);
+      this.employeeParams = params;
+      this.loadEmployees();
+    }
   }
 
   removeRole(id: number): void {

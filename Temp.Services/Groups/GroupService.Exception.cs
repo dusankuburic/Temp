@@ -15,6 +15,7 @@ public partial class GroupService
     public delegate Task<GetGroupInnerTeamsResponse> ReturningGroupInnerTeamsFunction();
     public delegate Task<List<GetModeratorGroupsResponse>> ReturningModeratorGroupsFunction();
     public delegate Task<List<GetModeratorFreeGroupsResponse>> ReturningModeratorFreeGroupsFunction();
+    public delegate Task<bool> ReturningGroupExistsFunction();
 
     public async Task<CreateGroupResponse> TryCatch(ReturningCreateGroupFunction returningCreateGroupFunction) {
         try {
@@ -103,6 +104,16 @@ public partial class GroupService
     public async Task<List<GetModeratorFreeGroupsResponse>> TryCatch(ReturningModeratorFreeGroupsFunction returningModeratorFreeGroupsFunction) {
         try {
             return await returningModeratorFreeGroupsFunction();
+        } catch (SqlException sqlException) {
+            throw CreateAndLogCriticalDependencyException(sqlException);
+        } catch (Exception exception) {
+            throw CreateAndLogServiceException(exception);
+        }
+    }
+
+    public async Task<bool> TryCatch(ReturningGroupExistsFunction returningGroupExistsFunction) {
+        try {
+            return await returningGroupExistsFunction();
         } catch (SqlException sqlException) {
             throw CreateAndLogCriticalDependencyException(sqlException);
         } catch (Exception exception) {

@@ -102,6 +102,17 @@ public class OrganizationsController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("organization-exists")]
+    public async Task<IActionResult> OrganizationExists([FromQuery] string name) {
+        try {
+            var response = await _organizationService.OrganizationExists(name);
+
+            return Ok(response);
+        } catch (OrganizationValidationException organizationValidationException) {
+            return BadRequest(GetInnerMessage(organizationValidationException));
+        }
+    }
+
     private static string GetInnerMessage(Exception exception) {
         return exception.InnerException.Message;
     }

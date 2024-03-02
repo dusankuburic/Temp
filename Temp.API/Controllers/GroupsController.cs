@@ -104,6 +104,17 @@ public class GroupsController : ControllerBase
         }
     }
 
+    [HttpGet("group-exists")]
+    public async Task<IActionResult> GroupExists([FromQuery] string name, int organizationId) {
+        try {
+            var response = await _groupService.GroupExists(name, organizationId);
+
+            return Ok(response);
+        } catch (GroupValidationException groupValidationException) {
+            return BadRequest(GetInnerMessage(groupValidationException));
+        }
+    }
+
     private static string GetInnerMessage(Exception exception) {
         return exception.InnerException.Message;
     }

@@ -9,17 +9,14 @@ import { PaginatedResult } from 'src/app/core/models/pagination';
 
 @Injectable()
 export class EngagementWithEmployeeResolver  {
-
-    pageNumber = 1
-    pageSize = 5
-
     constructor(
         private engagementService: EngagementService,
         private router: Router,
         private alertify: AlertifyService){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<Employee[]>> {
-        return this.engagementService.getEmployeesWithEngagement(this.pageNumber, this.pageSize).pipe(
+        this.engagementService.resetEngagementParams();
+        return this.engagementService.getEmployeesWithEngagement().pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving data');
                 this.router.navigate(['']);

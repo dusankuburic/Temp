@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmploymentStatusService } from 'src/app/core/services/employment-status.service';
+import { EmploymentStatusValidators } from '../employment-status-validators';
 
 @Component({
   selector: 'app-employment-status-create',
@@ -15,15 +16,22 @@ export class EmploymentStatusCreateComponent implements OnInit {
   constructor(
     private employmentStatusService: EmploymentStatusService,
     private alertify: AlertifyService,
-    private fb: UntypedFormBuilder) { }
+    private fb: UntypedFormBuilder,
+    private validators: EmploymentStatusValidators) { }
 
   ngOnInit(): void {
     this.createForm();
   }
 
+  name = new FormControl('',[
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)],
+    [this.validators.validateNameNotTaken()]);
+
   createForm(): void {
     this.createEmploymentStatusForm = this.fb.group({
-      name: ['', Validators.required]
+      name: this.name
     });
   }
 

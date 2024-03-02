@@ -3,20 +3,12 @@
     <h1 class="text-center">Edit Group</h1>
       <div class="row justify-content-center">
           <div class="col-lg-6 col-sm-6 col-8">
-              
             <form [formGroup]="editGroupForm" (ngSubmit)="update()">
               <div class="form-group">
-                <h4>Name</h4>
-                <input [ngClass]="{'is-invalid': editGroupForm.get('Name').errors
-                && editGroupForm.get('Name').touched}"
-                type="text"
-                class="form-control"
-                formControlName="Name">
-                <div class="invalid-feedback">Please enter a Name</div>
+                  <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
               </div>
               <button type="submit" [disabled]="!editGroupForm.valid" class="btn btn-success float-right">Save</button>
             </form>
-
           </div>
       </div>
   </div>

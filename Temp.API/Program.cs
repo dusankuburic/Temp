@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Temp.API.Bootstrap;
+using Temp.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,13 +17,8 @@ builder.Services.AddControllers()
     .ConfigureSerilizaiton()
     .ConfigureFluentValidation();
 
-builder.Services.Configure<ApiBehaviorOptions>(opt => {
-    opt.InvalidModelStateResponseFactory = ctx =>
-        new BadRequestObjectResult(ctx.ModelState);
-});
 
 builder.Services.AddAuthSetup(builder.Configuration);
-
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
@@ -55,21 +51,7 @@ using (var scope = app.Services.CreateScope()) {
     }
 }
 
-if (app.Environment.IsDevelopment()) {
-    app.UseDeveloperExceptionPage();
-}
-
-app.UseExceptionHandler(builder => {
-    builder.Run(async context => {
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-        var error = context.Features.Get<IExceptionHandlerFeature>();
-        if (error != null) {
-            context.Response.AddApplicationError(error.Error.Message);
-            await context.Response.WriteAsync(error.Error.Message);
-        }
-    });
-});
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseRouting();

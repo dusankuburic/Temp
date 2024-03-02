@@ -19,7 +19,7 @@ public class TeamsMappingProfile : Profile
         CreateMap<User, GetUserTeamResponse>()
             .ForMember(a => a.Id, o => o.MapFrom(s => s.Employee.Team.Id))
             .ForMember(a => a.Name, o => o.MapFrom(s => s.Employee.Team.Name));
-        CreateMap<Team, UpdateTeamRequest>();
+        CreateMap<UpdateTeamRequest, Team>();
 
     }
 }

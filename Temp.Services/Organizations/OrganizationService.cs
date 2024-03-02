@@ -43,6 +43,11 @@ public partial class OrganizationService : IOrganizationService
                 .ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
+            if (!string.IsNullOrEmpty(request.Name)) {
+                organizationsQuery = organizationsQuery.Where(x => x.Name.Contains(request.Name))
+                    .AsQueryable();
+            }
+
             return await PagedList<GetOrganizationResponse>.CreateAsync(
                 organizationsQuery,
                 request.PageNumber,
@@ -55,6 +60,11 @@ public partial class OrganizationService : IOrganizationService
                 .Where(x => x.OrganizationId == request.OrganizationId && x.IsActive)
                 .ProjectTo<InnerGroup>(_mapper.ConfigurationProvider)
                 .AsQueryable();
+
+            if (!string.IsNullOrEmpty(request.Name)) {
+                innerGroupsQurey = innerGroupsQurey.Where(x => x.Name.Contains(request.Name))
+                    .AsQueryable();
+            }
 
             var pagedGroups = await PagedList<InnerGroup>.CreateAsync(
                 innerGroupsQurey,
@@ -142,8 +152,10 @@ public partial class OrganizationService : IOrganizationService
         return new UpdateOrganizationStatusResponse();
     }
 
-    private async Task<bool> OrganizationExists(string name) {
-        return await _ctx.Organizations.AnyAsync(x => x.Name == name);
-    }
+    public Task<bool> OrganizationExists(string name) =>
+        TryCatch(async () => {
+            return await _ctx.Organizations.AnyAsync(x => x.Name == name);
+        });
+
 }
 

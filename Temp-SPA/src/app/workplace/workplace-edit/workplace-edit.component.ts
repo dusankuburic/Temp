@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Workplace } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -26,9 +26,14 @@ export class WorkplaceEditComponent implements OnInit {
     this.createForm();
   }
 
+  name = new FormControl('', [
+    Validators.required, 
+    Validators.minLength(3), 
+    Validators.maxLength(60)])
+
   createForm(): void {
     this.editWorkplaceForm = this.fb.group({
-      name: [this.workplace.name, Validators.required]
+      name: this.name.setValue(this.workplace.name)
     });
   }
 

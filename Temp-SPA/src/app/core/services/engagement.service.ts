@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Employee } from '../models/employee';
-import { Engagement } from '../models/engagement';
+import { Engagement, EngagementParams } from '../models/engagement';
 import { PaginatedResult } from '../models/pagination';
 
 @Injectable({
@@ -12,34 +12,64 @@ import { PaginatedResult } from '../models/pagination';
 })
 export class EngagementService {
   baseUrl = environment.apiUrl;
+  engagementParams = new EngagementParams();
 
 constructor(private http: HttpClient) { }
 
-getEmployeesWithEngagement(page?, itemsPerPage?, employeeParams?): Observable<PaginatedResult<Employee[]>> {
+setEngagementParams(params: EngagementParams): void {
+  this.engagementParams = params;
+}
+
+getEngagementParams(): EngagementParams {
+  return this.engagementParams;
+}
+
+resetEngagementParams(): void {
+  this.engagementParams.pageNumber = 1;
+  this.engagementParams.pageSize = 5;
+  this.engagementParams.workplace = '';
+  this.engagementParams.employmentStatus = '';
+  this.engagementParams.minSalary = 0;
+  this.engagementParams.maxSalary = 5000;
+}
+
+getEmployeesWithEngagement(): Observable<PaginatedResult<Employee[]>> {
   const paginatedResult: PaginatedResult<Employee[]> = new PaginatedResult<Employee[]>();
 
   let params = new HttpParams();
 
-  if (page != null && itemsPerPage != null){
-    params = params.append('pageNumber', page);
-    params = params.append('pageSize', itemsPerPage);
+  params = params.append('pageNumber', this.engagementParams.pageNumber);
+  params = params.append('pageSize', this.engagementParams.pageSize);
+
+
+  if (this.engagementParams.minSalary && this.engagementParams.maxSalary) {
+    params = params.append('minSalary', this.engagementParams.minSalary);
+    params = params.append('maxSalary', this.engagementParams.maxSalary);
+  }
+
+  if (this.engagementParams.workplace) {
+    params = params.append('workplace', this.engagementParams.workplace);
+  }
+
+  if (this.engagementParams.employmentStatus) {
+    params = params.append('employmentStatus', this.engagementParams.employmentStatus);
   }
 
 
-  if (employeeParams != null)
-  {
-    params = params.append('minSalary', employeeParams.minSalary);
-    params = params.append('maxSalary', employeeParams.maxSalary);
+  // if (employeeParams != null)
+  // {
+  //   params = params.append('minSalary', employeeParams.minSalary);
+  //   params = params.append('maxSalary', employeeParams.maxSalary);
 
-    if (employeeParams.workplace !== '' && employeeParams.employmentStatus !== '') {
-      params = params.append('workplace', employeeParams.workplace);
-      params = params.append('employmentStatus', employeeParams.employmentStatus);
-    } else if (employeeParams.workplace !== '') {
-      params = params.append('workplace', employeeParams.workplace);
-    } else if (employeeParams.employmentStatus !== '') {
-      params = params.append('employmentStatus', employeeParams.employmentStatus);
-    }
-  }
+  //   if (employeeParams.workplace !== '' && employeeParams.employmentStatus !== '') {
+  //     params = params.append('workplace', employeeParams.workplace);
+  //     params = params.append('employmentStatus', employeeParams.employmentStatus);
+  //   } else if (employeeParams.workplace !== '') {
+  //     params = params.append('workplace', employeeParams.workplace);
+  //   } else if (employeeParams.employmentStatus !== '') {
+  //     params = params.append('employmentStatus', employeeParams.employmentStatus);
+  //   }
+  // }
 
   return this.http.get<Employee[]>(this.baseUrl + 'engagements/with', {observe: 'response', params})
     .pipe(
@@ -53,14 +83,22 @@ getEmployeesWithEngagement(page?, itemsPerPage?, employeeParams?): Observable<Pa
     );
 }
 
-getEmployeesWithoutEngagement(page?, itemsPerPage?): Observable<PaginatedResult<Employee[]>> {
+getEmployeesWithoutEngagement(): Observable<PaginatedResult<Employee[]>> {
   const paginatedResult: PaginatedResult<Employee[]> = new PaginatedResult<Employee[]>();
 
   let params = new HttpParams();
 
-  if (page != null && itemsPerPage != null) {
-    params = params.append('pageNumber', page);
-    params = params.append('pageSize', itemsPerPage);
+  params = params.append('pageNumber', this.engagementParams.pageNumber);
+  params = params.append('pageSize', this.engagementParams.pageSize);
+
+  if (this.engagementParams.role) {
+    params = params.append('role', this.engagementParams.role);
+  }
+  if (this.engagementParams.firstName) {
+    params = params.append('firstName', this.engagementParams.firstName);
+  }
+  if (this.engagementParams.lastName) {
+    params = params.append('lastName', this.engagementParams.lastName);
   }
 
   return this.http.get<Employee[]>(this.baseUrl + 'engagements/without', {observe: 'response', params})

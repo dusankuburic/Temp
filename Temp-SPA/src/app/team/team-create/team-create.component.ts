@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/core/models/group';
 import { Team } from 'src/app/core/models/team';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { TeamService } from 'src/app/core/services/team.service';
+import { TeamValidators } from '../team-validators';
 
 @Component({
   selector: 'app-team-create',
@@ -19,7 +20,8 @@ export class TeamCreateComponent implements OnInit {
     private teamService: TeamService,
     private route: ActivatedRoute,
     private alertify: AlertifyService,
-    private fb: UntypedFormBuilder) { }
+    private fb: UntypedFormBuilder,
+    private validators: TeamValidators) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -28,9 +30,14 @@ export class TeamCreateComponent implements OnInit {
     this.createForm();
   }
 
+  name = new FormControl('',[
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)]);
+
   createForm(): void {
     this.createTeamForm = this.fb.group({
-      Name: ['', Validators.required]
+      name: this.name.setAsyncValidators(this.validators.validateNameNotTaken(this.group.id))
     });
   }
 
@@ -46,5 +53,4 @@ export class TeamCreateComponent implements OnInit {
       }
     });
   }
-
 }

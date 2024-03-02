@@ -82,6 +82,11 @@ public partial class GroupService : IGroupService
                 .ProjectTo<InnerTeam>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
+            if (!string.IsNullOrEmpty(request.Name)) {
+                innerTeamsQuery = innerTeamsQuery.Where(x => x.Name.Contains(request.Name))
+                    .AsQueryable();
+            }
+
             var pagedTeams = await PagedList<InnerTeam>.CreateAsync(
                 innerTeamsQuery,
                 request.PageNumber,
@@ -144,9 +149,9 @@ public partial class GroupService : IGroupService
         });
 
 
-    private async Task<bool> GroupExists(string name, int organizationId) {
-        return await _ctx.Groups
-            .AnyAsync(x => x.Name == name && x.OrganizationId == organizationId);
-    }
+    public Task<bool> GroupExists(string name, int organizationId) =>
+        TryCatch(async () => {
+            return await _ctx.Groups.AnyAsync(x => x.Name == name && x.OrganizationId == organizationId);
+        });
 
 }
