@@ -9,7 +9,7 @@ public interface IOrganizationService
     Task<CreateOrganizationResponse> CreateOrganization(CreateOrganizationRequest request);
     Task<PagedList<GetOrganizationResponse>> GetPagedOrganizations(GetOrganizationsRequest request);
     Task<GetPagedInnerGroupsResponse> GetPagedInnerGroups(GetOrganizationInnerGroupsRequest request);
-    Task<GetInnerGroupsResponse> GetInnerGroups(int id);
+    Task<List<InnerGroup>> GetInnerGroups(int id);
     Task<GetOrganizationResponse> GetOrganization(GetOrganizationRequest request);
     Task<IEnumerable<GetOrganizationResponse>> GetOrganizations();
     Task<UpdateOrganizationResponse> UpdateOrganization(UpdateOrganizationRequest request);

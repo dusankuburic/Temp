@@ -13,6 +13,12 @@ export class OrganizationCreateComponent implements OnInit {
   createOrganizationForm: UntypedFormGroup;
   organization: Organization;
 
+  name = new FormControl('',[
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)],
+    [this.validators.validateNameNotTaken()]);
+
   constructor(
     private organizationService: OrganizationService,
     private alertify: AlertifyService,
@@ -20,16 +26,6 @@ export class OrganizationCreateComponent implements OnInit {
     private validators: OrganizationValidators) { }
 
   ngOnInit(): void {
-    this.createForm();
-  }
-
-  name = new FormControl('',[
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(60)],
-    [this.validators.validateNameNotTaken()]);
-
-  createForm(): void {
     this.createOrganizationForm = this.fb.group({
       name: this.name
     });

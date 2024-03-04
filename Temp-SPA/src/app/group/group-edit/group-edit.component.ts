@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/core/models/group';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { GroupService } from 'src/app/core/services/group.service';
+import { GroupValidators } from '../group-validators';
 
 @Component({
   selector: 'app-group-edit',
@@ -12,19 +13,7 @@ import { GroupService } from 'src/app/core/services/group.service';
 export class GroupEditComponent implements OnInit {
   editGroupForm: UntypedFormGroup;
   group: Group;
-
-  constructor(
-    private groupService: GroupService,
-    private route: ActivatedRoute,
-    private fb: UntypedFormBuilder,
-    private alertify: AlertifyService) { }
-
-  ngOnInit(): void {
-    this.route.data.subscribe(data => {
-      this.group = data['group'];
-    });
-    this.createForm();
-  }
+  organizationId: number;
 
   name = new FormControl('',[
     Validators.required,
@@ -32,16 +21,40 @@ export class GroupEditComponent implements OnInit {
     Validators.maxLength(60)
   ]);
 
-  createForm(): void {
+  constructor(
+    private groupService: GroupService,
+    private route: ActivatedRoute,
+    private fb: UntypedFormBuilder,
+    private alertify: AlertifyService,
+    public validators: GroupValidators) { }
+
+  ngOnInit(): void {
     this.editGroupForm = this.fb.group({
-      name: this.name.setValue(this.group.name)
+      name: this.name
+    });
+
+    this.organizationId = parseInt(this.route.snapshot.paramMap.get('organizationId'));
+
+    this.route.data.subscribe(data => {
+      this.group = data['group'];
+      this.setupForm(this.group);
     });
   }
 
+  setupForm(group: Group): void {
+    if (this.editGroupForm)
+      this.editGroupForm.reset();
+
+      this.name.addAsyncValidators(this.validators.validateNameNotTaken(this.organizationId, group.name));
+
+      this.editGroupForm.patchValue({
+        name: group.name
+      });
+  }
+
   update(): void {
-    //TODO: rewrite this
     const groupForm = { ...this.editGroupForm.value };
-    this.group.name = groupForm.Name;
+    this.group.name = groupForm.name;
     this.groupService.updateGroup(this.group.id, this.group).subscribe({
       next: () => {
         this.alertify.success('Successfully updated');
@@ -50,7 +63,6 @@ export class GroupEditComponent implements OnInit {
         this.alertify.error(error.error);
       }
     });
-    
   }
 
 }

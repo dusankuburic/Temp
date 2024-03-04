@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Group, GroupParams, InnerGroups, PagedInnerGroups } from '../models/group';
 import { ModeratorMin } from '../models/moderator';
-import { InnerTeams } from '../models/team';
+import { InnerTeam, InnerTeams } from '../models/team';
 import { Observable, map } from 'rxjs';
 import { PaginatedResult } from '../models/pagination';
 
@@ -28,6 +28,7 @@ resetGroupParams(): void {
   this.groupParams.pageNumber = 1;
   this.groupParams.pageSize = 5;
   this.groupParams.name = '';
+  this.groupParams.withTeams = 'all';
 }
 
 getInnerGroups(organizationId: number): Observable<PagedInnerGroups> {
@@ -38,6 +39,8 @@ getInnerGroups(organizationId: number): Observable<PagedInnerGroups> {
   params = params.append('organizationId', organizationId);
   params = params.append('pageNumber', this.groupParams.pageNumber);
   params = params.append('pageSize', this.groupParams.pageSize);
+
+  params = params.append('withTeams', this.groupParams.withTeams);
 
   if (this.groupParams.name) {
     params = params.append('name', this.groupParams.name);
@@ -67,11 +70,9 @@ checkGroupExists(name: string, organizationId: number): Observable<boolean> {
   return this.http.get<boolean>(this.baseUrl + `groups/group-exists?name=${name}&organizationId=${organizationId}`);
 }
 
-
 getGroup(id: number): Observable<Group> {
   return this.http.get<Group>(this.baseUrl + 'groups/' + id);
 }
-
 
 createGroup(group: Group): Observable<Group> {
   return this.http.post<Group>(this.baseUrl + 'groups', group);
@@ -81,8 +82,8 @@ updateGroup(id: number, group: Group): Observable<void> {
   return this.http.put<void>(this.baseUrl + 'groups/' + id, group);
 }
 
-getInnerTeams(groupId: number): Observable<InnerTeams> {
-  return this.http.get<InnerTeams>(this.baseUrl + 'groups/inner-teams/' + groupId);
+getInnerTeams(groupId: number): Observable<InnerTeam[]> {
+  return this.http.get<InnerTeam[]>(this.baseUrl + 'groups/inner-teams/' + groupId);
 }
 
 getModeratorGroups(moderatorId: number): Observable<Group[]> {

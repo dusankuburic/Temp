@@ -11,6 +11,8 @@ builder.Services.AddMappingsCollection();
 
 builder.Services.AddProgramServices();
 
+builder.Services.ConfigureSwaggerDoc();
+
 builder.Services.ConfigureCORS();
 
 builder.Services.AddControllers()
@@ -52,6 +54,9 @@ using (var scope = app.Services.CreateScope()) {
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
+
+
+app.UseSwaggerDoc();
 
 app.UseHttpsRedirection();
 app.UseRouting();

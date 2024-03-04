@@ -104,17 +104,12 @@ public partial class GroupService : IGroupService
             };
         });
 
-    public Task<GetGroupInnerTeamsResponse> GetGroupInnerTeams(GetGroupInnerTeamsRequest request) =>
+    public Task<List<InnerTeam>> GetGroupInnerTeams(int id) =>
         TryCatch(async () => {
-            var innerTeams = await _ctx.Groups
-                .Include(x => x.Teams)
-                .Where(x => x.Id == request.Id && x.IsActive)
-                .Select(x => new GetGroupInnerTeamsResponse {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Teams = x.Teams.Select(t => new InnerTeam{ Id = t.Id, Name = t.Name })
-                })
-                .FirstOrDefaultAsync();
+            var innerTeams = await _ctx.Teams
+                .Where(x => x.GroupId == id && x.IsActive)
+                .ProjectTo<InnerTeam>(_mapper.ConfigurationProvider)
+                .ToListAsync();
 
             return innerTeams;
         });

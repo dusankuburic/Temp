@@ -24,7 +24,7 @@ export const teamRoutes: Routes = [
     },
     {
         canActivate: [AuthGuard],
-        path: ':id/edit',
+        path: ':id/edit/:groupId/group',
         component: TeamEditComponent,
         resolve: { team: TeamEditResolver}
     },

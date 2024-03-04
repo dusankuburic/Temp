@@ -17,6 +17,11 @@ export class GroupCreateComponent implements OnInit {
   organization: Organization;
   group: Group;
 
+  name = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)]);
+
   constructor(
     private groupService: GroupService,
     private route: ActivatedRoute,
@@ -25,21 +30,18 @@ export class GroupCreateComponent implements OnInit {
     private validators: GroupValidators) { }
 
   ngOnInit(): void {
+    this.createGroupForm = this.fb.group({
+      name: this.name
+    });
+
     this.route.data.subscribe(data => {
       this.organization = data['organization'];
+      this.setupForm(this.organization);
     });
-    this.createForm();
   }
 
-  name = new FormControl('', [
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(60)]);
-
-  createForm(): void {
-    this.createGroupForm = this.fb.group({
-      name: this.name.setAsyncValidators(this.validators.validateNameNotTaken(this.organization.id))
-    });
+  setupForm(organization: Organization): void {
+    this.name.setAsyncValidators(this.validators.validateNameNotTaken(organization.id))
   }
 
   create(): void {

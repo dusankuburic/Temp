@@ -61,9 +61,9 @@ public class GroupsController : ControllerBase
     }
 
     [HttpGet("inner-teams/{id}")]
-    public async Task<IActionResult> InnerTeams([FromRoute] GetGroupInnerTeamsRequest request) {
+    public async Task<IActionResult> InnerTeams([FromRoute] int id) {
         try {
-            var response = await _groupService.GetGroupInnerTeams(request);
+            var response = await _groupService.GetGroupInnerTeams(id);
 
             return Ok(response);
         } catch (GroupValidationException groupValidationException) {

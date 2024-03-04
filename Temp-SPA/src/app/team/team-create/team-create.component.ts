@@ -15,6 +15,11 @@ export class TeamCreateComponent implements OnInit {
   createTeamForm: UntypedFormGroup;
   group: Group;
   team: Team;
+  
+  name = new FormControl('',[
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)]);
 
   constructor(
     private teamService: TeamService,
@@ -24,21 +29,18 @@ export class TeamCreateComponent implements OnInit {
     private validators: TeamValidators) { }
 
   ngOnInit(): void {
+    this.createTeamForm = this.fb.group({
+      name: this.name
+    });
+
     this.route.data.subscribe(data => {
       this.group = data['group'];
+      this.setupForm(this.group);
     });
-    this.createForm();
   }
 
-  name = new FormControl('',[
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(60)]);
-
-  createForm(): void {
-    this.createTeamForm = this.fb.group({
-      name: this.name.setAsyncValidators(this.validators.validateNameNotTaken(this.group.id))
-    });
+  setupForm(group: Group): void {
+    this.name.setAsyncValidators(this.validators.validateNameNotTaken(group.id))
   }
 
   create(): void {

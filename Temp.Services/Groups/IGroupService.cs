@@ -9,7 +9,7 @@ public interface IGroupService
     Task<GetGroupResponse> GetGroup(GetGroupRequest request);
     Task<UpdateGroupResponse> UpdateGroup(UpdateGroupRequest request);
     Task<UpdateGroupStatusResponse> UpdateGroupStatus(UpdateGroupStatusRequest request);
-    Task<GetGroupInnerTeamsResponse> GetGroupInnerTeams(GetGroupInnerTeamsRequest request);
+    Task<List<InnerTeam>> GetGroupInnerTeams(int id);
     Task<GetPagedGroupInnerTeamsResponse> GetPagedGroupInnerTeams(GetPagedGroupInnerTeamsRequest request);
     Task<List<GetModeratorGroupsResponse>> GetModeratorGroups(GetModeratorGroupsRequest request);
     Task<List<GetModeratorFreeGroupsResponse>> GetModeratorFreeGroups(GetModeratorFreeGroupsRequest request);

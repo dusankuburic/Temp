@@ -13,6 +13,12 @@ export class EmploymentStatusCreateComponent implements OnInit {
   createEmploymentStatusForm: UntypedFormGroup;
   employmentStatus: EmploymentStatus;
 
+  name = new FormControl('',[
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)],
+    [this.validators.validateNameNotTaken()]);
+
   constructor(
     private employmentStatusService: EmploymentStatusService,
     private alertify: AlertifyService,
@@ -20,16 +26,6 @@ export class EmploymentStatusCreateComponent implements OnInit {
     private validators: EmploymentStatusValidators) { }
 
   ngOnInit(): void {
-    this.createForm();
-  }
-
-  name = new FormControl('',[
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(60)],
-    [this.validators.validateNameNotTaken()]);
-
-  createForm(): void {
     this.createEmploymentStatusForm = this.fb.group({
       name: this.name
     });

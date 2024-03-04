@@ -24,11 +24,12 @@ export interface PagedInnerTeams {
 }
 
 export interface FullTeam {
-    id: number;
-    organizationName: string;
-    organizationId: number;
-    groupName: string;
+    teamId: number;
     teamName: string;
+    organizationId: number;
+    organizationName: string;
+    groupId: number;
+    groupName: string;
 }
 
 export class TeamParams {

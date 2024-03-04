@@ -7,7 +7,7 @@
         <form class="form" [formGroup]="filtersForm">
             <div class="input-group">
                 <select class="form-control" formControlName="role">
-                    <option *ngFor="let role of roles" [value]="role.value" [disabled]="role.disabled">
+                    <option *ngFor="let role of rolesSelect" [value]="role.value" [disabled]="role.disabled">
                         {{role.display}}
                     </option>
                 </select>
@@ -38,13 +38,14 @@
                 <td>{{employee.firstName}}</td>
                 <td>{{employee.lastName}}</td>
                 <td>
-                    <span class="badge rounded-pill" 
+                    <span class="badge rounded-pill pill-ts" 
                     [ngClass]="{'text-bg-warning': employee.role === 'Admin',
                                     'text-bg-info' : employee.role === 'User',
                                     'text-bg-success' : employee.role === 'Moderator',
                                     'text-bg-secondary': employee.role === 'None'}">
                         {{employee.role}}
                     </span>
+
                 </td>
                 <td>
                     <a class="btn btn-primary" [routerLink]="['/employees/', employee.id, 'edit']"><fa-icon [icon]="editIcon"></fa-icon></a>

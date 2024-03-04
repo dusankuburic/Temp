@@ -23,6 +23,12 @@ export class OrganizationListComponent implements OnInit {
   organizations: Organization[];
   pagination: Pagination;
   organizationParams: OrganizationParams;
+  groupsSelect = [
+    {value: '', display: 'Select with groups', disabled: true },
+    {value: 'all', display: 'All', disabled: false},
+    {value: 'yes', display: 'With groups', disabled: false},
+    {value: 'no', display: 'Without groups', disabled: false}
+  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -32,7 +38,21 @@ export class OrganizationListComponent implements OnInit {
       this.organizationParams = organizationsService.getOrganizationParams();
 
       this.filtersForm = this.fb.group({
+        withGroups: ['', Validators.minLength(1)],
         name: ['', Validators.minLength(1)]
+      })
+
+      const withGroupsControl = this.filtersForm.get('withGroups');
+      withGroupsControl.valueChanges.pipe(
+        debounceTime(100),
+        distinctUntilChanged()
+      ).subscribe((searchFor) => {
+        const params = this.organizationsService.getOrganizationParams();
+        params.pageNumber = 1;
+        this.organizationParams.withGroups = searchFor;
+        this.organizationsService.setOrganizationParams(params);
+        this.organizationParams = params;
+        this.loadOrganizations();
       })
 
       const nameControl = this.filtersForm.get('name');

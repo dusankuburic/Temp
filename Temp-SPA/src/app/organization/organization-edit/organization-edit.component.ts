@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Organization } from 'src/app/core/models/organization';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -13,6 +13,12 @@ export class OrganizationEditComponent implements OnInit {
   editOrganizationForm: UntypedFormGroup;
   organization: Organization;
 
+  name = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)
+  ]);
+
   constructor(
     private organizationService: OrganizationService,
     private route: ActivatedRoute,
@@ -20,22 +26,23 @@ export class OrganizationEditComponent implements OnInit {
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {
+    this.editOrganizationForm = this.fb.group({
+      name: this.name
+    });
+
     this.route.data.subscribe(data => {
       this.organization = data['organization'];
+      this.setupForm(this.organization);
     });
-    this.createForm();
   }
 
-  name = new FormControl('', [
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(60)
-  ]);
+  setupForm(organization: Organization): void {
+    if (this.editOrganizationForm)
+      this.editOrganizationForm.reset();
 
-  createForm(): void {
-    this.editOrganizationForm = this.fb.group({
-      name: this.name.setValue(this.organization.name)
-    });
+      this.editOrganizationForm.patchValue({
+        name: organization.name
+      });
   }
 
   update(): void {

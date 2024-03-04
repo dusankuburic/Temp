@@ -3,11 +3,13 @@
     <h1 class="text-center">Edit Team</h1>
       <div class="row justify-content-center">
           <div class="col-lg-6 col-sm-6 col-8">
-            <form [formGroup]="editTeamForm" (ngSubmit)="update()">
+            <form class="row g-2" [formGroup]="editTeamForm" (ngSubmit)="update()">
               <div class="form-group">
                 <tmp-input [formControl]="name" [label]="'name'" placeholder="'Name'"></tmp-input>
               </div>
-              <button type="submit" [disabled]="!editTeamForm.valid" class="btn btn-success float-right">Save</button>
+              <div class="form-gorup">
+                <button type="submit" [disabled]="!editTeamForm.valid" class="btn btn-success float-right">Save</button>
+              </div>
             </form>
           </div>
       </div>

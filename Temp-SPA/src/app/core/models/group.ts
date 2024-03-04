@@ -31,4 +31,5 @@ export class GroupParams {
     pageNumber: number = 1;
     pageSize: number = 5;
     name: string = '';
+    withTeams: string = 'all';
 }

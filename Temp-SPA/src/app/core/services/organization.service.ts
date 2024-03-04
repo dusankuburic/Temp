@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { InnerGroups } from '../models/group';
+import { InnerGroup, InnerGroups } from '../models/group';
 import { Organization, OrganizationParams } from '../models/organization';
 import { Observable, map } from 'rxjs';
 import { PaginatedResult } from '../models/pagination';
@@ -27,6 +27,7 @@ resetOrganizationParams(): void {
   this.organizationParams.pageNumber = 1;
   this.organizationParams.pageSize = 5;
   this.organizationParams.name = '';
+  this.organizationParams.withGroups = 'all';
 }
 
 getPagedOrganizations(): Observable<PaginatedResult<Organization[]>> {
@@ -36,6 +37,8 @@ getPagedOrganizations(): Observable<PaginatedResult<Organization[]>> {
 
   params = params.append('pageNumber', this.organizationParams.pageNumber);
   params = params.append('pageSize', this.organizationParams.pageSize);
+
+  params = params.append('withGroups', this.organizationParams.withGroups);
 
   if (this.organizationParams.name) {
     params = params.append('name', this.organizationParams.name);
@@ -73,8 +76,8 @@ createOrganization(organization: Organization): Observable<Organization> {
   return this.http.post<Organization>(this.baseUrl + 'organizations', organization);
 }
 
-getInnerGroups(organizationId: number): Observable<InnerGroups> {
-  return this.http.get<InnerGroups>(this.baseUrl + 'organizations/inner-groups/' + organizationId);
+getInnerGroups(organizationId: number): Observable<InnerGroup[]> {
+  return this.http.get<InnerGroup[]>(this.baseUrl + 'organizations/inner-groups/' + organizationId);
 }
 
 changeStatus(id: number): Observable<void> {

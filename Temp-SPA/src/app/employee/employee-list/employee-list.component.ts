@@ -24,7 +24,7 @@ export class EmployeeListComponent implements OnInit {
   filtersForm: FormGroup;
   employees: Employee[];
   unassignRoleDto: UnassignRoleDto;
-  roles = [
+  rolesSelect = [
     {value: '', display: 'Select Role', disabled: true},
     {value: '', display: 'All', disabled: false},
     {value: 'User', display: 'User',  disabled: false},
