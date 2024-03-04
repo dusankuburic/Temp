@@ -94,7 +94,7 @@ public class GroupsController : ControllerBase
     }
 
     [HttpPut("change-status/{id}")]
-    public async Task<IActionResult> UpdateGroupStatus([FromBody] UpdateGroupStatusRequest request) {
+    public async Task<IActionResult> UpdateGroupStatus([FromRoute] UpdateGroupStatusRequest request) {
         try {
             var response = await _groupService.UpdateGroupStatus(request);
 

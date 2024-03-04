@@ -99,7 +99,7 @@ updateModeratorGroups(id: number, groups): Observable<void> {
 }
 
 changeStatus(id: number): Observable<void> {
-  return this.http.put<void>(this.baseUrl + 'groups/change-status/', id);
+  return this.http.put<void>(this.baseUrl + 'groups/change-status/' + id, id);
 }
 
 }

@@ -76,7 +76,7 @@ public class TeamsController : ControllerBase
     }
 
     [HttpPut("change-status/{id}")]
-    public async Task<IActionResult> UpdateTeamStatus([FromBody] UpdateTeamStatusRequest request) {
+    public async Task<IActionResult> UpdateTeamStatus([FromRoute] UpdateTeamStatusRequest request) {
         var response = await _teamService.UpdateTeamStatus(request);
 
         return NoContent();

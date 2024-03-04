@@ -39,7 +39,6 @@ public partial class OrganizationService : IOrganizationService
     public Task<PagedList<GetOrganizationResponse>> GetPagedOrganizations(GetOrganizationsRequest request) =>
         TryCatch(async () => {
             var organizationsQuery = _ctx.Organizations
-                .Include(x => x.Groups.Where(x => x.IsActive))
                 .Where(x => x.IsActive)
                 .AsQueryable();
 
@@ -49,10 +48,10 @@ public partial class OrganizationService : IOrganizationService
             }
 
             organizationsQuery = request.WithGroups switch {
-                "all" => organizationsQuery.Where(x => x.Groups.Count == 0 || x.Groups.Count > 0).AsQueryable(),
-                "yes" => organizationsQuery.Where(x => x.Groups.Count > 0).AsQueryable(),
-                "no" => organizationsQuery.Where(x => x.Groups.Count == 0).AsQueryable(),
-                _ => organizationsQuery.Where(x => x.Groups.Count == 0 || x.Groups.Count > 0).AsQueryable()
+                "all" => organizationsQuery,
+                "yes" => organizationsQuery.Where(x => x.HasActiveGroup == true).AsQueryable(),
+                "no" => organizationsQuery.Where(x => x.HasActiveGroup == false).AsQueryable(),
+                _ => organizationsQuery
             };
 
             return await PagedList<GetOrganizationResponse>.CreateAsync(
@@ -64,7 +63,6 @@ public partial class OrganizationService : IOrganizationService
     public Task<GetPagedInnerGroupsResponse> GetPagedInnerGroups(GetOrganizationInnerGroupsRequest request) =>
         TryCatch(async () => {
             var innerGroupsQurey = _ctx.Groups
-                .Include(x => x.Teams.Where(x => x.IsActive))
                 .Where(x => x.OrganizationId == request.OrganizationId && x.IsActive)
                 .AsQueryable();
 
@@ -74,10 +72,10 @@ public partial class OrganizationService : IOrganizationService
             }
 
             innerGroupsQurey = request.WithTeams switch {
-                "all" => innerGroupsQurey.Where(x => x.Teams.Count == 0 || x.Teams.Count > 0).AsQueryable(),
-                "yes" => innerGroupsQurey.Where(x => x.Teams.Count > 0).AsQueryable(),
-                "no" => innerGroupsQurey.Where(x => x.Teams.Count == 0).AsQueryable(),
-                _ => innerGroupsQurey.Where(x => x.Teams.Count == 0 || x.Teams.Count > 0).AsQueryable()
+                "all" => innerGroupsQurey,
+                "yes" => innerGroupsQurey.Where(x => x.HasActiveTeam == true).AsQueryable(),
+                "no" => innerGroupsQurey.Where(x => x.HasActiveTeam == false).AsQueryable(),
+                _ => innerGroupsQurey
             };
 
             var pagedGroups = await PagedList<InnerGroup>.CreateAsync(
@@ -127,7 +125,7 @@ public partial class OrganizationService : IOrganizationService
         TryCatch(async () => {
             var organizations = await _ctx.Organizations
                 .Include(x => x.Groups.Where(x => x.IsActive))
-                .Where(x => x.IsActive && x.Groups.Count > 0)
+                .Where(x => x.IsActive && x.HasActiveGroup && x.Groups.Any(x => x.HasActiveTeam == true))
                 .ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 

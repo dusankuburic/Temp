@@ -31,6 +31,16 @@ public partial class TeamService : ITeamService
              _ctx.Teams.Add(team);
              await _ctx.SaveChangesAsync();
 
+             var group = await _ctx.Groups
+                .Include(x => x.Organization)
+                .Where(x => x.Id == request.GroupId)
+                .FirstOrDefaultAsync();
+
+             group.HasActiveTeam = true;
+             group.Organization.HasActiveGroup = true;
+
+             await _ctx.SaveChangesAsync();
+
              return _mapper.Map<CreateTeamResponse>(team);
          });
 
@@ -96,7 +106,23 @@ public partial class TeamService : ITeamService
                 .FirstOrDefaultAsync();
 
         team.IsActive = !team.IsActive;
+        await _ctx.SaveChangesAsync();
 
+
+        var group = await _ctx.Groups
+            .Include(x => x.Organization)
+            .Where(x => x.Id == team.GroupId)
+            .FirstOrDefaultAsync();
+
+        group.HasActiveTeam = await _ctx.Groups
+            .Include(x => x.Teams)
+            .Where(x => x.Id == group.Id)
+            .AnyAsync(x => x.Teams.Any(x => x.IsActive));
+
+        group.Organization.HasActiveGroup = await _ctx.Organizations
+            .Include(x => x.Groups)
+            .Where(x => x.Id == group.Organization.Id)
+            .AnyAsync(x => x.Groups.Any(x => x.IsActive && x.HasActiveTeam));
         await _ctx.SaveChangesAsync();
 
         return new UpdateTeamStatusResponse();

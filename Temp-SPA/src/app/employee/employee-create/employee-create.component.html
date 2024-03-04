@@ -41,7 +41,7 @@
           <div class="invalid-feedback">Please choose a organization</div>                     
         </div>
 
-        <div class="form-group" *ngIf="organizations?.length > 0">
+        <div class="form-group" *ngIf="createEmployeeForm.get('organizationId').value">
           <h4>Groups</h4>        
           <select
             [ngClass]="{'is-invalid': createEmployeeForm.get('groupId').errors && createEmployeeForm.get('groupId').touched}"
@@ -56,7 +56,7 @@
           <div class="invalid-feedback">Please choose a group</div>                     
         </div>
 
-        <div class="form-group" *ngIf="innerTeams?.length > 0">
+        <div class="form-group" *ngIf="createEmployeeForm.get('groupId').value">
           <h4>Teams</h4>        
           <select
             [ngClass]="{'is-invalid': createEmployeeForm.get('teamId').errors && createEmployeeForm.get('teamId').touched}"

@@ -112,6 +112,8 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   loadInnerGroups(id): void {
+    if (id == null)
+      return;
     this.innerTeams = [];
     this.organizationService.getInnerGroups(id).subscribe((res) => {
       if (res !== null) {
@@ -124,6 +126,8 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   loadInnerTeams(id): void {
+    if (id == null)
+      return;
     this.groupService.getInnerTeams(id).subscribe((res) => {
       if (res !== null) {
         this.innerTeams = res;
