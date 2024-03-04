@@ -51,8 +51,8 @@ export class EngagementCreateComponent implements OnInit {
   }
 
   loadEmployee(): void {
-    //this.employeeData.Employee.Id
-    this.employeeService.getEmployee(6).subscribe({
+    const employeeId = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.employeeService.getEmployee(employeeId).subscribe({
         next: (res: any) => {
           this.employee = res;
         },
@@ -85,7 +85,7 @@ export class EngagementCreateComponent implements OnInit {
   }
 
   loadEngagements(): void {
-    this.engagementService.getEngagementForEmployee(this.employeeData.Employee.Id).subscribe({
+    this.engagementService.getEngagementForEmployee(this.employee.id).subscribe({
       next: (res: any) => {
         this.employeeData = res;
       },
@@ -106,7 +106,7 @@ export class EngagementCreateComponent implements OnInit {
   }
 
   create(): void {
-    this.engagement = { ...this.createEngagementForm.value, id: this.employeeData.Employee.Id };
+    this.engagement = { ...this.createEngagementForm.value, employeeId: this.employee.id };
     this.engagementService.createEngagement(this.engagement).subscribe({
       next: () => {
         this.loadEngagements();

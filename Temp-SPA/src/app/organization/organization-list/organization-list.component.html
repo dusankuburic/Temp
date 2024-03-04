@@ -5,6 +5,11 @@
     <div class="col-lg-7">
         <form class="form" [formGroup]="filtersForm">
             <div class="input-group">
+                <select class="form-control" formControlName="withGroups">
+                    <option *ngFor="let opt of groupsSelect" [value]="opt.value" [disabled]="opt.disabled">
+                        {{opt.display}}
+                    </option>
+                </select>
                 <input type="text" placeholder="Name" class="form-control" formControlName="name">
             </div>
         </form>
@@ -36,7 +41,7 @@
                 <td>
                     <div class="btn-group" role="group">
                         <a class="btn btn-warning" [routerLink]="['/groups/organization/', organization.id]"><fa-icon [icon]="innerGroupsIcon"></fa-icon></a>
-                        <a class="btn btn-info" [routerLink]="['/groups/create/organization/', organization.id]"><fa-icon [icon]="createGroupIcon"></fa-icon></a>
+                        <a class="btn btn-info" [routerLink]="['/groups/create/organization/', organization.id]"><fa-icon [icon]="plusIcon"></fa-icon></a>
                     </div>
                 </td>
             </tr>

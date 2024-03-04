@@ -25,7 +25,7 @@ export const groupRoutes: Routes = [
     },
     { 
         canActivate: [AuthGuard],
-        path: ':id/edit', 
+        path: ':id/edit/:organizationId/organization', 
         component: GroupEditComponent, 
         resolve: { group: GroupEditResolver }
     },

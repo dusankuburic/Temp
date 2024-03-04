@@ -7,7 +7,7 @@
         <form class="form" [formGroup]="filtersForm">
             <div class="input-group">
                 <select class="form-control" formControlName="role">
-                    <option *ngFor="let role of roles" [value]="role.value" [disabled]="role.disabled">
+                    <option *ngFor="let role of rolesSelect" [value]="role.value" [disabled]="role.disabled">
                         {{role.display}}
                     </option>
                 </select>

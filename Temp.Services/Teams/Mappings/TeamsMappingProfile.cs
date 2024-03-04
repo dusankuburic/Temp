@@ -13,7 +13,9 @@ public class TeamsMappingProfile : Profile
             .ForMember(a => a.OrganizationName, o => o.MapFrom(s => s.Group.Organization.Name))
             .ForMember(a => a.OrganizationId, o => o.MapFrom(s => s.Group.Organization.Id))
             .ForMember(a => a.GroupName, o => o.MapFrom(s => s.Group.Name))
-            .ForMember(a => a.TeamName, o => o.MapFrom(s => s.Name));
+            .ForMember(a => a.GroupId, o => o.MapFrom(s => s.Group.Id))
+            .ForMember(a => a.TeamName, o => o.MapFrom(s => s.Name))
+            .ForMember(a => a.TeamId, o => o.MapFrom(s => s.Id));
         CreateMap<Team, GetTeamResponse>()
             .ForMember(a => a.GroupId, o => o.MapFrom(s => s.Group.Id));
         CreateMap<User, GetUserTeamResponse>()

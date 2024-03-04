@@ -15,4 +15,5 @@ public class GetOrganizationInnerGroupsRequest
     }
 
     public string Name { get; set; }
+    public string WithTeams { get; set; } = "all";
 }

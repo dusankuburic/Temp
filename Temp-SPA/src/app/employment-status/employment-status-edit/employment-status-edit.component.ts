@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmploymentStatusService } from 'src/app/core/services/employment-status.service';
+import { EmploymentStatusValidators } from '../employment-status-validators';
 
 @Component({
   selector: 'app-employment-status-edit',
@@ -13,29 +14,40 @@ export class EmploymentStatusEditComponent implements OnInit {
   editEmploymentStatusForm: UntypedFormGroup;
   employmentStatus: EmploymentStatus;
 
-  constructor(
-    private employmentStatusService: EmploymentStatusService,
-    private route: ActivatedRoute,
-    private fb: UntypedFormBuilder,
-    private alertify: AlertifyService) { }
-
-  ngOnInit(): void {
-    this.route.data.subscribe(data => {
-      this.employmentStatus = data['employmentStatus'];
-    });
-    this.createForm();
-  }
-
   name = new FormControl('', [
     Validators.required,
     Validators.minLength(3),
     Validators.maxLength(60)
   ])
 
-  createForm(): void {
+  constructor(
+    private employmentStatusService: EmploymentStatusService,
+    private route: ActivatedRoute,
+    private fb: UntypedFormBuilder,
+    private alertify: AlertifyService,
+    private validators: EmploymentStatusValidators) { }
+
+  ngOnInit(): void {
     this.editEmploymentStatusForm = this.fb.group({
-      name: this.name.setValue(this.employmentStatus.name)
+      name: this.name
     });
+
+    this.route.data.subscribe(data => {
+      this.employmentStatus = data['employmentStatus'];
+    });
+    this.setupForm(this.employmentStatus);
+  }
+
+
+  setupForm(employmentStatus: EmploymentStatus): void {
+    if (this.editEmploymentStatusForm)
+      this.editEmploymentStatusForm.reset();
+
+      this.name.addAsyncValidators(this.validators.validateNameNotTaken(employmentStatus.name));
+
+      this.editEmploymentStatusForm.patchValue({
+        name: employmentStatus.name
+      });
   }
 
   update(): void {
