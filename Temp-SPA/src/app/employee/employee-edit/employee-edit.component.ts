@@ -3,10 +3,10 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
-import { Group, ModeratorGroups } from 'src/app/core/models/group';
+import { Group, InnerGroup, ModeratorGroups } from 'src/app/core/models/group';
 import { Moderator, ModeratorMin } from 'src/app/core/models/moderator';
 import { Organization } from 'src/app/core/models/organization';
-import { FullTeam, Team } from 'src/app/core/models/team';
+import { FullTeam, InnerTeam, Team } from 'src/app/core/models/team';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
 import { GroupService } from 'src/app/core/services/group.service';
@@ -27,8 +27,8 @@ export class EmployeeEditComponent implements OnInit {
   fullTeam: FullTeam;
   Moderator: Moderator;
   organizations: Organization[];
-  innerGroups: Group[];
-  innerTeams: Team[];
+  innerGroups: InnerGroup[];
+  innerTeams: InnerTeam[];
   currentModeratorGroups: Group[];
   freeModeratorGroups: Group[];
 
@@ -44,9 +44,11 @@ export class EmployeeEditComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.employee = data['employee'];
-      this.organizations = data['organizations'];
     });
-
+    this.organizationService.getOrganizations().subscribe((res) => {
+      this.organizations = res;
+    });
+ 
     this.createForm();
 
     if (this.employee.role === 'Moderator') {
@@ -69,18 +71,20 @@ export class EmployeeEditComponent implements OnInit {
   loadFullTeam(id): void {
     this.teamService.getFullTeam(id).subscribe((res) => {
       this.fullTeam = res;
+      this.loadOrgData(this.fullTeam);
     });
   }
 
   async loadModeratorGroups(id, EmployeeId: number) {
-    let moderatorMin = {} as ModeratorMin;
+    let moderatorMin: ModeratorMin; 
 
     await lastValueFrom(this.teamService.getFullTeam(id)).then((fullTeam) => {
       this.fullTeam = fullTeam;
+      this.loadOrgData(this.fullTeam);
 
       firstValueFrom(this.employeeService.getModerator(EmployeeId)).then((moderator) => {
         this.Moderator = moderator;
-        moderatorMin.id = moderator.id;
+        moderatorMin = {id: moderator.id};
 
         firstValueFrom(this.groupService.getModeratorGroups(moderator.id)).then((currModerGroup) => {
           this.currentModeratorGroups = currModerGroup;
@@ -99,12 +103,19 @@ export class EmployeeEditComponent implements OnInit {
     });
   }
 
+  loadOrgData(fullTeam: FullTeam) {
+    this.editEmployeeForm.get('organizationId').setValue(fullTeam.organizationId);
+    this.loadInnerGroups(fullTeam.organizationId);
+    this.editEmployeeForm.get('groupId').setValue(fullTeam.groupId);
+    this.loadInnerTeams(fullTeam.groupId);
+    this.editEmployeeForm.get('teamId').setValue(fullTeam.teamId);
+  }
 
   loadInnerGroups(id): void {
     this.innerTeams = [];
-    this.organizationService.getInnerGroups(this.sliceStringId(id)).subscribe((res) => {
+    this.organizationService.getInnerGroups(id).subscribe((res) => {
       if (res !== null) {
-        this.innerGroups = res.groups;
+        this.innerGroups = res;
       } else {
         this.innerGroups = [];
         this.innerTeams = [];
@@ -113,18 +124,15 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   loadInnerTeams(id): void {
-    this.groupService.getInnerTeams(this.sliceStringId(id)).subscribe((res) => {
+    this.groupService.getInnerTeams(id).subscribe((res) => {
       if (res !== null) {
-        this.innerTeams = res.teams;
+        this.innerTeams = res;
       } else {
         this.innerTeams = [];
       }
     });
   }
 
-  sliceStringId(str): number {
-    return str.slice(3, str.length);
-  }
 
   updateGroup(moderatorId: number, newGroupId: number): void {
     let moderatorGroups = {} as ModeratorGroups;

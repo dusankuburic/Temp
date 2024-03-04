@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Workplace } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
+import { WorkplaceValidators } from '../workplace-validators';
 
 @Component({
   selector: 'app-workplace-edit',
@@ -13,27 +14,37 @@ export class WorkplaceEditComponent implements OnInit {
   editWorkplaceForm: UntypedFormGroup;
   workplace: Workplace;
 
+  name = new FormControl('', [
+    Validators.required, 
+    Validators.minLength(3), 
+    Validators.maxLength(60)]);
+
   constructor(
     private workplaceService: WorkplaceService,
     private route: ActivatedRoute,
     private fb: UntypedFormBuilder,
-    private alertify: AlertifyService) { }
+    private alertify: AlertifyService,
+    private validators: WorkplaceValidators) { }
 
   ngOnInit(): void {
+    this.editWorkplaceForm = this.fb.group({
+      name: this.name
+    });
+
     this.route.data.subscribe(data => {
       this.workplace = data['workplace'];
+      this.setupForm(this.workplace);
     });
-    this.createForm();
   }
 
-  name = new FormControl('', [
-    Validators.required, 
-    Validators.minLength(3), 
-    Validators.maxLength(60)])
+  setupForm(workplace: Workplace): void {
+    if (this.editWorkplaceForm) 
+      this.editWorkplaceForm.reset();
+     
+    this.name.addAsyncValidators(this.validators.validateNameNotTaken(workplace.name))
 
-  createForm(): void {
-    this.editWorkplaceForm = this.fb.group({
-      name: this.name.setValue(this.workplace.name)
+    this.editWorkplaceForm.patchValue({
+      name: workplace.name
     });
   }
 

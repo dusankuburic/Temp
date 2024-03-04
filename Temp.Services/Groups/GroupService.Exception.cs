@@ -12,7 +12,7 @@ public partial class GroupService
     public delegate Task<UpdateGroupResponse> ReturningUpdateGroupFunction();
     public delegate Task<UpdateGroupStatusResponse> ReturningUpdateGroupStatusFunction();
     public delegate Task<GetPagedGroupInnerTeamsResponse> ReturningPagedGroupInnerTeamsFunction();
-    public delegate Task<GetGroupInnerTeamsResponse> ReturningGroupInnerTeamsFunction();
+    public delegate Task<List<InnerTeam>> ReturningGroupInnerTeamsFunction();
     public delegate Task<List<GetModeratorGroupsResponse>> ReturningModeratorGroupsFunction();
     public delegate Task<List<GetModeratorFreeGroupsResponse>> ReturningModeratorFreeGroupsFunction();
     public delegate Task<bool> ReturningGroupExistsFunction();
@@ -81,7 +81,7 @@ public partial class GroupService
         }
     }
 
-    public async Task<GetGroupInnerTeamsResponse> TryCatch(ReturningGroupInnerTeamsFunction returningGroupInnerTeamsFunction) {
+    public async Task<List<InnerTeam>> TryCatch(ReturningGroupInnerTeamsFunction returningGroupInnerTeamsFunction) {
         try {
             return await returningGroupInnerTeamsFunction();
         } catch (SqlException sqlException) {

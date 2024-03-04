@@ -39,8 +39,8 @@ public partial class OrganizationService : IOrganizationService
     public Task<PagedList<GetOrganizationResponse>> GetPagedOrganizations(GetOrganizationsRequest request) =>
         TryCatch(async () => {
             var organizationsQuery = _ctx.Organizations
+                .Include(x => x.Groups.Where(x => x.IsActive))
                 .Where(x => x.IsActive)
-                .ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(request.Name)) {
@@ -48,8 +48,15 @@ public partial class OrganizationService : IOrganizationService
                     .AsQueryable();
             }
 
+            organizationsQuery = request.WithGroups switch {
+                "all" => organizationsQuery.Where(x => x.Groups.Count == 0 || x.Groups.Count > 0).AsQueryable(),
+                "yes" => organizationsQuery.Where(x => x.Groups.Count > 0).AsQueryable(),
+                "no" => organizationsQuery.Where(x => x.Groups.Count == 0).AsQueryable(),
+                _ => organizationsQuery.Where(x => x.Groups.Count == 0 || x.Groups.Count > 0).AsQueryable()
+            };
+
             return await PagedList<GetOrganizationResponse>.CreateAsync(
-                organizationsQuery,
+                organizationsQuery.ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider),
                 request.PageNumber,
                 request.PageSize);
         });
@@ -57,8 +64,8 @@ public partial class OrganizationService : IOrganizationService
     public Task<GetPagedInnerGroupsResponse> GetPagedInnerGroups(GetOrganizationInnerGroupsRequest request) =>
         TryCatch(async () => {
             var innerGroupsQurey = _ctx.Groups
+                .Include(x => x.Teams.Where(x => x.IsActive))
                 .Where(x => x.OrganizationId == request.OrganizationId && x.IsActive)
-                .ProjectTo<InnerGroup>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(request.Name)) {
@@ -66,8 +73,15 @@ public partial class OrganizationService : IOrganizationService
                     .AsQueryable();
             }
 
+            innerGroupsQurey = request.WithTeams switch {
+                "all" => innerGroupsQurey.Where(x => x.Teams.Count == 0 || x.Teams.Count > 0).AsQueryable(),
+                "yes" => innerGroupsQurey.Where(x => x.Teams.Count > 0).AsQueryable(),
+                "no" => innerGroupsQurey.Where(x => x.Teams.Count == 0).AsQueryable(),
+                _ => innerGroupsQurey.Where(x => x.Teams.Count == 0 || x.Teams.Count > 0).AsQueryable()
+            };
+
             var pagedGroups = await PagedList<InnerGroup>.CreateAsync(
-                innerGroupsQurey,
+                innerGroupsQurey.ProjectTo<InnerGroup>(_mapper.ConfigurationProvider),
                 request.PageNumber,
                 request.PageSize);
 
@@ -83,14 +97,13 @@ public partial class OrganizationService : IOrganizationService
             };
         });
 
-    public Task<GetInnerGroupsResponse> GetInnerGroups(int id) =>
+    public Task<List<InnerGroup>> GetInnerGroups(int id) =>
         TryCatch(async () => {
-            var innerGroups = await _ctx.Organizations
-                .AsNoTracking()
-                .Include(x => x.Groups)
-                .Where(x => x.Id == id && x.IsActive)
-                .ProjectTo<GetInnerGroupsResponse>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+            var innerGroups = await _ctx.Groups
+                .Include(x => x.Teams.Where(x => x.IsActive))
+                .Where(x => x.OrganizationId == id && x.IsActive && x.Teams.Count > 0)
+                .ProjectTo<InnerGroup>(_mapper.ConfigurationProvider)
+                .ToListAsync();
 
             return innerGroups;
         });
@@ -113,9 +126,9 @@ public partial class OrganizationService : IOrganizationService
     public Task<IEnumerable<GetOrganizationResponse>> GetOrganizations() =>
         TryCatch(async () => {
             var organizations = await _ctx.Organizations
-                .Where(x => x.IsActive)
+                .Include(x => x.Groups.Where(x => x.IsActive))
+                .Where(x => x.IsActive && x.Groups.Count > 0)
                 .ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider)
-                .AsNoTracking()
                 .ToListAsync();
 
             ValidateStorageOrganizations(organizations);

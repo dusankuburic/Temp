@@ -1,5 +1,4 @@
-﻿
-namespace Temp.Domain.Models;
+﻿namespace Temp.Domain.Models;
 
 public class Organization : BaseEntity
 {
@@ -10,4 +9,6 @@ public class Organization : BaseEntity
     public bool IsActive { get; set; } = true;
 
     public ICollection<Group> Groups { get; set; }
+
+    public bool HasActiveGroup { get; set; }
 }

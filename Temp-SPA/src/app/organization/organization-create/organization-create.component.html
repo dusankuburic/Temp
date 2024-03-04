@@ -1,11 +1,13 @@
 <div class="row justify-content-center">
   <div class="col-lg-4">
     <h1 class="text-center">Create Organization</h1>
-    <form [formGroup]="createOrganizationForm" (ngSubmit)="create()">
+    <form class="row g-2" [formGroup]="createOrganizationForm" (ngSubmit)="create()">
       <div class="form-group">
         <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Name'"></tmp-input>
       </div>
-      <button type="submit" [disabled]="!createOrganizationForm.valid" class="btn btn-success float-right">Create</button>
+      <div class="form-group">
+        <button type="submit" [disabled]="!createOrganizationForm.valid" class="btn btn-success float-right">Create</button>
+      </div>
     </form>
   </div>
 </div>

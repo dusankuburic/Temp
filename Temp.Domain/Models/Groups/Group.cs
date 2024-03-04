@@ -15,5 +15,7 @@ public class Group : BaseEntity
 
     public ICollection<Team> Teams { get; set; }
 
+    public bool HasActiveTeam { get; set; }
+
     public ICollection<ModeratorGroup> ModeratorGroups { get; set; }
 }

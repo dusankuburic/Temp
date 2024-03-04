@@ -13,4 +13,5 @@ public class GetOrganizationsRequest
     }
 
     public string Name { get; set; }
+    public string WithGroups { get; set; } = "all";
 }

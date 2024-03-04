@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { Employee } from 'src/app/core/models/employee';
-import { Group } from 'src/app/core/models/group';
+import { InnerGroup } from 'src/app/core/models/group';
 import { Organization } from 'src/app/core/models/organization';
-import { Team } from 'src/app/core/models/team';
+import { InnerTeam, Team } from 'src/app/core/models/team';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
 import { GroupService } from 'src/app/core/services/group.service';
@@ -18,21 +17,20 @@ export class EmployeeCreateComponent implements OnInit {
   createEmployeeForm: UntypedFormGroup;
   employee: Employee;
   organizations: Organization[];
-  innerGroups: Group[];
-  innerTeams: Team[];
+  innerGroups: InnerGroup[];
+  innerTeams: InnerTeam[];
 
   constructor(
-    private route: ActivatedRoute,
     private employeeService: EmployeeService,
-    private organizationService: OrganizationService,
+    private organizationService: OrganizationService, 
     private groupService: GroupService,
     private alertify: AlertifyService,
     private fb: UntypedFormBuilder) { }
 
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
-      this.organizations = data['organizations'];
-    });
+   this.organizationService.getOrganizations().subscribe((res) => {
+    this.organizations = res;
+   })
     this.createForm();
   }
 
@@ -48,9 +46,9 @@ export class EmployeeCreateComponent implements OnInit {
 
   loadInnerGroups(id): void {
     this.innerTeams = [];
-    this.organizationService.getInnerGroups(this.sliceStringId(id)).subscribe((res) => {
+    this.organizationService.getInnerGroups(id).subscribe((res) => {
       if (res !== null) {
-        this.innerGroups = res.groups;
+        this.innerGroups = res;
       } else {
         this.innerGroups = [];
         this.innerTeams = [];
@@ -59,20 +57,13 @@ export class EmployeeCreateComponent implements OnInit {
   }
 
   loadInnerTeams(id): void {
-    this.groupService.getInnerTeams(this.sliceStringId(id)).subscribe((res) => {
+    this.groupService.getInnerTeams(id).subscribe((res) => {
       if (res !== null) {
-        this.innerTeams = res.teams;
+        this.innerTeams = res;
       } else {
-        this.innerTeams = [];
+       this.innerTeams = [];
       }
     });
-  }
-
-  // input => 1: 4343, 3: 3, 2: 5
-  // output => 4343, 3, 5
-
-  sliceStringId(str): number {
-    return str.slice(3, str.length);
   }
 
   create(): void {

@@ -13,6 +13,12 @@ export class WorkplaceCreateComponent implements OnInit {
   createWorkplaceForm: UntypedFormGroup;
   workplace: Workplace;
 
+  name = new FormControl('', [
+    Validators.required, 
+    Validators.minLength(3), 
+    Validators.maxLength(60)], 
+    [this.validators.validateNameNotTaken()]);
+
   constructor(
     private workplaceService: WorkplaceService,
     private alertify: AlertifyService,
@@ -20,16 +26,6 @@ export class WorkplaceCreateComponent implements OnInit {
     private validators: WorkplaceValidators) { }
 
   ngOnInit(): void {
-    this.createForm();
-  }
-
-  name = new FormControl('', [
-    Validators.required, 
-    Validators.minLength(3), 
-    Validators.maxLength(60)], 
-    [this.validators.validateNameNotTaken()])
-
-  createForm(): void {
     this.createWorkplaceForm = this.fb.group({
       name: this.name
     });

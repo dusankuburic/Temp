@@ -35,7 +35,7 @@
                 <td>{{employee.firstName}}</td>
                 <td>{{employee.lastName}}</td>
                 <td>
-                    <span class="badge rounded-pill" [ngClass]="{'text-bg-warning': employee.role === 'Admin',
+                    <span class="badge rounded-pill pill-ts" [ngClass]="{'text-bg-warning': employee.role === 'Admin',
                                     'text-bg-info' : employee.role === 'User',
                                     'text-bg-success' : employee.role === 'Moderator',
                                     'text-bg-secondary': employee.role === 'None'}">

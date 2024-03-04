@@ -25,6 +25,12 @@ export class GroupListComponent implements OnInit {
   pagination: Pagination;
   organization: Organization;
   groupParams: GroupParams;
+  teamSelect = [
+    {value: '', display: 'Select with teams', disabled: true},
+    {value: 'all', display: 'All', disabled: false},
+    {value: 'yes', display: 'With teams', disabled: false},
+    {value: 'no', display: 'Without teams', disabled: false},
+  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -34,8 +40,22 @@ export class GroupListComponent implements OnInit {
       this.groupParams = groupService.getGroupParams();
 
       this.filtersForm = this.fb.group({
+        withTeams: ['', Validators.minLength(1)],
         name: ['', Validators.minLength(1)]
       })
+
+      const withTeamsControl = this.filtersForm.get('withTeams');
+      withTeamsControl.valueChanges.pipe(
+        debounceTime(100),
+        distinctUntilChanged()
+      ).subscribe((searchFor) => {
+        const params = this.groupService.getGroupParams();
+        params.pageNumber = 1;
+        this.groupParams.withTeams = searchFor;
+        this.groupService.setGroupParams(params);
+        this.groupParams = params;
+        this.loadGroups();
+      });
 
       const nameControl = this.filtersForm.get('name');
       nameControl.valueChanges.pipe(
