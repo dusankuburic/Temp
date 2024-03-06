@@ -36,7 +36,7 @@
           <td>
             <div class="btn-group" role="group">
               <a class="btn btn-primary" [routerLink]="['/groups', group.id, 'edit', organization.id, 'organization']"><fa-icon [icon]="editGroupIcon"></fa-icon></a>
-              <a class="btn btn-success" (click)="changeStatus(group.id)"><fa-icon [icon]="archiveGroupIcon"></fa-icon></a>
+              <a class="btn btn-danger" (click)="changeStatus(group.id)"><fa-icon [icon]="archiveGroupIcon"></fa-icon></a>
             </div>
           </td>
           <td>

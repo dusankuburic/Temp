@@ -1,5 +1,4 @@
 ﻿global using System;
-global using System.Collections;
 global using System.Collections.Generic;
 global using System.ComponentModel.DataAnnotations;
 global using System.IdentityModel.Tokens.Jwt;
@@ -13,4 +12,3 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.IdentityModel.Tokens;
 global using Newtonsoft.Json;
-global using Newtonsoft.Json.Serialization;

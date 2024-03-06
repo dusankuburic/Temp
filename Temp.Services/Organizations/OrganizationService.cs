@@ -151,17 +151,20 @@ public partial class OrganizationService : IOrganizationService
          });
 
 
-    public async Task<UpdateOrganizationStatusResponse> UpdateOrganizationStatus(UpdateOrganizationStatusRequest request) {
-        var ortanization = await _ctx.Organizations
+    public Task<UpdateOrganizationStatusResponse> UpdateOrganizationStatus(UpdateOrganizationStatusRequest request) =>
+        TryCatch(async () => {
+            var organization = await _ctx.Organizations
             .Where(x => x.Id == request.Id)
             .FirstOrDefaultAsync();
 
-        ortanization.IsActive = !ortanization.IsActive;
+            organization.IsActive = !organization.IsActive;
 
-        await _ctx.SaveChangesAsync();
+            ValidateOrganizationOnUpdate(organization);
 
-        return new UpdateOrganizationStatusResponse();
-    }
+            await _ctx.SaveChangesAsync();
+
+            return new UpdateOrganizationStatusResponse();
+        });
 
     public Task<bool> OrganizationExists(string name) =>
         TryCatch(async () => {

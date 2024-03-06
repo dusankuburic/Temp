@@ -9,7 +9,7 @@ import { TmpInputComponent } from "./tmp-input/tmp-input.component";
 @NgModule({
     declarations: [
       TmpPaginationComponent,
-      TmpInputComponent,
+      TmpInputComponent
     ],
     imports: [
       CommonModule,
@@ -25,7 +25,7 @@ import { TmpInputComponent } from "./tmp-input/tmp-input.component";
       PaginationModule,
       FontAwesomeModule,
       TmpPaginationComponent,
-      TmpInputComponent,
+      TmpInputComponent
     ]
   })
   export class SharedModule { }

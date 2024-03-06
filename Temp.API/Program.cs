@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Temp.API.Bootstrap;
 using Temp.API.Middleware;
+using Temp.Services.Integrations.Azure.AzureStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,7 @@ builder.Services.ConfigureSwaggerDoc();
 builder.Services.ConfigureCORS();
 
 builder.Services.AddControllers()
-    .ConfigureSerilizaiton()
+    .ConfigureSerialization()
     .ConfigureFluentValidation();
 
 
@@ -25,7 +26,11 @@ builder.Services.AddAuthSetup(builder.Configuration);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
 
+builder.Services.AddScoped<IAzureStorageService>(opt => new AzureStorageService(builder.Configuration["ConnectionStrings:AzureConnection"]));
+
 builder.Services.AddHealthChecks();
+
+builder.Services.AddDataProtection();
 
 var app = builder.Build();
 
@@ -60,6 +65,7 @@ app.UseSwaggerDoc();
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -73,7 +79,7 @@ app.MapHealthChecks("/health", new HealthCheckOptions {
     }
 });
 
-app.UseCors("CorsPolicy");
+
 app.MapControllers();
 
 app.Run();

@@ -29,7 +29,7 @@
                 <td>
                     <div class="btn-group" role="group">
                         <a class="btn btn-primary" [routerLink]="['/employment-statuses/', employment.id, 'edit']"><fa-icon [icon]="editIcon"></fa-icon></a>
-                        <a class="btn btn-success" (click)="changeStatus(employment.id)"><fa-icon [icon]="archiveIcon"></fa-icon></a>
+                        <a class="btn btn-danger" (click)="changeStatus(employment.id)"><fa-icon [icon]="archiveIcon"></fa-icon></a>
                     </div>
                 </td>
             </tr>

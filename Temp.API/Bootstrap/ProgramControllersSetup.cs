@@ -5,7 +5,7 @@ namespace Temp.API.Bootstrap;
 
 public static class ProgramControllersSetup
 {
-    public static IMvcBuilder ConfigureSerilizaiton(this IMvcBuilder builder) {
+    public static IMvcBuilder ConfigureSerialization(this IMvcBuilder builder) {
 
         builder.AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 

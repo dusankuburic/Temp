@@ -30,7 +30,7 @@
           <td>
             <div class="btn-group" role="group">
               <a class="btn btn-primary" [routerLink]="['/teams', team.id, 'edit', group.id, 'group']"><fa-icon [icon]="editTeamIcon"></fa-icon></a>
-              <a class="btn btn-success" (click)="changeStatus(team.id)"><fa-icon [icon]="archiveTeamIcon"></fa-icon></a>
+              <a class="btn btn-danger" (click)="changeStatus(team.id)"><fa-icon [icon]="archiveTeamIcon"></fa-icon></a>
             </div>
           </td>  
         </tr>
