@@ -18,7 +18,7 @@ export class GroupListResolver  {
         this.groupService.resetGroupParams();
         return this.groupService.getInnerGroups(organizationId).pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving groups');
+                this.alertify.error('Unable to list groups');
                 this.router.navigate(['']);
                 return of(null);
             })

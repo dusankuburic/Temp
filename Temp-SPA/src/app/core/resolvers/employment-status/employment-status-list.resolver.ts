@@ -18,7 +18,7 @@ export class EmploymentStatusListResolver  {
         this.employmentStatusService.resetEmploymentStatusParams();
         return this.employmentStatusService.getPagedEmploymentStatuses().pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Unable to list Employment statuses');
                 this.router.navigate(['']);
                 return of(null);
             })

@@ -51,8 +51,8 @@ export class OrganizationEditComponent implements OnInit {
       next: () => {
         this.alertify.success('Successfully updated');
       },
-      error: (error) => {
-        this.alertify.error(error.error);
+      error: () => {
+        this.alertify.error('Unable to update organization');
       }
     });
   }

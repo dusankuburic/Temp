@@ -23,7 +23,7 @@ public class LoginAdmin
         return true;
     }
 
-    public async Task<Response> Do(Request request) {
+    public async Task<LoginAResponse> Do(LoginAdminRequest request) {
         var admin = await _ctx.Admins.FirstOrDefaultAsync(x => x.Username == request.Username);
 
         if (admin is null)
@@ -50,14 +50,15 @@ public class LoginAdmin
         {
             Subject = adminIdentity,
             Expires = DateTime.UtcNow.AddDays(1),
-            SigningCredentials = creds
+            SigningCredentials = creds,
+            Issuer = _config["AppSettings:Issuer"]
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
-        return new Response {
-            User = new AdminResponse {
+        return new LoginAResponse {
+            User = new LoginAdminResponse {
                 Id = admin.Id,
                 Username = admin.Username
             },
@@ -66,26 +67,28 @@ public class LoginAdmin
     }
 
 
-    public class Request
-    {
-        [Required]
-        [MaxLength(30)]
-        public string Username { get; set; }
-        [Required]
-        [MaxLength(30)]
-        public string Password { get; set; }
-    }
 
-    public class AdminResponse
-    {
-        public int Id { get; set; }
-        public string Username { get; set; }
-    }
 
-    public class Response
-    {
-        public string Token { get; set; }
-        public AdminResponse User { get; set; }
-    }
+}
 
+public class LoginAdminRequest
+{
+    [Required]
+    [MaxLength(30)]
+    public string Username { get; set; }
+    [Required]
+    [MaxLength(30)]
+    public string Password { get; set; }
+}
+
+public class LoginAdminResponse
+{
+    public int Id { get; set; }
+    public string Username { get; set; }
+}
+
+public class LoginAResponse
+{
+    public string Token { get; set; }
+    public LoginAdminResponse User { get; set; }
 }

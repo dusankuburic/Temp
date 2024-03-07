@@ -17,6 +17,8 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(CreateApplicationResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create([FromBody] CreateApplicationRequest request) {
         try {
             var response = await _applicationService.CreateApplication(request);
@@ -28,6 +30,8 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetApplicationResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetApplication([FromRoute] GetApplicationRequest request) {
         try {
             var response = await _applicationService.GetApplication(request);
@@ -39,6 +43,8 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpGet("team/{teamId}/moderator/{moderatorId}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(IEnumerable<GetTeamApplicationsResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetTeamApplications([FromRoute] GetTeamApplicationsRequest request) {
         try {
             var response = await _applicationService.GetTeamApplications(request);
@@ -50,6 +56,8 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpGet("user/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(IEnumerable<GetApplicationResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserApplications([FromRoute] GetUserApplicationsRequest request) {
         try {
             var response = await _applicationService.GetUserApplications(request);
@@ -61,6 +69,8 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpPut("change-status/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateApplicationStatus([FromBody] UpdateApplicationStatusRequest request) {
         try {
             var response = await _applicationService.UpdateApplicationStatus(request);

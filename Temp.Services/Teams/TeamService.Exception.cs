@@ -11,6 +11,7 @@ public partial class TeamService
     public delegate Task<GetTeamResponse> ReturningGetTeamFunction();
     public delegate Task<GetUserTeamResponse> ReturningGetUserTeamFunction();
     public delegate Task<UpdateTeamResponse> ReturningUpdateFunction();
+    public delegate Task<UpdateTeamStatusResponse> ReturningUpdateTeamStatusFunction();
     public delegate Task<GetFullTeamTreeResponse> ReturningTeamTreeFunction();
     public delegate Task<bool> ReturningTeamExistsFunction();
 
@@ -66,6 +67,20 @@ public partial class TeamService
     public async Task<UpdateTeamResponse> TryCatch(ReturningUpdateFunction returningUpdateFunction) {
         try {
             return await returningUpdateFunction();
+        } catch (NullTeamException nullTeamException) {
+            throw CreateAndLogValidationException(nullTeamException);
+        } catch (InvalidTeamException invalidTeamException) {
+            throw CreateAndLogValidationException(invalidTeamException);
+        } catch (SqlException sqlException) {
+            throw CreateAndLogCriticalDependencyException(sqlException);
+        } catch (Exception exception) {
+            throw CreateAndLogServiceException(exception);
+        }
+    }
+
+    public async Task<UpdateTeamStatusResponse> TryCatch(ReturningUpdateTeamStatusFunction returningUpdateTeamStatusFunction) {
+        try {
+            return await returningUpdateTeamStatusFunction();
         } catch (NullTeamException nullTeamException) {
             throw CreateAndLogValidationException(nullTeamException);
         } catch (InvalidTeamException invalidTeamException) {

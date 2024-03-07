@@ -22,11 +22,11 @@ public class RegisterUser
         return await _ctx.Users.AnyAsync(x => x.Username == username);
     }
 
-    public async Task<Response> Do(Request request) {
+    public async Task<RegisterUserResponse> Do(RegisterUserRequest request) {
         var userExists = await UserExists(request.Username);
 
         if (userExists) {
-            return new Response {
+            return new RegisterUserResponse {
                 Messsage = $"User already exists with {request.Username} username",
                 Username = request.Username,
                 Status = false
@@ -49,26 +49,28 @@ public class RegisterUser
 
         //var result = await new UpdateEmployeeRole(_ctx).Do("User",request.EmployeeId);
 
-        return new Response {
+        return new RegisterUserResponse {
             Messsage = "Successful registration",
             Username = user.Username,
             Status = true
         };
     }
 
-    public class Request
-    {
-        public int EmployeeId { get; set; }
-        [Required]
-        public string Username { get; set; }
-        [Required]
-        public string Password { get; set; }
-    }
+}
 
-    public class Response
-    {
-        public string Username { get; set; }
-        public string Messsage { get; set; }
-        public bool Status { get; set; }
-    }
+
+public class RegisterUserRequest
+{
+    public int EmployeeId { get; set; }
+    [Required]
+    public string Username { get; set; }
+    [Required]
+    public string Password { get; set; }
+}
+
+public class RegisterUserResponse
+{
+    public string Username { get; set; }
+    public string Messsage { get; set; }
+    public bool Status { get; set; }
 }

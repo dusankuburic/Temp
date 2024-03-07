@@ -10,7 +10,8 @@ public static class ProgramAuthSetup
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.ASCII.GetBytes(configuration.GetSection("AppSettings:Token").Value)),
-                    ValidateIssuer = false,
+                    ValidIssuer = configuration["AppSettings:Issuer"],
+                    ValidateIssuer = true,
                     ValidateAudience = false
                 };
             });

@@ -17,6 +17,8 @@ public class EmploymentStatusesController : ControllerBase
     }
 
     [HttpGet("paged-employmentstatuses")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(PagedList<GetPagedEmploymentStatusesResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPagedEmploymentStatuses([FromQuery] GetPagedEmploymentStatusesRequest request) {
         try {
             var response = await _employmentStatusService.GetPagedEmploymentStatuses(request);
@@ -29,6 +31,8 @@ public class EmploymentStatusesController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(List<GetEmploymentStatusResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmploymentStatuses() {
         try {
             var response = await _employmentStatusService.GetEmploymentStatuses();
@@ -40,6 +44,8 @@ public class EmploymentStatusesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetEmploymentStatusResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmploymentStatus([FromRoute] GetEmploymentStatusRequest request) {
         try {
             var response = await _employmentStatusService.GetEmploymentStatus(request);
@@ -51,6 +57,8 @@ public class EmploymentStatusesController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(CreateEmploymentStatusResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create([FromBody] CreateEmploymentStatusRequest request) {
         try {
             var response = await _employmentStatusService.CreateEmploymentStatus(request);
@@ -62,6 +70,8 @@ public class EmploymentStatusesController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateEmploymentStatus([FromBody] UpdateEmploymentStatusRequest request) {
         try {
             var response = await _employmentStatusService.UpdateEmplymentStatus(request);
@@ -73,6 +83,8 @@ public class EmploymentStatusesController : ControllerBase
     }
 
     [HttpPut("change-status/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateEmploymentStatusStatus([FromBody] UpdateEmploymentStatusStatusRequest request) {
         try {
             var response = await _employmentStatusService.UpdateEmploymentStatusStatus(request);
@@ -84,6 +96,8 @@ public class EmploymentStatusesController : ControllerBase
     }
 
     [HttpGet("employment-status-exists")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     public async Task<IActionResult> EmploymentStatusExists([FromQuery] string name) {
         try {
             var response = await _employmentStatusService.EmploymentStatusExists(name);

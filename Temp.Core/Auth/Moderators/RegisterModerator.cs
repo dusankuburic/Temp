@@ -22,11 +22,11 @@ public class RegisterModerator
         return await _ctx.Moderators.AnyAsync(x => x.Username == username);
     }
 
-    public async Task<Response> Do(Request request) {
+    public async Task<RegisterModeratorResponse> Do(RegisterModeratorRequest request) {
         var moderatorExists = await ModeratorExists(request.Username);
 
         if (moderatorExists) {
-            return new Response {
+            return new RegisterModeratorResponse {
                 Message = $"Admin already exists with {request.Username} username",
                 Username = request.Username,
                 Status = false
@@ -49,7 +49,7 @@ public class RegisterModerator
 
         //var result = await new UpdateEmployeeRole(_ctx).Do("Moderator", request.EmployeeId);
 
-        return new Response {
+        return new RegisterModeratorResponse {
             Message = "Successful registration",
             Username = moderator.Username,
             Status = true
@@ -57,23 +57,25 @@ public class RegisterModerator
     }
 
 
-    public class Request
-    {
-        public int EmployeeId { get; set; }
 
-        [Required]
-        [MinLength(5), MaxLength(30)]
-        public string Username { get; set; }
+}
 
-        [Required]
-        [MinLength(5), MaxLength(30)]
-        public string Password { get; set; }
-    }
+public class RegisterModeratorRequest
+{
+    public int EmployeeId { get; set; }
 
-    public class Response
-    {
-        public string Username { get; set; }
-        public string Message { get; set; }
-        public bool Status { get; set; }
-    }
+    [Required]
+    [MinLength(5), MaxLength(30)]
+    public string Username { get; set; }
+
+    [Required]
+    [MinLength(5), MaxLength(30)]
+    public string Password { get; set; }
+}
+
+public class RegisterModeratorResponse
+{
+    public string Username { get; set; }
+    public string Message { get; set; }
+    public bool Status { get; set; }
 }

@@ -12,7 +12,7 @@ public class UpdateModeratorGroups : ModeratorService
         _ctx = ctx;
     }
 
-    public Task<Response> Do(int id, Request request) =>
+    public Task<UpdateModeratorGroupsResponse> Do(int id, UpdateModeratorGroupsRequest request) =>
     TryCatch(async () => {
         if (request.Groups.Count() == 0) {
             var mod = await _ctx.ModeratorGroups
@@ -40,22 +40,23 @@ public class UpdateModeratorGroups : ModeratorService
 
         await _ctx.SaveChangesAsync();
 
-        return new Response {
+        return new UpdateModeratorGroupsResponse {
             Message = $"Groups are assigned",
             Status = true
         };
     });
 
+}
 
-    public class Request
-    {
-        [Required]
-        public IEnumerable<int> Groups { get; set; }
-    }
 
-    public class Response
-    {
-        public bool Status { get; set; }
-        public string Message { get; set; }
-    }
+public class UpdateModeratorGroupsRequest
+{
+    [Required]
+    public IEnumerable<int> Groups { get; set; }
+}
+
+public class UpdateModeratorGroupsResponse
+{
+    public bool Status { get; set; }
+    public string Message { get; set; }
 }

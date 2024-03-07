@@ -4,16 +4,16 @@ import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { Workplace, WorkplaceParams } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
-import { faPenNib, faPenToSquare, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs';
+import { faPenToSquare, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-workplace-list',
   templateUrl: './workplace-list.component.html'
 })
 export class WorkplaceListComponent implements OnInit {
-  archiveIcon = faPenNib;
+  archiveIcon = faTrashAlt;
   editIcon = faPenToSquare
   plusIcon = faPlusCircle;
 

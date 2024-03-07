@@ -23,7 +23,7 @@ public class LoginModerator
         return true;
     }
 
-    public async Task<Response> Do(Request request) {
+    public async Task<LoginModeratorResponse> Do(LoginModeratorRequest request) {
         var moderator = await _ctx.Moderators.FirstOrDefaultAsync(x => x.Username == request.Username);
 
         if (moderator is null)
@@ -49,13 +49,14 @@ public class LoginModerator
             {
             Subject = moderatorIdentity,
             Expires = DateTime.UtcNow.AddDays(1),
-            SigningCredentials = creds
+            SigningCredentials = creds,
+            Issuer = _config["AppSettings:Issuer"]
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
-        return new Response {
+        return new LoginModeratorResponse {
             User = new ModeratorResponse {
                 Id = moderator.Id,
                 Username = moderator.Username
@@ -64,27 +65,29 @@ public class LoginModerator
         };
     }
 
+}
 
-    public class Request
-    {
-        [Required]
-        [MaxLength(30)]
-        public string Username { get; set; }
 
-        [Required]
-        [MaxLength(30)]
-        public string Password { get; set; }
-    }
 
-    public class ModeratorResponse
-    {
-        public int Id { get; set; }
-        public string Username { get; set; }
-    }
+public class LoginModeratorRequest
+{
+    [Required]
+    [MaxLength(30)]
+    public string Username { get; set; }
 
-    public class Response
-    {
-        public string Token { get; set; }
-        public ModeratorResponse User { get; set; }
-    }
+    [Required]
+    [MaxLength(30)]
+    public string Password { get; set; }
+}
+
+public class ModeratorResponse
+{
+    public int Id { get; set; }
+    public string Username { get; set; }
+}
+
+public class LoginModeratorResponse
+{
+    public string Token { get; set; }
+    public ModeratorResponse User { get; set; }
 }

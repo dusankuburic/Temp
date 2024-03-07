@@ -83,55 +83,26 @@ public partial class EmployeeService : IEmployeeService
     public Task<PagedList<GetEmployeesWithEngagementResponse>>
     GetEmployeesWithEngagement(GetEmployeesWithEngagementRequest request) =>
     TryCatch(async () => {
-        var currentDateTime = DateTime.UtcNow;
 
-        //TODO fix this horror
         var employeesWithEngagement = _ctx.Employees
-            .Include(x => x.Engagements)
-            .Where(x => x.Engagements.Count != 0)
-            .Where(x => x.Engagements.Any(n => n.DateTo > currentDateTime))
+            .Include(x => x.Engagements.Where(n => n.DateTo > DateTime.UtcNow))
+            .Where(x => x.Engagements.Count > 0)
             .OrderByDescending(x => x.Id)
-            .Select(x => new GetEmployeesWithEngagementResponse
-            {
-                Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                Role = x.Role,
-                Salary = _ctx.Engagements
-                    .Where(e => e.EmployeeId == x.Id)
-                    .Select(e => e.Salary)
-                    .ToList(),
-                Workplace = _ctx.Engagements
-                    .Where(e => e.EmployeeId == x.Id)
-                    .Select(e => e.Workplace.Name)
-                    .ToList(),
-                EmploymentStatus = _ctx.Engagements
-                    .Where(e => e.EmployeeId == x.Id)
-                    .Select(e => e.EmploymentStatus.Name)
-                    .ToList()
-            })
+            .ProjectTo<GetEmployeesWithEngagementResponse>(_mapper.ConfigurationProvider)
             .AsQueryable();
 
-        if (request.MinSalary != 0 || request.MaxSalary != 5000) {
-            employeesWithEngagement = employeesWithEngagement
-                .Where(x => x.Salary.All(sal => sal >= request.MinSalary && sal <= request.MaxSalary))
+        if (!string.IsNullOrEmpty(request.Role)) {
+            employeesWithEngagement = employeesWithEngagement.Where(x => x.Role == request.Role)
                 .AsQueryable();
         }
 
-        if (!string.IsNullOrEmpty(request.Workplace) && !string.IsNullOrEmpty(request.EmploymentStatus)) {
-            employeesWithEngagement = employeesWithEngagement
-                .Where(x =>
-                    x.Workplace.Any(w => w.Contains(request.Workplace)) &&
-                    x.EmploymentStatus.Any(e => e.Contains(request.EmploymentStatus)))
+        if (!string.IsNullOrEmpty(request.FirstName)) {
+            employeesWithEngagement = employeesWithEngagement.Where(x => x.FirstName.Contains(request.FirstName))
                 .AsQueryable();
-        } else if (!string.IsNullOrEmpty(request.Workplace)) {
-            employeesWithEngagement = employeesWithEngagement
-                .Where(x => x.Workplace.Any(w => w.Contains(request.Workplace)))
-                .AsQueryable();
+        }
 
-        } else if (!string.IsNullOrEmpty(request.EmploymentStatus)) {
-            employeesWithEngagement = employeesWithEngagement
-                .Where(x => x.EmploymentStatus.Any(es => es.Contains(request.EmploymentStatus)))
+        if (!string.IsNullOrEmpty(request.LastName)) {
+            employeesWithEngagement = employeesWithEngagement.Where(x => x.LastName.Contains(request.LastName))
                 .AsQueryable();
         }
 
@@ -258,9 +229,9 @@ public partial class EmployeeService : IEmployeeService
         return empolyee.Role == RoleName;
     }
 
-    public Task<AssignRoleResponse> AssignRole(AssignRoleRequest request) {
+    public async Task<AssignRoleResponse> AssignRole(AssignRoleRequest request) {
         //if (request.Role == "User") {
-        //    var userRequest = new RegisterUser.Request
+        //    var userRequest = new RegisterUserRequest
         //        {
         //        Username = request.Username,
         //        Password = request.Password,
@@ -276,7 +247,7 @@ public partial class EmployeeService : IEmployeeService
         //    };
 
         //} else if (request.Role == "Admin") {
-        //    var adminRequest = new RegisterAdmin.Request
+        //    var adminRequest = new RegisterAdminRequest
         //        {
         //        Username = request.Username,
         //        Password = request.Password,
@@ -285,7 +256,7 @@ public partial class EmployeeService : IEmployeeService
 
         //    var response = await new RegisterAdmin(_ctx).Do(adminRequest);
 
-        //    return new AssignRole.Response {
+        //    return new AssignRoleResponse {
         //        Username = response.Username,
         //        Message = response.Message,
         //        Status = response.Status
@@ -300,17 +271,18 @@ public partial class EmployeeService : IEmployeeService
 
         //    var response = await new RegisterModerator(_ctx).Do(moderatorRequest);
 
-        //    return new AssignRole.Response {
+        //    return new AssignRoleResponse {
         //        Username = response.Username,
         //        Message = response.Message,
         //        Status = response.Status
         //    };
         //} else {
-        //    return new AssignRole.Response {
+        //    return new AssignRoleResponse {
         //        Status = false,
         //        Message = "Wrong role!!!!"
         //    };
         //}
+
         return null;
     }
 }

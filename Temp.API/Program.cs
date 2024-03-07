@@ -6,28 +6,27 @@ using Temp.API.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureLogging();
-
 builder.Services.AddMappingsCollection();
 
-builder.Services.AddProgramServices();
+builder.Services.ConfigurePersistence(builder.Configuration);
+
+builder.Services.AddProgramServices(builder.Configuration);
+builder.Services.AddAuthSetup(builder.Configuration);
 
 builder.Services.ConfigureSwaggerDoc();
 
-builder.Services.ConfigureCORS();
-
 builder.Services.AddControllers()
-    .ConfigureSerilizaiton()
+    .ConfigureSerialization()
     .ConfigureFluentValidation();
 
-
-builder.Services.AddAuthSetup(builder.Configuration);
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
-
 builder.Services.AddHealthChecks();
+builder.Services.AddDataProtection();
+builder.Services.ConfigureCORS();
 
 var app = builder.Build();
+
+app.UseHttpLogging();
+
 
 using (var scope = app.Services.CreateScope()) {
     var services = scope.ServiceProvider;
@@ -54,12 +53,12 @@ using (var scope = app.Services.CreateScope()) {
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
-
-
 app.UseSwaggerDoc();
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -73,7 +72,6 @@ app.MapHealthChecks("/health", new HealthCheckOptions {
     }
 });
 
-app.UseCors("CorsPolicy");
 app.MapControllers();
 
 app.Run();

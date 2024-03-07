@@ -17,6 +17,8 @@ public class WorkplacesController : Controller
     }
 
     [HttpGet("paged-workplaces")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(PagedList<GetWorkplacesResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPagedWorkplaces([FromQuery] GetWorkplacesRequest request) {
         try {
             var response = await _workplaceService.GetPagedWorkplaces(request);
@@ -29,6 +31,8 @@ public class WorkplacesController : Controller
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(List<GetWorkplaceResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetWorkplaces() {
         try {
             var response = await _workplaceService.GetWorkplaces();
@@ -40,6 +44,8 @@ public class WorkplacesController : Controller
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetWorkplaceResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetWorkplace([FromRoute] int id) {
         try {
             var response = await _workplaceService.GetWorkplace(id);
@@ -51,6 +57,8 @@ public class WorkplacesController : Controller
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(CreateWorkplaceResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateWorkplace([FromBody] CreateWorkplaceRequest request) {
         try {
             var response = await _workplaceService.CreateWorkplace(request);
@@ -62,6 +70,8 @@ public class WorkplacesController : Controller
     }
 
     [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateWorkplace([FromBody] UpdateWorkplaceRequest request) {
         try {
             var response = await _workplaceService.UpdateWorkplace(request);
@@ -73,6 +83,8 @@ public class WorkplacesController : Controller
     }
 
     [HttpPut("change-status/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateWorkplaceStatus([FromBody] UpdateWorkplaceStatusRequest request) {
         try {
             var response = await _workplaceService.UpdateWorkplaceStatus(request);
@@ -84,6 +96,8 @@ public class WorkplacesController : Controller
     }
 
     [HttpGet("workplace-exists")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     public async Task<IActionResult> WorkplaceExists([FromQuery] string name) {
         try {
             var response = await _workplaceService.WorkplaceExists(name);

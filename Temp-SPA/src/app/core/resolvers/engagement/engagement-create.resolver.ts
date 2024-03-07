@@ -17,7 +17,7 @@ export class EngagementCreateResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<any> {
         return  this.engagementService.getEngagementForEmployee(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Unable to get Employee engagement');
                 this.router.navigate(['']);
                 return of(null);
             })

@@ -30,8 +30,4 @@ export class EngagementParams {
     firstName: string = '';
     lastName: string = '';
     role: string = '';
-    workplace: string = '';
-    employmentStatus: string = '';
-    minSalary: number = 0;
-    maxSalary: number = 5000;
 }

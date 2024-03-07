@@ -17,7 +17,7 @@ export class ApplicationModeratorResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<Application>  {
         return this.applicationService.getApplication(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Unable to get Application');
                 this.router.navigate(['']);
                 return of(null);
             })

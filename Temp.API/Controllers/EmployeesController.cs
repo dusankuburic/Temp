@@ -17,10 +17,13 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(PagedList<GetEmployeesResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmployees([FromQuery] GetEmployeesRequest request) {
         try {
             var response = await _employeeService.GetEmployees(request);
             Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
+
             return Ok(response);
         } catch (EmployeeValidationException employeeValidationException) {
             return BadRequest(GetInnerMessage(employeeValidationException));
@@ -28,6 +31,8 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetEmployeesResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmployee([FromRoute] int id) {
         try {
             var response = await _employeeService.GetEmployee(id);
@@ -39,6 +44,8 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(CreateEmployeeResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create([FromBody] CreateEmployeeRequest request) {
         try {
             var response = await _employeeService.CreateEmployee(request);
@@ -50,6 +57,8 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeRequest request) {
         try {
             var response = await _employeeService.UpdateEmployee(request);
@@ -61,24 +70,30 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPut("change-status/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateEmployeeAccountStatus([FromBody] int id) {
         var response = await _employeeService.UpdateEmployeeAccountStatus(id);
         return response ? NoContent() : BadRequest();
     }
 
     [HttpPut("assign/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequest request) {
 
-        //var response = await new AssignRole(_ctx).Do(request);
+        // var response = await new AssignRole(_ctx).Do(request);
         //return response.Status ? Ok() : BadRequest(response.Message);
-        return Ok();
+        return NoContent();
     }
 
     [HttpPut("unassign/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> RemoveRole([FromBody] RemoveEmployeeRoleRequest request) {
         //var response = await new RemoveEmployeeRole(_ctx).Do(request);
         //return response.Status ? (IActionResult)Ok() : BadRequest(response.Message);
-        return Ok();
+        return NoContent();
     }
 
     private static string GetInnerMessage(Exception exception) =>

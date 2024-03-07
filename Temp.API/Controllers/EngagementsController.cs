@@ -27,6 +27,8 @@ public class EngagementsController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(CreateEngagementResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create([FromBody] CreateEngagementRequest request) {
         try {
             var response = await _engagementService.CreateEngagement(request);
@@ -39,6 +41,8 @@ public class EngagementsController : ControllerBase
 
     [Authorize(Roles = "User")]
     [HttpGet("user/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(List<GetUserEmployeeEngagementsResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserEmployeeEngagments([FromRoute] GetUserEmployeeEngagementsRequest request) {
         try {
             var response = await _engagementService.GetUserEmployeeEngagements(request);
@@ -50,6 +54,8 @@ public class EngagementsController : ControllerBase
     }
 
     [HttpGet("without")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(PagedList<GetEmployeesWithoutEngagementResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> WithoutEngagements([FromQuery] GetEmployeesWithoutEngagementRequest request) {
         try {
             var response = await _employeeService.GetEmployeesWithoutEngagement(request);
@@ -66,6 +72,8 @@ public class EngagementsController : ControllerBase
     }
 
     [HttpGet("with")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(PagedList<GetEmployeesWithEngagementResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> WithEngagements([FromQuery] GetEmployeesWithEngagementRequest request) {
         try {
             var response = await _employeeService.GetEmployeesWithEngagement(request);
@@ -81,6 +89,8 @@ public class EngagementsController : ControllerBase
     }
 
     [HttpGet("employee/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(List<GetEngagementsForEmployeeResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEngagementForEmployee([FromRoute] GetEngagementsForEmployeeRequest request) {
         var response = await _engagementService.GetEngagementForEmployee(request);
 

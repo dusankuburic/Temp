@@ -38,8 +38,8 @@ export class OrganizationCreateComponent implements OnInit {
         this.alertify.success('Successfully created');
         this.createOrganizationForm.reset();
       },
-      error: (error) => {
-        this.alertify.error(error.error);
+      error: () => {
+        this.alertify.error('Unable to create organization');
       }
     });
   }

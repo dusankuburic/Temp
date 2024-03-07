@@ -18,7 +18,7 @@ export class ApplicationCreateResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<Team> {
         return  this.teamService.getUserTeam(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Unable to get user team');
                 this.router.navigate(['']);
                 return of(null);
             })

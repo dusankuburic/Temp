@@ -13,6 +13,7 @@ public partial class OrganizationService
     public delegate Task<IEnumerable<GetOrganizationResponse>> ReturningGetOrganizationsFunction();
     public delegate Task<GetOrganizationResponse> ReturningGetOrganizationFunction();
     public delegate Task<UpdateOrganizationResponse> ReturningUpdateOrganizationFunction();
+    public delegate Task<UpdateOrganizationStatusResponse> ReturningUpdateOrganizationStatusFunction();
     public delegate Task<GetPagedInnerGroupsResponse> ReturningGetPagedInnerGroupsFunction();
     public delegate Task<List<InnerGroup>> ReturningGetInnerGroupsFunction();
     public delegate Task<bool> ReturningOrganizationExistsFunction();
@@ -24,8 +25,8 @@ public partial class OrganizationService
             throw CreateAndLogValidationException(nullOrganizationException);
         } catch (InvalidOrganizationException invalidOrganizationException) {
             throw CreateAndLogValidationException(invalidOrganizationException);
-        } catch (SqlException sqlExcepton) {
-            throw CreateAndLogCriticalDependencyException(sqlExcepton);
+        } catch (SqlException sqlException) {
+            throw CreateAndLogCriticalDependencyException(sqlException);
         } catch (Exception exception) {
             throw CreateAndLogServiceException(exception);
         }
@@ -56,8 +57,8 @@ public partial class OrganizationService
             return await returningGetOrganizationsFunction();
         } catch (OrganizationEmptyStorageException organizationEmptyStorageException) {
             throw CreateAndLogValidationException(organizationEmptyStorageException);
-        } catch (SqlException sqlExcepton) {
-            throw CreateAndLogCriticalDependencyException(sqlExcepton);
+        } catch (SqlException sqlException) {
+            throw CreateAndLogCriticalDependencyException(sqlException);
         } catch (Exception exception) {
             throw CreateAndLogServiceException(exception);
         }
@@ -68,8 +69,8 @@ public partial class OrganizationService
             return await returningGetOrganizationFunction();
         } catch (NullOrganizationException nullOrganizationException) {
             throw CreateAndLogServiceException(nullOrganizationException);
-        } catch (SqlException sqlExcepton) {
-            throw CreateAndLogCriticalDependencyException(sqlExcepton);
+        } catch (SqlException sqlException) {
+            throw CreateAndLogCriticalDependencyException(sqlException);
         } catch (Exception exception) {
             throw CreateAndLogServiceException(exception);
         }
@@ -82,8 +83,22 @@ public partial class OrganizationService
             throw CreateAndLogValidationException(nullOrganizationException);
         } catch (InvalidOrganizationException invalidOrganizationException) {
             throw CreateAndLogValidationException(invalidOrganizationException);
-        } catch (SqlException sqlExcepton) {
-            throw CreateAndLogCriticalDependencyException(sqlExcepton);
+        } catch (SqlException sqlException) {
+            throw CreateAndLogCriticalDependencyException(sqlException);
+        } catch (Exception exception) {
+            throw CreateAndLogServiceException(exception);
+        }
+    }
+
+    public async Task<UpdateOrganizationStatusResponse> TryCatch(ReturningUpdateOrganizationStatusFunction returningUpdateOrganizationStatusFunction) {
+        try {
+            return await returningUpdateOrganizationStatusFunction();
+        } catch (NullOrganizationException nullOrganizationException) {
+            throw CreateAndLogValidationException(nullOrganizationException);
+        } catch (InvalidOrganizationException invalidOrganizationException) {
+            throw CreateAndLogValidationException(invalidOrganizationException);
+        } catch (SqlException sqlException) {
+            throw CreateAndLogCriticalDependencyException(sqlException);
         } catch (Exception exception) {
             throw CreateAndLogServiceException(exception);
         }

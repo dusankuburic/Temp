@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { faEdit, faPenNib, faPlusCircle, faProjectDiagram, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faPlusCircle, faProjectDiagram, faTrashAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { GroupParams, InnerGroup, PagedInnerGroups } from 'src/app/core/models/group';
 import { Organization } from 'src/app/core/models/organization';
@@ -15,7 +15,7 @@ import { GroupService } from 'src/app/core/services/group.service';
 })
 export class GroupListComponent implements OnInit {
   editGroupIcon = faEdit;
-  archiveGroupIcon = faPenNib;
+  archiveGroupIcon = faTrashAlt;
   innerTeamsIcon = faUsers;
   createTeamIcon = faProjectDiagram;
   plusIcon = faPlusCircle;

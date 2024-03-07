@@ -1,0 +1,93 @@
+﻿using Temp.Database;
+
+namespace Temp.Services.Auth.Moderators;
+
+public class LoginModerator
+{
+    private readonly ApplicationDbContext _ctx;
+    private readonly IConfiguration _config;
+
+    public LoginModerator(ApplicationDbContext ctx, IConfiguration config) {
+        _ctx = ctx;
+        _config = config;
+    }
+
+    private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt) {
+        using (var hmac = new HMACSHA512(passwordSalt)) {
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            for (int i = 0; i < computedHash.Length; i++) {
+                if (computedHash[i] != passwordHash[i])
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public async Task<LoginModeratorResponse> Do(LoginModeratorRequest request) {
+        var moderator = await _ctx.Moderators.FirstOrDefaultAsync(x => x.Username == request.Username);
+
+        if (moderator is null)
+            return null;
+
+        if (moderator.IsActive == false)
+            return null;
+
+        if (!VerifyPasswordHash(request.Password, moderator.PasswordHash, moderator.PasswordSalt))
+            return null;
+
+        var moderatorClaims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, moderator.Username),
+                new Claim(ClaimTypes.Role, "Moderator")
+            };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        var moderatorIdentity = new ClaimsIdentity(moderatorClaims, "Moderator_Identity");
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+            {
+            Subject = moderatorIdentity,
+            Expires = DateTime.UtcNow.AddDays(1),
+            SigningCredentials = creds,
+            Issuer = _config["AppSettings:Issuer"]
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+
+        return new LoginModeratorResponse {
+            User = new ModeratorResponse {
+                Id = moderator.Id,
+                Username = moderator.Username
+            },
+            Token = tokenHandler.WriteToken(token)
+        };
+    }
+
+}
+
+
+
+public class LoginModeratorRequest
+{
+    [Required]
+    [MaxLength(30)]
+    public string Username { get; set; }
+
+    [Required]
+    [MaxLength(30)]
+    public string Password { get; set; }
+}
+
+public class ModeratorResponse
+{
+    public int Id { get; set; }
+    public string Username { get; set; }
+}
+
+public class LoginModeratorResponse
+{
+    public string Token { get; set; }
+    public ModeratorResponse User { get; set; }
+}
