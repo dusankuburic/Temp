@@ -10,30 +10,25 @@ builder.Services.ConfigureLogging();
 
 builder.Services.AddMappingsCollection();
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+
+builder.Services.AddScoped<IAzureStorageService>(opt => new AzureStorageService(builder.Configuration["ConnectionStrings:AzureConnection"]));
 builder.Services.AddProgramServices();
+builder.Services.ConfigureCORS();
+builder.Services.AddAuthSetup(builder.Configuration);
 
 builder.Services.ConfigureSwaggerDoc();
-
-builder.Services.ConfigureCORS();
 
 builder.Services.AddControllers()
     .ConfigureSerialization()
     .ConfigureFluentValidation();
 
-
-builder.Services.AddAuthSetup(builder.Configuration);
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
-
-builder.Services.AddScoped<IAzureStorageService>(opt => new AzureStorageService(builder.Configuration["ConnectionStrings:AzureConnection"]));
-
 builder.Services.AddHealthChecks();
-
 builder.Services.AddDataProtection();
 
 var app = builder.Build();
-
+app.UseCors("CorsPolicy");
 using (var scope = app.Services.CreateScope()) {
     var services = scope.ServiceProvider;
     try {
@@ -60,12 +55,12 @@ using (var scope = app.Services.CreateScope()) {
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-
 app.UseSwaggerDoc();
 
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors("CorsPolicy");
+
+
 
 app.UseAuthentication();
 app.UseAuthorization();

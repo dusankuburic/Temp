@@ -22,7 +22,7 @@ public class ModeratorsController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAdmin(RegisterModerator.Request request) {
+    public async Task<IActionResult> RegisterAdmin(RegisterModeratorRequest request) {
         var response = await new RegisterModerator(_ctx).Do(request);
         if (response.Status)
             return NoContent();
@@ -31,7 +31,7 @@ public class ModeratorsController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAdmin(LoginModerator.Request request) {
+    public async Task<IActionResult> LoginAdmin(LoginModeratorRequest request) {
         if (!ModelState.IsValid) {
             return BadRequest(ModelState.Values);
         }
@@ -44,7 +44,7 @@ public class ModeratorsController : ControllerBase
     }
 
     [HttpPut("update-groups/{id}")]
-    public async Task<IActionResult> UpdateGroups(int id, UpdateModeratorGroups.Request request) {
+    public async Task<IActionResult> UpdateGroups(int id, UpdateModeratorGroupsRequest request) {
         try {
             var response = await new UpdateModeratorGroups(_ctx).Do(id, request);
             if (response.Status)

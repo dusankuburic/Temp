@@ -15,13 +15,13 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterUser(RegisterUser.Request request) {
+    public async Task<IActionResult> RegisterUser(RegisterUserRequest request) {
         var response = await new RegisterUser(_ctx).Do(request);
         return response.Status ? Ok(response) : BadRequest(response);
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginUser(LoginUser.Request request) {
+    public async Task<IActionResult> LoginUser(LoginUserRequest request) {
         if (!ModelState.IsValid)
             return BadRequest(ModelState.Values);
 

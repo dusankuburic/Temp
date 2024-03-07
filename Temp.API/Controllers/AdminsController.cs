@@ -15,13 +15,13 @@ public class AdminsController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAdmin(RegisterAdmin.Request request) {
+    public async Task<IActionResult> RegisterAdmin(RegisterAdminRequest request) {
         var response = await new RegisterAdmin(_ctx).Do(request);
         return response.Status ? Ok(response) : BadRequest(response.Message);
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAdmin(LoginAdmin.Request request) {
+    public async Task<IActionResult> LoginAdmin(LoginAdminRequest request) {
         if (!ModelState.IsValid)
             return BadRequest(ModelState.Values);
 

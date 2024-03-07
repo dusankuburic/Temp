@@ -22,18 +22,28 @@ services:
 
   temp.api:
     container_name: temp.api
+    ports:
+     - 5000:8080
+     - 5001:8081
     environment:
-      # - ASPNETCORE_URLS=https://+:8081;http://+:8080
-      # - ASPNETCORE_Kestrel__Certificates__Default__Password=ZH4no7TVVeuzxq6+uLI4ym7yZnA=
-      # - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certs/aspnetapp.pfx
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=ZH4no7TVVeuzxq6+uLI4ym7yZnA=
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certs/aspnetapp.pfx
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings__DefaultConnection=Server=tempdb;User=sa;Password=YourStrong!Passw0rd;Database=Temp;Trusted_Connection=false;MultipleActiveResultSets=True;TrustServerCertificate=True;"
       - "ConnectionStrings__AzureConnection=AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;DefaultEndpointsProtocol=http;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;TableEndpoint=http://azurite:10002/devstoreaccount1;"
     depends_on:
       - tempdb
       - azurite
-    ports:
-     - 5000:8080
-    #  - 5001:8081
 
+
+
+  # temp.spa.angular:
+  #   container_name: temp.spa.angular
+  #   depends_on:
+  #     - temp.api
+  #   ports:
+  #     - 4200:80
+      
     

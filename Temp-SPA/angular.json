@@ -70,7 +70,10 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "Temp-SPA:build"
+            "buildTarget": "Temp-SPA:build",
+            "sslCert": "ssl/localhost.pem",
+            "sslKey": "ssl/localhost-key.pem",
+            "ssl": false
           },
           "configurations": {
             "production": {

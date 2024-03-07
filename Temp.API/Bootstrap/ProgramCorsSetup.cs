@@ -6,9 +6,10 @@ public static class ProgramCorsSetup
         services.AddCors(opt => {
             opt.AddPolicy("CorsPolicy", policy => {
                 policy
-                .WithOrigins("http://localhost:4200/")
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .AllowAnyMethod()
+                .AllowAnyOrigin();
+                //.WithOrigins("http://localhost:4242");
             });
         });
 

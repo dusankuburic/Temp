@@ -22,11 +22,11 @@ public class RegisterAdmin
         return await _ctx.Admins.AnyAsync(x => x.Username == username);
     }
 
-    public async Task<Response> Do(Request request) {
+    public async Task<RegisterAdminResponse> Do(RegisterAdminRequest request) {
         var adminExists = await AdminExists(request.Username);
 
         if (adminExists) {
-            return new Response {
+            return new RegisterAdminResponse {
                 Message = $"Admin already exists with {request.Username} username",
                 Username = request.Username,
                 Status = false
@@ -49,7 +49,7 @@ public class RegisterAdmin
 
         //var result = await new UpdateEmployeeRole(_ctx).Do("Admin",request.EmployeeId);
 
-        return new Response {
+        return new RegisterAdminResponse {
             Message = "Successful registration",
             Username = admin.Username,
             Status = true
@@ -57,25 +57,27 @@ public class RegisterAdmin
     }
 
 
-    public class Request
-    {
-        public int EmployeeId { get; set; }
 
-        [Required]
-        [MinLength(5), MaxLength(30)]
-        public string Username { get; set; }
+}
 
-        [Required]
-        [MinLength(5), MaxLength(30)]
-        public string Password { get; set; }
-    }
+public class RegisterAdminRequest
+{
+    public int EmployeeId { get; set; }
 
-    public class Response
-    {
-        public string Username { get; set; }
+    [Required]
+    [MinLength(5), MaxLength(30)]
+    public string Username { get; set; }
 
-        public string Message { get; set; }
+    [Required]
+    [MinLength(5), MaxLength(30)]
+    public string Password { get; set; }
+}
 
-        public bool Status { get; set; }
-    }
+public class RegisterAdminResponse
+{
+    public string Username { get; set; }
+
+    public string Message { get; set; }
+
+    public bool Status { get; set; }
 }

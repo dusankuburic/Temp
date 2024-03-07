@@ -23,7 +23,7 @@ public class LoginUser
         return true;
     }
 
-    public async Task<Response> Do(Request request) {
+    public async Task<Response> Do(LoginUserRequest request) {
         var user = await _ctx.Users.FirstOrDefaultAsync(x => x.Username == request.Username);
 
         if (user is null)
@@ -50,7 +50,8 @@ public class LoginUser
             {
             Subject = userIdentity,
             Expires = DateTime.UtcNow.AddDays(1),
-            SigningCredentials = creds
+            SigningCredentials = creds,
+            Issuer = _config["AppSettings:Issuer"]
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -65,23 +66,25 @@ public class LoginUser
         };
     }
 
-    public class Request
-    {
-        [Required]
-        public string Username { get; set; }
-        [Required]
-        public string Password { get; set; }
-    }
+}
 
-    public class UserResponse
-    {
-        public int Id { get; set; }
-        public string Username { get; set; }
-    }
 
-    public class Response
-    {
-        public string Token { get; set; }
-        public UserResponse User { get; set; }
-    }
+public class LoginUserRequest
+{
+    [Required]
+    public string Username { get; set; }
+    [Required]
+    public string Password { get; set; }
+}
+
+public class UserResponse
+{
+    public int Id { get; set; }
+    public string Username { get; set; }
+}
+
+public class Response
+{
+    public string Token { get; set; }
+    public UserResponse User { get; set; }
 }

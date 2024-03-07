@@ -21,7 +21,7 @@ public class ExceptionMiddleware
         } catch (Exception exception) {
             _logger.LogError(exception, exception.Message);
 
-            var response = _env.IsDevelopment()
+            var response = !_env.IsDevelopment()
                 ? $"{exception.Message}\n{exception.StackTrace}"
                 : "";
 
