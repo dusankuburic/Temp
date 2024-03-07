@@ -1,4 +1,4 @@
-﻿using Temp.Core.Auth.Admins;
+﻿using Temp.Services.Auth.Admins;
 
 namespace Temp.API.Controllers;
 
@@ -14,13 +14,18 @@ public class AdminsController : ControllerBase
         _config = config;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("register")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(RegisterAdminResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> RegisterAdmin(RegisterAdminRequest request) {
         var response = await new RegisterAdmin(_ctx).Do(request);
         return response.Status ? Ok(response) : BadRequest(response.Message);
     }
 
     [HttpPost("login")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(LoginAdmin), StatusCodes.Status200OK)]
     public async Task<IActionResult> LoginAdmin(LoginAdminRequest request) {
         if (!ModelState.IsValid)
             return BadRequest(ModelState.Values);

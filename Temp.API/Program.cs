@@ -1,21 +1,16 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Temp.API.Bootstrap;
 using Temp.API.Middleware;
-using Temp.Services.Integrations.Azure.AzureStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureLogging();
-
 builder.Services.AddMappingsCollection();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+builder.Services.ConfigurePersistence(builder.Configuration);
 
-builder.Services.AddScoped<IAzureStorageService>(opt => new AzureStorageService(builder.Configuration["ConnectionStrings:AzureConnection"]));
-builder.Services.AddProgramServices();
+builder.Services.AddProgramServices(builder.Configuration);
 builder.Services.AddAuthSetup(builder.Configuration);
 
 builder.Services.ConfigureSwaggerDoc();
@@ -28,15 +23,6 @@ builder.Services.AddHealthChecks();
 builder.Services.AddDataProtection();
 builder.Services.ConfigureCORS();
 
-builder.Services.AddHttpLogging(logging => {
-    logging.RequestHeaders.Add("Authorization");
-    logging.LoggingFields = HttpLoggingFields.All;
-    logging.RequestHeaders.Add("sec-ch-ua");
-    logging.ResponseHeaders.Add("Authorization");
-    logging.MediaTypeOptions.AddText("application/javascript");
-    logging.RequestBodyLogLimit = 14096;
-    logging.ResponseBodyLogLimit = 14096;
-});
 var app = builder.Build();
 
 app.UseHttpLogging();
@@ -72,12 +58,10 @@ app.UseSwaggerDoc();
 app.UseHttpsRedirection();
 app.UseRouting();
 
-
 app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.MapHealthChecks("/health", new HealthCheckOptions {
     AllowCachingResponses = false,
@@ -87,7 +71,6 @@ app.MapHealthChecks("/health", new HealthCheckOptions {
         [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
     }
 });
-
 
 app.MapControllers();
 

@@ -44,7 +44,6 @@ public partial class TeamService : ITeamService
              return _mapper.Map<CreateTeamResponse>(team);
          });
 
-
     public Task<GetFullTeamTreeResponse> GetFullTeamTree(GetFullTeamTreeRequest requst) =>
         TryCatch(async () => {
             var team = await _ctx.Teams
@@ -111,9 +110,9 @@ public partial class TeamService : ITeamService
             await _ctx.SaveChangesAsync();
 
             var group = await _ctx.Groups
-            .Include(x => x.Organization)
-            .Where(x => x.Id == team.GroupId)
-            .FirstOrDefaultAsync();
+                .Include(x => x.Organization)
+                .Where(x => x.Id == team.GroupId)
+                .FirstOrDefaultAsync();
 
             group.HasActiveTeam = await _ctx.Groups
                 .Include(x => x.Teams)

@@ -1,4 +1,4 @@
-﻿using Temp.Core.Auth.Users;
+﻿using Temp.Services.Auth.Users;
 
 namespace Temp.API.Controllers;
 
@@ -14,13 +14,19 @@ public class UsersController : ControllerBase
         _config = config;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("register")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(RegisterUserResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> RegisterUser(RegisterUserRequest request) {
         var response = await new RegisterUser(_ctx).Do(request);
         return response.Status ? Ok(response) : BadRequest(response);
     }
 
     [HttpPost("login")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Response), StatusCodes.Status200OK)]
     public async Task<IActionResult> LoginUser(LoginUserRequest request) {
         if (!ModelState.IsValid)
             return BadRequest(ModelState.Values);

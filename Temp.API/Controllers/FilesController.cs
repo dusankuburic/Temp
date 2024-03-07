@@ -2,6 +2,7 @@
 
 namespace Temp.API.Controllers;
 
+[Authorize(Roles = "Admin")]
 [ApiController]
 [Route("api/[controller]")]
 public class FilesController : ControllerBase

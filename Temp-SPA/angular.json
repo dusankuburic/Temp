@@ -73,7 +73,7 @@
             "buildTarget": "Temp-SPA:build",
             "sslCert": "ssl/localhost.pem",
             "sslKey": "ssl/localhost-key.pem",
-            "ssl": true
+            "ssl": false
           },
           "configurations": {
             "production": {

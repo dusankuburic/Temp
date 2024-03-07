@@ -229,9 +229,9 @@ public partial class EmployeeService : IEmployeeService
         return empolyee.Role == RoleName;
     }
 
-    public Task<AssignRoleResponse> AssignRole(AssignRoleRequest request) {
+    public async Task<AssignRoleResponse> AssignRole(AssignRoleRequest request) {
         //if (request.Role == "User") {
-        //    var userRequest = new RegisterUser.Request
+        //    var userRequest = new RegisterUserRequest
         //        {
         //        Username = request.Username,
         //        Password = request.Password,
@@ -247,7 +247,7 @@ public partial class EmployeeService : IEmployeeService
         //    };
 
         //} else if (request.Role == "Admin") {
-        //    var adminRequest = new RegisterAdmin.Request
+        //    var adminRequest = new RegisterAdminRequest
         //        {
         //        Username = request.Username,
         //        Password = request.Password,
@@ -256,7 +256,7 @@ public partial class EmployeeService : IEmployeeService
 
         //    var response = await new RegisterAdmin(_ctx).Do(adminRequest);
 
-        //    return new AssignRole.Response {
+        //    return new AssignRoleResponse {
         //        Username = response.Username,
         //        Message = response.Message,
         //        Status = response.Status
@@ -271,17 +271,18 @@ public partial class EmployeeService : IEmployeeService
 
         //    var response = await new RegisterModerator(_ctx).Do(moderatorRequest);
 
-        //    return new AssignRole.Response {
+        //    return new AssignRoleResponse {
         //        Username = response.Username,
         //        Message = response.Message,
         //        Status = response.Status
         //    };
         //} else {
-        //    return new AssignRole.Response {
+        //    return new AssignRoleResponse {
         //        Status = false,
         //        Message = "Wrong role!!!!"
         //    };
         //}
+
         return null;
     }
 }

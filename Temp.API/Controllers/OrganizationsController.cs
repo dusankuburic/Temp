@@ -17,6 +17,8 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpGet("paged-organizations")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(PagedList<GetOrganizationResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPagedOrganizations([FromQuery] GetOrganizationsRequest request) {
         try {
             var response = await _organizationService.GetPagedOrganizations(request);
@@ -29,6 +31,8 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(IEnumerable<GetOrganizationResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOrganizations() {
         try {
             var response = await _organizationService.GetOrganizations();
@@ -40,6 +44,8 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetOrganizationResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOrganization([FromRoute] GetOrganizationRequest request) {
         try {
             var response = await _organizationService.GetOrganization(request);
@@ -51,6 +57,8 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpGet("paged-inner-groups")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetPagedInnerGroupsResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPagedInnerGroups([FromQuery] GetOrganizationInnerGroupsRequest request) {
         try {
             var response = await _organizationService.GetPagedInnerGroups(request);
@@ -63,6 +71,8 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpGet("inner-groups/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(List<InnerGroup>), StatusCodes.Status200OK)]
     public async Task<IActionResult> InnerGroups([FromRoute] int id) {
         try {
             var response = await _organizationService.GetInnerGroups(id);
@@ -74,6 +84,8 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(CreateOrganizationResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create([FromBody] CreateOrganizationRequest request) {
         try {
             var response = await _organizationService.CreateOrganization(request);
@@ -85,6 +97,8 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateOrganization([FromBody] UpdateOrganizationRequest request) {
         try {
             var response = await _organizationService.UpdateOrganization(request);
@@ -96,6 +110,8 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpPut("change-status/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateOrganizationStatus([FromBody] UpdateOrganizationStatusRequest request) {
         var response = await _organizationService.UpdateOrganizationStatus(request);
 
@@ -103,6 +119,8 @@ public class OrganizationsController : ControllerBase
     }
 
     [HttpGet("organization-exists")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> OrganizationExists([FromQuery] string name) {
         try {
             var response = await _organizationService.OrganizationExists(name);
