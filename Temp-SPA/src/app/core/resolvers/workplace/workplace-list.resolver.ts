@@ -18,7 +18,7 @@ export class WorkplaceListResolver  {
         this.workplaceService.resetWorkplaceParams();
         return this.workplaceService.getPagedWorkplaces().pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Unable to list Workplaces');
                 this.router.navigate(['']);
                 return of(null);
             })

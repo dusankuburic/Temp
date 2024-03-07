@@ -38,8 +38,8 @@ export class WorkplaceCreateComponent implements OnInit {
         this.alertify.success('Successfully created');
         this.createWorkplaceForm.reset();
       },
-      error: (error) => {
-        this.alertify.error(error.error);
+      error: () => {
+        this.alertify.error('Unable to create workplace');
       }
     });
   }

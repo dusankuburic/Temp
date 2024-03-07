@@ -37,13 +37,11 @@ services:
       - tempdb
       - azurite
 
-
-
-  # temp.spa.angular:
-  #   container_name: temp.spa.angular
-  #   depends_on:
-  #     - temp.api
-  #   ports:
-  #     - 4200:80
+  temp.spa.angular:
+    container_name: temp.spa.angular
+    depends_on:
+      - temp.api
+    ports:
+      - 4323:80
       
     

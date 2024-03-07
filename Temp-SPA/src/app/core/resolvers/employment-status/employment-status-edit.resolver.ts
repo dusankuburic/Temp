@@ -17,7 +17,7 @@ export class EmploymentStatusEditResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<EmploymentStatus> {
         return this.employmentStatusService.getEmploymentStatus(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Unable to get Employment status');
                 this.router.navigate(['/employment-statuses']);
                 return of(null);
             })

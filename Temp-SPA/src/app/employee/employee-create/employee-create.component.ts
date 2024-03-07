@@ -77,8 +77,8 @@ export class EmployeeCreateComponent implements OnInit {
         this.alertify.success('Successfully created');
         this.createEmployeeForm.reset();
       },
-      error: (error) => {
-        this.alertify.error(error);
+      error: () => {
+        this.alertify.error('Unable to create employee');
       }
     });
   }

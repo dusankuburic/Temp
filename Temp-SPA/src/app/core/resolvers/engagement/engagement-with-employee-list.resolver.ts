@@ -18,7 +18,7 @@ export class EngagementWithEmployeeResolver  {
         this.engagementService.resetEngagementParams();
         return this.engagementService.getEmployeesWithEngagement().pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Unable to list Employees');
                 this.router.navigate(['']);
                 return of(null);
             })

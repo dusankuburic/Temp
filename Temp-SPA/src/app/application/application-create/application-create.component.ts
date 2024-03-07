@@ -44,8 +44,8 @@ export class ApplicationCreateComponent implements OnInit {
         this.alertify.success('Successfully created');
         this.createApplicationForm.reset();
       },
-      error: (error) => {
-        this.alertify.error(error);
+      error: () => {
+        this.alertify.error('Unable to create application');
       }
     });
   }

@@ -8,8 +8,7 @@ public static class ProgramCorsSetup
                 policy
                 .AllowAnyHeader()
                 .AllowAnyMethod()
-                .AllowAnyOrigin();
-                //.WithOrigins("http://localhost:4242");
+                .WithOrigins("https://localhost:4323");
             });
         });
 

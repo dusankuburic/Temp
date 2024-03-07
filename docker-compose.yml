@@ -13,8 +13,8 @@ services:
       context: .
       dockerfile: Temp.API/Dockerfile
 
-  # temp.spa.angular:
-  #   image: ${DOCKER_REGISTRY-}temp.spa.angular
-  #   build:
-  #     context: .
-  #     dockerfile: Temp-SPA/Dockerfile
+  temp.spa.angular:
+    image: ${DOCKER_REGISTRY-}temp.spa.angular
+    build:
+      context: ./Temp-SPA
+      dockerfile: ./Dockerfile

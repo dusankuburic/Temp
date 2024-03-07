@@ -38,8 +38,8 @@ export class EmploymentStatusCreateComponent implements OnInit {
         this.alertify.success('Successfully created');
         this.createEmploymentStatusForm.reset();
       },
-      error: (error) => {
-        this.alertify.error(error.error);
+      error: () => {
+        this.alertify.error('Unable to create employment status');
       }
     });
   }

@@ -94,8 +94,8 @@ export class EngagementWithEmployeeListComponent implements OnInit {
           this.employees = res.result;
           this.pagination = res.pagination;
         },
-        error: (error) => {
-          this.alertify.error(error.error);
+        error: () => {
+          this.alertify.error('Unable to list employeees');
         }
       });
   }

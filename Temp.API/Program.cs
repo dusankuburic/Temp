@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Temp.API.Bootstrap;
 using Temp.API.Middleware;
@@ -15,7 +16,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<IAzureStorageService>(opt => new AzureStorageService(builder.Configuration["ConnectionStrings:AzureConnection"]));
 builder.Services.AddProgramServices();
-builder.Services.ConfigureCORS();
 builder.Services.AddAuthSetup(builder.Configuration);
 
 builder.Services.ConfigureSwaggerDoc();
@@ -26,9 +26,22 @@ builder.Services.AddControllers()
 
 builder.Services.AddHealthChecks();
 builder.Services.AddDataProtection();
+builder.Services.ConfigureCORS();
 
+builder.Services.AddHttpLogging(logging => {
+    logging.RequestHeaders.Add("Authorization");
+    logging.LoggingFields = HttpLoggingFields.All;
+    logging.RequestHeaders.Add("sec-ch-ua");
+    logging.ResponseHeaders.Add("Authorization");
+    logging.MediaTypeOptions.AddText("application/javascript");
+    logging.RequestBodyLogLimit = 14096;
+    logging.ResponseBodyLogLimit = 14096;
+});
 var app = builder.Build();
-app.UseCors("CorsPolicy");
+
+app.UseHttpLogging();
+
+
 using (var scope = app.Services.CreateScope()) {
     var services = scope.ServiceProvider;
     try {
@@ -54,16 +67,17 @@ using (var scope = app.Services.CreateScope()) {
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
-
 app.UseSwaggerDoc();
 
 app.UseHttpsRedirection();
 app.UseRouting();
 
 
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapHealthChecks("/health", new HealthCheckOptions {
     AllowCachingResponses = false,
