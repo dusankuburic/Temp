@@ -1,7 +1,7 @@
 
 <div class="row justify-content-center">
-  <div class="col-lg-8">
-    <h1 class="text-center" *ngIf="innerTeams">Teams inside {{innerTeams.name}}</h1>
+  <div class="col-lg-10">
+    <h1 class="text-center" *ngIf="innerTeams">Teams inside {{group.name}}</h1>
     <table class="table table-striped table-hover text-center">
       <thead>
           <tr>
@@ -10,10 +10,12 @@
           </tr>
       </thead>
       <tbody *ngIf="innerTeams"> 
-        <tr *ngFor="let team of innerTeams.teams">
+        <tr *ngFor="let team of innerTeams">
           <td>{{team.name}}</td>
           <td>
-            <a class="btn btn-primary" [routerLink]="['/applications/list/team/', team.id]"><i class="fas fa-list"></i></a>
+            <a class="btn btn-primary" [routerLink]="['/applications/list/team/', team.id]">
+              <fa-icon [icon]="listIcon"></fa-icon>
+            </a>
           </td>  
         </tr>
       </tbody>

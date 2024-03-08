@@ -5,26 +5,26 @@ namespace Temp.Services.Groups;
 
 public partial class GroupService
 {
-    public void ValidateGroupOnCreate(Group group) {
+    private void ValidateGroupOnCreate(Group group) {
         ValidateGroup(group);
         ValidateGroupString(group);
     }
 
-    public void ValidateGroupOnUpdate(Group group) {
+    private void ValidateGroupOnUpdate(Group group) {
         ValidateGroup(group);
         ValidateGroupString(group);
     }
 
-    public void ValidateGroupOnStatusUpdate(Group group) {
+    private void ValidateGroupOnStatusUpdate(Group group) {
         ValidateGroup(group);
     }
 
-    public void ValidateGroup(Group group) {
+    private void ValidateGroup(Group group) {
         if (group is null)
             throw new NullGroupException();
     }
 
-    public void ValidateGroupString(Group group) {
+    private void ValidateGroupString(Group group) {
         switch (group) {
             case { } when IsInvalid(group.Name):
                 throw new InvalidGroupException(
@@ -33,6 +33,6 @@ public partial class GroupService
         }
     }
 
-    public static bool IsInvalid(string input) =>
+    private static bool IsInvalid(string input) =>
         string.IsNullOrWhiteSpace(input);
 }

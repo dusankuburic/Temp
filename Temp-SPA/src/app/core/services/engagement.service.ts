@@ -26,7 +26,7 @@ getEngagementParams(): EngagementParams {
 
 resetEngagementParams(): void {
   this.engagementParams.pageNumber = 1;
-  this.engagementParams.pageSize = 5;
+  this.engagementParams.pageSize = 10;
   this.engagementParams.role = '';
   this.engagementParams.firstName = '';
   this.engagementParams.lastName = '';

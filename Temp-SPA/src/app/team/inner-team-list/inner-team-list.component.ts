@@ -51,7 +51,11 @@ export class TeamListComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.group = {id: data['innerteams'].id, name: data['innerteams'].name };
+      this.group = {
+        id: data['innerteams'].id, 
+        name: data['innerteams'].name,
+        hasActiveTeam: data['innerteams'].hasActiveTeam
+      };
       this.innerTeams = data['innerteams'].teams.result;
       this.pagination = data['innerteams'].teams.pagination;
     });

@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Temp.Services.Teams.Exceptions;
+﻿using Temp.Services.Teams.Exceptions;
 using Temp.Services.Teams.Models.Commands;
 using Temp.Services.Teams.Models.Queries;
 
@@ -7,15 +6,15 @@ namespace Temp.Services.Teams;
 
 public partial class TeamService
 {
-    public delegate Task<CreateTeamResponse> ReturningCreateTeamFunction();
-    public delegate Task<GetTeamResponse> ReturningGetTeamFunction();
-    public delegate Task<GetUserTeamResponse> ReturningGetUserTeamFunction();
-    public delegate Task<UpdateTeamResponse> ReturningUpdateFunction();
-    public delegate Task<UpdateTeamStatusResponse> ReturningUpdateTeamStatusFunction();
-    public delegate Task<GetFullTeamTreeResponse> ReturningTeamTreeFunction();
-    public delegate Task<bool> ReturningTeamExistsFunction();
+    private delegate Task<CreateTeamResponse> ReturningCreateTeamFunction();
+    private delegate Task<GetTeamResponse> ReturningGetTeamFunction();
+    private delegate Task<GetUserTeamResponse> ReturningGetUserTeamFunction();
+    private delegate Task<UpdateTeamResponse> ReturningUpdateFunction();
+    private delegate Task<UpdateTeamStatusResponse> ReturningUpdateTeamStatusFunction();
+    private delegate Task<GetFullTeamTreeResponse> ReturningTeamTreeFunction();
+    private delegate Task<bool> ReturningTeamExistsFunction();
 
-    public async Task<GetFullTeamTreeResponse> TryCatch(ReturningTeamTreeFunction returningTeamTreeFunction) {
+    private async Task<GetFullTeamTreeResponse> TryCatch(ReturningTeamTreeFunction returningTeamTreeFunction) {
         try {
             return await returningTeamTreeFunction();
         } catch (SqlException sqlException) {
@@ -25,7 +24,7 @@ public partial class TeamService
         }
     }
 
-    public async Task<CreateTeamResponse> TryCatch(ReturningCreateTeamFunction returningCreateTeamFunction) {
+    private async Task<CreateTeamResponse> TryCatch(ReturningCreateTeamFunction returningCreateTeamFunction) {
         try {
             return await returningCreateTeamFunction();
         } catch (NullTeamException nullTeamException) {
@@ -39,7 +38,7 @@ public partial class TeamService
         }
     }
 
-    public async Task<GetTeamResponse> TryCatch(ReturningGetTeamFunction returningGetTeamFunction) {
+    private async Task<GetTeamResponse> TryCatch(ReturningGetTeamFunction returningGetTeamFunction) {
         try {
             return await returningGetTeamFunction();
         } catch (NullTeamException nullTeamException) {
@@ -52,7 +51,7 @@ public partial class TeamService
     }
 
 
-    public async Task<GetUserTeamResponse> TryCatch(ReturningGetUserTeamFunction returningGetUserTeamFunction) {
+    private async Task<GetUserTeamResponse> TryCatch(ReturningGetUserTeamFunction returningGetUserTeamFunction) {
         try {
             return await returningGetUserTeamFunction();
         } catch (NullTeamException nullTeamException) {
@@ -64,7 +63,7 @@ public partial class TeamService
         }
     }
 
-    public async Task<UpdateTeamResponse> TryCatch(ReturningUpdateFunction returningUpdateFunction) {
+    private async Task<UpdateTeamResponse> TryCatch(ReturningUpdateFunction returningUpdateFunction) {
         try {
             return await returningUpdateFunction();
         } catch (NullTeamException nullTeamException) {
@@ -78,7 +77,7 @@ public partial class TeamService
         }
     }
 
-    public async Task<UpdateTeamStatusResponse> TryCatch(ReturningUpdateTeamStatusFunction returningUpdateTeamStatusFunction) {
+    private async Task<UpdateTeamStatusResponse> TryCatch(ReturningUpdateTeamStatusFunction returningUpdateTeamStatusFunction) {
         try {
             return await returningUpdateTeamStatusFunction();
         } catch (NullTeamException nullTeamException) {
@@ -92,7 +91,7 @@ public partial class TeamService
         }
     }
 
-    public async Task<bool> TryCatch(ReturningTeamExistsFunction returningTeamExistsFunction) {
+    private async Task<bool> TryCatch(ReturningTeamExistsFunction returningTeamExistsFunction) {
         try {
             return await returningTeamExistsFunction();
         } catch (SqlException sqlException) {

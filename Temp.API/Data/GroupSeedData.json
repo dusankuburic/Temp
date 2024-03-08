@@ -1,26 +1,32 @@
 [
   {
     "name": "DEV",
-    "organizationId": 1
+    "organizationId": 1,
+    "hasActiveTeam": true
   },
   {
     "name": "DEVOPS",
-    "organizationId": 1
+    "organizationId": 1,
+    "hasActiveTeam": true
   },
   {
     "name": "FRONT",
-    "organizationId": 1
+    "organizationId": 1,
+    "hasActiveTeam": true
   },
   {
     "name": "DEV",
-    "organizationId": 2
+    "organizationId": 2,
+    "hasActiveTeam": true
   },
   {
     "name": "FRONT",
-    "organizationId": 2
+    "organizationId": 2,
+    "hasActiveTeam": false
   },
   {
     "name": "DEV",
-    "organizationId": 3
+    "organizationId": 3,
+    "hasActiveTeam": false
   }
 ]

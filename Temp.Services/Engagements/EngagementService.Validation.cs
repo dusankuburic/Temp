@@ -5,20 +5,20 @@ namespace Temp.Services.Engagements;
 
 public partial class EngagementService
 {
-    public void ValidateEngagementOnCreate(Engagement engagement) {
+    private void ValidateEngagementOnCreate(Engagement engagement) {
         ValidateEngagement(engagement);
         ValidateEngagementInts(engagement);
         ValidateEngagementDates(engagement);
         ValidateDateRange(engagement);
     }
 
-    public void ValidateEngagement(Engagement engagement) {
+    private void ValidateEngagement(Engagement engagement) {
         if (engagement is null) {
             throw new NullEngagementException();
         }
     }
 
-    public void ValidateEngagementInts(Engagement engagement) {
+    private void ValidateEngagementInts(Engagement engagement) {
         switch (engagement) {
             case { } when IsInvalidInt(engagement.EmployeeId):
                 throw new InvalidEngagementException(
@@ -35,7 +35,7 @@ public partial class EngagementService
         }
     }
 
-    public void ValidateEngagementDates(Engagement engagement) {
+    private void ValidateEngagementDates(Engagement engagement) {
         switch (engagement) {
             case { } when IsInvalidDate(engagement.DateFrom):
                 throw new InvalidEngagementException(
@@ -48,17 +48,17 @@ public partial class EngagementService
         }
     }
 
-    public void ValidateDateRange(Engagement engagement) {
+    private void ValidateDateRange(Engagement engagement) {
         if (engagement.DateFrom > engagement.DateTo) {
             throw new DateRangeEngagementException();
         }
     }
 
-    public static bool IsInvalidInt(int input) {
+    private static bool IsInvalidInt(int input) {
         return input <= 0 || input > int.MaxValue;
     }
 
-    public static bool IsInvalidDate(DateTime input) {
+    private static bool IsInvalidDate(DateTime input) {
         return input == DateTime.MinValue;
     }
 }

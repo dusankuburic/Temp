@@ -25,7 +25,7 @@ getEmploymentStatusParams(): EmploymentStatusParams {
 
 resetEmploymentStatusParams(): void {
   this.employmentStatusParams.pageNumber = 1;
-  this.employmentStatusParams.pageSize = 5;
+  this.employmentStatusParams.pageSize = 10;
   this.employmentStatusParams.name = '';
 }
 

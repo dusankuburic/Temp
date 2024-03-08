@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
-import { debounceTime, distinctUntilChanged, last } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
 import { EngagementParams } from 'src/app/core/models/engagement';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';

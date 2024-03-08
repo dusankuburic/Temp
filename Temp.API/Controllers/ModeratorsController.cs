@@ -1,4 +1,5 @@
 ﻿using Temp.Domain.Models.ModeratorGroups.Exceptions;
+using Temp.Services.Auth;
 using Temp.Services.Auth.Moderators;
 
 namespace Temp.API.Controllers;
@@ -8,11 +9,14 @@ namespace Temp.API.Controllers;
 public class ModeratorsController : ControllerBase
 {
     private readonly ApplicationDbContext _ctx;
-    private readonly IConfiguration _config;
+    private readonly IAuthService _authService;
 
-    public ModeratorsController(ApplicationDbContext ctx, IConfiguration config) {
+
+    public ModeratorsController(
+        ApplicationDbContext ctx,
+        IAuthService authService) {
         _ctx = ctx;
-        _config = config;
+        _authService = authService;
     }
 
     [HttpGet("{id}")]
@@ -29,7 +33,7 @@ public class ModeratorsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> RegisterAdmin(RegisterModeratorRequest request) {
-        var response = await new RegisterModerator(_ctx).Do(request);
+        var response = await _authService.RegisterModerator(request);
         if (response.Status)
             return NoContent();
 
@@ -45,7 +49,7 @@ public class ModeratorsController : ControllerBase
             return BadRequest(ModelState.Values);
         }
 
-        var response = await new LoginModerator(_ctx, _config).Do(request);
+        var response = await _authService.LoginModerator(request);
         if (response is null)
             return Unauthorized();
 

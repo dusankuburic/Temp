@@ -27,7 +27,7 @@
                     <th>Name</th>
                     <th>Options</th>
                     <th colspan="3">Group Options</th>
-            </tr>
+                </tr>
             </thead>
             <tbody>
             <tr *ngFor="let organization of organizations">
@@ -40,7 +40,7 @@
                 </td>       
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn btn-warning" [routerLink]="['/groups/organization/', organization.id]"><fa-icon [icon]="innerGroupsIcon"></fa-icon></a>
+                        <a class="btn" [ngClass]="organization.hasActiveGroup ? 'btn-warning' : 'btn-danger'" [routerLink]="['/groups/organization/', organization.id]"><fa-icon [icon]="innerGroupsIcon"></fa-icon></a>
                         <a class="btn btn-info" [routerLink]="['/groups/create/organization/', organization.id]"><fa-icon [icon]="plusIcon"></fa-icon></a>
                     </div>
                 </td>
@@ -50,11 +50,11 @@
     </div>
     <div class="col-lg-6" *ngIf="!organizations.length">
         <div class="alert alert-info text-center" role="alert">
-            <h5>There is no organization</h5>
+            <h5>There are no organizations</h5>
         </div>
     </div>
 </div>
-<div *ngIf="organizations.length" class="d-flex justify-content-center">
+<div class="d-flex justify-content-center">
     <tmp-pagination
         [totalCount]="pagination.totalItems"
         [pageSize]="pagination.itemsPerPage"

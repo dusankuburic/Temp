@@ -8,7 +8,7 @@
 	{
 		"firstName": "Milos Djukic",
 		"lastName": "Zohar",
-		"role": "User",
+		"role": "Moderator",
 		"teamId": 5
 	},
 	{
@@ -20,55 +20,55 @@
 	{
 		"firstName": "Aca",
 		"lastName": "Lukas",
-		"role": "None",
+		"role": "User",
 		"teamId": 2
 	},
 	{
 		"firstName": "Rajko",
 		"lastName": "Horizont",
-		"role": "Moderator",
+		"role": "None",
 		"teamId": 2
 	},
 	{
 		"firstName": "Ilija",
 		"lastName": "Grahovac",
-		"role": "User",
+		"role": "None",
 		"teamId": 3
 	},
 	{
 		"firstName": "Tina",
 		"lastName": "Ivanovic",
-		"role": "User",
+		"role": "None",
 		"teamId": 3
 	},
 	{
 		"firstName": "Sdji",
 		"lastName": "Ping",
-		"role": "User",
+		"role": "None",
 		"teamId": 5
 	},
 	{
 		"firstName": "Mimi",
 		"lastName": "Mercedez",
-		"role": "User",
+		"role": "None",
 		"teamId": 3
 	},
 	{
 		"firstName": "Juice",
 		"lastName": "Jedan Jedini",
-		"role": "User",
+		"role": "None",
 		"teamId": 2
 	},
 	{
 		"firstName": "Hose",
 		"lastName": "Armando",
-		"role": "User",
+		"role": "None",
 		"teamId": 2
 	},
 	{
 		"firstName": "Uqa",
 		"lastName": "Stop",
-		"role": "User",
+		"role": "None",
 		"teamId": 2
 	}
 ]

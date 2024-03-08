@@ -73,7 +73,11 @@ export class GroupListComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.organization = { id: data['innergroups'].id, name: data['innergroups'].name };
+      this.organization = { 
+        id: data['innergroups'].id, 
+        name: data['innergroups'].name, 
+        hasActiveGroup: data['innergroups'].hasActiveGroup 
+      };
       this.innerGroups = data['innergroups'].groups.result;
       this.pagination = data['innergroups'].groups.pagination;
     });

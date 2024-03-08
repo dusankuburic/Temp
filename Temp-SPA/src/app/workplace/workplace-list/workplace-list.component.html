@@ -37,8 +37,12 @@
             </tbody>
         </table>
     </div>
+    <div class="col-lg-6" *ngIf="!workplaces.length">
+        <div class="alert alert-info text-center" role="alert">
+            <h5>There are no workplaces</h5>
+        </div>
+    </div>
 </div>
-
 <div class="d-flex justify-content-center">
     <tmp-pagination
         [totalCount]="pagination.totalItems"

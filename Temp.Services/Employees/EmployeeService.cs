@@ -1,5 +1,4 @@
-﻿using AutoMapper.QueryableExtensions;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services._Helpers;
 using Temp.Services.Employees.Models.Commands;
@@ -111,7 +110,7 @@ public partial class EmployeeService : IEmployeeService
             request.PageNumber,
             request.PageSize);
 
-        ValidateGetEmployeeWithEngagement(employees);
+        //ValidateGetEmployeeWithEngagement(employees);
 
         return employees;
     });
@@ -148,7 +147,7 @@ public partial class EmployeeService : IEmployeeService
             request.PageNumber,
             request.PageSize);
 
-        ValidateGetEmployeeWithoutEngagement(employees);
+        //ValidateGetEmployeeWithoutEngagement(employees);
 
         return employees;
     });
@@ -158,6 +157,8 @@ public partial class EmployeeService : IEmployeeService
         var employee = await _ctx.Employees
             .Where(x => x.Id == request.Id)
             .FirstOrDefaultAsync();
+
+        //NOTE: on diff org reset assigned teams
 
         _mapper.Map(request, employee);
 
@@ -182,9 +183,9 @@ public partial class EmployeeService : IEmployeeService
         } else if (employee.Role == "Moderator") {
             var moderator = await _ctx.Moderators.FirstOrDefaultAsync(x => x.EmployeeId == request.Id);
             _ctx.Moderators.Remove(moderator);
-        } else {
-            employee.Role = "None";
         }
+        employee.Role = "None";
+
         await _ctx.SaveChangesAsync();
 
         return new RemoveEmployeeRoleResponse();
@@ -196,7 +197,6 @@ public partial class EmployeeService : IEmployeeService
             .Include(x => x.Admin)
             .Include(x => x.Moderator)
             .Where(x => x.Id == EmployeeId)
-            .AsNoTracking()
             .FirstOrDefaultAsync();
 
         switch (employee.Role) {
@@ -229,61 +229,6 @@ public partial class EmployeeService : IEmployeeService
         return empolyee.Role == RoleName;
     }
 
-    public async Task<AssignRoleResponse> AssignRole(AssignRoleRequest request) {
-        //if (request.Role == "User") {
-        //    var userRequest = new RegisterUserRequest
-        //        {
-        //        Username = request.Username,
-        //        Password = request.Password,
-        //        EmployeeId = request.Id
-        //    };
 
-        //    var response = await new RegisterUser(_ctx).Do(userRequest);
-
-        //    return new AssignRole.Response {
-        //        Username = response.Username,
-        //        Message = response.Messsage,
-        //        Status = response.Status
-        //    };
-
-        //} else if (request.Role == "Admin") {
-        //    var adminRequest = new RegisterAdminRequest
-        //        {
-        //        Username = request.Username,
-        //        Password = request.Password,
-        //        EmployeeId = request.Id
-        //    };
-
-        //    var response = await new RegisterAdmin(_ctx).Do(adminRequest);
-
-        //    return new AssignRoleResponse {
-        //        Username = response.Username,
-        //        Message = response.Message,
-        //        Status = response.Status
-        //    };
-        //} else if (request.Role == "Moderator") {
-        //    var moderatorRequest = new RegisterModerator.Request
-        //        {
-        //        Username = request.Username,
-        //        Password = request.Password,
-        //        EmployeeId = request.Id
-        //    };
-
-        //    var response = await new RegisterModerator(_ctx).Do(moderatorRequest);
-
-        //    return new AssignRoleResponse {
-        //        Username = response.Username,
-        //        Message = response.Message,
-        //        Status = response.Status
-        //    };
-        //} else {
-        //    return new AssignRoleResponse {
-        //        Status = false,
-        //        Message = "Wrong role!!!!"
-        //    };
-        //}
-
-        return null;
-    }
 }
 

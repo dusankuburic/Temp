@@ -24,7 +24,7 @@ getTeamParams(): TeamParams {
 
 resetTeamParams(): void {
   this.teamParams.pageNumber = 1;
-  this.teamParams.pageSize = 5;
+  this.teamParams.pageSize = 10;
   this.teamParams.name = '';
 }
 

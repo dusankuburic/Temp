@@ -16,42 +16,48 @@
         </form>
     </div>
 </div>
-
 <div class="row justify-content-center">
     <div class="col-lg-12">
         <hr>
         <div class="table-responsive">
-        <table class="table table-striped table-hover text-center">
-            <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Role</th>
-                    <th>Options</th>
-                </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let employee of employees">
-                <td>{{employee.firstName}}</td>
-                <td>{{employee.lastName}}</td>
-                <td>
-                    <span class="badge rounded-pill pill-ts" [ngClass]="{'text-bg-warning': employee.role === 'Admin',
-                                    'text-bg-info' : employee.role === 'User',
-                                    'text-bg-success' : employee.role === 'Moderator',
-                                    'text-bg-secondary': employee.role === 'None'}">
-                        {{employee.role}}
-                    </span>
-                </td>
-                <td>
-                <a class="btn btn-primary" [routerLink]="['/engagements/create/', employee.id]"><fa-icon [icon]="addEngagementIcon"></fa-icon></a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <table class="table table-striped table-hover text-center">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Role</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let employee of employees">
+                        <td>{{employee.firstName}}</td>
+                        <td>{{employee.lastName}}</td>
+                        <td>
+                            <span class="badge rounded-pill pill-ts" 
+                            [ngClass]="{'text-bg-warning': employee.role === 'Admin',
+                            'text-bg-info' : employee.role === 'User',
+                            'text-bg-success' : employee.role === 'Moderator',
+                            'text-bg-secondary': employee.role === 'None'}">
+                                {{employee.role}}
+                            </span>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" [routerLink]="['/engagements/create/', employee.id]">
+                                <fa-icon [icon]="addEngagementIcon"></fa-icon>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-6" *ngIf="!employees.length">
+        <div class="alert alert-info text-center" role="alert">
+          <h5>There are employees without engagement</h5>
         </div>
     </div>
 </div>
-
 <div class="d-flex justify-content-center">
     <tmp-pagination
         [totalCount]="pagination.totalItems"

@@ -10,7 +10,7 @@ export interface Employee {
 
 export class EmployeeParams {
     pageNumber: number = 1;
-    pageSize: number = 5;
+    pageSize: number = 10;
     role: string = '';
     firstName: string = '';
     lastName: string = '';

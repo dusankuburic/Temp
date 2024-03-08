@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { faBookmark, faComment, faEye } from '@fortawesome/free-solid-svg-icons';
 import { ModeratorListApplication, UpdateApplicationRequest } from 'src/app/core/models/application';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { ApplicationService } from 'src/app/core/services/application.service';
@@ -9,6 +10,9 @@ import { ApplicationService } from 'src/app/core/services/application.service';
   templateUrl: './application-moderator-list.component.html'
 })
 export class ApplicationModeratorListComponent implements OnInit {
+  eyeIcon = faEye;
+  commentIcon = faComment
+  bookmarkIcon = faBookmark;
   applications: ModeratorListApplication[];
   user: any;
 

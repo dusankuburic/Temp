@@ -1,4 +1,4 @@
-﻿using Temp.Services.Auth.Users;
+﻿using Temp.Services.Auth;
 
 namespace Temp.API.Controllers;
 
@@ -6,12 +6,10 @@ namespace Temp.API.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private readonly ApplicationDbContext _ctx;
-    private readonly IConfiguration _config;
+    private readonly IAuthService _authService;
 
-    public UsersController(ApplicationDbContext ctx, IConfiguration config) {
-        _ctx = ctx;
-        _config = config;
+    public UsersController(IAuthService authService) {
+        _authService = authService;
     }
 
     [Authorize(Roles = "Admin")]
@@ -19,7 +17,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(RegisterUserResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> RegisterUser(RegisterUserRequest request) {
-        var response = await new RegisterUser(_ctx).Do(request);
+        var response = await _authService.RegisterUser(request);
         return response.Status ? Ok(response) : BadRequest(response);
     }
 
@@ -31,7 +29,7 @@ public class UsersController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState.Values);
 
-        var response = await new LoginUser(_ctx, _config).Do(request);
+        var response = await _authService.LoginUser(request);
         return response is null ? Unauthorized() : Ok(response);
     }
 }

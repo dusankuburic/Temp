@@ -1,11 +1,12 @@
 export interface Organization {
     id: number;
     name: string;
+    hasActiveGroup: boolean;
 }
 
 export class OrganizationParams {
     pageNumber: number = 1;
-    pageSize: number = 5;
+    pageSize: number = 10;
     name: string = '';
     withGroups: string = 'all';
 }

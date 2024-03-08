@@ -1,5 +1,8 @@
 # Temp
 
+Admin: john john123
+docker compose up --detach
+
 ## Under Development
 
 

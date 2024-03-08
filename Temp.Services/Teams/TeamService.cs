@@ -1,5 +1,4 @@
-﻿using AutoMapper.QueryableExtensions;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Teams.Models.Commands;

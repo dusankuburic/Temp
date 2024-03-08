@@ -3,7 +3,6 @@ import { EngagementCreateComponent } from './engagement-create/engagement-create
 import { EngagementUserListComponent } from './engagement-user-list/engagement-user-list.component';
 import { EngagementWithEmployeeListComponent } from './engagement-with-employee-list/engagement-with-employee-list.component';
 import { EngagementWithoutEmployeeListComponent } from './engagement-without-employee-list/engagement-without-employee-list.component';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { RouterModule } from '@angular/router';
 import { engagementRoutes } from './engagement.routes';
 import { SharedModule } from '../shared/shared.module';
@@ -15,7 +14,6 @@ import { EngagementCreateResolver } from '../core/resolvers/engagement/engagemen
 @NgModule({
     imports: [
         SharedModule,
-        BsDatepickerModule,
         RouterModule.forChild(engagementRoutes)
     ],
     exports: [],

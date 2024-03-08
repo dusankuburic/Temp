@@ -25,7 +25,7 @@ getOrganizationParams(): OrganizationParams {
 
 resetOrganizationParams(): void {
   this.organizationParams.pageNumber = 1;
-  this.organizationParams.pageSize = 5;
+  this.organizationParams.pageSize = 10;
   this.organizationParams.name = '';
   this.organizationParams.withGroups = 'all';
 }

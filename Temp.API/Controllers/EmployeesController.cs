@@ -1,4 +1,5 @@
-﻿using Temp.Services.Employees;
+﻿using Temp.Services.Auth;
+using Temp.Services.Employees;
 using Temp.Services.Employees.Exceptions;
 using Temp.Services.Employees.Models.Commands;
 using Temp.Services.Employees.Models.Queries;
@@ -11,9 +12,13 @@ namespace Temp.API.Controllers;
 public class EmployeesController : ControllerBase
 {
     private readonly IEmployeeService _employeeService;
+    private readonly IAuthService _authService;
 
-    public EmployeesController(IEmployeeService employeeService) {
+    public EmployeesController(
+        IEmployeeService employeeService,
+        IAuthService authService) {
         _employeeService = employeeService;
+        _authService = authService;
     }
 
     [HttpGet]
@@ -77,23 +82,20 @@ public class EmployeesController : ControllerBase
         return response ? NoContent() : BadRequest();
     }
 
-    [HttpPut("assign/{id}")]
+    [HttpPost("assign/{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequest request) {
-
-        // var response = await new AssignRole(_ctx).Do(request);
-        //return response.Status ? Ok() : BadRequest(response.Message);
-        return NoContent();
+        var response = await _authService.AssignRole(request);
+        return response.Status ? Ok() : BadRequest(response.Message);
     }
 
     [HttpPut("unassign/{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> RemoveRole([FromBody] RemoveEmployeeRoleRequest request) {
-        //var response = await new RemoveEmployeeRole(_ctx).Do(request);
-        //return response.Status ? (IActionResult)Ok() : BadRequest(response.Message);
-        return NoContent();
+        var response = await _employeeService.RemoveEmployeeRole(request);
+        return response.Success ? Ok() : BadRequest();
     }
 
     private static string GetInnerMessage(Exception exception) =>

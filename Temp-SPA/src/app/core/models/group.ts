@@ -4,6 +4,7 @@ export interface Group {
     id: number;
     name: string;
     organizationId: number;
+    hasActiveTeam: boolean;
 }
 
 export interface InnerGroups {
@@ -15,6 +16,7 @@ export interface InnerGroups {
 export interface InnerGroup {
     id: number;
     name: string;
+    hasActiveTeam: boolean;
 }
 
 export interface PagedInnerGroups {
@@ -29,7 +31,7 @@ export interface ModeratorGroups {
 
 export class GroupParams {
     pageNumber: number = 1;
-    pageSize: number = 5;
+    pageSize: number = 10;
     name: string = '';
     withTeams: string = 'all';
 }

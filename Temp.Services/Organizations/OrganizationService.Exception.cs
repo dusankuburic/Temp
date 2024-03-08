@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Temp.Services._Helpers;
+﻿using Temp.Services._Helpers;
 using Temp.Services.Organizations.Exceptions;
 using Temp.Services.Organizations.Models.Commands;
 using Temp.Services.Organizations.Models.Queries;
@@ -8,17 +7,17 @@ namespace Temp.Services.Organizations;
 
 public partial class OrganizationService
 {
-    public delegate Task<CreateOrganizationResponse> ReturningCreateOrganizationFunction();
-    public delegate Task<PagedList<GetOrganizationResponse>> ReturningGetPagedOrganizationsFunction();
-    public delegate Task<IEnumerable<GetOrganizationResponse>> ReturningGetOrganizationsFunction();
-    public delegate Task<GetOrganizationResponse> ReturningGetOrganizationFunction();
-    public delegate Task<UpdateOrganizationResponse> ReturningUpdateOrganizationFunction();
-    public delegate Task<UpdateOrganizationStatusResponse> ReturningUpdateOrganizationStatusFunction();
-    public delegate Task<GetPagedInnerGroupsResponse> ReturningGetPagedInnerGroupsFunction();
-    public delegate Task<List<InnerGroup>> ReturningGetInnerGroupsFunction();
-    public delegate Task<bool> ReturningOrganizationExistsFunction();
+    private delegate Task<CreateOrganizationResponse> ReturningCreateOrganizationFunction();
+    private delegate Task<PagedList<GetOrganizationResponse>> ReturningGetPagedOrganizationsFunction();
+    private delegate Task<IEnumerable<GetOrganizationResponse>> ReturningGetOrganizationsFunction();
+    private delegate Task<GetOrganizationResponse> ReturningGetOrganizationFunction();
+    private delegate Task<UpdateOrganizationResponse> ReturningUpdateOrganizationFunction();
+    private delegate Task<UpdateOrganizationStatusResponse> ReturningUpdateOrganizationStatusFunction();
+    private delegate Task<GetPagedInnerGroupsResponse> ReturningGetPagedInnerGroupsFunction();
+    private delegate Task<List<InnerGroup>> ReturningGetInnerGroupsFunction();
+    private delegate Task<bool> ReturningOrganizationExistsFunction();
 
-    public async Task<CreateOrganizationResponse> TryCatch(ReturningCreateOrganizationFunction returningCreateOrganizationFunction) {
+    private async Task<CreateOrganizationResponse> TryCatch(ReturningCreateOrganizationFunction returningCreateOrganizationFunction) {
         try {
             return await returningCreateOrganizationFunction();
         } catch (NullOrganizationException nullOrganizationException) {
@@ -32,7 +31,7 @@ public partial class OrganizationService
         }
     }
 
-    public async Task<GetPagedInnerGroupsResponse> TryCatch(ReturningGetPagedInnerGroupsFunction returningGetPagedInnerGroupsFunction) {
+    private async Task<GetPagedInnerGroupsResponse> TryCatch(ReturningGetPagedInnerGroupsFunction returningGetPagedInnerGroupsFunction) {
         try {
             return await returningGetPagedInnerGroupsFunction();
         } catch (SqlException sqlException) {
@@ -42,7 +41,7 @@ public partial class OrganizationService
         }
     }
 
-    public async Task<PagedList<GetOrganizationResponse>> TryCatch(ReturningGetPagedOrganizationsFunction returningGetPagedOrganizationsFunction) {
+    private async Task<PagedList<GetOrganizationResponse>> TryCatch(ReturningGetPagedOrganizationsFunction returningGetPagedOrganizationsFunction) {
         try {
             return await returningGetPagedOrganizationsFunction();
         } catch (SqlException sqlException) {
@@ -52,7 +51,7 @@ public partial class OrganizationService
         }
     }
 
-    public async Task<IEnumerable<GetOrganizationResponse>> TryCatch(ReturningGetOrganizationsFunction returningGetOrganizationsFunction) {
+    private async Task<IEnumerable<GetOrganizationResponse>> TryCatch(ReturningGetOrganizationsFunction returningGetOrganizationsFunction) {
         try {
             return await returningGetOrganizationsFunction();
         } catch (OrganizationEmptyStorageException organizationEmptyStorageException) {
@@ -64,7 +63,7 @@ public partial class OrganizationService
         }
     }
 
-    public async Task<GetOrganizationResponse> TryCatch(ReturningGetOrganizationFunction returningGetOrganizationFunction) {
+    private async Task<GetOrganizationResponse> TryCatch(ReturningGetOrganizationFunction returningGetOrganizationFunction) {
         try {
             return await returningGetOrganizationFunction();
         } catch (NullOrganizationException nullOrganizationException) {
@@ -76,7 +75,7 @@ public partial class OrganizationService
         }
     }
 
-    public async Task<UpdateOrganizationResponse> TryCatch(ReturningUpdateOrganizationFunction returningUpdateOrganizationFunction) {
+    private async Task<UpdateOrganizationResponse> TryCatch(ReturningUpdateOrganizationFunction returningUpdateOrganizationFunction) {
         try {
             return await returningUpdateOrganizationFunction();
         } catch (NullOrganizationException nullOrganizationException) {
@@ -90,7 +89,7 @@ public partial class OrganizationService
         }
     }
 
-    public async Task<UpdateOrganizationStatusResponse> TryCatch(ReturningUpdateOrganizationStatusFunction returningUpdateOrganizationStatusFunction) {
+    private async Task<UpdateOrganizationStatusResponse> TryCatch(ReturningUpdateOrganizationStatusFunction returningUpdateOrganizationStatusFunction) {
         try {
             return await returningUpdateOrganizationStatusFunction();
         } catch (NullOrganizationException nullOrganizationException) {
@@ -104,7 +103,7 @@ public partial class OrganizationService
         }
     }
 
-    public async Task<List<InnerGroup>> TryCatch(ReturningGetInnerGroupsFunction returningGetInnerGroupsFunction) {
+    private async Task<List<InnerGroup>> TryCatch(ReturningGetInnerGroupsFunction returningGetInnerGroupsFunction) {
         try {
             return await returningGetInnerGroupsFunction();
         } catch (OrganizationGetInnerGroupsStorageException organizationGetInnerGroupsStorageException) {
@@ -116,7 +115,7 @@ public partial class OrganizationService
         }
     }
 
-    public async Task<bool> TryCatch(ReturningOrganizationExistsFunction returningOrganizationExistsFunction) {
+    private async Task<bool> TryCatch(ReturningOrganizationExistsFunction returningOrganizationExistsFunction) {
         try {
             return await returningOrganizationExistsFunction();
         } catch (SqlException sqlException) {

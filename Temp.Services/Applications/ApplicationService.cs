@@ -1,5 +1,4 @@
-﻿using AutoMapper.QueryableExtensions;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models.Applications;
 using Temp.Services.Applications.Models.Commands;
 using Temp.Services.Applications.Models.Queries;
@@ -74,7 +73,7 @@ public partial class ApplicationService : IApplicationService
             .ProjectTo<GetUserApplicationsResponse>(_mapper.ConfigurationProvider)
             .ToListAsync();
 
-        ValidateGetUserApplications(applications);
+        //ValidateGetUserApplications(applications);
 
         return applications;
     });
@@ -90,7 +89,7 @@ public partial class ApplicationService : IApplicationService
             .ProjectTo<GetTeamApplicationsResponse>(_mapper.ConfigurationProvider)
             .ToListAsync();
 
-        ValidateGetTeamApplicationsViewModel(applications);
+        //ValidateGetTeamApplicationsViewModel(applications);
 
         return applications;
     });
