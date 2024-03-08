@@ -50,8 +50,8 @@ export class TeamCreateComponent implements OnInit {
         this.alertify.success('Successfully created')
         this.createTeamForm.reset();
       },
-      error: (error) => {
-        this.alertify.error(error.error);
+      error: () => {
+        this.alertify.error('Unable to create team');
       }
     });
   }

@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { JwtModule } from '@auth0/angular-jwt';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -17,6 +17,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 
 import { ModeratorComponent } from './moderator/moderator.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AddAuthHeaderInterceptor } from './core/interceptors/auth-interceptor.interceptor';
 
 export function tokenGetter(): any {
   return localStorage.getItem('token');
@@ -49,7 +50,9 @@ export function tokenGetter(): any {
     }),
     FontAwesomeModule,
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AddAuthHeaderInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,5 +1,4 @@
-﻿using AutoMapper.QueryableExtensions;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Teams.Models.Commands;
@@ -31,9 +30,18 @@ public partial class TeamService : ITeamService
              _ctx.Teams.Add(team);
              await _ctx.SaveChangesAsync();
 
+             var group = await _ctx.Groups
+                .Include(x => x.Organization)
+                .Where(x => x.Id == request.GroupId)
+                .FirstOrDefaultAsync();
+
+             group.HasActiveTeam = true;
+             group.Organization.HasActiveGroup = true;
+
+             await _ctx.SaveChangesAsync();
+
              return _mapper.Map<CreateTeamResponse>(team);
          });
-
 
     public Task<GetFullTeamTreeResponse> GetFullTeamTree(GetFullTeamTreeRequest requst) =>
         TryCatch(async () => {
@@ -74,7 +82,6 @@ public partial class TeamService : ITeamService
             return team;
         });
 
-
     public Task<UpdateTeamResponse> UpdateTeam(UpdateTeamRequest request) =>
         TryCatch(async () => {
             var team = await _ctx.Teams
@@ -89,18 +96,36 @@ public partial class TeamService : ITeamService
             return new UpdateTeamResponse();
         });
 
-
-    public async Task<UpdateTeamStatusResponse> UpdateTeamStatus(UpdateTeamStatusRequest request) {
-        var team = await _ctx.Teams
+    public Task<UpdateTeamStatusResponse> UpdateTeamStatus(UpdateTeamStatusRequest request) =>
+        TryCatch(async () => {
+            var team = await _ctx.Teams
                 .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync();
 
-        team.IsActive = !team.IsActive;
+            team.IsActive = !team.IsActive;
 
-        await _ctx.SaveChangesAsync();
+            ValidateTeamOnUpdate(team);
 
-        return new UpdateTeamStatusResponse();
-    }
+            await _ctx.SaveChangesAsync();
+
+            var group = await _ctx.Groups
+                .Include(x => x.Organization)
+                .Where(x => x.Id == team.GroupId)
+                .FirstOrDefaultAsync();
+
+            group.HasActiveTeam = await _ctx.Groups
+                .Include(x => x.Teams)
+                .Where(x => x.Id == group.Id)
+                .AnyAsync(x => x.Teams.Any(x => x.IsActive));
+
+            group.Organization.HasActiveGroup = await _ctx.Organizations
+                .Include(x => x.Groups)
+                .Where(x => x.Id == group.Organization.Id)
+                .AnyAsync(x => x.Groups.Any(x => x.IsActive && x.HasActiveTeam));
+            await _ctx.SaveChangesAsync();
+
+            return new UpdateTeamStatusResponse();
+        });
 
     public Task<bool> TeamExists(string name, int groupId) =>
         TryCatch(async () => {

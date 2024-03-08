@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
-import { debounceTime, distinctUntilChanged, last } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
 import { EngagementParams } from 'src/app/core/models/engagement';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
@@ -39,10 +39,6 @@ export class EngagementWithEmployeeListComponent implements OnInit {
         role: ['', Validators.minLength(1)],
         firstName: ['', Validators.minLength(1)],
         lastName: ['', Validators.minLength(1)],
-        workplace: ['', Validators.minLength(1)],
-        employmentStatus: ['', Validators.minLength(1)],
-        minSalary: [0, [Validators.min(0), Validators.max(5000)]],
-        maxSalary: [5000, [Validators.min(0), Validators.max(5000)]]
       });
 
       const roleControl = this.filtersForm.get('role');
@@ -83,60 +79,6 @@ export class EngagementWithEmployeeListComponent implements OnInit {
         this.engagementParams = params;
         this.loadEmployeesWithEngagement();
       });
-
-      const workplaceControl = this.filtersForm.get('workplace');
-      workplaceControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.engagementService.getEngagementParams();
-        params.pageNumber = 1;
-        params.workplace = searchFor;
-        this.engagementService.setEngagementParams(params);
-        this.engagementParams = params;
-        this.loadEmployeesWithEngagement();
-      });
-
-      const employmentStatusControl = this.filtersForm.get('employmentStatus');
-      employmentStatusControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.engagementService.getEngagementParams();
-        params.pageNumber = 1;
-        params.employmentStatus = searchFor;
-        this.engagementService.setEngagementParams(params);
-        this.engagementParams = params;
-        this.loadEmployeesWithEngagement();
-      });
-
-      const minSalaryControl = this.filtersForm.get('minSalary');
-      minSalaryControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.engagementService.getEngagementParams();
-        params.pageNumber = 1;
-        params.minSalary = searchFor;
-        this.engagementService.setEngagementParams(params);
-        this.engagementParams = params;
-        this.loadEmployeesWithEngagement();
-      });
-
-
-      const maxSalaryControl = this.filtersForm.get('maxSalary');
-      maxSalaryControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.engagementService.getEngagementParams();
-        params.pageNumber = 1;
-        params.maxSalary = searchFor;
-        this.engagementService.setEngagementParams(params);
-        this.engagementParams = params;
-        this.loadEmployeesWithEngagement();
-      });
-
     }
 
   ngOnInit(): void {
@@ -152,8 +94,8 @@ export class EngagementWithEmployeeListComponent implements OnInit {
           this.employees = res.result;
           this.pagination = res.pagination;
         },
-        error: (error) => {
-          this.alertify.error(error.error);
+        error: () => {
+          this.alertify.error('Unable to list employeees');
         }
       });
   }

@@ -17,7 +17,7 @@ export class TeamEditResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<Team>  {
         return this.teamService.getTeam(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Unable to get Team');
                 this.router.navigate(['/organizations']);
                 return of(null);
             })

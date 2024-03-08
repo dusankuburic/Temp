@@ -7,43 +7,43 @@ namespace Temp.Services.Employees;
 
 public partial class EmployeeService
 {
-    public void ValidateEmployeeOnCreate(Employee employee) {
+    private void ValidateEmployeeOnCreate(Employee employee) {
         ValidateEmployee(employee);
         ValidateEmployeeStrings(employee);
     }
 
-    public void ValidateEmployeeOnUpdate(Employee employee) {
+    private void ValidateEmployeeOnUpdate(Employee employee) {
         ValidateEmployee(employee);
         ValidateEmployeeStrings(employee);
     }
 
-    public void ValidateEmployee(Employee employee) {
+    private void ValidateEmployee(Employee employee) {
         if (employee is null) {
             throw new NullEmployeeException();
         }
     }
 
-    public void ValidateGetEmployee(GetEmployeeResponse employee) {
+    private void ValidateGetEmployee(GetEmployeeResponse employee) {
         if (employee is null) {
             throw new NullEmployeeException();
         }
     }
 
-    public void ValidateGetEmployeeWithoutEngagement
+    private void ValidateGetEmployeeWithoutEngagement
         (PagedList<GetEmployeesWithoutEngagementResponse> employeeWithoutEngagement) {
         if (employeeWithoutEngagement.Count == 0) {
             throw new EmployeeWithoutEngagementStorageException();
         }
     }
 
-    public void ValidateGetEmployeeWithEngagement
+    private void ValidateGetEmployeeWithEngagement
         (PagedList<GetEmployeesWithEngagementResponse> employeeWithEngagement) {
         if (employeeWithEngagement.Count == 0) {
             throw new EmployeeWithEngagementStorageException();
         }
     }
 
-    public void ValidateEmployeeStrings(Employee employee) {
+    private void ValidateEmployeeStrings(Employee employee) {
         switch (employee) {
             case { } when IsInvalid(employee.FirstName):
                 throw new InvalidEmployeeException(
@@ -56,13 +56,13 @@ public partial class EmployeeService
         }
     }
 
-    public void ValidateStorageEmployees(PagedList<GetEmployeesResponse> storageEmployees) {
+    private void ValidateStorageEmployees(PagedList<GetEmployeesResponse> storageEmployees) {
         if (storageEmployees.Count == 0) {
             throw new EmployeeEmptyStorageException();
         }
     }
 
-    public static bool IsInvalid(string input) {
+    private static bool IsInvalid(string input) {
         return string.IsNullOrWhiteSpace(input);
     }
 }

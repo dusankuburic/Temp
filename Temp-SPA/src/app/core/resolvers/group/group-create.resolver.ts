@@ -18,7 +18,7 @@ export class GroupCreateResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<Organization>  {
         return this.organizationService.getOrganization(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Unable to get Organization');
                 this.router.navigate(['']);
                 return of(null);
             })

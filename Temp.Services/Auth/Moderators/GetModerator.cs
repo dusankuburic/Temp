@@ -1,6 +1,6 @@
 ﻿using Temp.Database;
 
-namespace Temp.Core.Auth.Moderators;
+namespace Temp.Services.Auth.Moderators;
 
 public class GetModerator
 {

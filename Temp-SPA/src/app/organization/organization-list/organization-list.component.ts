@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { faEdit, faPenNib, faPlusCircle, faProjectDiagram, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faPlusCircle, faProjectDiagram, faTrashAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Organization, OrganizationParams } from 'src/app/core/models/organization';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
@@ -14,7 +14,7 @@ import { OrganizationService } from 'src/app/core/services/organization.service'
 })
 export class OrganizationListComponent implements OnInit {
   editOrganizationIcon = faEdit
-  archiveOrganizationIcon = faPenNib
+  archiveOrganizationIcon = faTrashAlt
   innerGroupsIcon = faUsers
   createGroupIcon = faProjectDiagram
   plusIcon = faPlusCircle;

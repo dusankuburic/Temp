@@ -25,7 +25,7 @@ getWorkplaceParams(): WorkplaceParams {
 
 resetWorkplaceParams(): void {
   this.workplaceParams.pageNumber = 1;
-  this.workplaceParams.pageSize = 5;
+  this.workplaceParams.pageSize = 10;
   this.workplaceParams.name = '';
 }
 

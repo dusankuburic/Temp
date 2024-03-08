@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Temp.Services._Helpers;
+﻿using Temp.Services._Helpers;
 using Temp.Services.Employees.Exceptions;
 using Temp.Services.Employees.Models.Commands;
 using Temp.Services.Employees.Models.Queries;
@@ -8,14 +7,14 @@ namespace Temp.Services.Employees;
 
 public partial class EmployeeService
 {
-    public delegate Task<CreateEmployeeResponse> ReturningCreateEmployeeFunction();
-    public delegate Task<PagedList<GetEmployeesResponse>> ReturningGetEmployeesFunction();
-    public delegate Task<GetEmployeeResponse> ReturningGetEmployeeFunction();
-    public delegate Task<UpdateEmployeeResponse> ReturningUpdateEmployeeFunction();
-    public delegate Task<PagedList<GetEmployeesWithoutEngagementResponse>> ReturningEmployeesWithoutEngagement();
-    public delegate Task<PagedList<GetEmployeesWithEngagementResponse>> ReturningEmployeesWithEngagement();
+    private delegate Task<CreateEmployeeResponse> ReturningCreateEmployeeFunction();
+    private delegate Task<PagedList<GetEmployeesResponse>> ReturningGetEmployeesFunction();
+    private delegate Task<GetEmployeeResponse> ReturningGetEmployeeFunction();
+    private delegate Task<UpdateEmployeeResponse> ReturningUpdateEmployeeFunction();
+    private delegate Task<PagedList<GetEmployeesWithoutEngagementResponse>> ReturningEmployeesWithoutEngagement();
+    private delegate Task<PagedList<GetEmployeesWithEngagementResponse>> ReturningEmployeesWithEngagement();
 
-    public async Task<CreateEmployeeResponse> TryCatch(ReturningCreateEmployeeFunction returningCreateEmployeeFunction) {
+    private async Task<CreateEmployeeResponse> TryCatch(ReturningCreateEmployeeFunction returningCreateEmployeeFunction) {
         try {
             return await returningCreateEmployeeFunction();
         } catch (NullEmployeeException nullEmployeeException) {
@@ -29,7 +28,7 @@ public partial class EmployeeService
         }
     }
 
-    public async Task<PagedList<GetEmployeesResponse>> TryCatch(ReturningGetEmployeesFunction returningGetEmployeesFunction) {
+    private async Task<PagedList<GetEmployeesResponse>> TryCatch(ReturningGetEmployeesFunction returningGetEmployeesFunction) {
         try {
             return await returningGetEmployeesFunction();
         } catch (EmployeeEmptyStorageException employeeEmptyStorageException) {
@@ -41,7 +40,7 @@ public partial class EmployeeService
         }
     }
 
-    public async Task<GetEmployeeResponse> TryCatch(ReturningGetEmployeeFunction returningGetEmployeeFunction) {
+    private async Task<GetEmployeeResponse> TryCatch(ReturningGetEmployeeFunction returningGetEmployeeFunction) {
         try {
             return await returningGetEmployeeFunction();
         } catch (NullEmployeeException nullEmployeeException) {
@@ -53,7 +52,7 @@ public partial class EmployeeService
         }
     }
 
-    public async Task<UpdateEmployeeResponse> TryCatch(ReturningUpdateEmployeeFunction returningUpdateEmployeeFunction) {
+    private async Task<UpdateEmployeeResponse> TryCatch(ReturningUpdateEmployeeFunction returningUpdateEmployeeFunction) {
         try {
             return await returningUpdateEmployeeFunction();
         } catch (NullEmployeeException nullEmployeeException) {
@@ -67,7 +66,7 @@ public partial class EmployeeService
         }
     }
 
-    public async Task<PagedList<GetEmployeesWithoutEngagementResponse>> TryCatch(ReturningEmployeesWithoutEngagement returningEmployeesWithoutEngagement) {
+    private async Task<PagedList<GetEmployeesWithoutEngagementResponse>> TryCatch(ReturningEmployeesWithoutEngagement returningEmployeesWithoutEngagement) {
         try {
             return await returningEmployeesWithoutEngagement();
         } catch (EmployeeWithoutEngagementStorageException employeeWithoutEngagementStorageException) {
@@ -79,7 +78,7 @@ public partial class EmployeeService
         }
     }
 
-    public async Task<PagedList<GetEmployeesWithEngagementResponse>> TryCatch(ReturningEmployeesWithEngagement returningEmployeesWithEngagement) {
+    private async Task<PagedList<GetEmployeesWithEngagementResponse>> TryCatch(ReturningEmployeesWithEngagement returningEmployeesWithEngagement) {
         try {
             return await returningEmployeesWithEngagement();
         } catch (EmployeeWithEngagementStorageException employeeWithEngagementStorageException) {

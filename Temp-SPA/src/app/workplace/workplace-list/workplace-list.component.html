@@ -30,15 +30,19 @@
                 <td>
                     <div class="btn-group" role="group">
                         <a class="btn btn-primary" [routerLink]="['/workplaces/', workplace.id, 'edit']"><fa-icon [icon]="editIcon"></fa-icon></a>
-                        <a class="btn btn-success" (click)="changeStatus(workplace.id)"><fa-icon [icon]="archiveIcon"></fa-icon></a>
+                        <a class="btn btn-danger" (click)="changeStatus(workplace.id)"><fa-icon [icon]="archiveIcon"></fa-icon></a>
                     </div>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
+    <div class="col-lg-6" *ngIf="!workplaces.length">
+        <div class="alert alert-info text-center" role="alert">
+            <h5>There are no workplaces</h5>
+        </div>
+    </div>
 </div>
-
 <div class="d-flex justify-content-center">
     <tmp-pagination
         [totalCount]="pagination.totalItems"

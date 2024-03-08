@@ -8,8 +8,7 @@
       <form [formGroup]="createApplicationForm" (ngSubmit)="create()">
         <div class="form-group">
           <h4>Category</h4>
-          <input [ngClass]="{'is-invalid': createApplicationForm.get('category').errors
-            && createApplicationForm.get('category').touched}"
+          <input [ngClass]="{'is-invalid': createApplicationForm.get('category').errors && createApplicationForm.get('category').touched}"
             type="text"
             class="form-control"
             formControlName="category">
@@ -18,11 +17,11 @@
 
         <div class="form-group">
           <h4>Content</h4>
-          <textarea [ngClass]="{'is-invalid': createApplicationForm.get('content').errors
-          && createApplicationForm.get('content').touched}"
-          class="form-control"
-          rows="7"
-          formControlName="content"></textarea>
+          <textarea [ngClass]="{'is-invalid': createApplicationForm.get('content').errors && createApplicationForm.get('content').touched}"
+            class="form-control"
+            rows="7"
+            formControlName="content">
+          </textarea>
           <div class="invalid-feedback">Please enter a Content</div>
         </div>
         <button type="submit" [disabled]="!createApplicationForm.valid" class="btn btn-success float-right">Send</button>

@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  tempdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+
+  temp.api:
+    image: ${DOCKER_REGISTRY-}tempapi
+    build:
+      context: .
+      dockerfile: Temp.API/Dockerfile
+
+  temp.spa.angular:
+    image: ${DOCKER_REGISTRY-}temp.spa.angular
+    build:
+      context: ./Temp-SPA
+      dockerfile: ./Dockerfile

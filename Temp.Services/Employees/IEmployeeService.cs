@@ -23,7 +23,5 @@ public interface IEmployeeService
     Task<bool> UpdateEmployeeAccountStatus(int EmployeeId);
 
     Task<bool> UpdateEmployeeRole(string RoleName, int EmployeeId);
-
-    Task<AssignRoleResponse> AssignRole(AssignRoleRequest request);
 }
 

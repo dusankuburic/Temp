@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Group, GroupParams, InnerGroups, PagedInnerGroups } from '../models/group';
 import { ModeratorMin } from '../models/moderator';
-import { InnerTeam, InnerTeams } from '../models/team';
+import { InnerTeam } from '../models/team';
 import { Observable, map } from 'rxjs';
 import { PaginatedResult } from '../models/pagination';
 
@@ -26,7 +26,7 @@ getGroupParams(): GroupParams {
 
 resetGroupParams(): void {
   this.groupParams.pageNumber = 1;
-  this.groupParams.pageSize = 5;
+  this.groupParams.pageSize = 10;
   this.groupParams.name = '';
   this.groupParams.withTeams = 'all';
 }
@@ -99,7 +99,7 @@ updateModeratorGroups(id: number, groups): Observable<void> {
 }
 
 changeStatus(id: number): Observable<void> {
-  return this.http.put<void>(this.baseUrl + 'groups/change-status/', id);
+  return this.http.put<void>(this.baseUrl + 'groups/change-status/' + id, id);
 }
 
 }

@@ -28,7 +28,7 @@ getEmployeeParams(): EmployeeParams {
 
 resetEmployeeParams(): void {
   this.employeeParams.pageNumber = 1;
-  this.employeeParams.pageSize = 5;
+  this.employeeParams.pageSize = 10;
   this.employeeParams.firstName = '';
   this.employeeParams.lastName = '';
   this.employeeParams.role = '';
@@ -85,7 +85,7 @@ assignRole(entity: AssignRoleDto): any {
 }
 
 unassignRole(entity: UnassignRoleDto): Observable<void> {
-  return this.http.put<void>(this.baseUrl + 'employees/unassign/' + entity.id, entity.id);
+  return this.http.put<void>(this.baseUrl + 'employees/unassign/' + entity.id, entity);
 }
 
 changeStatus(id: number): Observable<void> {

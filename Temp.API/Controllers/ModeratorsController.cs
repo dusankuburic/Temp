@@ -1,5 +1,6 @@
-﻿using Temp.Core.Auth.Moderators;
-using Temp.Domain.Models.ModeratorGroups.Exceptions;
+﻿using Temp.Domain.Models.ModeratorGroups.Exceptions;
+using Temp.Services.Auth;
+using Temp.Services.Auth.Moderators;
 
 namespace Temp.API.Controllers;
 
@@ -8,22 +9,31 @@ namespace Temp.API.Controllers;
 public class ModeratorsController : ControllerBase
 {
     private readonly ApplicationDbContext _ctx;
-    private readonly IConfiguration _config;
+    private readonly IAuthService _authService;
 
-    public ModeratorsController(ApplicationDbContext ctx, IConfiguration config) {
+
+    public ModeratorsController(
+        ApplicationDbContext ctx,
+        IAuthService authService) {
         _ctx = ctx;
-        _config = config;
+        _authService = authService;
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetModerator.ModeratorViewModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetModerator([FromRoute] int id) {
         var response = await new GetModerator(_ctx).Do(id);
+
         return Ok(response);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAdmin(RegisterModerator.Request request) {
-        var response = await new RegisterModerator(_ctx).Do(request);
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> RegisterAdmin(RegisterModeratorRequest request) {
+        var response = await _authService.RegisterModerator(request);
         if (response.Status)
             return NoContent();
 
@@ -31,20 +41,26 @@ public class ModeratorsController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAdmin(LoginModerator.Request request) {
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(LoginModeratorResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> LoginAdmin(LoginModeratorRequest request) {
         if (!ModelState.IsValid) {
             return BadRequest(ModelState.Values);
         }
 
-        var response = await new LoginModerator(_ctx, _config).Do(request);
+        var response = await _authService.LoginModerator(request);
         if (response is null)
             return Unauthorized();
 
         return Ok(response);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("update-groups/{id}")]
-    public async Task<IActionResult> UpdateGroups(int id, UpdateModeratorGroups.Request request) {
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateGroups(int id, UpdateModeratorGroupsRequest request) {
         try {
             var response = await new UpdateModeratorGroups(_ctx).Do(id, request);
             if (response.Status)

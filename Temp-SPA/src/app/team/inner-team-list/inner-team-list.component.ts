@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { faEdit, faPenNib, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { InnerGroup } from 'src/app/core/models/group';
 import { Pagination } from 'src/app/core/models/pagination';
@@ -15,7 +15,7 @@ import { TeamService } from 'src/app/core/services/team.service';
 })
 export class TeamListComponent implements OnInit {
   editTeamIcon = faEdit;
-  archiveTeamIcon = faPenNib;
+  archiveTeamIcon = faTrashAlt;
   plusIcon = faPlusCircle;
 
   filtersForm: FormGroup;
@@ -51,7 +51,11 @@ export class TeamListComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.group = {id: data['innerteams'].id, name: data['innerteams'].name };
+      this.group = {
+        id: data['innerteams'].id, 
+        name: data['innerteams'].name,
+        hasActiveTeam: data['innerteams'].hasActiveTeam
+      };
       this.innerTeams = data['innerteams'].teams.result;
       this.pagination = data['innerteams'].teams.pagination;
     });

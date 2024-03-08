@@ -17,7 +17,6 @@ import { WorkplaceService } from 'src/app/core/services/workplace.service';
   templateUrl: './engagement-create.component.html'
 })
 export class EngagementCreateComponent implements OnInit {
-  employeeData: any;
   employeeId: number;
   createEngagementForm: UntypedFormGroup;
   engagement: Engagement;
@@ -57,7 +56,7 @@ export class EngagementCreateComponent implements OnInit {
           this.employee = res;
         },
         error: () => {
-          this.alertify.error('Problem retrieving data')
+          this.alertify.error('Unable get employee')
         }
       });
   }
@@ -68,7 +67,7 @@ export class EngagementCreateComponent implements OnInit {
         this.workplaces = res;
       },
       error: () => {
-        this.alertify.error('Problem retrieving workplaces');
+        this.alertify.error('Unable to list workplaces');
       }
     });
   }
@@ -79,7 +78,7 @@ export class EngagementCreateComponent implements OnInit {
         this.employmentStatuses = res;
       },
       error: () => {
-        this.alertify.error('Problem retrieving Employment Statuses');
+        this.alertify.error('Unable to list Employment statuses');
       }
     })
   }
@@ -87,10 +86,10 @@ export class EngagementCreateComponent implements OnInit {
   loadEngagements(): void {
     this.engagementService.getEngagementForEmployee(this.employee.id).subscribe({
       next: (res: any) => {
-        this.employeeData = res;
+        this.existingEngagements = res;
       },
       error: () => {
-        this.alertify.error('Problem retrieving data');
+        this.alertify.error('Unable to list engagements');
       }
     });
   }
@@ -113,8 +112,8 @@ export class EngagementCreateComponent implements OnInit {
         this.alertify.success('Successfully created');
         this.createEngagementForm.reset();
       },
-      error: (error) => {
-        this.alertify.error(error.error);
+      error: () => {
+        this.alertify.error('Unable to create engagement');
       }
     });
   }

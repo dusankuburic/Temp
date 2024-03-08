@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { OutletContext } from '@angular/router';
 
 @Component({
   selector: 'tmp-pagination',

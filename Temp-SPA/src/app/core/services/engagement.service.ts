@@ -26,11 +26,10 @@ getEngagementParams(): EngagementParams {
 
 resetEngagementParams(): void {
   this.engagementParams.pageNumber = 1;
-  this.engagementParams.pageSize = 5;
-  this.engagementParams.workplace = '';
-  this.engagementParams.employmentStatus = '';
-  this.engagementParams.minSalary = 0;
-  this.engagementParams.maxSalary = 5000;
+  this.engagementParams.pageSize = 10;
+  this.engagementParams.role = '';
+  this.engagementParams.firstName = '';
+  this.engagementParams.lastName = '';
 }
 
 getEmployeesWithEngagement(): Observable<PaginatedResult<Employee[]>> {
@@ -42,34 +41,15 @@ getEmployeesWithEngagement(): Observable<PaginatedResult<Employee[]>> {
   params = params.append('pageSize', this.engagementParams.pageSize);
 
 
-  if (this.engagementParams.minSalary && this.engagementParams.maxSalary) {
-    params = params.append('minSalary', this.engagementParams.minSalary);
-    params = params.append('maxSalary', this.engagementParams.maxSalary);
+  if (this.engagementParams.role) {
+    params = params.append('role', this.engagementParams.role);
   }
-
-  if (this.engagementParams.workplace) {
-    params = params.append('workplace', this.engagementParams.workplace);
+  if (this.engagementParams.firstName) {
+    params = params.append('firstName', this.engagementParams.firstName);
   }
-
-  if (this.engagementParams.employmentStatus) {
-    params = params.append('employmentStatus', this.engagementParams.employmentStatus);
+  if (this.engagementParams.lastName) {
+    params = params.append('lastName', this.engagementParams.lastName);
   }
-
-
-  // if (employeeParams != null)
-  // {
-  //   params = params.append('minSalary', employeeParams.minSalary);
-  //   params = params.append('maxSalary', employeeParams.maxSalary);
-
-  //   if (employeeParams.workplace !== '' && employeeParams.employmentStatus !== '') {
-  //     params = params.append('workplace', employeeParams.workplace);
-  //     params = params.append('employmentStatus', employeeParams.employmentStatus);
-  //   } else if (employeeParams.workplace !== '') {
-  //     params = params.append('workplace', employeeParams.workplace);
-  //   } else if (employeeParams.employmentStatus !== '') {
-  //     params = params.append('employmentStatus', employeeParams.employmentStatus);
-  //   }
-  // }
 
   return this.http.get<Employee[]>(this.baseUrl + 'engagements/with', {observe: 'response', params})
     .pipe(

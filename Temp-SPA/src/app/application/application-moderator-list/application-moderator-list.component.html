@@ -18,18 +18,21 @@
                 <td>{{application.username}}</td>
                 <td>{{application.createdAt | date}}</td>
                 <td>
-                    <h3>
-                        <span class="badge badge-pill" [ngClass]="{'badge-danger': application.status == false,
-                        'badge-success': application.status == true}">
-                        <i class="far fa-eye"></i>
+                    <h4>
+                        <span class="badge  rounded-pill" [ngClass]="{'badge-danger': application.status == false, 'badge-success': application.status == true}">
+                            <fa-icon [icon]="eyeIcon"></fa-icon>
                         </span>
-                    </h3>
+                    </h4>
                 </td>
                 <td *ngIf="application.status == false">
-                    <a (click)="updateStatus(application.id, application.teamId)" class="btn btn-info"><i class="far fa-bookmark"></i></a>
+                    <a (click)="updateStatus(application.id, application.teamId)" class="btn btn-info">
+                        <fa-icon [icon]="bookmarkIcon"></fa-icon>
+                    </a>
                 </td>
                 <td>
-                    <a class="btn btn-primary" [routerLink]="['/applications/moderator/', application.id]"><i class="far fa-comments"></i></a>
+                    <a class="btn btn-primary" [routerLink]="['/applications/moderator/', application.id]">
+                        <fa-icon [icon]="eyeIcon"></fa-icon>
+                    </a>
                 </td>
             </tr>
           </tbody>

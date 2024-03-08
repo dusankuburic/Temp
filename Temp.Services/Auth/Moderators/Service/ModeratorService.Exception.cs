@@ -1,13 +1,13 @@
 ﻿using Temp.Domain.Models.ModeratorGroups.Exceptions;
 
-namespace Temp.Core.Auth.Moderators.Service;
+namespace Temp.Services.Auth.Moderators.Service;
 
 public partial class ModeratorService
 {
-    public delegate Task<UpdateModeratorGroups.Response> ReturningUpdateModeratorGroupFunction();
+    public delegate Task<UpdateModeratorGroupsResponse> ReturningUpdateModeratorGroupFunction();
 
 
-    public async Task<UpdateModeratorGroups.Response> TryCatch(
+    public async Task<UpdateModeratorGroupsResponse> TryCatch(
         ReturningUpdateModeratorGroupFunction returningUpdateModeratorGroupFunction) {
         try {
             return await returningUpdateModeratorGroupFunction();

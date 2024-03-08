@@ -6,20 +6,20 @@ namespace Temp.Services.Applications
 {
     public partial class ApplicationService
     {
-        public void ValidateApplicationOnCreate(Application application) {
+        private void ValidateApplicationOnCreate(Application application) {
             ValidateApplication(application);
             ValidateApplicationInts(application);
             ValidateApplicationString(application);
             ValidateApplicationDates(application);
         }
 
-        public void ValidateApplication(Application application) {
+        private void ValidateApplication(Application application) {
             if (application is null) {
                 throw new NullApplicationException();
             }
         }
 
-        public void ValidateApplicationInts(Application application) {
+        private void ValidateApplicationInts(Application application) {
             switch (application) {
                 case { } when IsInvalidInt(application.UserId):
                     throw new InvalidApplicationException(
@@ -32,7 +32,7 @@ namespace Temp.Services.Applications
             }
         }
 
-        public void ValidateApplicationDates(Application application) {
+        private void ValidateApplicationDates(Application application) {
             switch (application) {
                 case { } when IsInvalidDate(application.CreatedAt):
                     throw new InvalidApplicationException(
@@ -42,7 +42,7 @@ namespace Temp.Services.Applications
         }
 
 
-        public void ValidateApplicationString(Application application) {
+        private void ValidateApplicationString(Application application) {
             switch (application) {
                 case { } when IsInvalid(application.Content):
                     throw new InvalidApplicationException(
@@ -51,38 +51,38 @@ namespace Temp.Services.Applications
             }
         }
 
-        public void ValidateGetApplication(GetApplicationResponse application) {
+        private void ValidateGetApplication(GetApplicationResponse application) {
             if (application is null) {
                 throw new NullApplicationException();
             }
         }
 
-        public void ValidateGetTeamApplicationsViewModel(IEnumerable<GetTeamApplicationsResponse> applicationViewModels) {
+        private void ValidateGetTeamApplicationsViewModel(IEnumerable<GetTeamApplicationsResponse> applicationViewModels) {
             if (applicationViewModels.Count() == 0) {
                 throw new ApplicationWithTeamStorageException();
             }
         }
 
-        public void ValidateGetUserApplications(IEnumerable<GetUserApplicationsResponse> applicationViewModels) {
+        private void ValidateGetUserApplications(IEnumerable<GetUserApplicationsResponse> applicationViewModels) {
             if (applicationViewModels.Count() == 0) {
                 throw new ApplicationWithUserStorageException();
             }
         }
 
-        public static bool IsInvalidInt(int input) {
+        private static bool IsInvalidInt(int input) {
             if (input > 0 && input <= int.MaxValue) {
                 return false;
             }
             return true;
         }
 
-        public static bool IsInvalidDate(DateTime? input) {
+        private static bool IsInvalidDate(DateTime? input) {
             if (input != DateTime.MinValue) {
                 return false;
             }
             return true;
         }
 
-        public static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
+        private static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
     }
 }

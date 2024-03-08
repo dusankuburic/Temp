@@ -1,5 +1,4 @@
-﻿using AutoMapper.QueryableExtensions;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services._Helpers;
 using Temp.Services.Groups.Models.Commands;
@@ -30,6 +29,13 @@ public partial class GroupService : IGroupService
             ValidateGroupOnCreate(group);
 
             _ctx.Groups.Add(group);
+            await _ctx.SaveChangesAsync();
+
+            var organization = await _ctx.Organizations
+                .Where(x => x.Id == request.OrganizationId)
+                .FirstOrDefaultAsync();
+
+            organization.HasActiveGroup = true;
             await _ctx.SaveChangesAsync();
 
             return _mapper.Map<CreateGroupResponse>(group);
@@ -63,13 +69,19 @@ public partial class GroupService : IGroupService
     public Task<UpdateGroupStatusResponse> UpdateGroupStatus(UpdateGroupStatusRequest request) =>
         TryCatch(async () => {
             var group = await _ctx.Groups
+                .Include(x => x.Organization)
                 .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync();
 
             ValidateGroupOnStatusUpdate(group);
 
             group.IsActive = !group.IsActive;
+            await _ctx.SaveChangesAsync();
 
+            group.Organization.HasActiveGroup = await _ctx.Organizations
+                .Include(x => x.Groups)
+                .Where(x => x.Id == group.OrganizationId)
+                .AnyAsync(x => x.Groups.Any(x => x.IsActive && x.HasActiveTeam));
             await _ctx.SaveChangesAsync();
 
             return new UpdateGroupStatusResponse();

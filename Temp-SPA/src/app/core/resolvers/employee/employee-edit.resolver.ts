@@ -18,7 +18,7 @@ export class EmployeeEditResolver  {
     resolve(route: ActivatedRouteSnapshot): Observable<Employee>{
         return this.employeeService.getEmployee(route.params['id']).pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Unable to get Employee');
                 this.router.navigate(['/employees']);
                 return of(null);
             })

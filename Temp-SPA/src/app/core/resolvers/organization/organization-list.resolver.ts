@@ -18,7 +18,7 @@ export class OrganizationListResolver  {
         this.organizationService.resetOrganizationParams();
         return this.organizationService.getPagedOrganizations().pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Unable to list Organizations');
                 this.router.navigate(['']);
                 return of(null);
             })

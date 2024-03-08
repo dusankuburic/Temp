@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Temp.Services._Helpers;
+﻿using Temp.Services._Helpers;
 using Temp.Services.EmploymentStatuses.Exceptions;
 using Temp.Services.EmploymentStatuses.Models.Commands;
 using Temp.Services.EmploymentStatuses.Models.Queries;
@@ -8,15 +7,15 @@ namespace Temp.Services.EmploymentStatuses;
 
 public partial class EmploymentStatusService
 {
-    public delegate Task<CreateEmploymentStatusResponse> ReturningEmploymentStatusFunction();
-    public delegate Task<List<GetEmploymentStatusResponse>> ReturningEmploymentStatusesFunction();
-    public delegate Task<PagedList<GetPagedEmploymentStatusesResponse>> ReturningPagedEmplymentStatusesFunction();
-    public delegate Task<GetEmploymentStatusResponse> ReturningGetEmploymentStatusFunction();
-    public delegate Task<UpdateEmploymentStatusResponse> ReturningUpdateEmploymentStatusFunction();
-    public delegate Task<UpdateEmploymentStatusStatusResponse> ReturningUpdateEmploymentStatusStatusFunction();
-    public delegate Task<bool> ReturningEmploymentStatusExistsFunction();
+    private delegate Task<CreateEmploymentStatusResponse> ReturningEmploymentStatusFunction();
+    private delegate Task<List<GetEmploymentStatusResponse>> ReturningEmploymentStatusesFunction();
+    private delegate Task<PagedList<GetPagedEmploymentStatusesResponse>> ReturningPagedEmplymentStatusesFunction();
+    private delegate Task<GetEmploymentStatusResponse> ReturningGetEmploymentStatusFunction();
+    private delegate Task<UpdateEmploymentStatusResponse> ReturningUpdateEmploymentStatusFunction();
+    private delegate Task<UpdateEmploymentStatusStatusResponse> ReturningUpdateEmploymentStatusStatusFunction();
+    private delegate Task<bool> ReturningEmploymentStatusExistsFunction();
 
-    public async Task<CreateEmploymentStatusResponse> TryCatch(ReturningEmploymentStatusFunction returningEmploymentStatusFunction) {
+    private async Task<CreateEmploymentStatusResponse> TryCatch(ReturningEmploymentStatusFunction returningEmploymentStatusFunction) {
         try {
             return await returningEmploymentStatusFunction();
         } catch (NullEmploymentStatusException nullEmploymentStatusException) {
@@ -30,7 +29,7 @@ public partial class EmploymentStatusService
         }
     }
 
-    public async Task<List<GetEmploymentStatusResponse>> TryCatch(ReturningEmploymentStatusesFunction returningEmploymentStatusesFunction) {
+    private async Task<List<GetEmploymentStatusResponse>> TryCatch(ReturningEmploymentStatusesFunction returningEmploymentStatusesFunction) {
         try {
             return await returningEmploymentStatusesFunction();
         } catch (SqlException sqlException) {
@@ -40,7 +39,7 @@ public partial class EmploymentStatusService
         }
     }
 
-    public async Task<PagedList<GetPagedEmploymentStatusesResponse>> TryCatch(ReturningPagedEmplymentStatusesFunction returningPagedEmplymentStatusesFunction) {
+    private async Task<PagedList<GetPagedEmploymentStatusesResponse>> TryCatch(ReturningPagedEmplymentStatusesFunction returningPagedEmplymentStatusesFunction) {
         try {
             return await returningPagedEmplymentStatusesFunction();
         } catch (SqlException sqlException) {
@@ -50,7 +49,7 @@ public partial class EmploymentStatusService
         }
     }
 
-    public async Task<GetEmploymentStatusResponse> TryCatch(ReturningGetEmploymentStatusFunction returningGetEmploymentStatusFunction) {
+    private async Task<GetEmploymentStatusResponse> TryCatch(ReturningGetEmploymentStatusFunction returningGetEmploymentStatusFunction) {
         try {
             return await returningGetEmploymentStatusFunction();
         } catch (NullEmploymentStatusException nullEmploymentStatusException) {
@@ -62,7 +61,7 @@ public partial class EmploymentStatusService
         }
     }
 
-    public async Task<UpdateEmploymentStatusResponse> TryCatch(ReturningUpdateEmploymentStatusFunction returningUpdateEmploymentStatusFunction) {
+    private async Task<UpdateEmploymentStatusResponse> TryCatch(ReturningUpdateEmploymentStatusFunction returningUpdateEmploymentStatusFunction) {
         try {
             return await returningUpdateEmploymentStatusFunction();
         } catch (NullEmploymentStatusException nullEmploymentStatusException) {
@@ -76,7 +75,7 @@ public partial class EmploymentStatusService
         }
     }
 
-    public async Task<UpdateEmploymentStatusStatusResponse> TryCatch(ReturningUpdateEmploymentStatusStatusFunction returningUpdateEmploymentStatusStatusFunction) {
+    private async Task<UpdateEmploymentStatusStatusResponse> TryCatch(ReturningUpdateEmploymentStatusStatusFunction returningUpdateEmploymentStatusStatusFunction) {
         try {
             return await returningUpdateEmploymentStatusStatusFunction();
         } catch (NullEmploymentStatusException nullEmploymentStatusException) {
@@ -90,7 +89,7 @@ public partial class EmploymentStatusService
         }
     }
 
-    public async Task<bool> TryCatch(ReturningEmploymentStatusExistsFunction returningEmploymentStatusExistsFunction) {
+    private async Task<bool> TryCatch(ReturningEmploymentStatusExistsFunction returningEmploymentStatusExistsFunction) {
         try {
             return await returningEmploymentStatusExistsFunction();
         } catch (SqlException sqlException) {

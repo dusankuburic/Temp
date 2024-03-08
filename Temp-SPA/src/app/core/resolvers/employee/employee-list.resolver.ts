@@ -18,7 +18,7 @@ export class EmployeeListResolver {
         this.employeeService.resetEmployeeParams();
         return this.employeeService.getEmployees().pipe(
             catchError(error => {
-                this.alertify.error('Problem retrieving data');
+                this.alertify.error('Unable to list Employees');
                 this.router.navigate(['']);
                 return of(null);
             })
