@@ -13,4 +13,5 @@ public class InnerGroup
 {
     public int Id { get; set; }
     public string Name { get; set; }
+    public bool HasActiveTeam { get; set; }
 }

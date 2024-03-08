@@ -5,26 +5,26 @@ namespace Temp.Services.Workplaces;
 
 public partial class WorkplaceService
 {
-    public void ValidateWorkplaceOnCreate(Workplace workplace) {
+    private void ValidateWorkplaceOnCreate(Workplace workplace) {
         ValidateWorkplace(workplace);
         ValidateWorkplaceStrings(workplace);
     }
 
-    public void ValidateWorkplaceOnUpdate(Workplace workplace) {
+    private void ValidateWorkplaceOnUpdate(Workplace workplace) {
         ValidateWorkplace(workplace);
         ValidateWorkplaceStrings(workplace);
     }
 
-    public void ValidateWorkplaceOnStatusUpdate(Workplace workplace) {
+    private void ValidateWorkplaceOnStatusUpdate(Workplace workplace) {
         ValidateWorkplace(workplace);
     }
 
-    public void ValidateWorkplace(Workplace workplace) {
+    private void ValidateWorkplace(Workplace workplace) {
         if (workplace is null)
             throw new NullWorkplaceException();
     }
 
-    public void ValidateWorkplaceStrings(Workplace workplace) {
+    private void ValidateWorkplaceStrings(Workplace workplace) {
         switch (workplace) {
             case { } when IsInvalid(workplace.Name):
                 throw new InvalidWorkplaceException(
@@ -33,6 +33,6 @@ public partial class WorkplaceService
         }
     }
 
-    public static bool IsInvalid(string input)
+    private static bool IsInvalid(string input)
         => string.IsNullOrWhiteSpace(input);
 }

@@ -1,5 +1,4 @@
-﻿using AutoMapper.QueryableExtensions;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models.Applications;
 using Temp.Services.Applications.Models.Commands;
 using Temp.Services.Applications.Models.Queries;

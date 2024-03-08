@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Temp.Services.Groups.Exceptions;
+﻿using Temp.Services.Groups.Exceptions;
 using Temp.Services.Groups.Models.Commands;
 using Temp.Services.Groups.Models.Queries;
 
@@ -7,17 +6,17 @@ namespace Temp.Services.Groups;
 
 public partial class GroupService
 {
-    public delegate Task<CreateGroupResponse> ReturningCreateGroupFunction();
-    public delegate Task<GetGroupResponse> ReturningGetGroupFunction();
-    public delegate Task<UpdateGroupResponse> ReturningUpdateGroupFunction();
-    public delegate Task<UpdateGroupStatusResponse> ReturningUpdateGroupStatusFunction();
-    public delegate Task<GetPagedGroupInnerTeamsResponse> ReturningPagedGroupInnerTeamsFunction();
-    public delegate Task<List<InnerTeam>> ReturningGroupInnerTeamsFunction();
-    public delegate Task<List<GetModeratorGroupsResponse>> ReturningModeratorGroupsFunction();
-    public delegate Task<List<GetModeratorFreeGroupsResponse>> ReturningModeratorFreeGroupsFunction();
-    public delegate Task<bool> ReturningGroupExistsFunction();
+    private delegate Task<CreateGroupResponse> ReturningCreateGroupFunction();
+    private delegate Task<GetGroupResponse> ReturningGetGroupFunction();
+    private delegate Task<UpdateGroupResponse> ReturningUpdateGroupFunction();
+    private delegate Task<UpdateGroupStatusResponse> ReturningUpdateGroupStatusFunction();
+    private delegate Task<GetPagedGroupInnerTeamsResponse> ReturningPagedGroupInnerTeamsFunction();
+    private delegate Task<List<InnerTeam>> ReturningGroupInnerTeamsFunction();
+    private delegate Task<List<GetModeratorGroupsResponse>> ReturningModeratorGroupsFunction();
+    private delegate Task<List<GetModeratorFreeGroupsResponse>> ReturningModeratorFreeGroupsFunction();
+    private delegate Task<bool> ReturningGroupExistsFunction();
 
-    public async Task<CreateGroupResponse> TryCatch(ReturningCreateGroupFunction returningCreateGroupFunction) {
+    private async Task<CreateGroupResponse> TryCatch(ReturningCreateGroupFunction returningCreateGroupFunction) {
         try {
             return await returningCreateGroupFunction();
         } catch (NullGroupException nullGroupException) {
@@ -31,7 +30,7 @@ public partial class GroupService
         }
     }
 
-    public async Task<GetGroupResponse> TryCatch(ReturningGetGroupFunction returningGetGroupFunction) {
+    private async Task<GetGroupResponse> TryCatch(ReturningGetGroupFunction returningGetGroupFunction) {
         try {
             return await returningGetGroupFunction();
         } catch (NullGroupException nullGroupException) {
@@ -43,7 +42,7 @@ public partial class GroupService
         }
     }
 
-    public async Task<UpdateGroupResponse> TryCatch(ReturningUpdateGroupFunction returningUpdateGroupFunction) {
+    private async Task<UpdateGroupResponse> TryCatch(ReturningUpdateGroupFunction returningUpdateGroupFunction) {
         try {
             return await returningUpdateGroupFunction();
         } catch (NullGroupException nullGroupException) {
@@ -57,7 +56,7 @@ public partial class GroupService
         }
     }
 
-    public async Task<UpdateGroupStatusResponse> TryCatch(ReturningUpdateGroupStatusFunction returningUpdateGroupStatusFunction) {
+    private async Task<UpdateGroupStatusResponse> TryCatch(ReturningUpdateGroupStatusFunction returningUpdateGroupStatusFunction) {
         try {
             return await returningUpdateGroupStatusFunction();
         } catch (NullGroupException nullGroupException) {
@@ -71,7 +70,7 @@ public partial class GroupService
         }
     }
 
-    public async Task<GetPagedGroupInnerTeamsResponse> TryCatch(ReturningPagedGroupInnerTeamsFunction returningPagedGroupInnerTeamsFunction) {
+    private async Task<GetPagedGroupInnerTeamsResponse> TryCatch(ReturningPagedGroupInnerTeamsFunction returningPagedGroupInnerTeamsFunction) {
         try {
             return await returningPagedGroupInnerTeamsFunction();
         } catch (SqlException sqlException) {
@@ -81,7 +80,7 @@ public partial class GroupService
         }
     }
 
-    public async Task<List<InnerTeam>> TryCatch(ReturningGroupInnerTeamsFunction returningGroupInnerTeamsFunction) {
+    private async Task<List<InnerTeam>> TryCatch(ReturningGroupInnerTeamsFunction returningGroupInnerTeamsFunction) {
         try {
             return await returningGroupInnerTeamsFunction();
         } catch (SqlException sqlException) {
@@ -91,7 +90,7 @@ public partial class GroupService
         }
     }
 
-    public async Task<List<GetModeratorGroupsResponse>> TryCatch(ReturningModeratorGroupsFunction returningModeratorGroupsFunction) {
+    private async Task<List<GetModeratorGroupsResponse>> TryCatch(ReturningModeratorGroupsFunction returningModeratorGroupsFunction) {
         try {
             return await returningModeratorGroupsFunction();
         } catch (SqlException sqlException) {
@@ -101,7 +100,7 @@ public partial class GroupService
         }
     }
 
-    public async Task<List<GetModeratorFreeGroupsResponse>> TryCatch(ReturningModeratorFreeGroupsFunction returningModeratorFreeGroupsFunction) {
+    private async Task<List<GetModeratorFreeGroupsResponse>> TryCatch(ReturningModeratorFreeGroupsFunction returningModeratorFreeGroupsFunction) {
         try {
             return await returningModeratorFreeGroupsFunction();
         } catch (SqlException sqlException) {
@@ -111,7 +110,7 @@ public partial class GroupService
         }
     }
 
-    public async Task<bool> TryCatch(ReturningGroupExistsFunction returningGroupExistsFunction) {
+    private async Task<bool> TryCatch(ReturningGroupExistsFunction returningGroupExistsFunction) {
         try {
             return await returningGroupExistsFunction();
         } catch (SqlException sqlException) {

@@ -6,36 +6,35 @@ namespace Temp.Services.Teams;
 
 public partial class TeamService
 {
-    public void ValidateTeamOnCreate(Team team) {
+    private void ValidateTeamOnCreate(Team team) {
         ValidateTeam(team);
         ValidateTeamString(team);
     }
 
-    public void ValidateTeamOnUpdate(Team team) {
+    private void ValidateTeamOnUpdate(Team team) {
         ValidateTeam(team);
         ValidateTeamString(team);
     }
 
-    public void ValidateTeam(Team team) {
+    private void ValidateTeam(Team team) {
         if (team is null) {
             throw new NullTeamException();
         }
     }
 
-
-    public void ValidateGetTeam(GetTeamResponse team) {
+    private void ValidateGetTeam(GetTeamResponse team) {
         if (team is null) {
             throw new NullTeamException();
         }
     }
 
-    public void ValidateGetUserTeam(GetUserTeamResponse team) {
+    private void ValidateGetUserTeam(GetUserTeamResponse team) {
         if (team is null) {
             throw new NullTeamException();
         }
     }
 
-    public void ValidateTeamString(Team team) {
+    private void ValidateTeamString(Team team) {
         switch (team) {
             case { } when IsInvalid(team.Name):
                 throw new InvalidTeamException(
@@ -44,8 +43,7 @@ public partial class TeamService
         }
     }
 
-
-    public static bool IsInvalid(string input) {
+    private static bool IsInvalid(string input) {
         return string.IsNullOrWhiteSpace(input);
     }
 }

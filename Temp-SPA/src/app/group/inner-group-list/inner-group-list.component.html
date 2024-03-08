@@ -41,14 +41,14 @@
           </td>
           <td>
             <div class="btn-group" role="group">
-              <a class="btn btn-warning"[routerLink]="['/teams/group/', group.id]"><fa-icon [icon]="innerTeamsIcon"></fa-icon></a>
+              <a class="btn" [ngClass]="group.hasActiveTeam ? 'btn-warning': 'btn-danger'"  [routerLink]="['/teams/group/', group.id]"><fa-icon [icon]="innerTeamsIcon"></fa-icon></a>
               <a class="btn btn-info"  [routerLink]="['/teams/create/group/', group.id]"><fa-icon [icon]="plusIcon"></fa-icon></a>  
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-</div>
+  </div>
   <div class="col-lg-6" *ngIf="!innerGroups.length">
     <div class="alert alert-info text-center" role="alert">
       <h5>There are no groups inside organization</h5>

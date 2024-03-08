@@ -26,7 +26,7 @@ export interface ExistingEngagement {
 
 export class EngagementParams {
     pageNumber: number = 1;
-    pageSize: number = 5;
+    pageSize: number = 10;
     firstName: string = '';
     lastName: string = '';
     role: string = '';

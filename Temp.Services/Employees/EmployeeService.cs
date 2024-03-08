@@ -1,5 +1,4 @@
-﻿using AutoMapper.QueryableExtensions;
-using Temp.Database;
+﻿using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services._Helpers;
 using Temp.Services.Employees.Models.Commands;
@@ -111,7 +110,7 @@ public partial class EmployeeService : IEmployeeService
             request.PageNumber,
             request.PageSize);
 
-        ValidateGetEmployeeWithEngagement(employees);
+        //ValidateGetEmployeeWithEngagement(employees);
 
         return employees;
     });
@@ -148,7 +147,7 @@ public partial class EmployeeService : IEmployeeService
             request.PageNumber,
             request.PageSize);
 
-        ValidateGetEmployeeWithoutEngagement(employees);
+        //ValidateGetEmployeeWithoutEngagement(employees);
 
         return employees;
     });
@@ -229,61 +228,6 @@ public partial class EmployeeService : IEmployeeService
         return empolyee.Role == RoleName;
     }
 
-    public async Task<AssignRoleResponse> AssignRole(AssignRoleRequest request) {
-        //if (request.Role == "User") {
-        //    var userRequest = new RegisterUserRequest
-        //        {
-        //        Username = request.Username,
-        //        Password = request.Password,
-        //        EmployeeId = request.Id
-        //    };
 
-        //    var response = await new RegisterUser(_ctx).Do(userRequest);
-
-        //    return new AssignRole.Response {
-        //        Username = response.Username,
-        //        Message = response.Messsage,
-        //        Status = response.Status
-        //    };
-
-        //} else if (request.Role == "Admin") {
-        //    var adminRequest = new RegisterAdminRequest
-        //        {
-        //        Username = request.Username,
-        //        Password = request.Password,
-        //        EmployeeId = request.Id
-        //    };
-
-        //    var response = await new RegisterAdmin(_ctx).Do(adminRequest);
-
-        //    return new AssignRoleResponse {
-        //        Username = response.Username,
-        //        Message = response.Message,
-        //        Status = response.Status
-        //    };
-        //} else if (request.Role == "Moderator") {
-        //    var moderatorRequest = new RegisterModerator.Request
-        //        {
-        //        Username = request.Username,
-        //        Password = request.Password,
-        //        EmployeeId = request.Id
-        //    };
-
-        //    var response = await new RegisterModerator(_ctx).Do(moderatorRequest);
-
-        //    return new AssignRoleResponse {
-        //        Username = response.Username,
-        //        Message = response.Message,
-        //        Status = response.Status
-        //    };
-        //} else {
-        //    return new AssignRoleResponse {
-        //        Status = false,
-        //        Message = "Wrong role!!!!"
-        //    };
-        //}
-
-        return null;
-    }
 }
 
