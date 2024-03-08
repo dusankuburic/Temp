@@ -7,7 +7,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["Temp.API/Temp.API.csproj", "Temp.API/"]
 COPY ["Temp.Services/Temp.Services.csproj", "Temp.Services/"]
-COPY ["Temp.Core/Temp.Core.csproj", "Temp.Core/"]
 COPY ["Temp.Domain/Temp.Domain.csproj", "Temp.Domain/"]
 COPY ["Temp.Database/Temp.Database.csproj", "Temp.Database/"]
 

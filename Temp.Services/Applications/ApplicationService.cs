@@ -73,7 +73,7 @@ public partial class ApplicationService : IApplicationService
             .ProjectTo<GetUserApplicationsResponse>(_mapper.ConfigurationProvider)
             .ToListAsync();
 
-        ValidateGetUserApplications(applications);
+        //ValidateGetUserApplications(applications);
 
         return applications;
     });
@@ -89,7 +89,7 @@ public partial class ApplicationService : IApplicationService
             .ProjectTo<GetTeamApplicationsResponse>(_mapper.ConfigurationProvider)
             .ToListAsync();
 
-        ValidateGetTeamApplicationsViewModel(applications);
+        //ValidateGetTeamApplicationsViewModel(applications);
 
         return applications;
     });

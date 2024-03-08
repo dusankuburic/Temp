@@ -82,7 +82,7 @@ public class EmployeesController : ControllerBase
         return response ? NoContent() : BadRequest();
     }
 
-    [HttpPut("assign/{id}")]
+    [HttpPost("assign/{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequest request) {

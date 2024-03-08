@@ -17,7 +17,6 @@ import { WorkplaceService } from 'src/app/core/services/workplace.service';
   templateUrl: './engagement-create.component.html'
 })
 export class EngagementCreateComponent implements OnInit {
-  employeeData: any;
   employeeId: number;
   createEngagementForm: UntypedFormGroup;
   engagement: Engagement;
@@ -87,7 +86,7 @@ export class EngagementCreateComponent implements OnInit {
   loadEngagements(): void {
     this.engagementService.getEngagementForEmployee(this.employee.id).subscribe({
       next: (res: any) => {
-        this.employeeData = res;
+        this.existingEngagements = res;
       },
       error: () => {
         this.alertify.error('Unable to list engagements');

@@ -1,4 +1,3 @@
-
 <div class="row d-flex justify-content-around">
     <div class="col-lg-2">
         <h4>Employees</h4>
@@ -55,10 +54,8 @@
                     </td>
                     <td *ngIf="employee.role != 'None'">
                         <div class="btn-group">
-                            <a (click)="changeStatus(employee.id)" class="btn" 
-                                [ngClass]="{'btn-success': employee.isActive,
-                            'btn-warning': !employee.isActive}">
-                            <fa-icon [icon]="employee.isActive ? deactivateUserIcon : activateUserIcon"></fa-icon>
+                            <a (click)="changeStatus(employee.id)" class="btn" [ngClass]="{'btn-success': employee.isActive, 'btn-warning': !employee.isActive}">
+                                <fa-icon [icon]="employee.isActive ? deactivateUserIcon : activateUserIcon"></fa-icon>
                             </a>
                             <a (click)="removeRole(employee.id)" class="btn btn-danger"><fa-icon [icon]="removeRoleIcon"></fa-icon></a> 
                         </div>

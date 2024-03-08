@@ -158,6 +158,8 @@ public partial class EmployeeService : IEmployeeService
             .Where(x => x.Id == request.Id)
             .FirstOrDefaultAsync();
 
+        //NOTE: on diff org reset assigned teams
+
         _mapper.Map(request, employee);
 
         ValidateEmployeeOnUpdate(employee);
@@ -181,9 +183,9 @@ public partial class EmployeeService : IEmployeeService
         } else if (employee.Role == "Moderator") {
             var moderator = await _ctx.Moderators.FirstOrDefaultAsync(x => x.EmployeeId == request.Id);
             _ctx.Moderators.Remove(moderator);
-        } else {
-            employee.Role = "None";
         }
+        employee.Role = "None";
+
         await _ctx.SaveChangesAsync();
 
         return new RemoveEmployeeRoleResponse();
@@ -195,7 +197,6 @@ public partial class EmployeeService : IEmployeeService
             .Include(x => x.Admin)
             .Include(x => x.Moderator)
             .Where(x => x.Id == EmployeeId)
-            .AsNoTracking()
             .FirstOrDefaultAsync();
 
         switch (employee.Role) {

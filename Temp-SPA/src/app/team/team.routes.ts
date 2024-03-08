@@ -32,6 +32,6 @@ export const teamRoutes: Routes = [
         canActivate: [ModeratorGuard],
         path: ':id/assigned-groups',
         component: AssignedInnerTeamsComponent,
-        resolve: { teams: TeamListResolver }
+        resolve: { innerteams: TeamListResolver }
     }
 ];

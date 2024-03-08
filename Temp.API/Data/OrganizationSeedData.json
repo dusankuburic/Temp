@@ -1,20 +1,26 @@
 [
   {
-    "name": "HACIJENDA 1"
+    "name": "HACIJENDA 1",
+    "hasActiveGroup": true
   },
   {
-    "name": "HACIJENDA 2"
+    "name": "HACIJENDA 2",
+    "hasActiveGroup": true
   },
   {
-    "name": "Puket 0lk2"
+    "name": "Puket 0lk2",
+    "hasActiveGroup": true
   },
   {
-    "name": "Rotor KJ33"
+    "name": "Rotor KJ33",
+    "hasActiveGroup": false
   },
   {
-    "name": "Stator MM22"
+    "name": "Stator MM22",
+    "hasActiveGroup": false
   },
   {
-    "name": "Felna PH99"
+    "name": "Felna PH99",
+    "hasActiveGroup": false
   }
 ]
