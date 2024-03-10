@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, firstValueFrom, lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
-import { Group, InnerGroup, ModeratorGroups } from 'src/app/core/models/group';
+import { Group, ModeratorGroups } from 'src/app/core/models/group';
 import { Moderator, ModeratorMin } from 'src/app/core/models/moderator';
-import { Organization } from 'src/app/core/models/organization';
-import { FullTeam, InnerTeam, Team } from 'src/app/core/models/team';
+import { FullTeam } from 'src/app/core/models/team';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
 import { TeamService } from 'src/app/core/services/team.service';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 
 @Component({
   selector: 'app-employee-edit',
@@ -26,9 +26,9 @@ export class EmployeeEditComponent implements OnInit {
   employee: Employee;
   fullTeam: FullTeam;
   Moderator: Moderator;
-  organizations$: Observable<Organization[]>;
-  innerGroups: InnerGroup[];
-  innerTeams: InnerTeam[];
+  organizationsSelect: SelectionOption[];
+  innerGroupsSelect: SelectionOption[];
+  innerTeamsSelect: SelectionOption[];
   currentModeratorGroups: Group[];
   freeModeratorGroups: Group[];
 
@@ -57,9 +57,9 @@ export class EmployeeEditComponent implements OnInit {
     this.editEmployeeForm = this.fb.group({
       firstName: this.firstName,
       lastName: this.lastName,
-      organizationId: [null],
-      groupId: [null],
-      teamId: [null]
+      organizationId: [null, Validators.required],
+      groupId: [null, Validators.required],
+      teamId: [null, Validators.required]
     });
     this.editEmployeeForm.get('organizationId').disable();
 
@@ -74,7 +74,13 @@ export class EmployeeEditComponent implements OnInit {
       this.loadFullTeam(this.employee.teamId);
     }
 
-    this.organizations$ = this.organizationService.getOrganizations();
+    this.organizationService.getOrganizationsForSelect()
+      .subscribe(res => {
+        this.organizationsSelect = [
+          {value: null, display: 'Select Organization', hidden: true},
+          ...res
+        ];
+      });
   }
 
   setupForm(employee: Employee): void {
@@ -124,22 +130,38 @@ export class EmployeeEditComponent implements OnInit {
 
   loadOrgData(fullTeam: FullTeam) {
     this.editEmployeeForm.get('organizationId').setValue(fullTeam.organizationId);
-    this.loadInnerGroups(fullTeam.organizationId);
+    this.organizationService.getInnerGroupsForSelect(fullTeam.organizationId).subscribe((res) => {
+      if (res !== null) {
+        this.innerGroupsSelect = [
+          {value: null, display: 'Select Group', hidden: true},
+          ...res
+        ];
+      }
+    });
+
     this.editEmployeeForm.get('groupId').setValue(fullTeam.groupId);
-    this.loadInnerTeams(fullTeam.groupId);
+    this.groupService.getInnerTeamsForSelect(fullTeam.groupId).subscribe((res) => {
+      if (res !== null) {
+        this.innerTeamsSelect = [];
+        this.innerTeamsSelect = [
+          {value: null, display: 'Select Team', hidden: true},
+          ...res
+        ];
+      }
+    });
     this.editEmployeeForm.get('teamId').setValue(fullTeam.teamId);
   }
 
   loadInnerGroups(id): void {
     if (id == null)
       return;
-    this.innerTeams = [];
-    this.organizationService.getInnerGroups(id).subscribe((res) => {
+    this.organizationService.getInnerGroupsForSelect(id).subscribe((res) => {
       if (res !== null) {
-        this.innerGroups = res;
-      } else {
-        this.innerGroups = [];
-        this.innerTeams = [];
+        this.innerGroupsSelect = [
+          {value: null, display: 'Select Group', hidden: true},
+          ...res
+        ];
+        this.editEmployeeForm.get('teamId').setValue(null);
       }
     });
   }
@@ -147,15 +169,17 @@ export class EmployeeEditComponent implements OnInit {
   loadInnerTeams(id): void {
     if (id == null)
       return;
-    this.groupService.getInnerTeams(id).subscribe((res) => {
+    this.groupService.getInnerTeamsForSelect(id).subscribe((res) => {
       if (res !== null) {
-        this.innerTeams = res;
-      } else {
-        this.innerTeams = [];
+        this.innerTeamsSelect = [];
+        this.innerTeamsSelect = [
+          {value: null, display: 'Select Team', hidden: true},
+          ...res
+        ];
+        this.editEmployeeForm.get('teamId').setValue(null);
       }
     });
   }
-
 
   updateGroup(moderatorId: number, newGroupId: number): void {
     let moderatorGroups = {} as ModeratorGroups;
@@ -192,7 +216,6 @@ export class EmployeeEditComponent implements OnInit {
 
     this.employeeService.updateEmployee(employeeForm).subscribe({
       next: () => {
-        this.loadFullTeam(employeeForm.teamId);
         this.alertify.success('Successfully updated');
       },
       error: () => {

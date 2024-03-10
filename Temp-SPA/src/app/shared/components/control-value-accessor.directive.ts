@@ -6,8 +6,6 @@ import { Subject, distinctUntilChanged, startWith, takeUntil, tap } from "rxjs";
     selector: '[tmpControlValueAccessor]'
 })
 export class ControlValueAccessorDirective<T> implements ControlValueAccessor, OnInit {
-    
-
     control: FormControl | undefined;
     isRequired = false;
 
@@ -41,8 +39,9 @@ export class ControlValueAccessorDirective<T> implements ControlValueAccessor, O
         }
     }
 
-
     writeValue(value: T): void {
+        if (this.control.value === value)
+            return;
         this.control 
             ? this.control.setValue(value)
             : (this.control = new FormControl(value))

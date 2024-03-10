@@ -38,7 +38,14 @@ export class EmployeeCreateComponent implements OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.createForm();
+    this.createEmployeeForm = this.fb.group({
+      firstName: this.firstName,
+      lastName: this.lastName,
+      organizationId: [null, Validators.required],
+      groupId: [null, Validators.required],
+      teamId: [null, Validators.required]
+    });
+    
     this.organizationService.getOrganizationsForSelect()
       .subscribe(res => {
         this.organizationsSelect = [
@@ -48,29 +55,17 @@ export class EmployeeCreateComponent implements OnInit {
     });
   }
 
-  createForm(): void {
-    this.createEmployeeForm = this.fb.group({
-      firstName: this.firstName,
-      lastName: this.lastName,
-      organizationId: [null, Validators.required],
-      groupId: [null, Validators.required],
-      teamId: [null, Validators.required]
-    });
-  }
-
   loadInnerGroups(id): void {
     if (id == null)
       return;
-    this.innerTeamsSelect = [];
     this.organizationService.getInnerGroupsForSelect(id).subscribe((res) => {
       if (res !== null) {
         this.innerGroupsSelect = [
         {value: null, display: 'Select Group', hidden: true},
           ...res
         ];
-      } else {
-        this.innerGroupsSelect = [];
-        this.innerTeamsSelect = [];
+        this.createEmployeeForm.get('groupId').setValue(null);
+        this.innerTeamsSelect = [{value: null, display: 'Select Team', hidden: true}];
       }
     });
   }
@@ -80,12 +75,12 @@ export class EmployeeCreateComponent implements OnInit {
       return;
     this.groupService.getInnerTeamsForSelect(id).subscribe((res) => {
       if (res !== null) {
+        this.innerTeamsSelect = [];
         this.innerTeamsSelect = [
           {value: null, display: 'Select Team', hidden: true},
           ...res
         ];
-      } else {
-       this.innerTeamsSelect = [];
+        this.createEmployeeForm.get('teamId').setValue(null);
       }
     });
   }

@@ -6,7 +6,7 @@
         class="form-control"
         [ngClass]="(isFilter) ? null : (control.touched) ? control.invalid ? 'is-invalid' : 'is-valid' : null">
         <label>{{label}}</label>
-    <ng-container *ngIf="control.touched && control.invalid">
+    <ng-container *ngIf="isFilter == false && control.touched && control.invalid">
         <div *ngIf="control.errors?.required" class="invalid-feedback">
             Please enter {{label}}.
         </div>

@@ -6,7 +6,6 @@ export interface SelectionOption {
   value: any, 
   display: any,
   disabled?: boolean,
-  selected?: boolean,
   hidden?: boolean
 };
 
@@ -25,5 +24,5 @@ export interface SelectionOption {
 export class TmpSelectComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() options: SelectionOption[] = [];
   @Input() label = '';
-  @Input() customErrorMessages: Record<string, string> = {};
+  @Input() isFilter: boolean = false;  
 }

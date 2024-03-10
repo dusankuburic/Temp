@@ -20,26 +20,20 @@
         <fieldset class="form-group">
             <legend>Role</legend>
             <div class="form-check">
-                <label class="form-check-label">
-                    <input type="radio" formControlName="role" value="User" class="form-check-input" />
-                    User
-                </label>
+              <input type="radio" formControlName="role" value="User" class="form-check-input"/>
+              <label class="form-check-label">User</label>
             </div>
             <div class="form-check">
-              <label class="form-check-label">
-                  <input type="radio" formControlName="role" value="Moderator" class="form-check-input" />  
-                  Moderator
-              </label>
-          </div>
+              <input type="radio"  formControlName="role" value="Moderator" class="form-check-input" />  
+              <label class="form-check-label">Moderator</label>
+            </div>
             <div class="form-check">
-                <label class="form-check-label">
-                    <input type="radio" formControlName="role" value="Admin" class="form-check-input" />  
-                    Admin
-                </label>
+              <input type="radio"  formControlName="role" value="Admin" class="form-check-input" />  
+              <label class="form-check-label">Admin</label>
             </div>
         </fieldset> 
         <div class="form-group">
-          <button class="btn btn-success float-right" [disabled]="!createAssignRoleForm.valid" type="submit">Save</button>
+          <button class="btn btn-success btn-ts float-right" [disabled]="!createAssignRoleForm.valid" type="submit">Save</button>
         </div>
     </form>
   </div>

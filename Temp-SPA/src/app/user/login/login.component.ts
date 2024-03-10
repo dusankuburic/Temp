@@ -6,7 +6,8 @@ import { Moderator } from '../../core/models/moderator';
 import { User } from '../../core/models/user';
 import { AlertifyService } from '../../core/services/alertify.service';
 import { AuthService } from '../../core/services/auth.service';
-import { _ } from 'ajv';
+
+import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 
 @Component({
   selector: 'app-login',
@@ -14,12 +15,12 @@ import { _ } from 'ajv';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  roleList = [
+  roleList: SelectionOption[] = [
+    {value: '', display: 'Select Role', disabled: true},
     {value: 'User', display: 'User'},
     {value: 'Admin', display: 'Admin'},
     {value: 'Moderator', display: 'Moderator'}
   ];
-
   admin: Admin;
   user: User;
   moderator: Moderator;
@@ -27,7 +28,7 @@ export class LoginComponent implements OnInit {
 
   username = new FormControl('', [Validators.required]);
   password = new FormControl('', [Validators.required]);
-  role = new FormControl(null, [Validators.required])
+  role = new FormControl('', [Validators.required])
 
   constructor(
     private authService: AuthService,
@@ -52,6 +53,7 @@ export class LoginComponent implements OnInit {
 
       if (this.role.value === 'User') {
         this.user = { ...this.loginForm.value };
+     
         this.authService.loginUser(this.user).subscribe(() => {
           this.loginForm.reset();
           this.router.navigate(['/home']);
@@ -63,6 +65,7 @@ export class LoginComponent implements OnInit {
 
       if (this.role.value === 'Moderator') {
         this.moderator = { ...this.loginForm.value };
+   
         this.authService.loginModerator(this.moderator).subscribe(() => {
           this.loginForm.reset();
           this.router.navigate(['/home']);
@@ -75,7 +78,8 @@ export class LoginComponent implements OnInit {
       if (this.role.value === 'Admin') {
         this.admin = { ...this.loginForm.value };
         this.authService.loginAdmin(this.admin).subscribe(() => {
-          this.loginForm.reset();
+        this.loginForm.reset();
+
           this.router.navigate(['/home']);
           this.alertify.success('Login successful');
         }, error => {
@@ -87,6 +91,11 @@ export class LoginComponent implements OnInit {
   }
 
   cancel(): void {
+    this.loginForm.patchValue({
+      role: '',
+      username: '',
+      password: ''
+    })
   }
 
 }

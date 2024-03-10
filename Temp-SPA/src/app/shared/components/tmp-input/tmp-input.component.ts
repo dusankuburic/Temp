@@ -21,5 +21,4 @@ export class TmpInputComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() placeholder = '';
   @Input() label = '';
   @Input() isFilter: boolean = false;
-  @Input() customErrorMessages: Record<string, string> = {};
 }

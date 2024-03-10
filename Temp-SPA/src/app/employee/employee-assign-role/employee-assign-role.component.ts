@@ -27,7 +27,7 @@ export class EmployeeAssignRoleComponent implements OnInit {
     Validators.maxLength(50)
   ]);
 
-  confirmPassword = new FormControl('', Validators.required);
+  confirmPassword = new FormControl('', [Validators.required]);
 
   constructor(
     private employeeService: EmployeeService,
@@ -38,7 +38,7 @@ export class EmployeeAssignRoleComponent implements OnInit {
 
   ngOnInit(): void {
     this.createAssignRoleForm = this.fb.group({
-      role: ['User'],
+      role: ['', Validators.required],
       username: this.username,
       password: this.password,
       confirmPassword: this.confirmPassword
@@ -54,6 +54,7 @@ export class EmployeeAssignRoleComponent implements OnInit {
     if (this.createAssignRoleForm)
       this.createAssignRoleForm.reset();
 
+    this.createAssignRoleForm.get('role').setValue('User');
     this.createAssignRoleForm.addValidators([PasswordValidator.match('password', 'confirmPassword')]);
   }
 

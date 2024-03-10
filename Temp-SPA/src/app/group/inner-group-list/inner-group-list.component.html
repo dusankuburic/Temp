@@ -6,7 +6,7 @@
     <form class="form" [formGroup]="filtersForm">
        <div class="row g-2">
         <div class="col-md">
-          <tmp-select [options]="teamSelect" [label]="'Teams'" formControlName="withTeams"></tmp-select>
+          <tmp-select [options]="teamSelect" [label]="'Teams'" formControlName="withTeams" [isFilter]="true"></tmp-select>
         </div>
         <div class="col-md">
           <tmp-input [placeholder]="'Name'" [label]="'Name'" formControlName="name" [isFilter]="true"></tmp-input>

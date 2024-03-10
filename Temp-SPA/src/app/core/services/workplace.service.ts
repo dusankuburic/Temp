@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { PaginatedResult } from '../models/pagination';
 import { UpdateWorkplaceStatus, Workplace, WorkplaceParams } from '../models/workplace';
+import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +60,15 @@ checkWorkplaceExists(name: string): Observable<boolean> {
 
 getWorkplaces(): Observable<Workplace[]> {
   return this.http.get<Workplace[]>(this.baseUrl + 'workplaces');
+}
+
+getWorkplacesForSelect(): Observable<SelectionOption[]> {
+  return this.http.get<Workplace[]>(this.baseUrl + 'workplaces')
+    .pipe(map(x => x.map(p => ({
+      value: p.id,
+      display: p.name
+    } as SelectionOption)))
+  );
 }
 
 getWorkplace(id: number): Observable<Workplace> {
