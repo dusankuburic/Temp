@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faPlusCircle, faProjectDiagram, faTrashAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -7,6 +7,7 @@ import { Organization, OrganizationParams } from 'src/app/core/models/organizati
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
+import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 
 @Component({
   selector: 'app-organization-list',
@@ -23,11 +24,11 @@ export class OrganizationListComponent implements OnInit {
   organizations: Organization[];
   pagination: Pagination;
   organizationParams: OrganizationParams;
-  groupsSelect = [
+  groupsSelect: SelectionOption[] = [
     {value: '', display: 'Select with groups', disabled: true },
-    {value: 'all', display: 'All', disabled: false},
-    {value: 'yes', display: 'With groups', disabled: false},
-    {value: 'no', display: 'Without groups', disabled: false}
+    {value: 'all', display: 'All'},
+    {value: 'yes', display: 'With groups'},
+    {value: 'no', display: 'Without groups'}
   ];
 
   constructor(
@@ -38,8 +39,8 @@ export class OrganizationListComponent implements OnInit {
       this.organizationParams = organizationsService.getOrganizationParams();
 
       this.filtersForm = this.fb.group({
-        withGroups: ['', Validators.minLength(1)],
-        name: ['', Validators.minLength(1)]
+        withGroups: [''],
+        name: ['']
       })
 
       const withGroupsControl = this.filtersForm.get('withGroups');

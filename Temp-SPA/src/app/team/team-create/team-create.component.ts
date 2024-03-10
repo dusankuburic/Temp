@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/core/models/group';
 import { Team } from 'src/app/core/models/team';
@@ -12,7 +12,7 @@ import { TeamValidators } from '../team-validators';
   templateUrl: './team-create.component.html'
 })
 export class TeamCreateComponent implements OnInit {
-  createTeamForm: UntypedFormGroup;
+  createTeamForm: FormGroup;
   group: Group;
   team: Team;
   
@@ -25,7 +25,7 @@ export class TeamCreateComponent implements OnInit {
     private teamService: TeamService,
     private route: ActivatedRoute,
     private alertify: AlertifyService,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private validators: TeamValidators) { }
 
   ngOnInit(): void {

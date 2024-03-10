@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Organization } from 'src/app/core/models/organization';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
@@ -10,7 +10,7 @@ import { OrganizationValidators } from '../organization-validators';
   templateUrl: './organization-create.component.html'
 })
 export class OrganizationCreateComponent implements OnInit {
-  createOrganizationForm: UntypedFormGroup;
+  createOrganizationForm: FormGroup;
   organization: Organization;
 
   name = new FormControl('',[
@@ -22,7 +22,7 @@ export class OrganizationCreateComponent implements OnInit {
   constructor(
     private organizationService: OrganizationService,
     private alertify: AlertifyService,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private validators: OrganizationValidators) { }
 
   ngOnInit(): void {

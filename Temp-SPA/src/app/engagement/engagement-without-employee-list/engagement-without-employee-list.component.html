@@ -4,14 +4,16 @@
     </div>
     <div class="col-lg-8">
         <form class="form" [formGroup]="filtersForm">
-            <div class="input-group">
-                <select class="form-control" name="role" formControlName="role">
-                    <option *ngFor="let role of roles" [value]="role.value" [disabled]="role.disabled">
-                        {{role.display}}
-                    </option>
-                </select>
-                <input type="text" placeholder="First Name" class="form-control" formControlName="firstName">
-                <input type="text" placeholder="Last Name" class="form-control" formControlName="lastName">
+            <div class="row g-2">
+                <div class="col-md">
+                    <tmp-select [options]="rolesSelect" [label]="'Role'" formControlName="role" [isFilter]="true"></tmp-select>
+                </div>
+                <div class="col-md">
+                    <tmp-input [placeholder]="'First Name'" [label]="'Last Name'" formControlName="firstName" [isFilter]="true"></tmp-input>
+                </div>
+                <div class="col-md">
+                    <tmp-input [placeholder]="'Last Name'" [label]="'Last Name'" formControlName="lastName" [isFilter]="true"></tmp-input>
+                </div>
             </div>
         </form>
     </div>

@@ -5,7 +5,7 @@ import { Workplace, WorkplaceParams } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
 import { faPenToSquare, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
@@ -30,7 +30,7 @@ export class WorkplaceListComponent implements OnInit {
       this.workplaceParams = workplaceService.getWorkplaceParams();
 
       this.filtersForm = this.fb.group({
-        name: ['', Validators.minLength(1)],
+        name: [''],
       })
 
       const nameControl = this.filtersForm.get('name');

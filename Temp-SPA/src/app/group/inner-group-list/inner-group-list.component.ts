@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faPlusCircle, faProjectDiagram, faTrashAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -8,6 +8,7 @@ import { Organization } from 'src/app/core/models/organization';
 import { Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { GroupService } from 'src/app/core/services/group.service';
+import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 
 @Component({
   selector: 'app-group-list',
@@ -25,11 +26,11 @@ export class GroupListComponent implements OnInit {
   pagination: Pagination;
   organization: Organization;
   groupParams: GroupParams;
-  teamSelect = [
+  teamSelect: SelectionOption[] = [
     {value: '', display: 'Select with teams', disabled: true},
-    {value: 'all', display: 'All', disabled: false},
-    {value: 'yes', display: 'With teams', disabled: false},
-    {value: 'no', display: 'Without teams', disabled: false},
+    {value: 'all', display: 'All'},
+    {value: 'yes', display: 'With teams'},
+    {value: 'no', display: 'Without teams'},
   ];
 
   constructor(
@@ -40,8 +41,8 @@ export class GroupListComponent implements OnInit {
       this.groupParams = groupService.getGroupParams();
 
       this.filtersForm = this.fb.group({
-        withTeams: ['', Validators.minLength(1)],
-        name: ['', Validators.minLength(1)]
+        withTeams: [''],
+        name: ['']
       })
 
       const withTeamsControl = this.filtersForm.get('withTeams');

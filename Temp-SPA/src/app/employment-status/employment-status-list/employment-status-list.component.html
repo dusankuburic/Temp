@@ -1,12 +1,10 @@
 <div class="row d-flex justify-content-center">
-    <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="col-lg-3">
         <h4>Employment statuses</h4>
     </div>
-    <div class="col-lg-5">
+    <div class="col-lg-7">
         <form class="form" [formGroup]="filtersForm">
-            <div class="input-group">
-                <input type="text" placeholder="Name" class="form-control" formControlName="name">
-            </div>
+            <tmp-input [placeholder]="'Name'" [label]="'Name'" formControlName="name" [isFilter]="true"></tmp-input>
         </form>
     </div>    
     <div class="col-lg-2">

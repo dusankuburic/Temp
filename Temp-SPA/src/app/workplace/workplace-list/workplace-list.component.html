@@ -4,9 +4,7 @@
     </div>
     <div class="col-lg-7">
         <form class="form" [formGroup]="filtersForm">
-            <div class="input-group">
-                <input type="text" placeholder="Name" class="form-control" formControlName="name">
-            </div>
+            <tmp-input [placeholder]="'Name'" [label]="'Name'" formControlName="name" [isFilter]="true"></tmp-input>
         </form>
     </div>
     <div class="col-lg-2">

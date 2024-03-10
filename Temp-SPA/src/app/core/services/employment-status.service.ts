@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { EmploymentStatus, EmploymentStatusParams } from '../models/employmentStatus';
 import { PaginatedResult } from '../models/pagination';
+import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +56,15 @@ getPagedEmploymentStatuses(): Observable<PaginatedResult<EmploymentStatus[]>> {
 
 getEmploymentStatuses(): Observable<EmploymentStatus[]> {
   return this.http.get<EmploymentStatus[]>(this.baseUrl + 'employmentStatuses');
+}
+
+getEmploymentStatusesForSelect(): Observable<SelectionOption[]> {
+  return this.http.get<EmploymentStatus[]>(this.baseUrl + 'employmentStatuses')
+    .pipe(map(x => x.map(p => ({
+      value: p.id,
+      display: p.name
+    } as SelectionOption)))
+  );
 }
 
 checkEmploymentStatusExists(name: string): Observable<boolean> {

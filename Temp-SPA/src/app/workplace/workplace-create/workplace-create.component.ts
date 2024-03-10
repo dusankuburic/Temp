@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Workplace } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
@@ -10,7 +10,7 @@ import { WorkplaceValidators } from '../workplace-validators';
   templateUrl: './workplace-create.component.html'
 })
 export class WorkplaceCreateComponent implements OnInit {
-  createWorkplaceForm: UntypedFormGroup;
+  createWorkplaceForm: FormGroup;
   workplace: Workplace;
 
   name = new FormControl('', [
@@ -22,7 +22,7 @@ export class WorkplaceCreateComponent implements OnInit {
   constructor(
     private workplaceService: WorkplaceService,
     private alertify: AlertifyService,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private validators: WorkplaceValidators) { }
 
   ngOnInit(): void {

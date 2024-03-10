@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/core/models/group';
 import { Organization } from 'src/app/core/models/organization';
@@ -13,7 +13,7 @@ import { GroupValidators } from '../group-validators';
 })
 
 export class GroupCreateComponent implements OnInit {
-  createGroupForm: UntypedFormGroup;
+  createGroupForm: FormGroup;
   organization: Organization;
   group: Group;
 
@@ -26,7 +26,7 @@ export class GroupCreateComponent implements OnInit {
     private groupService: GroupService,
     private route: ActivatedRoute,
     private alertify: AlertifyService,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private validators: GroupValidators) { }
 
   ngOnInit(): void {

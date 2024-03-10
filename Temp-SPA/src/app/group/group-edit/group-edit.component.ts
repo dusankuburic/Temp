@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/core/models/group';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -11,7 +11,7 @@ import { GroupValidators } from '../group-validators';
   templateUrl: './group-edit.component.html'
 })
 export class GroupEditComponent implements OnInit {
-  editGroupForm: UntypedFormGroup;
+  editGroupForm: FormGroup;
   group: Group;
   organizationId: number;
 
@@ -24,7 +24,7 @@ export class GroupEditComponent implements OnInit {
   constructor(
     private groupService: GroupService,
     private route: ActivatedRoute,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private alertify: AlertifyService,
     public validators: GroupValidators) { }
 

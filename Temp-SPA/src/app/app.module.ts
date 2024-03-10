@@ -10,14 +10,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
-
-import { UsersComponent } from './users/users.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
-import { ModeratorComponent } from './moderator/moderator.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AddAuthHeaderInterceptor } from './core/interceptors/auth-interceptor.interceptor';
+import { UserModule } from './user/user.module';
 
 export function tokenGetter(): any {
   return localStorage.getItem('token');
@@ -28,13 +25,11 @@ export function tokenGetter(): any {
     AppComponent,
     NavComponent,
     HomeComponent,
-    LoginComponent,
     SidebarComponent,
-    UsersComponent,    
-    ModeratorComponent,
    ],
   imports: [
     BrowserModule,
+    UserModule,
     FormsModule,
     AppRoutingModule,
     ReactiveFormsModule,
