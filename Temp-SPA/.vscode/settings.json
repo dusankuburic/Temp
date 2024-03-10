@@ -3,7 +3,8 @@
         "Alertify",
         "employmentstatuses",
         "innergroups",
-        "innerteams"
+        "innerteams",
+        "maxlength"
     ],
     "typescript.tsdk": "node_modules\\typescript\\lib"
 }

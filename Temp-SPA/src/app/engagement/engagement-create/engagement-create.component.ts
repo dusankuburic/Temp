@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Employee } from 'src/app/core/models/employee';
-import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
 import { Engagement, ExistingEngagement } from 'src/app/core/models/engagement';
-import { Workplace } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
 import { EmploymentStatusService } from 'src/app/core/services/employment-status.service';
 import { EngagementService } from 'src/app/core/services/engagement.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
+import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 
 @Component({
   selector: 'app-engagement-create',
@@ -18,14 +16,22 @@ import { WorkplaceService } from 'src/app/core/services/workplace.service';
 })
 export class EngagementCreateComponent implements OnInit {
   employeeId: number;
-  createEngagementForm: UntypedFormGroup;
+  createEngagementForm: FormGroup;
   engagement: Engagement;
-  bsConfig: Partial<BsDatepickerConfig>;
 
   existingEngagements: ExistingEngagement[];
   employee: Employee;
-  workplaces: Workplace[];
-  employmentStatuses: EmploymentStatus[];
+  workplacesList: SelectionOption[];
+  employmentStatusesList: SelectionOption[];
+
+  salary = new FormControl('', [
+    Validators.required,
+    Validators.min(300),
+    Validators.max(5000)
+  ]);
+
+  dateFrom = new FormControl(null, [Validators.required]);
+  dateTo = new FormControl(null, [Validators.required]);
 
   constructor(
     private route: ActivatedRoute,
@@ -33,17 +39,22 @@ export class EngagementCreateComponent implements OnInit {
     private employmentStatusService: EmploymentStatusService,
     private employeeService: EmployeeService,
     private workplaceService: WorkplaceService,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {
-    this.bsConfig = {
-      containerClass: 'theme-dark-blue'
-    },
+    this.createEngagementForm = this.fb.group({
+      workplaceId: [null, Validators.required],
+      salary: this.salary,
+      dateFrom: this.dateFrom,
+      dateTo: this.dateTo,
+      employmentStatusId: [null, Validators.required]
+    });
+
     this.route.data.subscribe(data => {
       this.existingEngagements = data['employeeData'];
     });
-    this.createForm();
+
     this.loadEmployee();
     this.loadWorkplaces();
     this.loadEmploymentStatuses();
@@ -62,9 +73,12 @@ export class EngagementCreateComponent implements OnInit {
   }
 
   loadWorkplaces(): void {
-    this.workplaceService.getWorkplaces().subscribe({
-      next: (res: Workplace[]) => {
-        this.workplaces = res;
+    this.workplaceService.getWorkplacesForSelect().subscribe({
+      next: (res) => {
+        this.workplacesList = [
+          {value: null, display: 'Select Workplace', disabled: true},
+          ...res
+        ];
       },
       error: () => {
         this.alertify.error('Unable to list workplaces');
@@ -73,9 +87,12 @@ export class EngagementCreateComponent implements OnInit {
   }
 
   loadEmploymentStatuses(): void {
-    this.employmentStatusService.getEmploymentStatuses().subscribe({
-      next: (res: EmploymentStatus[]) => {
-        this.employmentStatuses = res;
+    this.employmentStatusService.getEmploymentStatusesForSelect().subscribe({
+      next: (res) => {
+        this.employmentStatusesList = [
+          {value: null, display: 'Select Team', disabled: true},
+          ...res
+        ];
       },
       error: () => {
         this.alertify.error('Unable to list Employment statuses');
@@ -94,16 +111,6 @@ export class EngagementCreateComponent implements OnInit {
     });
   }
 
-  createForm(): void {
-    this.createEngagementForm = this.fb.group({
-      workplaceId: [null, Validators.required],
-      salary: ['', [Validators.required, Validators.min(300), Validators.max(5000)]],
-      dateFrom: [null, Validators.required],
-      dateTo: [null, Validators.required],
-      employmentStatusId: [null, Validators.required]
-    });
-  }
-
   create(): void {
     this.engagement = { ...this.createEngagementForm.value, employeeId: this.employee.id };
     this.engagementService.createEngagement(this.engagement).subscribe({
@@ -116,6 +123,5 @@ export class EngagementCreateComponent implements OnInit {
         this.alertify.error('Unable to create engagement');
       }
     });
-  }
-
+  } 
 }

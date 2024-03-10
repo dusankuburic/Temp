@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -8,6 +8,7 @@ import { EngagementParams } from 'src/app/core/models/engagement';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EngagementService } from 'src/app/core/services/engagement.service';
+import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 
 @Component({
   selector: 'app-engagement-with-employee-list',
@@ -17,13 +18,13 @@ export class EngagementWithEmployeeListComponent implements OnInit {
   addEngagementIcon = faCodeBranch
 
   filtersForm: FormGroup;
-  roles = [
+  rolesSelect: SelectionOption[] = [
     {value: '', display: 'Select Role', disabled: true},
-    {value: '', display: 'All', disabled: false},
-    {value: 'User', display: 'User',  disabled: false},
-    {value: 'Admin', display: 'Admin', disabled: false},
-    {value: 'Moderator', display: 'Moderator', disabled: false},
-    {value: 'None', display: 'None', disabled: false}];
+    {value: '', display: 'All'},
+    {value: 'User', display: 'User'},
+    {value: 'Admin', display: 'Admin'},
+    {value: 'Moderator', display: 'Moderator'},
+    {value: 'None', display: 'None'}];
   employees: Employee[];
   pagination: Pagination;
   engagementParams: EngagementParams;
@@ -36,9 +37,9 @@ export class EngagementWithEmployeeListComponent implements OnInit {
       this.engagementParams = engagementService.getEngagementParams();
 
       this.filtersForm = this.fb.group({
-        role: ['', Validators.minLength(1)],
-        firstName: ['', Validators.minLength(1)],
-        lastName: ['', Validators.minLength(1)],
+        role: [''],
+        firstName: [''],
+        lastName: [''],
       });
 
       const roleControl = this.filtersForm.get('role');

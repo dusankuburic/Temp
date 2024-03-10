@@ -3,14 +3,21 @@ import {  NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { PaginationModule } from "ngx-bootstrap/pagination";
-import { TmpPaginationComponent } from "./tmp-pagination/tmp-pagination.component";
-import { TmpInputComponent } from "./tmp-input/tmp-input.component";
+import { TmpPaginationComponent } from "./components/tmp-pagination/tmp-pagination.component";
+import { TmpInputComponent } from "./components/tmp-input/tmp-input.component";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
+import { PasswordValidator } from "./validators/password.validators";
+import { TmpDatepickerComponent } from "./components/tmp-datepicker/tmp-datepicker.component";
+import { ControlValueAccessorDirective } from "./components/control-value-accessor.directive";
+import { TmpSelectComponent } from "./components/tmp-select/tmp-select.component";
 
 @NgModule({
     declarations: [
+      ControlValueAccessorDirective,
       TmpPaginationComponent,
-      TmpInputComponent
+      TmpInputComponent,
+      TmpDatepickerComponent,
+      TmpSelectComponent,
     ],
     imports: [
       BsDatepickerModule,
@@ -21,14 +28,18 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
       FontAwesomeModule
     ],
     exports: [
-      BsDatepickerModule,
       CommonModule,
       FormsModule,
       ReactiveFormsModule,
       PaginationModule,
       FontAwesomeModule,
       TmpPaginationComponent,
-      TmpInputComponent
+      TmpInputComponent,
+      TmpDatepickerComponent,
+      TmpSelectComponent
+    ],
+    providers: [
+      PasswordValidator
     ]
   })
   export class SharedModule {}
