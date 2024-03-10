@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { Observable, firstValueFrom, lastValueFrom } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
 import { Group, InnerGroup, ModeratorGroups } from 'src/app/core/models/group';
 import { Moderator, ModeratorMin } from 'src/app/core/models/moderator';
@@ -22,15 +22,27 @@ export class EmployeeEditComponent implements OnInit {
   minusIcon = faMinus;
   plusIcon = faPlus;
 
-  editEmployeeForm: UntypedFormGroup;
+  editEmployeeForm: FormGroup;
   employee: Employee;
   fullTeam: FullTeam;
   Moderator: Moderator;
-  organizations: Organization[];
+  organizations$: Observable<Organization[]>;
   innerGroups: InnerGroup[];
   innerTeams: InnerTeam[];
   currentModeratorGroups: Group[];
   freeModeratorGroups: Group[];
+
+  firstName = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)
+  ]);
+
+  lastName = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)
+  ]);
 
   constructor(
     private employeeService: EmployeeService,
@@ -38,34 +50,41 @@ export class EmployeeEditComponent implements OnInit {
     private groupService: GroupService,
     private teamService: TeamService,
     private route: ActivatedRoute,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {
+    this.editEmployeeForm = this.fb.group({
+      firstName: this.firstName,
+      lastName: this.lastName,
+      organizationId: [null],
+      groupId: [null],
+      teamId: [null]
+    });
+    this.editEmployeeForm.get('organizationId').disable();
+
     this.route.data.subscribe(data => {
       this.employee = data['employee'];
+      this.setupForm(this.employee);
     });
-    this.organizationService.getOrganizations().subscribe((res) => {
-      this.organizations = res;
-    });
- 
-    this.createForm();
 
     if (this.employee.role === 'Moderator') {
       this.loadModeratorGroups(this.employee.teamId, this.employee.id);
     } else {
       this.loadFullTeam(this.employee.teamId);
     }
+
+    this.organizations$ = this.organizationService.getOrganizations();
   }
 
-  createForm(): void {
-    this.editEmployeeForm = this.fb.group({
-      firstName: [this.employee.firstName, Validators.required],
-      lastName: [this.employee.lastName, Validators.required],
-      organizationId: [null],
-      groupId: [null],
-      teamId: [null]
-    });
+  setupForm(employee: Employee): void {
+    if (this.editEmployeeForm)
+      this.editEmployeeForm.reset();
+
+      this.editEmployeeForm.patchValue({
+        firstName: employee.firstName,
+        lastName: employee.lastName
+      });
   }
 
   loadFullTeam(id): void {

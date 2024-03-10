@@ -1,47 +1,60 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssignRoleDto } from 'src/app/core/models/assignRoleDto';
 import { Employee } from 'src/app/core/models/employee';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
+import { PasswordValidator } from 'src/app/shared/validators/password.validators';
 
 @Component({
   selector: 'app-employee-assign-role',
   templateUrl: './employee-assign-role.component.html'
 })
 export class EmployeeAssignRoleComponent implements OnInit {
-  createAssignRoleForm: UntypedFormGroup;
+  createAssignRoleForm: FormGroup;
   employee: Employee;
   assignDto: AssignRoleDto;
   
+  username = new FormControl('', [
+    Validators.required,
+    Validators.minLength(8),
+    Validators.maxLength(50)]);
+
+  password = new FormControl('', [
+    Validators.required,
+    Validators.minLength(8),
+    Validators.maxLength(50)
+  ]);
+
+  confirmPassword = new FormControl('', Validators.required);
+
   constructor(
     private employeeService: EmployeeService,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private router: Router) { }
 
   ngOnInit(): void {
+    this.createAssignRoleForm = this.fb.group({
+      role: ['User'],
+      username: this.username,
+      password: this.password,
+      confirmPassword: this.confirmPassword
+    });
+
     this.route.data.subscribe(data => {
       this.employee = data['employee'];
     });
-    this.createForm();
+    this.setupForm();
   }
 
-  createForm(): void {
-    this.createAssignRoleForm = this.fb.group({
-      role: ['User'],
-      username: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30)]],
-      confirmPassword: ['', Validators.required]
-    }, {validator: this.passwordMatchValidator});
-  }
+  setupForm(): void {
+    if (this.createAssignRoleForm)
+      this.createAssignRoleForm.reset();
 
-  passwordMatchValidator(form: UntypedFormGroup): any {
-    return form.get('password').value === form.get('confirmPassword').value 
-      ? null 
-      : {mismatch: true};
+    this.createAssignRoleForm.addValidators([PasswordValidator.match('password', 'confirmPassword')]);
   }
 
   register(): void {

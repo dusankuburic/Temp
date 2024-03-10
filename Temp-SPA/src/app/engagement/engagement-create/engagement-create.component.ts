@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Employee } from 'src/app/core/models/employee';
 import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
 import { Engagement, ExistingEngagement } from 'src/app/core/models/engagement';
@@ -18,14 +17,23 @@ import { WorkplaceService } from 'src/app/core/services/workplace.service';
 })
 export class EngagementCreateComponent implements OnInit {
   employeeId: number;
-  createEngagementForm: UntypedFormGroup;
+  createEngagementForm: FormGroup;
   engagement: Engagement;
-  bsConfig: Partial<BsDatepickerConfig>;
 
   existingEngagements: ExistingEngagement[];
   employee: Employee;
   workplaces: Workplace[];
   employmentStatuses: EmploymentStatus[];
+
+
+  salary = new FormControl('', [
+    Validators.required,
+    Validators.min(300),
+    Validators.max(5000)
+  ]);
+
+  dateFrom = new FormControl(null, [Validators.required]);
+  dateTo = new FormControl(null, [Validators.required]);
 
   constructor(
     private route: ActivatedRoute,
@@ -33,13 +41,10 @@ export class EngagementCreateComponent implements OnInit {
     private employmentStatusService: EmploymentStatusService,
     private employeeService: EmployeeService,
     private workplaceService: WorkplaceService,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {
-    this.bsConfig = {
-      containerClass: 'theme-dark-blue'
-    },
     this.route.data.subscribe(data => {
       this.existingEngagements = data['employeeData'];
     });
@@ -48,6 +53,17 @@ export class EngagementCreateComponent implements OnInit {
     this.loadWorkplaces();
     this.loadEmploymentStatuses();
   }
+
+  createForm(): void {
+    this.createEngagementForm = this.fb.group({
+      workplaceId: [null, Validators.required],
+      salary: this.salary,
+      dateFrom: this.dateFrom,
+      dateTo: this.dateTo,
+      employmentStatusId: [null, Validators.required]
+    });
+  }
+
 
   loadEmployee(): void {
     const employeeId = parseInt(this.route.snapshot.paramMap.get('id'))
@@ -94,15 +110,6 @@ export class EngagementCreateComponent implements OnInit {
     });
   }
 
-  createForm(): void {
-    this.createEngagementForm = this.fb.group({
-      workplaceId: [null, Validators.required],
-      salary: ['', [Validators.required, Validators.min(300), Validators.max(5000)]],
-      dateFrom: [null, Validators.required],
-      dateTo: [null, Validators.required],
-      employmentStatusId: [null, Validators.required]
-    });
-  }
 
   create(): void {
     this.engagement = { ...this.createEngagementForm.value, employeeId: this.employee.id };

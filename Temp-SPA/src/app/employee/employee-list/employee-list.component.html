@@ -4,14 +4,16 @@
     </div>
     <div class="col-lg-7">
         <form class="form" [formGroup]="filtersForm">
-            <div class="input-group">
-                <select class="form-control" formControlName="role">
-                    <option *ngFor="let role of rolesSelect" [value]="role.value" [disabled]="role.disabled">
-                        {{role.display}}
-                    </option>
-                </select>
-                <input type="text" placeholder="First Name" class="form-control" formControlName="firstName">
-                <input type="text" placeholder="Last Name" class="form-control" formControlName="lastName">   
+            <div class="row g-2">
+                <div class="col-md">
+                    <tmp-select [options]="rolesSelect" label="Role" formControlName="role"></tmp-select>
+                </div>
+                <div class="col-md">
+                    <tmp-input placeholder="First Name" label="First Name" formControlName="firstName" [isFilter]="true"></tmp-input>
+                </div>
+                <div class="col-md">
+                    <tmp-input placeholder="Last Name" label="Last Name" formControlName="lastName" [isFilter]="true"></tmp-input>
+                </div>
             </div>
         </form>
     </div> 
@@ -39,12 +41,11 @@
                     <td>
                         <span class="badge rounded-pill pill-ts" 
                         [ngClass]="{'text-bg-warning': employee.role === 'Admin',
-                                        'text-bg-info' : employee.role === 'User',
-                                        'text-bg-success' : employee.role === 'Moderator',
-                                        'text-bg-secondary': employee.role === 'None'}">
+                            'text-bg-info' : employee.role === 'User',
+                            'text-bg-success' : employee.role === 'Moderator',
+                            'text-bg-secondary': employee.role === 'None'}">
                             {{employee.role}}
                         </span>
-
                     </td>
                     <td>
                         <a class="btn btn-primary" [routerLink]="['/employees/', employee.id, 'edit']"><fa-icon [icon]="editIcon"></fa-icon></a>

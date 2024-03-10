@@ -4,14 +4,14 @@
   </div>
   <div class="col-lg-7">
     <form class="form" [formGroup]="filtersForm">
-        <div class="input-group">
-            <select class="form-control" formControlName="withTeams">
-              <option *ngFor="let opt of teamSelect" [value]="opt.value" [disabled]="opt.disabled">
-                {{opt.display}}
-              </option>
-            </select>
-            <input type="text" placeholder="Name" class="form-control" formControlName="name">
+       <div class="row g-2">
+        <div class="col-md">
+          <tmp-select [options]="teamSelect" [label]="'Teams'" formControlName="withTeams"></tmp-select>
         </div>
+        <div class="col-md">
+          <tmp-input [placeholder]="'Name'" [label]="'Name'" formControlName="name" [isFilter]="true"></tmp-input>
+        </div>
+       </div>
     </form>
   </div>
   <div class="col-lg-2">

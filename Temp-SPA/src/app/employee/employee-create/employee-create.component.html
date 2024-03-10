@@ -3,76 +3,33 @@
     <h1 class="text-center">Create Employee</h1>
       <form class="row g-2" [formGroup]="createEmployeeForm" (ngSubmit)="create()">
         <div class="form-group">
-          <h4>First Name</h4>
-          <input [ngClass]="{'is-invalid' : createEmployeeForm.get('firstName').errors 
-            && createEmployeeForm.get('firstName').touched}"
-            type="text" 
-            class="form-control" 
-            formControlName="firstName">
-          <div class="invalid-feedback">Please enter a First Name</div>
+          <tmp-input [formControl]="firstName" [label]="'First Name'" [placeholder]="'Enter First Name'"></tmp-input>
         </div>
-            
         <div class="form-group">
-          <h4>Last Name</h4>
-          <input [ngClass]="{'is-invalid' : createEmployeeForm.get('lastName').errors
-            && createEmployeeForm.get('lastName').touched}"
-            type="lastName"
-            class="form-control" 
-            formControlName="lastName">
-      
-          <div class="invalid-feedback"
-            *ngIf="createEmployeeForm.get('lastName').hasError('required')  
-            && createEmployeeForm.get('lastName').touched">Please enter a Last Name
-          </div>
+          <tmp-input [formControl]="lastName" [label]="'Last Name'" [placeholder]="'Last Name'"></tmp-input>
         </div>
-
         <div class="form-group">
-          <h4>Organizations</h4>        
-          <select
-            [ngClass]="{'is-invalid': createEmployeeForm.get('organizationId').errors && createEmployeeForm.get('organizationId').touched}"
+          <tmp-select 
+            [options]="organizationsSelect"
+            [label]="'Organization'"
             formControlName="organizationId"
-            class="form-control"
             (change)="loadInnerGroups(createEmployeeForm.get('organizationId').value)">
-          <option [ngValue]="null">Select Organization</option>
-          <option *ngFor="let organization of organizations" value="{{organization.id}}" [ngValue]="organization.id">
-            {{organization.name}}
-          </option>
-          </select>           
-          <div class="invalid-feedback">Please choose a organization</div>                     
+          </tmp-select>
         </div>
-
         <div class="form-group" *ngIf="createEmployeeForm.get('organizationId').value">
-          <h4>Groups</h4>        
-          <select
-            [ngClass]="{'is-invalid': createEmployeeForm.get('groupId').errors && createEmployeeForm.get('groupId').touched}"
+          <tmp-select
+            [options]="innerGroupsSelect"
+            [label]="'Group'"
             formControlName="groupId"
-            class="form-control"
             (change)="loadInnerTeams(createEmployeeForm.get('groupId').value)">
-          <option [ngValue]="null">Select Group</option>   
-          <option *ngFor="let group of innerGroups" value="{{group.id}}" [ngValue]="group.id">
-            {{group.name}}
-          </option> 
-          </select>           
-          <div class="invalid-feedback">Please choose a group</div>                     
+          </tmp-select>
         </div>
-
         <div class="form-group" *ngIf="createEmployeeForm.get('groupId').value">
-          <h4>Teams</h4>        
-          <select
-            [ngClass]="{'is-invalid': createEmployeeForm.get('teamId').errors && createEmployeeForm.get('teamId').touched}"
-            formControlName="teamId"
-            class="form-control">
-          <option [ngValue]="null">Select Team</option>
-          <option *ngFor="let team of innerTeams" [ngValue]="team.id">
-            {{team.name}}
-          </option>
-          </select>           
-          <div class="invalid-feedback">Please choose a team</div>                     
+          <tmp-select [options]="innerTeamsSelect" [label]="'Team'" formControlName="teamId"></tmp-select>
         </div>
         <div class="form-gorup">
           <button type="submit" [disabled]="!createEmployeeForm.valid" class="btn btn-success float-right">Create</button>
         </div>
-    
       </form>
   </div>
 </div>

@@ -5,7 +5,7 @@
           <div class="col-lg-6 col-sm-6 col-8">
             <form class="row g-2" [formGroup]="editTeamForm" (ngSubmit)="update()">
               <div class="form-group">
-                <tmp-input [formControl]="name" [label]="'name'" placeholder="'Name'"></tmp-input>
+                <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
               </div>
               <div class="form-gorup">
                 <button type="submit" [disabled]="!editTeamForm.valid" class="btn btn-success float-right">Save</button>

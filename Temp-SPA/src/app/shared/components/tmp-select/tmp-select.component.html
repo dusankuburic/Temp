@@ -1,0 +1,13 @@
+<div class="form-floating" *ngIf="control">
+    <select [formControl]="control" class="form-select">
+        <option 
+            [value]="option.value"
+            [disabled]="option.disabled"
+            [selected]="option.selected"
+            [hidden]="option.hidden"
+            *ngFor="let option of options">
+            {{option.display}}
+        </option>
+    </select>
+    <label *ngIf="label">{{label}}</label>
+</div> 

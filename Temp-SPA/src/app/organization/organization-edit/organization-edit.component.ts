@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Organization } from 'src/app/core/models/organization';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -10,7 +10,7 @@ import { OrganizationService } from 'src/app/core/services/organization.service'
   templateUrl: './organization-edit.component.html'
 })
 export class OrganizationEditComponent implements OnInit {
-  editOrganizationForm: UntypedFormGroup;
+  editOrganizationForm: FormGroup;
   organization: Organization;
 
   name = new FormControl('', [
@@ -22,7 +22,7 @@ export class OrganizationEditComponent implements OnInit {
   constructor(
     private organizationService: OrganizationService,
     private route: ActivatedRoute,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private alertify: AlertifyService) { }
 
   ngOnInit(): void {

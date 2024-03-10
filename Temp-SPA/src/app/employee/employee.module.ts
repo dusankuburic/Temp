@@ -14,7 +14,7 @@ import { OrganizationListResolver } from '../core/resolvers/organization/organiz
 @NgModule({
     imports: [
         SharedModule,
-        RouterModule.forChild(employeeRoutes)
+        RouterModule.forChild(employeeRoutes),
     ],
     exports: [],
     declarations: [

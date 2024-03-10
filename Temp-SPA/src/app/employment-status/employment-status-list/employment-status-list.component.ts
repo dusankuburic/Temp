@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -30,7 +30,7 @@ export class EmploymentStatusListComponent implements OnInit {
       this.employmentStatusParams = employmentStatusService.getEmploymentStatusParams();
 
       this.filtersForm = this.fb.group({
-        name: ['', Validators.minLength(1)]
+        name: ['']
       });
 
       const nameControl = this.filtersForm.get('name');

@@ -6,6 +6,7 @@ import { ModeratorMin } from '../models/moderator';
 import { InnerTeam } from '../models/team';
 import { Observable, map } from 'rxjs';
 import { PaginatedResult } from '../models/pagination';
+import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 
 @Injectable({
   providedIn: 'root'
@@ -84,6 +85,15 @@ updateGroup(id: number, group: Group): Observable<void> {
 
 getInnerTeams(groupId: number): Observable<InnerTeam[]> {
   return this.http.get<InnerTeam[]>(this.baseUrl + 'groups/inner-teams/' + groupId);
+}
+
+getInnerTeamsForSelect(groupId: number): Observable<SelectionOption[]> {
+  return this.http.get<InnerTeam[]>(this.baseUrl + 'groups/inner-teams/' + groupId)
+    .pipe(map(x => x.map(p => ({
+      value: p.id,
+      display: p.name,
+    } as SelectionOption)))
+  );
 }
 
 getModeratorGroups(moderatorId: number): Observable<Group[]> {

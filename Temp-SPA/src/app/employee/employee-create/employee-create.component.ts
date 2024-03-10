@@ -1,43 +1,57 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Employee } from 'src/app/core/models/employee';
-import { InnerGroup } from 'src/app/core/models/group';
-import { Organization } from 'src/app/core/models/organization';
-import { InnerTeam, Team } from 'src/app/core/models/team';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
+import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 
 @Component({
   selector: 'app-employee-create',
   templateUrl: './employee-create.component.html'
 })
 export class EmployeeCreateComponent implements OnInit {
-  createEmployeeForm: UntypedFormGroup;
+  createEmployeeForm: FormGroup;
   employee: Employee;
-  organizations: Organization[];
-  innerGroups: InnerGroup[];
-  innerTeams: InnerTeam[];
+  organizationsSelect: SelectionOption[];
+  innerGroupsSelect: SelectionOption[];
+  innerTeamsSelect: SelectionOption[];
+
+  firstName = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)
+  ]);
+
+  lastName = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60)
+  ]);
 
   constructor(
     private employeeService: EmployeeService,
     private organizationService: OrganizationService, 
     private groupService: GroupService,
     private alertify: AlertifyService,
-    private fb: UntypedFormBuilder) { }
+    private fb: FormBuilder) { }
 
   ngOnInit(): void {
-   this.organizationService.getOrganizations().subscribe((res) => {
-    this.organizations = res;
-   })
     this.createForm();
+    this.organizationService.getOrganizationsForSelect()
+      .subscribe(res => {
+        this.organizationsSelect = [
+          {value: null, display: 'Select Organization', hidden: true},
+          ...res
+        ];
+    });
   }
 
   createForm(): void {
     this.createEmployeeForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: this.firstName,
+      lastName: this.lastName,
       organizationId: [null, Validators.required],
       groupId: [null, Validators.required],
       teamId: [null, Validators.required]
@@ -47,13 +61,16 @@ export class EmployeeCreateComponent implements OnInit {
   loadInnerGroups(id): void {
     if (id == null)
       return;
-    this.innerTeams = [];
-    this.organizationService.getInnerGroups(id).subscribe((res) => {
+    this.innerTeamsSelect = [];
+    this.organizationService.getInnerGroupsForSelect(id).subscribe((res) => {
       if (res !== null) {
-        this.innerGroups = res;
+        this.innerGroupsSelect = [
+        {value: null, display: 'Select Group', hidden: true},
+          ...res
+        ];
       } else {
-        this.innerGroups = [];
-        this.innerTeams = [];
+        this.innerGroupsSelect = [];
+        this.innerTeamsSelect = [];
       }
     });
   }
@@ -61,11 +78,14 @@ export class EmployeeCreateComponent implements OnInit {
   loadInnerTeams(id): void {
     if (id == null)
       return;
-    this.groupService.getInnerTeams(id).subscribe((res) => {
+    this.groupService.getInnerTeamsForSelect(id).subscribe((res) => {
       if (res !== null) {
-        this.innerTeams = res;
+        this.innerTeamsSelect = [
+          {value: null, display: 'Select Team', hidden: true},
+          ...res
+        ];
       } else {
-       this.innerTeams = [];
+       this.innerTeamsSelect = [];
       }
     });
   }

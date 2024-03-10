@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 import { UserGuard } from './core/guards/user.guard';
 import { HomeComponent } from './home/home.component';
-import { UsersComponent } from './users/users.component';
+import { UsersComponent } from './user/users/users.component';
 import { ModeratorGuard } from './core/guards/moderator.guard';
-import { ModeratorComponent } from './moderator/moderator.component';
+import { ModeratorComponent } from './user/moderator/moderator.component';
 import { AuthGuard } from './core/guards/auth.guard';
 
 export const appRoutes: Routes = [

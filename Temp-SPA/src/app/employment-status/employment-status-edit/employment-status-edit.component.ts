@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -11,7 +11,7 @@ import { EmploymentStatusValidators } from '../employment-status-validators';
   templateUrl: './employment-status-edit.component.html'
 })
 export class EmploymentStatusEditComponent implements OnInit {
-  editEmploymentStatusForm: UntypedFormGroup;
+  editEmploymentStatusForm: FormGroup;
   employmentStatus: EmploymentStatus;
 
   name = new FormControl('', [
@@ -23,7 +23,7 @@ export class EmploymentStatusEditComponent implements OnInit {
   constructor(
     private employmentStatusService: EmploymentStatusService,
     private route: ActivatedRoute,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private alertify: AlertifyService,
     private validators: EmploymentStatusValidators) { }
 

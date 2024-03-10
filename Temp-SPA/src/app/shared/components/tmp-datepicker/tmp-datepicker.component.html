@@ -1,0 +1,15 @@
+<div class="form-floating">
+    <input 
+        bsDatepicker
+        [bsConfig]="bsConfig"
+        [formControl]="control"
+        placeholder="{{placeholder}}"
+        class="form-control"
+        [ngClass]="(control.touched) ? control.invalid ? 'is-invalid' : 'is-valid' : null">
+        <label>{{label}}</label>
+    <ng-container *ngIf="control.touched && control.invalid">
+        <div *ngIf="control.errors?.required" class="invalid-feedback">
+            Please choose {{label}}.
+        </div>
+    </ng-container>
+</div>
