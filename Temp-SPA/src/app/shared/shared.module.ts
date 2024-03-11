@@ -10,6 +10,7 @@ import { PasswordValidator } from "./validators/password.validators";
 import { TmpDatepickerComponent } from "./components/tmp-datepicker/tmp-datepicker.component";
 import { ControlValueAccessorDirective } from "./components/control-value-accessor.directive";
 import { TmpSelectComponent } from "./components/tmp-select/tmp-select.component";
+import { BsModalService } from "ngx-bootstrap/modal";
 
 @NgModule({
     declarations: [
@@ -39,7 +40,8 @@ import { TmpSelectComponent } from "./components/tmp-select/tmp-select.component
       TmpSelectComponent
     ],
     providers: [
-      PasswordValidator
+      PasswordValidator,
+      BsModalService,
     ]
   })
   export class SharedModule {}

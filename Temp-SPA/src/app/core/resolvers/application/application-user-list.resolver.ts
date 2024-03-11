@@ -16,7 +16,7 @@ export class ApplicationUserListResolver  {
 
     resolve(route: ActivatedRouteSnapshot): Observable<UserListApplication[]>  {
         return this.applicationService.getUserApplications(route.params['id']).pipe(
-            catchError(error => {
+            catchError(() => {
                 this.alertify.error('Unable to list user applications');
                 this.router.navigate(['']);
                 return of(null);

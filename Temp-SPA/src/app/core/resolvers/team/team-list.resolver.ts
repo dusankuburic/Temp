@@ -18,7 +18,7 @@ export class TeamListResolver  {
         const groupId = parseInt(route.params['id']);
         this.teamService.resetTeamParams();
         return this.teamService.getInnerTeams(groupId).pipe(
-            catchError(error => {
+            catchError(() => {
                 this.alertify.error('Unable to list Teams');
                 this.router.navigate(['']);
                 return of(null);

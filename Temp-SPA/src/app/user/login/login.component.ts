@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
           this.loginForm.reset();
           this.router.navigate(['/home']);
           this.alertify.success('Login successful');
-        }, error => {
+        }, () => {
           this.alertify.error('Can not login');
         });
       }

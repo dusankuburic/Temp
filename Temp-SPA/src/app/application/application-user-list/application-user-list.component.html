@@ -16,7 +16,7 @@
                 <td>{{application.createdAt | date}}</td>
                 <td>
                     <h5>
-                        <span class="badge rounded-pill" [ngClass]="{'text-bg-danger': application.status == false, 'text-bg-success': application.status == true}">
+                        <span class="badge rounded-pill" [ngClass]="{'text-bg-danger': application.status === false, 'text-bg-success': application.status === true}">
                             <fa-icon [icon]="eyeIcon"></fa-icon>
                         </span>
                     </h5>  

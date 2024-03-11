@@ -81,7 +81,7 @@ export class EmploymentStatusListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  changeStatus(id: number): any {
+  changeStatus(id: number): void {
     this.employmentStatusService.changeStatus(id).subscribe({
       next: () => {
         this.loadEmploymentStatuses();

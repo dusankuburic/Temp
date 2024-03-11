@@ -19,12 +19,12 @@
                 <td>{{application.createdAt | date}}</td>
                 <td>
                     <h4>
-                        <span class="badge  rounded-pill" [ngClass]="{'badge-danger': application.status == false, 'badge-success': application.status == true}">
+                        <span class="badge  rounded-pill" [ngClass]="{'badge-danger': application.status === false, 'badge-success': application.status === true}">
                             <fa-icon [icon]="eyeIcon"></fa-icon>
                         </span>
                     </h4>
                 </td>
-                <td *ngIf="application.status == false">
+                <td *ngIf="application.status === false">
                     <a (click)="updateStatus(application.id, application.teamId)" class="btn btn-info">
                         <fa-icon [icon]="bookmarkIcon"></fa-icon>
                     </a>

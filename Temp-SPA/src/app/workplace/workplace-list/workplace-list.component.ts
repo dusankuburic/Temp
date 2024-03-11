@@ -7,6 +7,10 @@ import { WorkplaceService } from 'src/app/core/services/workplace.service';
 import { faPenToSquare, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { WorkplaceCreateModalComponent } from '../modals/workplace-create-modal/workplace-create-modal.component';
+import { WorkplaceEditComponent } from '../workplace-edit/workplace-edit.component';
+import { WorkplaceEditModalComponent } from '../modals/workplace-edit-modal/workplace-edit-modal.component';
 
 @Component({
   selector: 'app-workplace-list',
@@ -17,6 +21,7 @@ export class WorkplaceListComponent implements OnInit, AfterViewInit {
   editIcon = faPenToSquare
   plusIcon = faPlusCircle;
 
+  bsModalRef?: BsModalRef;
   filtersForm: FormGroup;
   workplaces: Workplace[];
   pagination: Pagination;
@@ -26,7 +31,8 @@ export class WorkplaceListComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private workplaceService: WorkplaceService,
     private alertify: AlertifyService,
-    private fb: FormBuilder) { 
+    private fb: FormBuilder,
+    private bsModalService: BsModalService) { 
       this.workplaceParams = workplaceService.getWorkplaceParams();
       this.filtersForm = this.fb.group({
         name: [''],
@@ -54,7 +60,26 @@ export class WorkplaceListComponent implements OnInit, AfterViewInit {
     });
   }
 
+  openCreateModal() {
+    const initialState: ModalOptions = {
+      class: 'modal-dialog-centered',
+      initialState: {
+        title: 'Create Workplace'
+      }
+    };
+    this.bsModalRef = this.bsModalService.show(WorkplaceCreateModalComponent, initialState);
+  }
 
+  openEditModal(id: number) {
+    const initialState: ModalOptions = {
+      class: 'modal-dialog-centered',
+      initialState: {
+        title: 'Edit Workplace',
+        workplaceId: id
+      }
+    };
+    this.bsModalRef = this.bsModalService.show(WorkplaceEditModalComponent, initialState);
+  }
 
   loadWorkplaces(): void {
     this.workplaceService.getPagedWorkplaces()

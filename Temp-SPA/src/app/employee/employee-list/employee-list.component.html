@@ -50,10 +50,10 @@
                     <td>
                         <a class="btn btn-primary" [routerLink]="['/employees/', employee.id, 'edit']"><fa-icon [icon]="editIcon"></fa-icon></a>
                     </td>
-                    <td *ngIf="employee.role != 'Admin' && employee.role != 'User' && employee.role != 'Moderator'">
+                    <td *ngIf="employee.role !== 'Admin' && employee.role !== 'User' && employee.role !== 'Moderator'">
                         <a class="btn btn-info" [routerLink]="['/employees/', employee.id, 'assign-role']"><fa-icon [icon]="assignRoleIcon"></fa-icon></a>
                     </td>
-                    <td *ngIf="employee.role != 'None'">
+                    <td *ngIf="employee.role !== 'None'">
                         <div class="btn-group">
                             <a (click)="changeStatus(employee.id)" class="btn" [ngClass]="{'btn-success': employee.isActive, 'btn-warning': !employee.isActive}">
                                 <fa-icon [icon]="employee.isActive ? deactivateUserIcon : activateUserIcon"></fa-icon>
