@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faPlusCircle, faProjectDiagram, faTrashAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +14,7 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
   selector: 'app-group-list',
   templateUrl: './inner-group-list.component.html'
 })
-export class GroupListComponent implements OnInit {
+export class GroupListComponent implements OnInit, AfterViewInit {
   editGroupIcon = faEdit;
   archiveGroupIcon = faTrashAlt;
   innerTeamsIcon = faUsers;
@@ -45,32 +45,35 @@ export class GroupListComponent implements OnInit {
         name: ['']
       })
 
-      const withTeamsControl = this.filtersForm.get('withTeams');
-      withTeamsControl.valueChanges.pipe(
-        debounceTime(100),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.groupService.getGroupParams();
-        params.pageNumber = 1;
-        this.groupParams.withTeams = searchFor;
-        this.groupService.setGroupParams(params);
-        this.groupParams = params;
-        this.loadGroups();
-      });
-
-      const nameControl = this.filtersForm.get('name');
-      nameControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.groupService.getGroupParams();
-        params.pageNumber = 1;
-        params.name = searchFor;
-        this.groupService.setGroupParams(params);
-        this.groupParams = params;
-        this.loadGroups();
-      })
     }
+
+  ngAfterViewInit(): void {
+    const withTeamsControl = this.filtersForm.get('withTeams');
+    withTeamsControl.valueChanges.pipe(
+      debounceTime(100),
+      distinctUntilChanged()
+    ).subscribe((searchFor) => {
+      const params = this.groupService.getGroupParams();
+      params.pageNumber = 1;
+      this.groupParams.withTeams = searchFor;
+      this.groupService.setGroupParams(params);
+      this.groupParams = params;
+      this.loadGroups();
+    });
+
+    const nameControl = this.filtersForm.get('name');
+    nameControl.valueChanges.pipe(
+      debounceTime(600),
+      distinctUntilChanged()
+    ).subscribe((searchFor) => {
+      const params = this.groupService.getGroupParams();
+      params.pageNumber = 1;
+      params.name = searchFor;
+      this.groupService.setGroupParams(params);
+      this.groupParams = params;
+      this.loadGroups();
+    })
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {

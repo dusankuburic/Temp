@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -12,7 +12,7 @@ import { EmploymentStatusService } from 'src/app/core/services/employment-status
   selector: 'app-employment-status-list',
   templateUrl: './employment-status-list.component.html'
 })
-export class EmploymentStatusListComponent implements OnInit {
+export class EmploymentStatusListComponent implements OnInit, AfterViewInit {
   editIcon = faEdit;
   archiveIcon = faTrashAlt;
   plusIcon = faPlusCircle;
@@ -33,19 +33,22 @@ export class EmploymentStatusListComponent implements OnInit {
         name: ['']
       });
 
-      const nameControl = this.filtersForm.get('name');
-      nameControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.employmentStatusService.getEmploymentStatusParams();
-        params.pageNumber = 1;
-        params.name = searchFor;
-        this.employmentStatusService.setEmploymentStatusParams(params);
-        this.employmentStatusParams = params;
-        this.loadEmploymentStatuses();
-      });
+
     }
+  ngAfterViewInit(): void {
+    const nameControl = this.filtersForm.get('name');
+    nameControl.valueChanges.pipe(
+      debounceTime(600),
+      distinctUntilChanged()
+    ).subscribe((searchFor) => {
+      const params = this.employmentStatusService.getEmploymentStatusParams();
+      params.pageNumber = 1;
+      params.name = searchFor;
+      this.employmentStatusService.setEmploymentStatusParams(params);
+      this.employmentStatusParams = params;
+      this.loadEmploymentStatuses();
+    });
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {

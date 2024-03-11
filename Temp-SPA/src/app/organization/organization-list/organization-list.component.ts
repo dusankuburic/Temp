@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faPlusCircle, faProjectDiagram, faTrashAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,7 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
   selector: 'app-organization-list',
   templateUrl: './organization-list.component.html'
 })
-export class OrganizationListComponent implements OnInit {
+export class OrganizationListComponent implements OnInit, AfterViewInit {
   editOrganizationIcon = faEdit
   archiveOrganizationIcon = faTrashAlt
   innerGroupsIcon = faUsers
@@ -43,32 +43,36 @@ export class OrganizationListComponent implements OnInit {
         name: ['']
       })
 
-      const withGroupsControl = this.filtersForm.get('withGroups');
-      withGroupsControl.valueChanges.pipe(
-        debounceTime(100),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.organizationsService.getOrganizationParams();
-        params.pageNumber = 1;
-        this.organizationParams.withGroups = searchFor;
-        this.organizationsService.setOrganizationParams(params);
-        this.organizationParams = params;
-        this.loadOrganizations();
-      })
-
-      const nameControl = this.filtersForm.get('name');
-      nameControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.organizationsService.getOrganizationParams();
-        params.pageNumber = 1;
-        params.name = searchFor;
-        this.organizationsService.setOrganizationParams(params);
-        this.organizationParams = params;
-        this.loadOrganizations();
-      });
     }
+    
+  ngAfterViewInit(): void {
+    
+    const withGroupsControl = this.filtersForm.get('withGroups');
+    withGroupsControl.valueChanges.pipe(
+      debounceTime(100),
+      distinctUntilChanged()
+    ).subscribe((searchFor) => {
+      const params = this.organizationsService.getOrganizationParams();
+      params.pageNumber = 1;
+      this.organizationParams.withGroups = searchFor;
+      this.organizationsService.setOrganizationParams(params);
+      this.organizationParams = params;
+      this.loadOrganizations();
+    })
+
+    const nameControl = this.filtersForm.get('name');
+    nameControl.valueChanges.pipe(
+      debounceTime(600),
+      distinctUntilChanged()
+    ).subscribe((searchFor) => {
+      const params = this.organizationsService.getOrganizationParams();
+      params.pageNumber = 1;
+      params.name = searchFor;
+      this.organizationsService.setOrganizationParams(params);
+      this.organizationParams = params;
+      this.loadOrganizations();
+    });
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {

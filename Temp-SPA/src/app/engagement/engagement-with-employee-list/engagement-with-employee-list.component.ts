@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +14,7 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
   selector: 'app-engagement-with-employee-list',
   templateUrl: './engagement-with-employee-list.component.html'
 })
-export class EngagementWithEmployeeListComponent implements OnInit {
+export class EngagementWithEmployeeListComponent implements OnInit, AfterViewInit {
   addEngagementIcon = faCodeBranch
 
   filtersForm: FormGroup;
@@ -42,45 +42,49 @@ export class EngagementWithEmployeeListComponent implements OnInit {
         lastName: [''],
       });
 
-      const roleControl = this.filtersForm.get('role');
-      roleControl.valueChanges.pipe(
-        debounceTime(100),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.engagementService.getEngagementParams();
-        params.pageNumber = 1;
-        this.engagementParams.role = searchFor;
-        this.engagementService.setEngagementParams(params);
-        this.engagementParams = params;
-        this.loadEmployeesWithEngagement();
-      });
-
-      const firstNameControl = this.filtersForm.get('firstName');
-      firstNameControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.engagementService.getEngagementParams();
-        params.pageNumber = 1;
-        params.firstName = searchFor;
-        this.engagementService.setEngagementParams(params);
-        this.engagementParams = params;
-        this.loadEmployeesWithEngagement();
-      });
-
-      const lastNameControl = this.filtersForm.get('lastName');
-      lastNameControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.engagementService.getEngagementParams();
-        params.pageNumber = 1;
-        params.lastName = searchFor;
-        this.engagementService.setEngagementParams(params);
-        this.engagementParams = params;
-        this.loadEmployeesWithEngagement();
-      });
     }
+    
+  ngAfterViewInit(): void {
+    
+    const roleControl = this.filtersForm.get('role');
+    roleControl.valueChanges.pipe(
+      debounceTime(100),
+      distinctUntilChanged()
+    ).subscribe((searchFor) => {
+      const params = this.engagementService.getEngagementParams();
+      params.pageNumber = 1;
+      this.engagementParams.role = searchFor;
+      this.engagementService.setEngagementParams(params);
+      this.engagementParams = params;
+      this.loadEmployeesWithEngagement();
+    });
+
+    const firstNameControl = this.filtersForm.get('firstName');
+    firstNameControl.valueChanges.pipe(
+      debounceTime(600),
+      distinctUntilChanged()
+    ).subscribe((searchFor) => {
+      const params = this.engagementService.getEngagementParams();
+      params.pageNumber = 1;
+      params.firstName = searchFor;
+      this.engagementService.setEngagementParams(params);
+      this.engagementParams = params;
+      this.loadEmployeesWithEngagement();
+    });
+
+    const lastNameControl = this.filtersForm.get('lastName');
+    lastNameControl.valueChanges.pipe(
+      debounceTime(600),
+      distinctUntilChanged()
+    ).subscribe((searchFor) => {
+      const params = this.engagementService.getEngagementParams();
+      params.pageNumber = 1;
+      params.lastName = searchFor;
+      this.engagementService.setEngagementParams(params);
+      this.engagementParams = params;
+      this.loadEmployeesWithEngagement();
+    });
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {

@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { Workplace, WorkplaceParams } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
 import { faPenToSquare, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-workplace-list',
   templateUrl: './workplace-list.component.html'
 })
-export class WorkplaceListComponent implements OnInit {
+export class WorkplaceListComponent implements OnInit, AfterViewInit {
   archiveIcon = faTrashAlt;
   editIcon = faPenToSquare
   plusIcon = faPlusCircle;
@@ -28,31 +28,33 @@ export class WorkplaceListComponent implements OnInit {
     private alertify: AlertifyService,
     private fb: FormBuilder) { 
       this.workplaceParams = workplaceService.getWorkplaceParams();
-
       this.filtersForm = this.fb.group({
         name: [''],
       })
-
-      const nameControl = this.filtersForm.get('name');
-      nameControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged(),
-      ).subscribe((searchFor) => {
-        const params = this.workplaceService.getWorkplaceParams();
-        params.pageNumber = 1;
-        params.name = searchFor;
-        this.workplaceService.setWorkplaceParams(params);
-        this.workplaceParams = params;
-        this.loadWorkplaces();
-      });
     }
-
+    
+  ngAfterViewInit(): void {
+    this.filtersForm.get('name').valueChanges.pipe(
+      debounceTime(600),
+      distinctUntilChanged(),
+    ).subscribe((searchFor) => {
+      const params = this.workplaceService.getWorkplaceParams();
+      params.pageNumber = 1;
+      params.name = searchFor;
+      this.workplaceService.setWorkplaceParams(params);
+      this.workplaceParams = params;
+      this.loadWorkplaces();
+    });
+  }
+ 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.workplaces = data['workplaces'].result;
       this.pagination = data['workplaces'].pagination;
     });
   }
+
+
 
   loadWorkplaces(): void {
     this.workplaceService.getPagedWorkplaces()

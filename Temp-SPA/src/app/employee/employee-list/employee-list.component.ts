@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faLock, faLockOpen, faPlusCircle, faSitemap, faUserTimes } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +14,7 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
   selector: 'app-employee-list',
   templateUrl: './employee-list.component.html'
 })
-export class EmployeeListComponent implements OnInit {
+export class EmployeeListComponent implements OnInit, AfterViewInit {
   editIcon = faEdit
   assignRoleIcon = faSitemap
   removeRoleIcon = faUserTimes
@@ -47,46 +47,48 @@ export class EmployeeListComponent implements OnInit {
         firstName: [null],
         lastName: [null]
       });
-
-      const roleControl = this.filtersForm.get('role');
-      roleControl.valueChanges.pipe(
-        debounceTime(100),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-          const params = this.employeeService.getEmployeeParams();
-          params.pageNumber = 1;
-          this.employeeParams.role = searchFor;
-          this.employeeService.setEmployeeParams(params);
-          this.employeeParams = params;
-          this.loadEmployees();
-      });
-      
-      const firstNameControl = this.filtersForm.get('firstName');
-      firstNameControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged(),
-      ).subscribe((searchFor) => {
-          const params = this.employeeService.getEmployeeParams();
-          params.pageNumber = 1;
-          params.firstName = searchFor;
-          this.employeeService.setEmployeeParams(params);
-          this.employeeParams = params;
-          this.loadEmployees();
-      });
-
-      const lastNameControl = this.filtersForm.get('lastName');
-      lastNameControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged(),
-      ).subscribe((searchFor) => {
+    }
+    
+  ngAfterViewInit(): void {
+    const roleControl = this.filtersForm.get('role');
+    roleControl.valueChanges.pipe(
+      debounceTime(100),
+      distinctUntilChanged()
+    ).subscribe((searchFor) => {
         const params = this.employeeService.getEmployeeParams();
         params.pageNumber = 1;
-        params.lastName = searchFor;
+        this.employeeParams.role = searchFor;
         this.employeeService.setEmployeeParams(params);
         this.employeeParams = params;
         this.loadEmployees();
-      });
-    }
+    });
+    
+    const firstNameControl = this.filtersForm.get('firstName');
+    firstNameControl.valueChanges.pipe(
+      debounceTime(600),
+      distinctUntilChanged(),
+    ).subscribe((searchFor) => {
+        const params = this.employeeService.getEmployeeParams();
+        params.pageNumber = 1;
+        params.firstName = searchFor;
+        this.employeeService.setEmployeeParams(params);
+        this.employeeParams = params;
+        this.loadEmployees();
+    });
+
+    const lastNameControl = this.filtersForm.get('lastName');
+    lastNameControl.valueChanges.pipe(
+      debounceTime(600),
+      distinctUntilChanged(),
+    ).subscribe((searchFor) => {
+      const params = this.employeeService.getEmployeeParams();
+      params.pageNumber = 1;
+      params.lastName = searchFor;
+      this.employeeService.setEmployeeParams(params);
+      this.employeeParams = params;
+      this.loadEmployees();
+    });
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
