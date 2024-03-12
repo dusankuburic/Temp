@@ -16,7 +16,7 @@ export class EngagementUserListResolver  {
 
     resolve(route: ActivatedRouteSnapshot): Observable<UserEngagement[]> {
         return this.engagementService.getUserEmployeeEngagements(route.params['id']).pipe(
-            catchError(error => {
+            catchError(() => {
                 this.alertify.error('Unable to list Employee Engagements');
                 this.route.navigate(['']);
                 return of(null);

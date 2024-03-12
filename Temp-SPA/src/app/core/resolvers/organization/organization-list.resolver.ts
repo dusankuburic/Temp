@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Organization } from '../../models/organization';
@@ -14,10 +14,10 @@ export class OrganizationListResolver  {
         private router: Router,
         private alertify: AlertifyService) {}
     
-    resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<Organization[]>> {
+    resolve(): Observable<PaginatedResult<Organization[]>> {
         this.organizationService.resetOrganizationParams();
         return this.organizationService.getPagedOrganizations().pipe(
-            catchError(error => {
+            catchError(() => {
                 this.alertify.error('Unable to list Organizations');
                 this.router.navigate(['']);
                 return of(null);

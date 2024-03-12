@@ -35,14 +35,14 @@
                   <tmp-select [options]="innerTeamsSelect" [label]="'Team'" formControlName="teamId"></tmp-select>
                 </div>
                 <div class="form-group">
-                  <button type="submit" [disabled]="!editEmployeeForm.valid" class="btn btn-success btn-ts float-right">Save</button>
+                  <button type="submit" [disabled]="!editEmployeeForm.valid" class="btn btn-success btn-ts float-end">Save</button>
                 </div>
               </form>
           </div>
       </div>
   </div>
 
-  <div *ngIf="employee.role == 'Moderator'" class="col-lg-6">
+  <div *ngIf="employee.role === 'Moderator'" class="col-lg-6">
     <div class="container">
       <h1 class="text-center">Assign Groups</h1>
       <div class="row justify-content-center">

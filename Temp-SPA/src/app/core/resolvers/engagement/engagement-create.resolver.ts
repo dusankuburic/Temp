@@ -16,7 +16,7 @@ export class EngagementCreateResolver  {
     //TODO: pass id into modal, then call db, discard this resolver you don;nt need it
     resolve(route: ActivatedRouteSnapshot): Observable<any> {
         return  this.engagementService.getEngagementForEmployee(route.params['id']).pipe(
-            catchError(error => {
+            catchError(() => {
                 this.alertify.error('Unable to get Employee engagement');
                 this.router.navigate(['']);
                 return of(null);

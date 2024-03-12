@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { EmploymentStatus } from '../../models/employmentStatus';
@@ -14,10 +14,10 @@ export class EmploymentStatusListResolver  {
         private router: Router,
         private alertify: AlertifyService) {}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<EmploymentStatus[]>> {
+    resolve(): Observable<PaginatedResult<EmploymentStatus[]>> {
         this.employmentStatusService.resetEmploymentStatusParams();
         return this.employmentStatusService.getPagedEmploymentStatuses().pipe(
-            catchError(error => {
+            catchError(() => {
                 this.alertify.error('Unable to list Employment statuses');
                 this.router.navigate(['']);
                 return of(null);

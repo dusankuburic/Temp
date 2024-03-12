@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{title}}</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form class="row g-2" [formGroup]="editOrganizationForm" (ngSubmit)="update()">
+        <div class="form-group">
+          <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
+        </div>
+        <div class="form-group">
+          <button type="submit" [disabled]="!editOrganizationForm.valid" class="btn btn-success btn-ts float-end">Save</button>
+        </div>
+      </form>
+</div>

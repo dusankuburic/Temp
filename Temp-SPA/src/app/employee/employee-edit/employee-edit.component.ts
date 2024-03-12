@@ -182,7 +182,7 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   updateGroup(moderatorId: number, newGroupId: number): void {
-    let moderatorGroups = {} as ModeratorGroups;
+    const moderatorGroups = {} as ModeratorGroups;
     moderatorGroups.groups = [];
 
     this.currentModeratorGroups.forEach((elem) => {

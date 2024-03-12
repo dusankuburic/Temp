@@ -12,7 +12,7 @@
         </option>
     </select>
     <label *ngIf="label">{{label}}</label>
-    <ng-container *ngIf="isFilter == false && control.touched && control.invalid">
+    <ng-container *ngIf="isFilter === false && control.touched && control.invalid">
         <div *ngIf="control.errors?.required" class="invalid-feedback">
             Please choose one of the options.
         </div>

@@ -43,7 +43,7 @@ export function tokenGetter(): any {
         disallowedRoutes: ['localhost:5000/api/admins/register', 'localhost:5000/api/users/register']
       }
     }),
-    FontAwesomeModule,
+    FontAwesomeModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AddAuthHeaderInterceptor, multi: true}

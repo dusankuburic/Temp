@@ -16,7 +16,7 @@ export class OrganizationEditResolver  {
 
     resolve(route: ActivatedRouteSnapshot): Observable<Organization>{
         return this.organizationService.getOrganization(route.params['id']).pipe(
-            catchError(error => {
+            catchError(() => {
                 this.alertify.error('Unable to get Organization');
                 this.router.navigate(['/organizations']);
                 return of(null);

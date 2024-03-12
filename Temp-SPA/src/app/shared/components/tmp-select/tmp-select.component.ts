@@ -7,7 +7,7 @@ export interface SelectionOption {
   display: any,
   disabled?: boolean,
   hidden?: boolean
-};
+}
 
 @Component({
   selector: 'tmp-select',

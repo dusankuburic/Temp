@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertifyService } from '../core/services/alertify.service';
 import { AuthService } from '../core/services/auth.service';
@@ -8,7 +8,7 @@ import { AuthService } from '../core/services/auth.service';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss']
 })
-export class NavComponent implements OnInit {
+export class NavComponent {
   model: any = {};
 
 
@@ -17,8 +17,6 @@ export class NavComponent implements OnInit {
     private alertify: AlertifyService,
     private router: Router) { }
 
-  ngOnInit(): void {
-  }
 
   login(): void {
     this.authService.loginAdmin(this.model).subscribe(next => {
