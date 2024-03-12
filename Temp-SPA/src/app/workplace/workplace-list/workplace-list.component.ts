@@ -5,12 +5,11 @@ import { Workplace, WorkplaceParams } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
 import { faPenToSquare, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { WorkplaceCreateModalComponent } from '../modals/workplace-create-modal/workplace-create-modal.component';
-import { WorkplaceEditComponent } from '../workplace-edit/workplace-edit.component';
-import { WorkplaceEditModalComponent } from '../modals/workplace-edit-modal/workplace-edit-modal.component';
+import { WorkplaceCreateModalComponent } from '../workplace-create-modal/workplace-create-modal.component';
+import { WorkplaceEditModalComponent } from '../workplace-edit-modal/workplace-edit-modal.component';
 
 @Component({
   selector: 'app-workplace-list',
@@ -22,6 +21,7 @@ export class WorkplaceListComponent implements OnInit, AfterViewInit {
   plusIcon = faPlusCircle;
 
   bsModalRef?: BsModalRef;
+  subscriptions: Subscription;
   filtersForm: FormGroup;
   workplaces: Workplace[];
   pagination: Pagination;
@@ -60,17 +60,26 @@ export class WorkplaceListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  openCreateModal() {
+  openCreateModal(): void {
     const initialState: ModalOptions = {
       class: 'modal-dialog-centered',
       initialState: {
         title: 'Create Workplace'
       }
     };
+    this.subscriptions = new Subscription();
     this.bsModalRef = this.bsModalService.show(WorkplaceCreateModalComponent, initialState);
+    if (this.bsModalRef?.onHidden) {
+      this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
+        if (this.bsModalRef.content.isSaved)
+          this.loadWorkplaces();
+
+        this.unsubscribe();
+      }))
+    }
   }
 
-  openEditModal(id: number) {
+  openEditModal(id: number): void {
     const initialState: ModalOptions = {
       class: 'modal-dialog-centered',
       initialState: {
@@ -78,8 +87,22 @@ export class WorkplaceListComponent implements OnInit, AfterViewInit {
         workplaceId: id
       }
     };
+    this.subscriptions = new Subscription();
     this.bsModalRef = this.bsModalService.show(WorkplaceEditModalComponent, initialState);
+
+    if (this.bsModalRef?.onHidden) {
+      this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
+        if (this.bsModalRef.content.isSaved)
+          this.loadWorkplaces();
+        
+        this.unsubscribe();
+      }))
+    }
   }
+  unsubscribe() {
+    this.subscriptions.unsubscribe();
+  }
+
 
   loadWorkplaces(): void {
     this.workplaceService.getPagedWorkplaces()
@@ -116,5 +139,7 @@ export class WorkplaceListComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+
 
 }

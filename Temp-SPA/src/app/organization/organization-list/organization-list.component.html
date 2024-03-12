@@ -15,7 +15,7 @@
         </form>
     </div>
     <div class="col-lg-2">
-        <a class="btn btn-success float-end" [routerLink]="['/organizations/create']"><fa-icon [icon]="plusIcon"></fa-icon></a> 
+        <a class="btn btn-success float-end" (click)="openCreateModal()"><fa-icon [icon]="plusIcon"></fa-icon></a> 
     </div>
 </div>
 <div class="row justify-content-center">
@@ -34,7 +34,7 @@
                 <td>{{organization.name}}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn btn-primary" [routerLink]="['/organizations/' , organization.id, 'edit']"><fa-icon [icon]="editOrganizationIcon"></fa-icon></a>
+                        <a class="btn btn-primary" (click)="openEditModal(organization.id)" ><fa-icon [icon]="editOrganizationIcon"></fa-icon></a>
                         <a class="btn btn-danger" (click)="changeStatus(organization.id)"><fa-icon [icon]="archiveOrganizationIcon"></fa-icon></a>
                     </div>
                 </td>       

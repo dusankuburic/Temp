@@ -15,7 +15,6 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AddAuthHeaderInterceptor } from './core/interceptors/auth-interceptor.interceptor';
 import { UserModule } from './user/user.module';
-import { WorkplaceValidators } from './workplace/workplace-validators';
 
 export function tokenGetter(): any {
   return localStorage.getItem('token');
@@ -47,7 +46,6 @@ export function tokenGetter(): any {
     FontAwesomeModule
   ],
   providers: [
-    WorkplaceValidators,
     {provide: HTTP_INTERCEPTORS, useClass: AddAuthHeaderInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]

@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{title}}</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row justify-content-center">
+    <div class="col alert alert-info text-center" role="alert">
+        <h5>Name: {{this.firstName}} {{this.lastName}}</h5>
+        </div>
+    <form class="row g-2" [formGroup]="createAssignRoleForm" (ngSubmit)="register()">
+        <input type="hidden" asp-for="@employee.Id" />
+        <div class="form-group">
+            <tmp-input [formControl]="username" [label]="'Username'" [placeholder]="'Enter username'"></tmp-input>
+        </div>
+        <div class="form-group">
+            <tmp-input [type]="'password'" [formControl]="password" [label]="'Password'" [placeholder]="'Enter password'"></tmp-input>
+        </div>
+        <div class="form-group">
+            <tmp-input [type]="'password'" [formControl]="confirmPassword" [label]="'Confirmed Password'" [placeholder]="'Enter your password again'"></tmp-input>
+        </div>
+        <fieldset class="form-group">
+            <legend>Role</legend>
+            <div class="form-check">
+                <input type="radio" formControlName="role" value="User" class="form-check-input"/>
+                <label class="form-check-label">User</label>
+            </div>
+            <div class="form-check">
+                <input type="radio"  formControlName="role" value="Moderator" class="form-check-input" />  
+                <label class="form-check-label">Moderator</label>
+            </div>
+            <div class="form-check">
+                <input type="radio"  formControlName="role" value="Admin" class="form-check-input" />  
+                <label class="form-check-label">Admin</label>
+            </div>
+        </fieldset> 
+        <div class="form-group">
+            <button class="btn btn-success btn-ts float-end" [disabled]="!createAssignRoleForm.valid" type="submit">Save</button>
+        </div>
+    </form>
+    </div>
+</div>

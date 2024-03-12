@@ -4,7 +4,8 @@
         "employmentstatuses",
         "innergroups",
         "innerteams",
-        "maxlength"
+        "maxlength",
+        "tabset"
     ],
     "typescript.tsdk": "node_modules\\typescript\\lib"
 }

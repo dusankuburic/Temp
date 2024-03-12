@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
-import { WorkplaceValidators } from '../../workplace-validators';
+import { WorkplaceValidators } from '../workplace-validators';
 import { Workplace } from 'src/app/core/models/workplace';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
@@ -56,6 +56,7 @@ export class WorkplaceEditModalComponent implements OnInit {
       const workplaceForm = { ...this.editWorkplaceForm.value, id: this.workplace.id};
       this.workplaceService.updateWorkplace(workplaceForm).subscribe({
         next: () => {
+          this.bsModalRef.content.isSaved = true;
           this.alertify.success('Successfully updated');
         },
         error: () => {

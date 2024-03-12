@@ -8,10 +8,8 @@ import { workplaceRoutes } from './workplace.routes';
 import { SharedModule } from '../shared/shared.module';
 import { WorkplaceListResolver } from '../core/resolvers/workplace/workplace-list.resolver';
 import { WorkplaceEditResolver } from '../core/resolvers/workplace/workplace-edit.resolver';
-import { WorkplaceValidators } from './workplace-validators';
-import { WorkplaceCreateModalComponent } from './modals/workplace-create-modal/workplace-create-modal.component';
-import { WorkplaceEditModalComponent } from './modals/workplace-edit-modal/workplace-edit-modal.component';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { WorkplaceCreateModalComponent } from './workplace-create-modal/workplace-create-modal.component';
+import { WorkplaceEditModalComponent } from './workplace-edit-modal/workplace-edit-modal.component';
 
 @NgModule({
     imports: [
@@ -27,10 +25,8 @@ import { BsModalService } from 'ngx-bootstrap/modal';
         WorkplaceEditModalComponent
     ],
     providers: [
-        WorkplaceValidators,
         WorkplaceListResolver,
         WorkplaceEditResolver,
-
     ]
 })
 export class WorkplaceModule { }

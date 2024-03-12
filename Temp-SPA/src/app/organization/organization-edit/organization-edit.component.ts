@@ -16,8 +16,7 @@ export class OrganizationEditComponent implements OnInit {
   name = new FormControl('', [
     Validators.required,
     Validators.minLength(3),
-    Validators.maxLength(60)
-  ]);
+    Validators.maxLength(60)]);
 
   constructor(
     private organizationService: OrganizationService,

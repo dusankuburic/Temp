@@ -2,12 +2,15 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faPlusCircle, faProjectDiagram, faTrashAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { Organization, OrganizationParams } from 'src/app/core/models/organization';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
+import { OrganizationCreateModalComponent } from '../organization-create-modal/organization-create-modal.component';
+import { OrganizationEditModalComponent } from '../organization-edit-modal/organization-edit-modal.component';
 
 @Component({
   selector: 'app-organization-list',
@@ -20,6 +23,8 @@ export class OrganizationListComponent implements OnInit, AfterViewInit {
   createGroupIcon = faProjectDiagram
   plusIcon = faPlusCircle;
 
+  bsModalRef?: BsModalRef;
+  subscriptions: Subscription;
   filtersForm: FormGroup;
   organizations: Organization[];
   pagination: Pagination;
@@ -35,18 +40,17 @@ export class OrganizationListComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private organizationsService: OrganizationService,
     private alertify: AlertifyService,
-    private fb: FormBuilder) { 
+    private fb: FormBuilder,
+    private bsModalService: BsModalService) { 
       this.organizationParams = organizationsService.getOrganizationParams();
 
       this.filtersForm = this.fb.group({
         withGroups: [''],
         name: ['']
       })
-
     }
     
   ngAfterViewInit(): void {
-    
     const withGroupsControl = this.filtersForm.get('withGroups');
     withGroupsControl.valueChanges.pipe(
       debounceTime(100),
@@ -79,6 +83,49 @@ export class OrganizationListComponent implements OnInit, AfterViewInit {
       this.organizations = data['organizations'].result;
       this.pagination = data['organizations'].pagination;
     });
+  }
+
+  openCreateModal(): void {
+    const initialState: ModalOptions = {
+      class: 'modal-dialog-centered',
+      initialState: {
+        title: 'Create Organization'
+      }
+    };
+    this.subscriptions = new Subscription();
+    this.bsModalRef = this.bsModalService.show(OrganizationCreateModalComponent, initialState);
+    if (this.bsModalRef?.onHidden) {
+      this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
+        if (this.bsModalRef.content.isSaved)
+          this.loadOrganizations();
+        
+        this.unsubscribe();
+      }))
+    }
+  }
+
+  openEditModal(id: number): void {
+    const initialState: ModalOptions = {
+      class: 'modal-dialog-centered',
+      initialState: {
+        title: 'Edit Organization',
+        organizationId: id
+      }
+    };
+    this.subscriptions = new Subscription();
+    this.bsModalRef = this.bsModalService.show(OrganizationEditModalComponent, initialState);
+    if (this.bsModalRef?.onHidden) {
+      this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
+        if (this.bsModalRef.content.isSaved)
+          this.loadOrganizations();
+        
+          this.unsubscribe();
+      }))
+    }
+  }
+
+  unsubscribe() {
+    this.subscriptions.unsubscribe();
   }
 
   loadOrganizations(): void {

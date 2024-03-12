@@ -18,7 +18,7 @@
         </form>
     </div> 
     <div class="col-lg-2">
-        <a class="btn btn-success float-end" [routerLink]="['/employees/create']"><fa-icon [icon]="plusIcon"></fa-icon></a>
+        <a class="btn btn-success float-end" (click)="openCreateModal()"><fa-icon [icon]="plusIcon"></fa-icon></a>
     </div>
 </div>
 <div class="row justify-content-center">
@@ -48,10 +48,10 @@
                         </span>
                     </td>
                     <td>
-                        <a class="btn btn-primary" [routerLink]="['/employees/', employee.id, 'edit']"><fa-icon [icon]="editIcon"></fa-icon></a>
+                        <a class="btn btn-primary" (click)="openEditModal(employee.id)"><fa-icon [icon]="editIcon"></fa-icon></a>
                     </td>
                     <td *ngIf="employee.role !== 'Admin' && employee.role !== 'User' && employee.role !== 'Moderator'">
-                        <a class="btn btn-info" [routerLink]="['/employees/', employee.id, 'assign-role']"><fa-icon [icon]="assignRoleIcon"></fa-icon></a>
+                        <a class="btn btn-info" (click)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)"><fa-icon [icon]="assignRoleIcon"></fa-icon></a>
                     </td>
                     <td *ngIf="employee.role !== 'None'">
                         <div class="btn-group">

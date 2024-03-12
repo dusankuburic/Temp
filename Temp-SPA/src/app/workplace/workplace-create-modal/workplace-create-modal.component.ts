@@ -27,6 +27,7 @@ export class WorkplaceCreateModalComponent implements OnInit {
     private fb: FormBuilder,
     private validators: WorkplaceValidators,
     public bsModalRef: BsModalRef) {}
+    
 
     ngOnInit(): void {
       this.createWorkplaceForm = this.fb.group({
@@ -38,8 +39,9 @@ export class WorkplaceCreateModalComponent implements OnInit {
       this.workplace = { ...this.createWorkplaceForm.value };
       this.workplaceService.createWorkplace(this.workplace).subscribe({
         next: () => {
-          this.alertify.success('Successfully created');
+          this.bsModalRef.content.isSaved = true;
           this.createWorkplaceForm.reset();
+          this.alertify.success('Successfully created');
         },
         error: () => {
           this.alertify.error('Unable to create workplace');

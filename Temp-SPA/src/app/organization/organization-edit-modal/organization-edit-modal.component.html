@@ -5,12 +5,12 @@
     </button>
 </div>
 <div class="modal-body">
-    <form class="row g-2" [formGroup]="createWorkplaceForm" (ngSubmit)="create()">
+    <form class="row g-2" [formGroup]="editOrganizationForm" (ngSubmit)="update()">
         <div class="form-group">
-        <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
+          <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
         </div>
-        <div class="form-gorup">
-        <button type="submit" [disabled]="!createWorkplaceForm.valid" class="btn btn-success btn-ts float-end">Create</button>
+        <div class="form-group">
+          <button type="submit" [disabled]="!editOrganizationForm.valid" class="btn btn-success btn-ts float-end">Save</button>
         </div>
-    </form>
+      </form>
 </div>
