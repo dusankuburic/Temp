@@ -7,18 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureLogging();
 builder.Services.AddMappingsCollection();
-
 builder.Services.ConfigurePersistence(builder.Configuration);
-
 builder.Services.AddProgramServices(builder.Configuration);
 builder.Services.AddAuthSetup(builder.Configuration);
-
 builder.Services.ConfigureSwaggerDoc();
-
 builder.Services.AddControllers()
     .ConfigureSerialization()
     .ConfigureFluentValidation();
-
 builder.Services.AddHealthChecks();
 builder.Services.AddDataProtection();
 builder.Services.ConfigureCORS();
@@ -26,8 +21,6 @@ builder.Services.ConfigureCORS();
 var app = builder.Build();
 
 app.UseHttpLogging();
-
-
 using (var scope = app.Services.CreateScope()) {
     var services = scope.ServiceProvider;
     try {
@@ -51,18 +44,13 @@ using (var scope = app.Services.CreateScope()) {
         logger.LogError(exMsg, "Migration error");
     }
 }
-
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseSwaggerDoc();
-
 app.UseHttpsRedirection();
 app.UseRouting();
-
 app.UseCors("CorsPolicy");
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapHealthChecks("/health", new HealthCheckOptions {
     AllowCachingResponses = false,
     ResultStatusCodes = {
@@ -71,7 +59,6 @@ app.MapHealthChecks("/health", new HealthCheckOptions {
         [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
     }
 });
-
 app.MapControllers();
 
 app.Run();

@@ -10,10 +10,13 @@ import { EngagementWithEmployeeResolver } from '../core/resolvers/engagement/eng
 import { EngagementWithoutEmployeeResolver } from '../core/resolvers/engagement/engagement-without-employee-list.resolver';
 import { EngagementUserListResolver } from '../core/resolvers/engagement/engagement-user-list.resolver';
 import { EngagementCreateResolver } from '../core/resolvers/engagement/engagement-create.resolver';
+import { EngagementCreateModalComponent } from './engagement-create-modal/engagement-create-modal.component';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 @NgModule({
     imports: [
         SharedModule,
+        TabsModule,
         RouterModule.forChild(engagementRoutes)
     ],
     exports: [],
@@ -22,6 +25,7 @@ import { EngagementCreateResolver } from '../core/resolvers/engagement/engagemen
         EngagementUserListComponent,
         EngagementWithEmployeeListComponent,
         EngagementWithoutEmployeeListComponent,
+        EngagementCreateModalComponent,
     ],
     providers: [
         EngagementWithoutEmployeeResolver,

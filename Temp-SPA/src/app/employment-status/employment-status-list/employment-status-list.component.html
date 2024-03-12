@@ -8,7 +8,7 @@
         </form>
     </div>    
     <div class="col-lg-2">
-        <a class="btn btn-success float-end" [routerLink]="['/employment-statuses/create']"><fa-icon [icon]="plusIcon"></fa-icon></a>
+        <a class="btn btn-success float-end" (click)="openCreateModal()"><fa-icon [icon]="plusIcon"></fa-icon></a>
     </div>
 </div>
 <div class="row justify-content-center">
@@ -26,7 +26,7 @@
                 <td>{{employment.name}}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn btn-primary" [routerLink]="['/employment-statuses/', employment.id, 'edit']"><fa-icon [icon]="editIcon"></fa-icon></a>
+                        <a class="btn btn-primary" (click)="openEditModal(employment.id)" ><fa-icon [icon]="editIcon"></fa-icon></a>
                         <a class="btn btn-danger" (click)="changeStatus(employment.id)"><fa-icon [icon]="archiveIcon"></fa-icon></a>
                     </div>
                 </td>

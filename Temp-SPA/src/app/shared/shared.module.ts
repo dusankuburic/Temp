@@ -10,6 +10,12 @@ import { PasswordValidator } from "./validators/password.validators";
 import { TmpDatepickerComponent } from "./components/tmp-datepicker/tmp-datepicker.component";
 import { ControlValueAccessorDirective } from "./components/control-value-accessor.directive";
 import { TmpSelectComponent } from "./components/tmp-select/tmp-select.component";
+import { BsModalService } from "ngx-bootstrap/modal";
+import { EmploymentStatusValidators } from "../employment-status/employment-status-validators";
+import { WorkplaceValidators } from "../workplace/workplace-validators";
+import { OrganizationValidators } from "../organization/organization-validators";
+import { GroupValidators } from "../group/group-validators";
+import { TeamValidators } from "../team/team-validators";
 
 @NgModule({
     declarations: [
@@ -39,7 +45,13 @@ import { TmpSelectComponent } from "./components/tmp-select/tmp-select.component
       TmpSelectComponent
     ],
     providers: [
-      PasswordValidator
+      PasswordValidator,
+      EmploymentStatusValidators,
+      OrganizationValidators,
+      TeamValidators,
+      GroupValidators,
+      WorkplaceValidators,
+      BsModalService,
     ]
   })
   export class SharedModule {}

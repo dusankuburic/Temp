@@ -45,7 +45,7 @@
                     </span>
                 </td>
                 <td>
-                    <a class="btn btn-primary" [routerLink]="['/engagements/create/', employee.id]">
+                    <a class="btn btn-primary" (click)="openCreateModal(employee.id)">
                         <fa-icon [icon]="addEngagementIcon"></fa-icon>
                     </a>
                 </td>

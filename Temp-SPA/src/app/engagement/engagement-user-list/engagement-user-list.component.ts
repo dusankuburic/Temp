@@ -15,8 +15,8 @@ export class EngagementUserListComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
         this.engagements = data['engagements'];
-
     });
   }
+  
 
 }

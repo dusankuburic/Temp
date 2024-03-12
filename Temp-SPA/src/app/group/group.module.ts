@@ -10,7 +10,8 @@ import { GroupListResolver } from '../core/resolvers/group/group-list.resolver';
 import { GroupCreateResolver } from '../core/resolvers/group/group-create.resolver';
 import { GroupEditResolver } from '../core/resolvers/group/group-edit.resolver';
 import { ModeratorAssignedGroupsResolver } from '../core/resolvers/group/moderator-assigned-groups.resolver';
-import { GroupValidators } from './group-validators';
+import { GroupCreateModalComponent } from './group-create-modal/group-create-modal.component';
+import { GroupEditModalComponent } from './group-edit-modal/group-edit-modal.component';
 
 @NgModule({
     imports: [
@@ -23,9 +24,10 @@ import { GroupValidators } from './group-validators';
         GroupEditComponent,
         GroupListComponent,
         AssignedGroupsComponent,
+        GroupCreateModalComponent,
+        GroupEditModalComponent,
     ],
     providers: [
-        GroupValidators,
         GroupListResolver,
         GroupCreateResolver,
         GroupEditResolver,

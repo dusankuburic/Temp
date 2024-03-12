@@ -1,26 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faPlusCircle, faProjectDiagram, faTrashAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { GroupParams, InnerGroup, PagedInnerGroups } from 'src/app/core/models/group';
 import { Organization } from 'src/app/core/models/organization';
 import { Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
+import { GroupCreateModalComponent } from '../group-create-modal/group-create-modal.component';
+import { GroupEditModalComponent } from '../group-edit-modal/group-edit-modal.component';
 
 @Component({
   selector: 'app-group-list',
   templateUrl: './inner-group-list.component.html'
 })
-export class GroupListComponent implements OnInit {
+export class GroupListComponent implements OnInit, AfterViewInit {
   editGroupIcon = faEdit;
   archiveGroupIcon = faTrashAlt;
   innerTeamsIcon = faUsers;
   createTeamIcon = faProjectDiagram;
   plusIcon = faPlusCircle;
 
+  bsModalRef?: BsModalRef;
+  subscriptions: Subscription;
   filtersForm: FormGroup;
   innerGroups: InnerGroup[];
   pagination: Pagination;
@@ -37,40 +42,43 @@ export class GroupListComponent implements OnInit {
     private route: ActivatedRoute,
     private groupService: GroupService,
     private alertify: AlertifyService,
-    private fb: FormBuilder) { 
+    private fb: FormBuilder,
+    private bsModalService: BsModalService) { 
       this.groupParams = groupService.getGroupParams();
 
       this.filtersForm = this.fb.group({
         withTeams: [''],
         name: ['']
       })
-
-      const withTeamsControl = this.filtersForm.get('withTeams');
-      withTeamsControl.valueChanges.pipe(
-        debounceTime(100),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.groupService.getGroupParams();
-        params.pageNumber = 1;
-        this.groupParams.withTeams = searchFor;
-        this.groupService.setGroupParams(params);
-        this.groupParams = params;
-        this.loadGroups();
-      });
-
-      const nameControl = this.filtersForm.get('name');
-      nameControl.valueChanges.pipe(
-        debounceTime(600),
-        distinctUntilChanged()
-      ).subscribe((searchFor) => {
-        const params = this.groupService.getGroupParams();
-        params.pageNumber = 1;
-        params.name = searchFor;
-        this.groupService.setGroupParams(params);
-        this.groupParams = params;
-        this.loadGroups();
-      })
     }
+
+  ngAfterViewInit(): void {
+    const withTeamsControl = this.filtersForm.get('withTeams');
+    withTeamsControl.valueChanges.pipe(
+      debounceTime(100),
+      distinctUntilChanged()
+    ).subscribe((searchFor) => {
+      const params = this.groupService.getGroupParams();
+      params.pageNumber = 1;
+      this.groupParams.withTeams = searchFor;
+      this.groupService.setGroupParams(params);
+      this.groupParams = params;
+      this.loadGroups();
+    });
+
+    const nameControl = this.filtersForm.get('name');
+    nameControl.valueChanges.pipe(
+      debounceTime(600),
+      distinctUntilChanged()
+    ).subscribe((searchFor) => {
+      const params = this.groupService.getGroupParams();
+      params.pageNumber = 1;
+      params.name = searchFor;
+      this.groupService.setGroupParams(params);
+      this.groupParams = params;
+      this.loadGroups();
+    })
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -82,6 +90,51 @@ export class GroupListComponent implements OnInit {
       this.innerGroups = data['innergroups'].groups.result;
       this.pagination = data['innergroups'].groups.pagination;
     });
+  }
+
+  openCreateModal(organizationId: number): void {
+    const initialState: ModalOptions = {
+      class: 'modal-dialog-centered',
+      initialState: {
+        title: 'Create Group',
+        organizationId: organizationId
+      }
+    };
+    this.subscriptions = new Subscription();
+    this.bsModalRef = this.bsModalService.show(GroupCreateModalComponent, initialState);
+    if (this.bsModalRef?.onHidden) {
+      this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
+        if (this.bsModalRef.content.isSaved)
+          this.loadGroups();
+        
+        this.unsubscribe();
+      }))
+    }
+  }
+
+  openEditModal(groupId: number, organizationId: number): void {
+    const initialState: ModalOptions = {
+      class: 'modal-dialog-centered',
+      initialState: {
+        title: 'Edit Group',
+        groupId: groupId,
+        organizationId: organizationId
+      }
+    };
+    this.subscriptions = new Subscription();
+    this.bsModalRef = this.bsModalService.show(GroupEditModalComponent, initialState);
+    if (this.bsModalRef?.onHidden) {
+      this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
+        if (this.bsModalRef.content.isSaved)
+          this.loadGroups();
+        
+        this.unsubscribe();
+      }))
+    }
+  }
+
+  unsubscribe() {
+    this.subscriptions.unsubscribe();
   }
 
   loadGroups(): void {

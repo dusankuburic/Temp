@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Workplace } from '../../models/workplace';
@@ -14,10 +14,10 @@ export class WorkplaceListResolver  {
         private router: Router,
         private alertify: AlertifyService){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<Workplace[]>>  {
+    resolve(): Observable<PaginatedResult<Workplace[]>>  {
         this.workplaceService.resetWorkplaceParams();
         return this.workplaceService.getPagedWorkplaces().pipe(
-            catchError(error => {
+            catchError(() => {
                 this.alertify.error('Unable to list Workplaces');
                 this.router.navigate(['']);
                 return of(null);

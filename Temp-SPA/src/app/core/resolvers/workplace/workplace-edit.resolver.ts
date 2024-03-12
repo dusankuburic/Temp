@@ -16,7 +16,7 @@ export class WorkplaceEditResolver  {
 
     resolve(route: ActivatedRouteSnapshot): Observable<Workplace> {
         return this.workplaceService.getWorkplace(route.params['id']).pipe(
-            catchError(error => {
+            catchError(() => {
                 this.alertify.error('Unable to get Workplace');
                 this.router.navigate(['/employees']);
                 return of(null);

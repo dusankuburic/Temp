@@ -14,7 +14,7 @@ export class AddAuthHeaderInterceptor implements HttpInterceptor {
         else 
             token = `Bearer ${token}`
 
-        let authorized: HttpRequest<any> = req.clone({
+        const authorized: HttpRequest<any> = req.clone({
             setHeaders: {'Authorization': token}
         });
 

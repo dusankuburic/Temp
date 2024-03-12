@@ -1,0 +1,38 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{title}}</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form class="row g-2" [formGroup]="createEmployeeForm" (ngSubmit)="create()">
+        <div class="form-group">
+            <tmp-input [formControl]="firstName" [label]="'First Name'" [placeholder]="'Enter First Name'"></tmp-input>
+        </div>
+        <div class="form-group">
+            <tmp-input [formControl]="lastName" [label]="'Last Name'" [placeholder]="'Last Name'"></tmp-input>
+        </div>
+        <div class="form-group">
+            <tmp-select 
+            [options]="organizationsSelect"
+            [label]="'Organization'"
+            formControlName="organizationId"
+            (change)="loadInnerGroups(createEmployeeForm.get('organizationId').value)">
+            </tmp-select>
+        </div>
+        <div class="form-group" *ngIf="createEmployeeForm.get('organizationId').value">
+            <tmp-select
+            [options]="innerGroupsSelect"
+            [label]="'Group'"
+            formControlName="groupId"
+            (change)="loadInnerTeams(createEmployeeForm.get('groupId').value)">
+            </tmp-select>
+        </div>
+        <div class="form-group" *ngIf="createEmployeeForm.get('groupId').value">
+            <tmp-select [options]="innerTeamsSelect" [label]="'Team'" formControlName="teamId"></tmp-select>
+        </div>
+        <div class="form-gorup">
+            <button type="submit" [disabled]="!createEmployeeForm.valid" class="btn btn-success btn-ts float-end">Create</button>
+        </div>
+    </form>
+</div>
