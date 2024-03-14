@@ -8,19 +8,19 @@
 	{
 		"firstName": "Milos Djukic",
 		"lastName": "Zohar",
-		"role": "Moderator",
+		"role": "None",
 		"teamId": 5
 	},
 	{
 		"firstName": "Tanja",
 		"lastName": "Savic",
-		"role": "User",
+		"role": "None",
 		"teamId": 2
 	},
 	{
 		"firstName": "Aca",
 		"lastName": "Lukas",
-		"role": "User",
+		"role": "None",
 		"teamId": 2
 	},
 	{

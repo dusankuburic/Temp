@@ -1,5 +1,4 @@
 ﻿using Temp.Domain.Models.ModeratorGroups.Exceptions;
-using Temp.Services.Auth;
 using Temp.Services.Auth.Moderators;
 
 namespace Temp.API.Controllers;
@@ -9,14 +8,9 @@ namespace Temp.API.Controllers;
 public class ModeratorsController : ControllerBase
 {
     private readonly ApplicationDbContext _ctx;
-    private readonly IAuthService _authService;
 
-
-    public ModeratorsController(
-        ApplicationDbContext ctx,
-        IAuthService authService) {
+    public ModeratorsController(ApplicationDbContext ctx) {
         _ctx = ctx;
-        _authService = authService;
     }
 
     [HttpGet("{id}")]
@@ -24,34 +18,6 @@ public class ModeratorsController : ControllerBase
     [ProducesResponseType(typeof(GetModerator.ModeratorViewModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetModerator([FromRoute] int id) {
         var response = await new GetModerator(_ctx).Do(id);
-
-        return Ok(response);
-    }
-
-    [Authorize(Roles = "Admin")]
-    [HttpPost("register")]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> RegisterAdmin(RegisterModeratorRequest request) {
-        var response = await _authService.RegisterModerator(request);
-        if (response.Status)
-            return NoContent();
-
-        return BadRequest(response.Message);
-    }
-
-    [HttpPost("login")]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(LoginModeratorResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> LoginAdmin(LoginModeratorRequest request) {
-        if (!ModelState.IsValid) {
-            return BadRequest(ModelState.Values);
-        }
-
-        var response = await _authService.LoginModerator(request);
-        if (response is null)
-            return Unauthorized();
 
         return Ok(response);
     }

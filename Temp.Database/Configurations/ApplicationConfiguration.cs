@@ -23,5 +23,15 @@ public class ApplicationConfiguration : IEntityTypeConfiguration<Application>
 
         builder.Property(x => x.Content)
             .HasMaxLength(610);
+
+        builder.HasOne(x => x.User)
+            .WithMany(x => x.Applications)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasOne(x => x.Moderator)
+            .WithMany(x => x.ModeratorApplications)
+            .HasForeignKey(x => x.ModeratorId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

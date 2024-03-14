@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { initOffset } from 'ngx-bootstrap/chronos/units/offset';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
 import { Group, ModeratorGroups } from 'src/app/core/models/group';
-import { Moderator, ModeratorMin } from 'src/app/core/models/moderator';
+import { ModeratorMin } from 'src/app/core/models/moderator';
 import { FullTeam } from 'src/app/core/models/team';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
@@ -28,7 +28,6 @@ export class EmployeeEditModalComponent implements OnInit {
   editEmployeeForm: FormGroup;
   employee: Employee;
   fullTeam: FullTeam;
-  Moderator: Moderator;
   organizationsSelect: SelectionOption[];
   innerGroupsSelect: SelectionOption[];
   innerTeamsSelect: SelectionOption[];
@@ -72,7 +71,7 @@ export class EmployeeEditModalComponent implements OnInit {
         this.setupForm(this.employee);
         
         if (this.employee.role === 'Moderator') {
-          this.loadModeratorGroups(this.employee.teamId, this.employee.id);
+          this.loadModeratorGroups(this.employee.teamId, this.employee.id, true);
         } else {
           this.loadFullTeam(this.employee.teamId);
         }
@@ -106,15 +105,15 @@ export class EmployeeEditModalComponent implements OnInit {
     });
   }
 
-  async loadModeratorGroups(id, EmployeeId: number) {
+  async loadModeratorGroups(id, EmployeeId: number, isOnInit?: boolean) {
     let moderatorMin: ModeratorMin; 
 
     await lastValueFrom(this.teamService.getFullTeam(id)).then((fullTeam) => {
       this.fullTeam = fullTeam;
-      this.loadOrgData(this.fullTeam);
+      if (isOnInit)
+        this.loadOrgData(this.fullTeam);
 
-      firstValueFrom(this.employeeService.getModerator(EmployeeId)).then((moderator) => {
-        this.Moderator = moderator;
+      firstValueFrom(this.employeeService.getEmployee(EmployeeId)).then((moderator) => {
         moderatorMin = {id: moderator.id};
 
         firstValueFrom(this.groupService.getModeratorGroups(moderator.id)).then((currModerGroup) => {

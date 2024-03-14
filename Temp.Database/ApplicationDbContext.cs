@@ -2,25 +2,21 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Temp.Database.Configurations;
 using Temp.Domain.Models;
 using Temp.Domain.Models.Applications;
+using Temp.Domain.Models.Identity;
 
 namespace Temp.Database;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<AppUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) {
 
     }
-
-    public DbSet<Admin> Admins { get; set; }
-
-    public DbSet<User> Users { get; set; }
-
-    public DbSet<Moderator> Moderators { get; set; }
 
     public DbSet<Employee> Employees { get; set; }
 

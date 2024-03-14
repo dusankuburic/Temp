@@ -70,10 +70,9 @@ public partial class TeamService : ITeamService
 
     public Task<GetUserTeamResponse> GetUserTeam(GetUserTeamRequest request) =>
         TryCatch(async () => {
-            var team = await _ctx.Users
-                .Include(x => x.Employee)
-                .ThenInclude(x => x.Team)
-                .Where(x => x.Id == request.Id && x.IsActive)
+            var team = await _ctx.Employees
+                .Include(x => x.Team)
+                .Where(x => x.Id == request.Id)
                 .ProjectTo<GetUserTeamResponse>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 

@@ -26,6 +26,7 @@ public partial class ApplicationService : IApplicationService
         var application = _mapper.Map<Application>(request);
         ValidateApplicationOnCreate(application);
 
+        application.Status = false;
         _ctx.Applications.Add(application);
         await _ctx.SaveChangesAsync();
 
@@ -81,10 +82,8 @@ public partial class ApplicationService : IApplicationService
     public Task<IEnumerable<GetTeamApplicationsResponse>> GetTeamApplications(GetTeamApplicationsRequest request) =>
     TryCatch(async () => {
         var applications = await _ctx.Applications
-            .AsNoTracking()
-            .Include(x => x.User)
             .Where(x => x.TeamId == request.TeamId)
-            .Where(x => (x.ModeratorId == request.ModeratorId) || (x.Status == false))
+            //.Where(x => (x.ModeratorId == request.ModeratorId) || (x.Status == false))
             .OrderBy(x => x.Status)
             .ProjectTo<GetTeamApplicationsResponse>(_mapper.ConfigurationProvider)
             .ToListAsync();

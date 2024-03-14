@@ -35,10 +35,9 @@ public partial class EngagementService : IEngagementService
 
     public Task<List<GetUserEmployeeEngagementsResponse>> GetUserEmployeeEngagements(GetUserEmployeeEngagementsRequest request) =>
         TryCatch(async () => {
-            var userEmployeeId = await _ctx.Users
-                .Include(x => x.Employee)
+            var userEmployeeId = await _ctx.Employees
                 .Where(x => x.Id == request.Id)
-                .Select(x => x.EmployeeId)
+                .Select(x => x.Id)
                 .FirstOrDefaultAsync();
 
             var engagements = await _ctx.Engagements
