@@ -39,9 +39,6 @@ using (var scope = app.Services.CreateScope()) {
         Seed.SeedWorkplaces(ctx);
         Seed.SeedEmployees(ctx);
         Seed.SeedWorkplaces(ctx);
-        //Seed.SeedAdmins(ctx);
-        //Seed.SeedUsers(ctx);
-        //Seed.SeedModerators(ctx);
         var userManager = services.GetRequiredService<UserManager<AppUser>>();
 
         if (userManager.Users.AnyAsync().Result == false) {
@@ -64,13 +61,15 @@ using (var scope = app.Services.CreateScope()) {
                 new Claim(ClaimTypes.Name, user.DisplayName)
             };
 
-            var result =  await userManager.CreateAsync(user, "KaiokenOver9000%");
+            var result =  await userManager.CreateAsync(user, "5B3jt4H8$$3t03E88");
             if (result.Succeeded) {
                 await userManager.AddToRoleAsync(user, "Admin");
                 await userManager.AddClaimsAsync(user, claims);
             }
 
-            var employee = await ctx.Employees.Where(x => x.Id == 1).FirstOrDefaultAsync();
+            var employee = await ctx.Employees
+                .Where(x => x.Id == 1)
+                .FirstOrDefaultAsync();
             employee.AppUserId = user.Id;
             employee.IsAppUserActive = true;
             await ctx.SaveChangesAsync();

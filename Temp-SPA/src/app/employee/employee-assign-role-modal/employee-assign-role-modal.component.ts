@@ -26,13 +26,12 @@ export class EmployeeAssignRoleModalComponent implements OnInit {
 
   email = new FormControl('', [
     Validators.required,
-    Validators.minLength(8),
-    Validators.maxLength(50)]);
+    Validators.email]);
 
+  passwordPattern: RegExp = /^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=\D*\d).{8,}$/;
   password = new FormControl('', [
     Validators.required,
-    Validators.minLength(8),
-    Validators.maxLength(50)]);
+    Validators.pattern(this.passwordPattern)]);
 
   confirmPassword = new FormControl('', [Validators.required]);
 
