@@ -17,11 +17,4 @@ public interface IEmployeeService
     Task<PagedList<GetEmployeesWithoutEngagementResponse>> GetEmployeesWithoutEngagement(GetEmployeesWithoutEngagementRequest request);
 
     Task<UpdateEmployeeResponse> UpdateEmployee(UpdateEmployeeRequest request);
-
-    Task<RemoveEmployeeRoleResponse> RemoveEmployeeRole(RemoveEmployeeRoleRequest request);
-
-    Task<bool> UpdateEmployeeAccountStatus(int EmployeeId);
-
-    Task<bool> UpdateEmployeeRole(string RoleName, int EmployeeId);
 }
-

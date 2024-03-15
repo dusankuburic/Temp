@@ -7,6 +7,12 @@ services:
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
 
+  redis:
+    image: redis:latest
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+
   temp.api:
     image: ${DOCKER_REGISTRY-}tempapi
     build:

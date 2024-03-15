@@ -57,7 +57,7 @@
             <tbody>
               <tr *ngFor="let group of currentModeratorGroups">
                 <td>{{group.name}}</td>
-                <td><a class="btn btn-danger" (click)="updateGroup(Moderator.id, group.id)"><fa-icon [icon]="minusIcon"></fa-icon></a></td>
+                <td><a class="btn btn-danger" (click)="updateGroup(this.employee.id, group.id)"><fa-icon [icon]="minusIcon"></fa-icon></a></td>
               </tr>
             </tbody>
           </table>
@@ -73,7 +73,7 @@
             <tbody>
               <tr *ngFor="let group of freeModeratorGroups">
                 <td>{{group.name}}</td>
-                <td><a class="btn btn-success" (click)="updateGroup(Moderator.id, group.id)"><fa-icon [icon]="plusIcon"></fa-icon></a></td>
+                <td><a class="btn btn-success" (click)="updateGroup(this.employee.id, group.id)"><fa-icon [icon]="plusIcon"></fa-icon></a></td>
               </tr>
               
             </tbody>

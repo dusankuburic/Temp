@@ -1,14 +1,13 @@
-﻿using Temp.Services.Employees.Models.Commands;
+﻿using Temp.Services.Auth.Models.Commands;
+using Temp.Services.Employees.Models.Commands;
 
 namespace Temp.Services.Auth;
 
 public interface IAuthService
 {
-    Task<LoginAResponse> LoginAdmin(LoginAdminRequest request);
-    Task<RegisterAdminResponse> RegisterAdmin(RegisterAdminRequest request);
-    Task<Response> LoginUser(LoginUserRequest request);
-    Task<RegisterUserResponse> RegisterUser(RegisterUserRequest request);
-    Task<LoginModeratorResponse> LoginModerator(LoginModeratorRequest request);
-    Task<RegisterModeratorResponse> RegisterModerator(RegisterModeratorRequest request);
+    Task<LoginResponse> Login(LoginRequest request);
+    Task<RegisterResponse> Register(RegisterRequest request);
     Task<AssignRoleResponse> AssignRole(AssignRoleRequest request);
+    Task<RemoveEmployeeRoleResponse> RemoveEmployeeRole(RemoveEmployeeRoleRequest request);
+    Task<bool> UpdateEmployeeAccountStatus(int employeeId);
 }

@@ -24,11 +24,14 @@ export class EmployeeAssignRoleModalComponent implements OnInit {
     Validators.minLength(8),
     Validators.maxLength(50)]);
 
+  email = new FormControl('', [
+    Validators.required,
+    Validators.email]);
+
+  passwordPattern: RegExp = /^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=\D*\d).{8,}$/;
   password = new FormControl('', [
     Validators.required,
-    Validators.minLength(8),
-    Validators.maxLength(50)
-  ]);
+    Validators.pattern(this.passwordPattern)]);
 
   confirmPassword = new FormControl('', [Validators.required]);
 
@@ -41,6 +44,7 @@ export class EmployeeAssignRoleModalComponent implements OnInit {
   ngOnInit(): void {
     this.createAssignRoleForm = this.fb.group({
       role: ['', Validators.required],
+      email: this.email,
       username: this.username,
       password: this.password,
       confirmPassword: this.confirmPassword
@@ -57,24 +61,14 @@ export class EmployeeAssignRoleModalComponent implements OnInit {
   register(): void {
     if (this.createAssignRoleForm.valid) {
       this.assignDto = { ...this.createAssignRoleForm.value, id: this.employeeId };
-
-      if (this.assignDto.role === 'Admin') {
-        this.employeeService.assignRole(this.assignDto).subscribe(() => {
-          this.bsModalRef.content.isSaved = true;
-          this.createAssignRoleForm.reset();
-          this.alertify.success('Successful admin registration');
-        }, error => {
-          this.alertify.error(error.error);
-        });
-      } else {
-        this.employeeService.assignRole(this.assignDto).subscribe(() => {
-          this.bsModalRef.content.isSaved = true;
-          this.createAssignRoleForm.reset();
-          this.alertify.success('Successful user registration');
-        }, error => {
-          this.alertify.error(error.error);
-        });
-      }
+      this.employeeService.assignRole(this.assignDto).subscribe(() => {
+        this.bsModalRef.content.isSaved = true;
+        this.createAssignRoleForm.disable();
+        this.alertify.success('Successful user registration');
+        this.bsModalRef.hide();
+      }, error => {
+        this.alertify.error(error.error);
+      });
     }
   }
 }

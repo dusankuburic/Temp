@@ -7,6 +7,10 @@
         [ngClass]="(isFilter) ? null : (control.touched) ? control.invalid ? 'is-invalid' : 'is-valid' : null">
         <label>{{label}}</label>
     <ng-container *ngIf="isFilter === false && control.touched && control.invalid">
+        <div *ngIf="control.errors?.pattern" class="invalid-feedback">
+            Passwords must be at least 8 characters long, have 1 uppercase letter, 1
+            lowercase letter, and 1 number.
+        </div>
         <div *ngIf="control.errors?.required" class="invalid-feedback">
             Please enter {{label}}.
         </div>
