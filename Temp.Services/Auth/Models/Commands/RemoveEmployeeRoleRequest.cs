@@ -1,4 +1,4 @@
-﻿namespace Temp.Services.Employees.Models.Commands;
+﻿namespace Temp.Services.Auth.Models.Commands;
 
 public class RemoveEmployeeRoleRequest
 {

@@ -6,6 +6,7 @@ using Temp.Services.Engagements;
 using Temp.Services.Groups;
 using Temp.Services.Integrations.Azure.AzureStorage;
 using Temp.Services.Organizations;
+using Temp.Services.Providers;
 using Temp.Services.Teams;
 using Temp.Services.Workplaces;
 
@@ -24,6 +25,8 @@ public static class ProgramServiceCollection
         services.AddScoped<IOrganizationService, OrganizationService>();
         services.AddScoped<ITeamService, TeamService>();
         services.AddScoped<IAuthService, AuthService>();
+
+        services.AddScoped<IIdentityProvider, IdentityProvider>();
 
         services.AddScoped<IAzureStorageService>(opt =>
             new AzureStorageService(configuration["ConnectionStrings:AzureConnection"]));

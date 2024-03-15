@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
 import { Group, ModeratorGroups } from 'src/app/core/models/group';
-import { Moderator, ModeratorMin } from 'src/app/core/models/moderator';
+import { ModeratorMin } from 'src/app/core/models/moderator';
 import { FullTeam } from 'src/app/core/models/team';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
@@ -25,7 +25,6 @@ export class EmployeeEditComponent implements OnInit {
   editEmployeeForm: FormGroup;
   employee: Employee;
   fullTeam: FullTeam;
-  Moderator: Moderator;
   organizationsSelect: SelectionOption[];
   innerGroupsSelect: SelectionOption[];
   innerTeamsSelect: SelectionOption[];
@@ -108,7 +107,7 @@ export class EmployeeEditComponent implements OnInit {
       this.loadOrgData(this.fullTeam);
 
       firstValueFrom(this.employeeService.getModerator(EmployeeId)).then((moderator) => {
-        this.Moderator = moderator;
+        //this.Moderator = moderator;
         moderatorMin = {id: moderator.id};
 
         firstValueFrom(this.groupService.getModeratorGroups(moderator.id)).then((currModerGroup) => {

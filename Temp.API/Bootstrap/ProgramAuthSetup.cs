@@ -1,8 +1,18 @@
-﻿namespace Temp.API.Bootstrap;
+﻿using Microsoft.AspNetCore.Identity;
+using Temp.Domain.Models.Identity;
+
+namespace Temp.API.Bootstrap;
 
 public static class ProgramAuthSetup
 {
     public static IServiceCollection AddAuthSetup(this IServiceCollection services, IConfiguration configuration) {
+
+        services.AddIdentityCore<AppUser>(opt => {
+
+        })
+        .AddRoles<IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddSignInManager<SignInManager<AppUser>>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options => {

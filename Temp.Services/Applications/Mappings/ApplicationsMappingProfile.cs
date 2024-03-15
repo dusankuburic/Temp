@@ -13,7 +13,7 @@ public class ApplicationsMappingProfile : Profile
         CreateMap<Application, GetApplicationResponse>();
         CreateMap<Application, GetUserApplicationsResponse>();
         CreateMap<Application, GetTeamApplicationsResponse>()
-            .ForMember(a => a.Username, o => o.MapFrom(s => s.User.Username));
+            .ForMember(a => a.Username, o => o.MapFrom(s => s.User.FirstName));
 
         CreateMap<UpdateApplicationStatusRequest, Application>()
             .AfterMap((x, y) => {

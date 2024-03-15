@@ -17,38 +17,8 @@ export class AuthService {
 
 constructor(private http: HttpClient) { }
 
-loginUser(model: any): any {
-  return this.http.post(this.baseUrl + 'users/login', model)
-  .pipe(
-    map((response: any) => {
-      const user = response;
-      if (user) {
-        localStorage.setItem('token', user.token);
-        localStorage.setItem('user', JSON.stringify(user.user));
-        this.decodedToken = this.jwtHelper.decodeToken(user.token);
-        this.currentUser = user.user;
-      }
-    })
-  );
-}
-
-loginModerator(model: any): any {
-  return this.http.post(this.baseUrl + 'moderators/login', model)
-  .pipe(
-    map((response: any) => {
-      const user = response;
-      if (user) {
-        localStorage.setItem('token', user.token);
-        localStorage.setItem('user', JSON.stringify(user.user));
-        this.decodedToken = this.jwtHelper.decodeToken(user.token);
-        this.currentUser = user.user;
-      }
-    })
-  );
-}
-
-loginAdmin(model: any): any {
-  return this.http.post(this.baseUrl + 'admins/login', model)
+login(model: any): any {
+  return this.http.post(this.baseUrl + 'accounts/login', model)
   .pipe(
     map((response: any) => {
       const user = response;
@@ -63,11 +33,11 @@ loginAdmin(model: any): any {
 }
 
 registerUser(user: User): any {
-  return this.http.post(this.baseUrl + 'users/register', user);
+  return this.http.post(this.baseUrl + 'accounts/register', user);
 }
 
 registerAdmin(admin: Admin): any {
-  return this.http.post(this.baseUrl + 'admins/register', admin);
+  return this.http.post(this.baseUrl + 'accounts/register', admin);
 }
 
 loggedIn(): any {

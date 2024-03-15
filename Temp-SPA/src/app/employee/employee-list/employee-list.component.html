@@ -55,8 +55,8 @@
                     </td>
                     <td *ngIf="employee.role !== 'None'">
                         <div class="btn-group">
-                            <a (click)="changeStatus(employee.id)" class="btn" [ngClass]="{'btn-success': employee.isActive, 'btn-warning': !employee.isActive}">
-                                <fa-icon [icon]="employee.isActive ? deactivateUserIcon : activateUserIcon"></fa-icon>
+                            <a (click)="changeStatus(employee.id)" class="btn" [ngClass]="{'btn-success': employee.isAppUserActive, 'btn-warning': !employee.isAppUserActive}">
+                                <fa-icon [icon]="employee.isAppUserActive ? deactivateUserIcon : activateUserIcon"></fa-icon>
                             </a>
                             <a (click)="removeRole(employee.id)" class="btn btn-danger"><fa-icon [icon]="removeRoleIcon"></fa-icon></a> 
                         </div>

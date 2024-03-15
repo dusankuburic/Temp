@@ -18,16 +18,6 @@ export class NavComponent {
     private router: Router) { }
 
 
-  login(): void {
-    this.authService.loginAdmin(this.model).subscribe(next => {
-      this.alertify.success('Logged in successfully');
-    }, error => {
-      this.alertify.error('go away');
-    }, () => {
-      this.router.navigate(['/members']);
-    });
-  }
-
   loggedIn(): any {
     return this.authService.loggedIn();
   }

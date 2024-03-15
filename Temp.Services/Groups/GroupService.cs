@@ -4,6 +4,7 @@ using Temp.Services._Helpers;
 using Temp.Services.Groups.Models.Commands;
 using Temp.Services.Groups.Models.Queries;
 using Temp.Services.Integrations.Loggings;
+using Temp.Services.Providers;
 
 namespace Temp.Services.Groups;
 
@@ -12,19 +13,24 @@ public partial class GroupService : IGroupService
     private readonly ApplicationDbContext _ctx;
     private readonly IMapper _mapper;
     private readonly ILoggingBroker _loggingBroker;
+    private readonly IIdentityProvider _identityProvider;
 
     public GroupService(
         ApplicationDbContext ctx,
         IMapper mapper,
-        ILoggingBroker loggingBroker) {
+        ILoggingBroker loggingBroker,
+        IIdentityProvider identityProvider) {
         _ctx = ctx;
         _mapper = mapper;
         _loggingBroker = loggingBroker;
+        _identityProvider = identityProvider;
     }
 
     public Task<CreateGroupResponse> CreateGroup(CreateGroupRequest request) =>
         TryCatch(async () => {
             var group = _mapper.Map<Group>(request);
+
+            group.SetAuditableInfoOnCreate(await _identityProvider.GetCurrentUser());
 
             ValidateGroupOnCreate(group);
 
@@ -59,6 +65,8 @@ public partial class GroupService : IGroupService
 
             _mapper.Map(request, group);
 
+            group.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
+
             ValidateGroupOnUpdate(group);
 
             await _ctx.SaveChangesAsync();
@@ -73,9 +81,11 @@ public partial class GroupService : IGroupService
                 .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync();
 
+            group.IsActive = !group.IsActive;
+            group.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
+
             ValidateGroupOnStatusUpdate(group);
 
-            group.IsActive = !group.IsActive;
             await _ctx.SaveChangesAsync();
 
             group.Organization.HasActiveGroup = await _ctx.Organizations

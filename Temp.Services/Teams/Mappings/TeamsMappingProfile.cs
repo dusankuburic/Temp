@@ -18,9 +18,9 @@ public class TeamsMappingProfile : Profile
             .ForMember(a => a.TeamId, o => o.MapFrom(s => s.Id));
         CreateMap<Team, GetTeamResponse>()
             .ForMember(a => a.GroupId, o => o.MapFrom(s => s.Group.Id));
-        CreateMap<User, GetUserTeamResponse>()
-            .ForMember(a => a.Id, o => o.MapFrom(s => s.Employee.Team.Id))
-            .ForMember(a => a.Name, o => o.MapFrom(s => s.Employee.Team.Name));
+        CreateMap<Employee, GetUserTeamResponse>()
+            .ForMember(a => a.Id, o => o.MapFrom(s => s.Team.Id))
+            .ForMember(a => a.Name, o => o.MapFrom(s => s.Team.Name));
         CreateMap<UpdateTeamRequest, Team>();
 
     }

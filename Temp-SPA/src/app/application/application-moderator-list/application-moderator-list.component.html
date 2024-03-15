@@ -18,11 +18,11 @@
                 <td>{{application.username}}</td>
                 <td>{{application.createdAt | date}}</td>
                 <td>
-                    <h4>
-                        <span class="badge  rounded-pill" [ngClass]="{'badge-danger': application.status === false, 'badge-success': application.status === true}">
+                    <h5>
+                        <span class="badge rounded-pill" [ngClass]="{'text-bg-danger': application.status === false, 'text-bg-success': application.status === true}">
                             <fa-icon [icon]="eyeIcon"></fa-icon>
                         </span>
-                    </h4>
+                    </h5>
                 </td>
                 <td *ngIf="application.status === false">
                     <a (click)="updateStatus(application.id, application.teamId)" class="btn btn-info">

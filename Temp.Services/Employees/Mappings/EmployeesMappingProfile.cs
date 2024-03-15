@@ -10,8 +10,7 @@ public class EmployeesMappingProfile : Profile
         CreateMap<CreateEmployeeRequest, Employee>();
         CreateMap<Employee, CreateEmployeeResponse>();
         CreateMap<Employee, GetEmployeeResponse>();
-        CreateMap<Employee, GetEmployeesResponse>()
-            .ForMember(a => a.IsActive, o => o.MapFrom(s => s.User.IsActive || s.Moderator.IsActive || s.Admin.IsActive));
+        CreateMap<Employee, GetEmployeesResponse>();
         CreateMap<Employee, GetEmployeesWithoutEngagementResponse>();
         CreateMap<Employee, GetEmployeesWithEngagementResponse>();
         CreateMap<UpdateEmployeeRequest, Employee>()
