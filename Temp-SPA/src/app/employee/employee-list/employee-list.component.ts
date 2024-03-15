@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faLock, faLockOpen, faPlusCircle, faSitemap, faUserTimes } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Subscription, debounceTime, distinctUntilChanged, last } from 'rxjs';
+import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { Employee, EmployeeParams } from 'src/app/core/models/employee';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { UnassignRoleDto } from 'src/app/core/models/unassignRoleDto';

@@ -19,10 +19,13 @@ builder.Services.AddControllers()
 builder.Services.AddHealthChecks();
 builder.Services.AddDataProtection();
 builder.Services.ConfigureCORS();
-
+builder.Services.AddResponseCompression(options => {
+    options.EnableForHttps = true;
+});
 var app = builder.Build();
 
 app.UseHttpLogging();
+app.UseResponseCompression();
 using (var scope = app.Services.CreateScope()) {
     var services = scope.ServiceProvider;
     try {
@@ -40,33 +43,38 @@ using (var scope = app.Services.CreateScope()) {
         //Seed.SeedUsers(ctx);
         //Seed.SeedModerators(ctx);
         var userManager = services.GetRequiredService<UserManager<AppUser>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
-        await roleManager.CreateAsync(new IdentityRole() { Name = "User" });
-        await roleManager.CreateAsync(new IdentityRole() { Name = "Moderator" });
 
-        var user = new AppUser {
-            DisplayName = "John",
-            Email = "johndoe@test.com",
-            UserName = "johndoe@test.com"
-        };
+        if (userManager.Users.AnyAsync().Result == false) {
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-        var claims = new List<Claim>(){
-           new Claim(ClaimTypes.Role, "Admin"),
-           new Claim(ClaimTypes.Name, user.DisplayName)
-        };
+            await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
+            await roleManager.CreateAsync(new IdentityRole() { Name = "User" });
+            await roleManager.CreateAsync(new IdentityRole() { Name = "Moderator" });
 
-        var result =  await userManager.CreateAsync(user, "DebelaDrolja100%");
-        if (result.Succeeded) {
-            await userManager.AddToRoleAsync(user, "Admin");
-            await userManager.AddClaimsAsync(user, claims);
+            var user = new AppUser {
+                DisplayName = "John",
+                Email = "johndoe@test.com",
+                UserName = "johndoe@test.com",
+                LockoutEnabled = false,
+            };
+
+            var claims = new List<Claim>() {
+                new Claim(ClaimTypes.Role, "Admin"),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.DisplayName)
+            };
+
+            var result =  await userManager.CreateAsync(user, "KaiokenOver9000%");
+            if (result.Succeeded) {
+                await userManager.AddToRoleAsync(user, "Admin");
+                await userManager.AddClaimsAsync(user, claims);
+            }
+
+            var employee = await ctx.Employees.Where(x => x.Id == 1).FirstOrDefaultAsync();
+            employee.AppUserId = user.Id;
+            employee.IsAppUserActive = true;
+            await ctx.SaveChangesAsync();
         }
-
-
-        var res = await ctx.Employees.Where(x => x.Id == 1).FirstOrDefaultAsync();
-        res.AppUserId = user.Id;
-        await ctx.SaveChangesAsync();
-
 
     } catch (Exception exMsg) {
         var logger = services.GetRequiredService<ILogger<Program>>();

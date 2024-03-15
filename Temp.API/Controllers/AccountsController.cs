@@ -1,4 +1,5 @@
 ﻿using Temp.Services.Auth;
+using Temp.Services.Auth.Models.Commands;
 
 namespace Temp.API.Controllers;
 
@@ -30,5 +31,23 @@ public class AccountsController : ControllerBase
 
         var response = await _authService.Login(request);
         return response is null ? Unauthorized() : Ok(response);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut("unassign/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> RemoveRole([FromBody] RemoveEmployeeRoleRequest request) {
+        var response = await _authService.RemoveEmployeeRole(request);
+        return response.Success ? Ok() : BadRequest();
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut("change-status/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateEmployeeAccountStatus([FromRoute] int id) {
+        var response = await _authService.UpdateEmployeeAccountStatus(id);
+        return response ? NoContent() : BadRequest();
     }
 }

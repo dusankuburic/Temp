@@ -32,8 +32,7 @@ export class EmployeeAssignRoleModalComponent implements OnInit {
   password = new FormControl('', [
     Validators.required,
     Validators.minLength(8),
-    Validators.maxLength(50)
-  ]);
+    Validators.maxLength(50)]);
 
   confirmPassword = new FormControl('', [Validators.required]);
 
@@ -65,8 +64,9 @@ export class EmployeeAssignRoleModalComponent implements OnInit {
       this.assignDto = { ...this.createAssignRoleForm.value, id: this.employeeId };
       this.employeeService.assignRole(this.assignDto).subscribe(() => {
         this.bsModalRef.content.isSaved = true;
-        this.createAssignRoleForm.reset();
+        this.createAssignRoleForm.disable();
         this.alertify.success('Successful user registration');
+        this.bsModalRef.hide();
       }, error => {
         this.alertify.error(error.error);
       });

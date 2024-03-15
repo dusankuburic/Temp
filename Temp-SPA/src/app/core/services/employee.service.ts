@@ -84,11 +84,11 @@ assignRole(entity: AssignRoleDto): any {
 }
 
 unassignRole(entity: UnassignRoleDto): Observable<void> {
-  return this.http.put<void>(this.baseUrl + 'employees/unassign/' + entity.id, entity);
+  return this.http.put<void>(this.baseUrl + 'accounts/unassign/' + entity.id, entity);
 }
 
 changeStatus(id: number): Observable<void> {
-  return this.http.put<void>(this.baseUrl + 'employees/change-status/' + id, id);
+  return this.http.put<void>(this.baseUrl + 'accounts/change-status/' + id, id);
 }
 
 }

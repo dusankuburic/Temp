@@ -1,8 +1,8 @@
 ﻿using Temp.Database;
 using Temp.Domain.Models;
-using Temp.Services.Auth.Moderators.Service;
+using Temp.Services.Moderators.Service;
 
-namespace Temp.Services.Auth.Moderators;
+namespace Temp.Services.Moderators;
 
 public class UpdateModeratorGroups : ModeratorService
 {

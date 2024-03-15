@@ -1,6 +1,7 @@
 ﻿using Temp.Database;
 using Temp.Domain.Models;
 using Temp.Services.Integrations.Loggings;
+using Temp.Services.Providers;
 using Temp.Services.Teams.Models.Commands;
 using Temp.Services.Teams.Models.Queries;
 
@@ -11,19 +12,24 @@ public partial class TeamService : ITeamService
     private readonly ApplicationDbContext _ctx;
     private readonly IMapper _mapper;
     private readonly ILoggingBroker _loggingBroker;
+    private readonly IIdentityProvider _identityProvider;
 
     public TeamService(
         ApplicationDbContext ctx,
         IMapper mapper,
-        ILoggingBroker loggingBroker) {
+        ILoggingBroker loggingBroker,
+        IIdentityProvider identityProvider) {
         _ctx = ctx;
         _mapper = mapper;
         _loggingBroker = loggingBroker;
+        _identityProvider = identityProvider;
     }
 
     public Task<CreateTeamResponse> CreateTeam(CreateTeamRequest request) =>
          TryCatch(async () => {
              var team = _mapper.Map<Team>(request);
+
+             team.SetAuditableInfoOnCreate(await _identityProvider.GetCurrentUser());
 
              ValidateTeamOnCreate(team);
 
@@ -89,6 +95,8 @@ public partial class TeamService : ITeamService
 
             _mapper.Map(request, team);
 
+            team.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
+
             ValidateTeamOnUpdate(team);
             await _ctx.SaveChangesAsync();
 
@@ -102,6 +110,7 @@ public partial class TeamService : ITeamService
                 .FirstOrDefaultAsync();
 
             team.IsActive = !team.IsActive;
+            team.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
 
             ValidateTeamOnUpdate(team);
 

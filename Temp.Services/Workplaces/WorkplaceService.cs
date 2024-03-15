@@ -2,6 +2,7 @@
 using Temp.Domain.Models;
 using Temp.Services._Helpers;
 using Temp.Services.Integrations.Loggings;
+using Temp.Services.Providers;
 using Temp.Services.Workplaces.Models.Commands;
 using Temp.Services.Workplaces.Models.Queries;
 
@@ -12,19 +13,24 @@ public partial class WorkplaceService : IWorkplaceService
     private readonly ApplicationDbContext _ctx;
     private readonly IMapper _mapper;
     private readonly ILoggingBroker _loggingBroker;
+    private readonly IIdentityProvider _identityProvider;
 
     public WorkplaceService(
         ApplicationDbContext ctx,
         IMapper mapper,
-        ILoggingBroker loggingBroker) {
+        ILoggingBroker loggingBroker,
+        IIdentityProvider identityProvider) {
         _ctx = ctx;
         _mapper = mapper;
         _loggingBroker = loggingBroker;
+        _identityProvider = identityProvider;
     }
 
     public Task<CreateWorkplaceResponse> CreateWorkplace(CreateWorkplaceRequest request) =>
          TryCatch(async () => {
              var workplace = _mapper.Map<Workplace>(request);
+
+             workplace.SetAuditableInfoOnCreate(await _identityProvider.GetCurrentUser());
 
              ValidateWorkplaceOnCreate(workplace);
 
@@ -74,13 +80,15 @@ public partial class WorkplaceService : IWorkplaceService
 
     public Task<UpdateWorkplaceResponse> UpdateWorkplace(UpdateWorkplaceRequest request) =>
         TryCatch(async () => {
-            var workpalce = await _ctx.Workplaces
+            var workplace = await _ctx.Workplaces
                 .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync();
 
-            _mapper.Map(request, workpalce);
+            _mapper.Map(request, workplace);
 
-            ValidateWorkplaceOnUpdate(workpalce);
+            workplace.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
+
+            ValidateWorkplaceOnUpdate(workplace);
 
             await _ctx.SaveChangesAsync();
 
@@ -94,6 +102,7 @@ public partial class WorkplaceService : IWorkplaceService
                 .FirstOrDefaultAsync();
 
             workplace.IsActive = !workplace.IsActive;
+            workplace.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
 
             ValidateWorkplaceOnStatusUpdate(workplace);
 

@@ -74,28 +74,12 @@ public class EmployeesController : ControllerBase
         }
     }
 
-    [HttpPut("change-status/{id}")]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpdateEmployeeAccountStatus([FromBody] int id) {
-        var response = await _employeeService.UpdateEmployeeAccountStatus(id);
-        return response ? NoContent() : BadRequest();
-    }
-
     [HttpPost("assign/{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequest request) {
         var response = await _authService.AssignRole(request);
         return response.Status ? Ok() : BadRequest(response.Message);
-    }
-
-    [HttpPut("unassign/{id}")]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> RemoveRole([FromBody] RemoveEmployeeRoleRequest request) {
-        var response = await _employeeService.RemoveEmployeeRole(request);
-        return response.Success ? Ok() : BadRequest();
     }
 
     private static string GetInnerMessage(Exception exception) =>

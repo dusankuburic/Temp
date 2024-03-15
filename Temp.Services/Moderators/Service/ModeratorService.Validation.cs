@@ -1,7 +1,7 @@
 ﻿using Temp.Domain.Models;
 using Temp.Domain.Models.ModeratorGroups.Exceptions;
 
-namespace Temp.Services.Auth.Moderators.Service;
+namespace Temp.Services.Moderators.Service;
 
 public partial class ModeratorService
 {

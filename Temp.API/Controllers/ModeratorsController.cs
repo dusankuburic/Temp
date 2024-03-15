@@ -1,5 +1,5 @@
 ﻿using Temp.Domain.Models.ModeratorGroups.Exceptions;
-using Temp.Services.Auth.Moderators;
+using Temp.Services.Moderators;
 
 namespace Temp.API.Controllers;
 
@@ -11,15 +11,6 @@ public class ModeratorsController : ControllerBase
 
     public ModeratorsController(ApplicationDbContext ctx) {
         _ctx = ctx;
-    }
-
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(GetModerator.ModeratorViewModel), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetModerator([FromRoute] int id) {
-        var response = await new GetModerator(_ctx).Do(id);
-
-        return Ok(response);
     }
 
     [Authorize(Roles = "Admin")]

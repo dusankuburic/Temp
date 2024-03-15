@@ -14,6 +14,7 @@ public class Employee : BaseEntity
     public string Role { get; set; }
 
     public string AppUserId { get; set; }
+    public bool IsAppUserActive { get; set; }
 
     public ICollection<Engagement> Engagements { get; set; }
     public ICollection<ModeratorGroup> ModeratorGroups { get; set; }

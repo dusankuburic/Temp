@@ -4,6 +4,7 @@ using Temp.Services._Helpers;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Organizations.Models.Commands;
 using Temp.Services.Organizations.Models.Queries;
+using Temp.Services.Providers;
 
 namespace Temp.Services.Organizations;
 
@@ -12,19 +13,24 @@ public partial class OrganizationService : IOrganizationService
     private readonly ApplicationDbContext _ctx;
     private readonly IMapper _mapper;
     private readonly ILoggingBroker _loggingBroker;
+    private readonly IIdentityProvider _identityProvider;
 
     public OrganizationService(
         ApplicationDbContext ctx,
         IMapper mapper,
-        ILoggingBroker loggingBroker) {
+        ILoggingBroker loggingBroker,
+        IIdentityProvider identityProvider) {
         _ctx = ctx;
         _mapper = mapper;
         _loggingBroker = loggingBroker;
+        _identityProvider = identityProvider;
     }
 
     public Task<CreateOrganizationResponse> CreateOrganization(CreateOrganizationRequest request) =>
         TryCatch(async () => {
             var organization = _mapper.Map<Organization>(request);
+
+            organization.SetAuditableInfoOnCreate(await _identityProvider.GetCurrentUser());
 
             ValidateOrganizationOnCreate(organization);
 
@@ -140,6 +146,8 @@ public partial class OrganizationService : IOrganizationService
                 .Where(x => x.Id == request.Id)
                 .FirstOrDefaultAsync();
 
+             organization.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
+
              _mapper.Map(request, organization);
 
              ValidateOrganizationOnUpdate(organization);
@@ -157,6 +165,7 @@ public partial class OrganizationService : IOrganizationService
             .FirstOrDefaultAsync();
 
             organization.IsActive = !organization.IsActive;
+            organization.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
 
             ValidateOrganizationOnUpdate(organization);
 
