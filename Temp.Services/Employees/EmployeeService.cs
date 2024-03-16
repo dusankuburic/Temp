@@ -74,6 +74,10 @@ public partial class EmployeeService : IEmployeeService
                 .AsQueryable();
         }
 
+        employeesQuery = employeesQuery.OrderBy(x => x.FirstName)
+            .AsQueryable();
+
+
         var employees = await PagedList<GetEmployeesResponse>.CreateAsync(
             employeesQuery,
             request.PageNumber,
@@ -107,6 +111,9 @@ public partial class EmployeeService : IEmployeeService
             employeesWithEngagement = employeesWithEngagement.Where(x => x.LastName.Contains(request.LastName))
                 .AsQueryable();
         }
+
+        employeesWithEngagement = employeesWithEngagement.OrderBy(x => x.FirstName)
+            .AsQueryable();
 
         var employees = await PagedList<GetEmployeesWithEngagementResponse>.CreateAsync(
             employeesWithEngagement,
@@ -142,6 +149,9 @@ public partial class EmployeeService : IEmployeeService
             employeesWithoutEngagement = employeesWithoutEngagement.Where(x => x.LastName.Contains(request.LastName))
                 .AsQueryable();
         }
+
+        employeesWithoutEngagement = employeesWithoutEngagement.OrderBy(x => x.FirstName)
+            .AsQueryable();
 
         var employees = await PagedList<GetEmployeesWithoutEngagementResponse>.CreateAsync(
             employeesWithoutEngagement,

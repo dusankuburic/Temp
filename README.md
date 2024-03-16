@@ -1,73 +1,34 @@
-# Temp
+# Temp (🚧 under construction) 
+This README is just a fast *quick start* document. 
 
-Admin: john john123
-docker compose up --detach
+### Startup
+    docker compose up --detach
+---
+### Endpoints
+App UI:
 
-## Under Development
+    http://localhost:4323
+App API doc:
 
+    https://localhost:5001/swagger/index.html
+Redis UI:
+        
+    http://localhost:8081
+Creds: 
 
-## Admin
+---
+### Creds
+App Username:
 
-### Main
-![](images/1img.png)
+    johndoe@test.com
+App Password:
 
-### Home page
-![](images/2img.png)
+    5B3jt4H8$$3t03E88
 
-### Employees
-![](images/3img.png)
+Redis UI Username:
 
-### Edit user with Moderator role
-![](images/4img.png)
+    root  
+        
+Redis UI Password:
 
-### Assign role
-![](images/5img.png)
-
-### Workplace list
-![](images/6img.png)
-
-### Employment status list
-![](images/7img.png)
-
-### With Engagement list
-![](images/8img.png)
-
-### Add Engagement to Employee
-![](images/9img.png)
-
-### Without Engagement list
-![](images/10img.png)
-
-### Without Engagement (passed Date)
-![](images/11img.png)
-
-### Without Any Engagement
-![](images/12img.png)
-
-### Organizations
-![](images/13img.png)
-
-### Groups inside selected Organization
-![](images/14img.png)
-
-### Teams inside selected Group
-![](images/15img.png)
-
-## Moderator
-
-### Moderator groups
-![](images/16img.png)
-
-### Teams inside moderator groups
-![](images/17img.png)
-
-### Applications from selected team
-![](images/18img.png)
-
-## User
-
-### Applications
-![](images/19img.png)
-
-### Create Application
-![](images/20img.png)
+    toor 

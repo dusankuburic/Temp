@@ -10,7 +10,7 @@ public static class ProgramConfigurePersistence
             options.UseSqlServer(configuration["ConnectionStrings:DefaultConnection"]));
 
         services.AddSingleton<IConnectionMultiplexer>(x => {
-            var opt = ConfigurationOptions.Parse("localhost");
+            var opt = ConfigurationOptions.Parse(configuration["ConnectionStrings:Redis"]);
             return ConnectionMultiplexer.Connect(opt);
         });
 

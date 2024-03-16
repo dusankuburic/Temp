@@ -6,6 +6,7 @@ namespace Temp.Services.Auth;
 public interface IAuthService
 {
     Task<LoginResponse> Login(LoginRequest request);
+    Task<bool> Logout();
     Task<RegisterResponse> Register(RegisterRequest request);
     Task<AssignRoleResponse> AssignRole(AssignRoleRequest request);
     Task<RemoveEmployeeRoleResponse> RemoveEmployeeRole(RemoveEmployeeRoleRequest request);

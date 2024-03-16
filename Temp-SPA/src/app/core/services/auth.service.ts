@@ -45,4 +45,15 @@ loggedIn(): any {
   return !this.jwtHelper.isTokenExpired(token);
 }
 
+logout(): any {
+  return this.http.post(this.baseUrl + 'accounts/logout', {});
+}
+
+clearStorage(): void {
+  localStorage.removeItem('token');
+  this.decodedToken = null;
+  localStorage.removeItem('user');
+  this.currentUser = null;
+}
+
 }

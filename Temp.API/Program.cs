@@ -24,8 +24,7 @@ builder.Services.AddResponseCompression(options => {
 });
 var app = builder.Build();
 
-app.UseHttpLogging();
-app.UseResponseCompression();
+
 using (var scope = app.Services.CreateScope()) {
     var services = scope.ServiceProvider;
     try {
@@ -80,6 +79,8 @@ using (var scope = app.Services.CreateScope()) {
         logger.LogError(exMsg, "Migration error");
     }
 }
+app.UseHttpLogging();
+app.UseResponseCompression();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseSwaggerDoc();
 app.UseHttpsRedirection();
