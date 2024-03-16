@@ -62,4 +62,11 @@ public class IdentityProvider : IIdentityProvider
 
         return JsonConvert.DeserializeObject<CurrentUser>(data);
     }
+
+    public async Task<bool> RemoveCurrentUser() {
+        var currentUserEmail = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+        await _database.KeyDeleteAsync($"{_currentUserIdPrefix}{currentUserEmail}");
+
+        return true;
+    }
 }

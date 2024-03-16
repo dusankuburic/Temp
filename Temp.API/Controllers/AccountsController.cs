@@ -13,14 +13,6 @@ public class AccountsController : ControllerBase
         _authService = authService;
     }
 
-    [Authorize(Roles = "Admin")]
-    [HttpPost("register")]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(RegisterResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Register(RegisterRequest request) {
-        var response = await _authService.Register(request);
-        return response.Status ? Ok(response) : BadRequest(response.Message);
-    }
 
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -31,6 +23,24 @@ public class AccountsController : ControllerBase
 
         var response = await _authService.Login(request);
         return response is null ? Unauthorized() : Ok(response);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("register")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(RegisterResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Register(RegisterRequest request) {
+        var response = await _authService.Register(request);
+        return response.Status ? Ok(response) : BadRequest(response.Message);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> Logout() {
+        var response = await _authService.Logout();
+        return response ? Ok() : BadRequest();
     }
 
     [Authorize(Roles = "Admin")]
@@ -50,4 +60,6 @@ public class AccountsController : ControllerBase
         var response = await _authService.UpdateEmployeeAccountStatus(id);
         return response ? NoContent() : BadRequest();
     }
+
+
 }

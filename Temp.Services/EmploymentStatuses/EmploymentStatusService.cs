@@ -54,6 +54,7 @@ public partial class EmploymentStatusService : IEmploymentStatusService
         TryCatch(async () => {
             var employmentStatuses = await _ctx.EmploymentStatuses
                 .Where(x => x.IsActive)
+                .OrderBy(x => x.Name)
                 .ProjectTo<GetEmploymentStatusResponse>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
@@ -71,6 +72,9 @@ public partial class EmploymentStatusService : IEmploymentStatusService
                 employmentStatuses = employmentStatuses.Where(x => x.Name.Contains(request.Name))
                     .AsQueryable();
             }
+
+            employmentStatuses = employmentStatuses.OrderBy(x => x.Name)
+                .AsQueryable();
 
             return await PagedList<GetPagedEmploymentStatusesResponse>.CreateAsync(
                 employmentStatuses,

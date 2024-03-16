@@ -52,6 +52,9 @@ public partial class WorkplaceService : IWorkplaceService
                     .AsQueryable();
              }
 
+             workplacesQuery = workplacesQuery.OrderBy(x => x.Name)
+                .AsQueryable();
+
              return await PagedList<GetWorkplacesResponse>.CreateAsync(
                  workplacesQuery,
                  request.PageNumber,
@@ -62,6 +65,7 @@ public partial class WorkplaceService : IWorkplaceService
         TryCatch(async () => {
             var workplaces = await _ctx.Workplaces
                 .Where(x => x.IsActive)
+                .OrderBy(x => x.Name)
                 .ProjectTo<GetWorkplaceResponse>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 

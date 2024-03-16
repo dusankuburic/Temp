@@ -29,21 +29,6 @@ public class AuthService : IAuthService
         _identityProvider = identityProvider;
     }
 
-    public async Task<AssignRoleResponse> AssignRole(AssignRoleRequest request) {
-
-        var response = await Register(new RegisterRequest {
-            EmployeeId = request.Id,
-            Email = request.Email,
-            DisplayName = request.Username,
-            Password = request.Password,
-            Role = request.Role
-        });
-
-        return new AssignRoleResponse() {
-            Status = response.Status
-        };
-    }
-
     public async Task<LoginResponse> Login(LoginRequest request) {
         var appUser = await _userManager.FindByEmailAsync(request.Username);
         if (appUser is null)
@@ -67,6 +52,12 @@ public class AuthService : IAuthService
             },
             Token = await GenerateToken(appUser)
         };
+    }
+
+    public async Task<bool> Logout() {
+        await _identityProvider.RemoveCurrentUser();
+
+        return true;
     }
 
     public async Task<RegisterResponse> Register(RegisterRequest request) {
@@ -104,6 +95,21 @@ public class AuthService : IAuthService
             Message = "Successful registration",
             Username = user.UserName,
             Status = result.Succeeded
+        };
+    }
+
+    public async Task<AssignRoleResponse> AssignRole(AssignRoleRequest request) {
+
+        var response = await Register(new RegisterRequest {
+            EmployeeId = request.Id,
+            Email = request.Email,
+            DisplayName = request.Username,
+            Password = request.Password,
+            Role = request.Role
+        });
+
+        return new AssignRoleResponse() {
+            Status = response.Status
         };
     }
 

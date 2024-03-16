@@ -59,6 +59,9 @@ public partial class OrganizationService : IOrganizationService
                 _ => organizationsQuery
             };
 
+            organizationsQuery = organizationsQuery.OrderBy(x => x.Name)
+                .AsQueryable();
+
             return await PagedList<GetOrganizationResponse>.CreateAsync(
                 organizationsQuery.ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider),
                 request.PageNumber,
@@ -83,6 +86,9 @@ public partial class OrganizationService : IOrganizationService
                 _ => innerGroupsQurey
             };
 
+            innerGroupsQurey = innerGroupsQurey.OrderBy(x => x.Name)
+                .AsQueryable();
+
             var pagedGroups = await PagedList<InnerGroup>.CreateAsync(
                 innerGroupsQurey.ProjectTo<InnerGroup>(_mapper.ConfigurationProvider),
                 request.PageNumber,
@@ -105,6 +111,7 @@ public partial class OrganizationService : IOrganizationService
             var innerGroups = await _ctx.Groups
                 .Include(x => x.Teams.Where(x => x.IsActive))
                 .Where(x => x.OrganizationId == id && x.IsActive && x.Teams.Count > 0)
+                .OrderBy(x => x.Name)
                 .ProjectTo<InnerGroup>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
@@ -131,6 +138,7 @@ public partial class OrganizationService : IOrganizationService
             var organizations = await _ctx.Organizations
                 .Include(x => x.Groups.Where(x => x.IsActive))
                 .Where(x => x.IsActive && x.HasActiveGroup && x.Groups.Any(x => x.HasActiveTeam == true))
+                .OrderBy(x => x.Name)
                 .ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
