@@ -55,6 +55,7 @@ services:
     depends_on:
       - tempdb
       - azurite
+      - redis
 
   temp.spa.angular:
     container_name: temp.spa.angular

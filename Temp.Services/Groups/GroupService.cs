@@ -101,6 +101,7 @@ public partial class GroupService : IGroupService
         TryCatch(async () => {
             var innerTeamsQuery = _ctx.Teams
                 .Where(x => x.GroupId == request.GroupId && x.IsActive)
+                .OrderBy(x => x.Name)
                 .ProjectTo<InnerTeam>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
@@ -130,6 +131,7 @@ public partial class GroupService : IGroupService
         TryCatch(async () => {
             var innerTeams = await _ctx.Teams
                 .Where(x => x.GroupId == id && x.IsActive)
+                .OrderBy(x => x.Name)
                 .ProjectTo<InnerTeam>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
