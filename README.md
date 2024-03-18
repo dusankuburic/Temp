@@ -14,8 +14,6 @@ App API doc:
 Redis UI:
         
     http://localhost:8081
-Creds: 
-
 ---
 ### Creds
 App Username:

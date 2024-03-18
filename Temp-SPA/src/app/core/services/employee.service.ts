@@ -80,7 +80,7 @@ updateEmployee(employee: Employee): Observable<void> {
 }
 
 assignRole(entity: AssignRoleDto): any {
-  return this.http.post(this.baseUrl + 'employees/assign/' + entity.id, entity);
+  return this.http.post(this.baseUrl + 'accounts/register', entity);
 }
 
 unassignRole(entity: UnassignRoleDto): Observable<void> {
@@ -89,6 +89,10 @@ unassignRole(entity: UnassignRoleDto): Observable<void> {
 
 changeStatus(id: number): Observable<void> {
   return this.http.put<void>(this.baseUrl + 'accounts/change-status/' + id, id);
+}
+
+checkEmailExists(uname: string): Observable<boolean> {
+  return this.http.get<boolean>(this.baseUrl + 'accounts/username-exists?username=' + uname);
 }
 
 }

@@ -31,6 +31,9 @@
         <div *ngIf="control.errors?.email" class="invalid-feedback">
             You must enter a valid email.
         </div>
+        <div *ngIf="control.errors?.usernameExists" class="invalid-feedback">
+            Username is already taken.
+        </div>
         <div *ngIf="control.errors?.pattern" class="invalid-feedback">
             Password not complex enough.
         </div>

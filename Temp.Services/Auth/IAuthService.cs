@@ -1,14 +1,14 @@
-﻿using Temp.Services.Auth.Models.Commands;
-using Temp.Services.Employees.Models.Commands;
+﻿using Temp.Domain.Models.Identity;
+using Temp.Services.Auth.Models.Commands;
 
 namespace Temp.Services.Auth;
 
 public interface IAuthService
 {
-    Task<LoginResponse> Login(LoginRequest request);
+    Task<LoginAppUserResponse> Login(LoginAppUserRequest request);
     Task<bool> Logout();
-    Task<RegisterResponse> Register(RegisterRequest request);
-    Task<AssignRoleResponse> AssignRole(AssignRoleRequest request);
-    Task<RemoveEmployeeRoleResponse> RemoveEmployeeRole(RemoveEmployeeRoleRequest request);
-    Task<bool> UpdateEmployeeAccountStatus(int employeeId);
+    Task<bool> CheckUsernameExists(string username);
+    Task<AppUser> Register(RegisterAppUserRequest request);
+    Task<AppUser> RemoveEmployeeRole(RemoveEmployeeRoleRequest request);
+    Task<AppUser> UpdateEmployeeAccountStatus(int employeeId);
 }
