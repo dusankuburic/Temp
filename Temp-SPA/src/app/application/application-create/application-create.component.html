@@ -4,15 +4,9 @@
     <div  class="alert alert-info text-center" role="alert">
       <h4>Team: {{team.name}}</h4>
     </div>
-
-      <form [formGroup]="createApplicationForm" (ngSubmit)="create()">
+      <form class="row g-2" [formGroup]="createApplicationForm" (ngSubmit)="create()">
         <div class="form-group">
-          <h4>Category</h4>
-          <input [ngClass]="{'is-invalid': createApplicationForm.get('category').errors && createApplicationForm.get('category').touched}"
-            type="text"
-            class="form-control"
-            formControlName="category">
-            <div class="invalid-feedback">Please enter a Category</div>
+          <tmp-input formControlName="category" [label]="'Category'" [placeholder]="'Category'" ></tmp-input>
         </div>
 
         <div class="form-group">
@@ -24,7 +18,9 @@
           </textarea>
           <div class="invalid-feedback">Please enter a Content</div>
         </div>
-        <button type="submit" [disabled]="!createApplicationForm.valid" class="btn btn-success float-right">Send</button>
+        <div class="form-group">
+          <button type="submit" [disabled]="!createApplicationForm.valid" class="btn btn-success btn-ts float-right">Send</button>
+        </div>
       </form>
       
     </div>

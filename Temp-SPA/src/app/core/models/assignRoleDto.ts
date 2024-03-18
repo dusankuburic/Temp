@@ -1,8 +1,8 @@
 
 export interface AssignRoleDto {
-    id: number;
+    employeeId: number;
     email: string;
-    username: string;
+    displayName: string;
     password: string;
     role: string;
 }

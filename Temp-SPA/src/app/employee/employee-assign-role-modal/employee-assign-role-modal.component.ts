@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { debounceTime, finalize, map, switchMap, take } from 'rxjs';
 import { AssignRoleDto } from 'src/app/core/models/assignRoleDto';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
@@ -19,14 +20,14 @@ export class EmployeeAssignRoleModalComponent implements OnInit {
   createAssignRoleForm: FormGroup;
   assignDto: AssignRoleDto;
   
-  username = new FormControl('', [
+  displayName = new FormControl('', [
     Validators.required,
     Validators.minLength(8),
-    Validators.maxLength(50)]);
+    Validators.maxLength(30)]);
 
-  email = new FormControl('', [
-    Validators.required,
-    Validators.email]);
+  email = new FormControl('', 
+  [Validators.required, Validators.email], 
+  [this.validateEmailNotTaken()]);
 
   passwordPattern: RegExp = /^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=\D*\d).{8,}$/;
   password = new FormControl('', [
@@ -45,7 +46,7 @@ export class EmployeeAssignRoleModalComponent implements OnInit {
     this.createAssignRoleForm = this.fb.group({
       role: ['', Validators.required],
       email: this.email,
-      username: this.username,
+      displayName: this.displayName,
       password: this.password,
       confirmPassword: this.confirmPassword
     });
@@ -60,7 +61,7 @@ export class EmployeeAssignRoleModalComponent implements OnInit {
 
   register(): void {
     if (this.createAssignRoleForm.valid) {
-      this.assignDto = { ...this.createAssignRoleForm.value, id: this.employeeId };
+      this.assignDto = { ...this.createAssignRoleForm.value, employeeId: this.employeeId };
       this.employeeService.assignRole(this.assignDto).subscribe(() => {
         this.bsModalRef.content.isSaved = true;
         this.createAssignRoleForm.disable();
@@ -69,6 +70,21 @@ export class EmployeeAssignRoleModalComponent implements OnInit {
       }, error => {
         this.alertify.error(error.error);
       });
+    }
+  }
+
+  validateEmailNotTaken(): AsyncValidatorFn {
+    return (control: AbstractControl) => {
+      return control.valueChanges.pipe(
+        debounceTime(600),
+        take(1),
+        switchMap(() => {
+          return this.employeeService.checkEmailExists(control.value).pipe(
+            map(result => result ? {usernameExists: true} : null),
+            finalize(() => control.markAsTouched())
+          )
+        })
+      )
     }
   }
 }

@@ -1,4 +1,5 @@
 ﻿using Temp.Services.Auth;
+using Temp.Services.Auth.Exceptions;
 using Temp.Services.Auth.Models.Commands;
 
 namespace Temp.API.Controllers;
@@ -13,25 +14,29 @@ public class AccountsController : ControllerBase
         _authService = authService;
     }
 
-
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Login(LoginRequest request) {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState.Values);
-
-        var response = await _authService.Login(request);
-        return response is null ? Unauthorized() : Ok(response);
+    [ProducesResponseType(typeof(LoginAppUserResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Login([FromBody] LoginAppUserRequest request) {
+        try {
+            var response = await _authService.Login(request);
+            return Ok(response);
+        } catch (UserValidationException) {
+            return Unauthorized();
+        }
     }
 
     [Authorize(Roles = "Admin")]
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(RegisterResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Register(RegisterRequest request) {
-        var response = await _authService.Register(request);
-        return response.Status ? Ok(response) : BadRequest(response.Message);
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> Register([FromBody] RegisterAppUserRequest request) {
+        try {
+            await _authService.Register(request);
+            return Ok();
+        } catch (UserValidationException userValidationException) {
+            return BadRequest(GetInnerMessage(userValidationException));
+        }
     }
 
     [Authorize(Roles = "Admin")]
@@ -48,8 +53,12 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> RemoveRole([FromBody] RemoveEmployeeRoleRequest request) {
-        var response = await _authService.RemoveEmployeeRole(request);
-        return response.Success ? Ok() : BadRequest();
+        try {
+            var response = await _authService.RemoveEmployeeRole(request);
+            return Ok();
+        } catch (UserValidationException userValidationException) {
+            return BadRequest(GetInnerMessage(userValidationException));
+        }
     }
 
     [Authorize(Roles = "Admin")]
@@ -57,9 +66,27 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateEmployeeAccountStatus([FromRoute] int id) {
-        var response = await _authService.UpdateEmployeeAccountStatus(id);
-        return response ? NoContent() : BadRequest();
+        try {
+            var response = await _authService.UpdateEmployeeAccountStatus(id);
+            return NoContent();
+        } catch (UserValidationException userValidationException) {
+            return BadRequest(GetInnerMessage(userValidationException));
+        }
     }
 
+    [HttpGet("username-exists")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> UsernameExists([FromQuery] string username) {
+        try {
+            var response = await _authService.CheckUsernameExists(username);
 
+            return Ok(response);
+        } catch (UserValidationException userValidationException) {
+            return BadRequest(GetInnerMessage(userValidationException));
+        }
+    }
+
+    private string GetInnerMessage(Exception exception) =>
+        exception.InnerException.Message;
 }
