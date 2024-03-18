@@ -4,7 +4,6 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
 import { map } from 'rxjs/operators';
-import { Admin } from '../models/admin';
 
 @Injectable({
   providedIn: 'root'
@@ -36,9 +35,6 @@ registerUser(user: User): any {
   return this.http.post(this.baseUrl + 'accounts/register', user);
 }
 
-registerAdmin(admin: Admin): any {
-  return this.http.post(this.baseUrl + 'accounts/register', admin);
-}
 
 loggedIn(): any {
   const token = localStorage.getItem('token')?.toString();

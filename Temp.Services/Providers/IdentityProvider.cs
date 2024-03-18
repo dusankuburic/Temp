@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using StackExchange.Redis;
-using Temp.Domain.Models.Identity;
+﻿using Temp.Domain.Models.Identity;
 using Temp.Services.Providers.Models;
 
 namespace Temp.Services.Providers;

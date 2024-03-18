@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Admin } from '../../core/models/admin';
 import { User } from '../../core/models/user';
 import { AlertifyService } from '../../core/services/alertify.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -12,7 +11,6 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  admin: Admin;
   user: User;
 
   username = new FormControl('', [Validators.required]);
