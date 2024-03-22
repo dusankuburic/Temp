@@ -31,7 +31,7 @@ Redis UI Password:
 
     toor
 ---
-### UI (admin workflow only)
+### UI (admin workflow)
 
 ![login](images/img0.png)
 ![employees](images/img1.png)
