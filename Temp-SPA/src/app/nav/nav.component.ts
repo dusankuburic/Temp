@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertifyService } from '../core/services/alertify.service';
 import { AuthService } from '../core/services/auth.service';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-nav',
@@ -9,6 +10,7 @@ import { AuthService } from '../core/services/auth.service';
   styleUrls: ['./nav.component.scss']
 })
 export class NavComponent {
+  signOutIcon = faSignOutAlt
   model: any = {};
 
 

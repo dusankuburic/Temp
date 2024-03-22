@@ -1,26 +1,26 @@
 [
   {
-    "name": "HACIJENDA 1",
+    "name": "NOC 1",
     "hasActiveGroup": true
   },
   {
-    "name": "HACIJENDA 2",
+    "name": "NOC 2",
     "hasActiveGroup": true
   },
   {
-    "name": "Puket 0lk2",
+    "name": "LOC 0lk2",
     "hasActiveGroup": true
   },
   {
-    "name": "Rotor KJ33",
+    "name": "ENV KJ33",
     "hasActiveGroup": false
   },
   {
-    "name": "Stator MM22",
+    "name": "ENV MM22",
     "hasActiveGroup": false
   },
   {
-    "name": "Felna PH99",
+    "name": "EMM PH99",
     "hasActiveGroup": false
   }
 ]

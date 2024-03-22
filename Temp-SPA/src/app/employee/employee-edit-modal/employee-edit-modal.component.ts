@@ -9,6 +9,7 @@ import { Group, ModeratorGroups } from 'src/app/core/models/group';
 import { ModeratorMin } from 'src/app/core/models/moderator';
 import { FullTeam } from 'src/app/core/models/team';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
@@ -27,6 +28,7 @@ export class EmployeeEditModalComponent implements OnInit {
   employeeId: number;
   editEmployeeForm: FormGroup;
   employee: Employee;
+  username?: string;
   fullTeam: FullTeam;
   organizationsSelect: SelectionOption[];
   innerGroupsSelect: SelectionOption[];
@@ -68,8 +70,12 @@ export class EmployeeEditModalComponent implements OnInit {
     this.employeeService.getEmployee(this.employeeId).subscribe({
       next: (res: Employee) => {
         this.employee = res;
-        this.setupForm(this.employee);
-        
+        this.setupForm(this.employee); 
+
+        if (this.employee.role !== 'None') {
+          this.loadEmployeeUsername(this.employee.id);
+        }
+
         if (this.employee.role === 'Moderator') {
           this.loadModeratorGroups(this.employee.teamId, this.employee.id, true);
         } else {
@@ -96,6 +102,17 @@ export class EmployeeEditModalComponent implements OnInit {
         firstName: employee.firstName,
         lastName: employee.lastName
       });
+  }
+  
+  loadEmployeeUsername(employeeId: number) {
+    this.employeeService.getEmployeeUsername(employeeId).subscribe({
+      next: (res: any) => {
+        this.username = res.username;
+      },
+      error: () => {
+        this.alertify.error('Unable to get employee username');
+      }
+    })
   }
 
   loadFullTeam(id): void {

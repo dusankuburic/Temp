@@ -50,7 +50,7 @@
                     <td>
                         <a class="btn btn-primary" (click)="openEditModal(employee.id)"><fa-icon [icon]="editIcon"></fa-icon></a>
                     </td>
-                    <td *ngIf="employee.role !== 'Admin' && employee.role !== 'User' && employee.role !== 'Moderator'">
+                    <td *ngIf="employee.role === 'None'">
                         <a class="btn btn-info" (click)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)"><fa-icon [icon]="assignRoleIcon"></fa-icon></a>
                     </td>
                     <td *ngIf="employee.role !== 'None'">

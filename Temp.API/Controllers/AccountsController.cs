@@ -39,7 +39,7 @@ public class AccountsController : ControllerBase
         }
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,User,Moderator")]
     [HttpPost("logout")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -74,6 +74,7 @@ public class AccountsController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("username-exists")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -85,6 +86,16 @@ public class AccountsController : ControllerBase
         } catch (UserValidationException userValidationException) {
             return BadRequest(GetInnerMessage(userValidationException));
         }
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("employee-username/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetEmployeeUsername([FromRoute] int id) {
+        var username = await _authService.GetEmployeeUsername(id);
+
+        return username != null ? Ok(new { username }) : BadRequest();
     }
 
     private string GetInnerMessage(Exception exception) =>
