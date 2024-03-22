@@ -11,4 +11,5 @@ public interface IAuthService
     Task<AppUser> Register(RegisterAppUserRequest request);
     Task<AppUser> RemoveEmployeeRole(RemoveEmployeeRoleRequest request);
     Task<AppUser> UpdateEmployeeAccountStatus(int employeeId);
+    Task<string> GetEmployeeUsername(int id);
 }

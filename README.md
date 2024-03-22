@@ -29,4 +29,21 @@ Redis UI Username:
         
 Redis UI Password:
 
-    toor 
+    toor
+---
+### UI (admin workflow only)
+
+![login](images/img0.png)
+![employees](images/img1.png)
+![create employee](images/img2.png)
+![edit employee moderator](images/img3.png)
+![edit employee user](images/img4.png)
+![assign role](images/img5.png)
+![employee filters](images/img6.png)
+![create engagement](images/img7.png)
+![engagements](images/img8.png)
+![org](images/img9.png)
+![org](images/img10.png)
+![org](images/img11.png)
+![org](images/img12.png)
+![org](images/img13.png)

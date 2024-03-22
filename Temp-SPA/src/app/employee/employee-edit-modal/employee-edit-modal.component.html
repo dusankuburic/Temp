@@ -6,6 +6,9 @@
 </div>
 <div class="modal-body">
     <div class="row justify-content-center">
+      <div *ngIf="username" class="alert alert-info text-center" role="alert">
+        <h4>{{username}}</h4>
+      </div>
       <form class="row g-2" [formGroup]="editEmployeeForm" (ngSubmit)="update()">
           <div class="form-group">
             <tmp-input [formControl]="firstName" [label]="'First Name'" [placeholder]="'Enter First Name'"></tmp-input>

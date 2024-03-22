@@ -12,8 +12,8 @@ using Temp.Database;
 namespace Temp.Database.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240315134923_addAute1hMigrati1on")]
-    partial class addAute1hMigrati1on
+    [Migration("20240322043841_initMigration")]
+    partial class initMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

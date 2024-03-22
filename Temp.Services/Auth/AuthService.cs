@@ -165,4 +165,17 @@ public partial class AuthService : IAuthService
 
         return tokenHandler.WriteToken(token);
     }
+
+
+    public async Task<string> GetEmployeeUsername(int id) {
+
+        var appUserId = await _ctx.Employees
+            .Where(x => x.Id == id)
+            .Select(x => x.AppUserId)
+            .FirstOrDefaultAsync();
+
+        var appUser = await _userManager.FindByIdAsync(appUserId);
+
+        return appUser.Email;
+    }
 }
