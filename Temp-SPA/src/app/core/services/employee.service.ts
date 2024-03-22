@@ -63,8 +63,8 @@ getEmployees(): Observable<PaginatedResult<Employee[]>> {
     );
 }
 
-getModerator(EmployeeId: number): Observable<any> {
-  return this.http.get<any>(this.baseUrl + 'moderators/' + EmployeeId);
+getModerator(employeeId: number): Observable<any> {
+  return this.http.get<any>(this.baseUrl + 'moderators/' + employeeId);
 }
 
 getEmployee(id: number): Observable<Employee> {
@@ -93,6 +93,10 @@ changeStatus(id: number): Observable<void> {
 
 checkEmailExists(uname: string): Observable<boolean> {
   return this.http.get<boolean>(this.baseUrl + 'accounts/username-exists?username=' + uname);
+}
+
+getEmployeeUsername(employeeId: number): Observable<string> {
+  return this.http.get<string>(this.baseUrl + 'accounts/employee-username/' + employeeId);
 }
 
 }

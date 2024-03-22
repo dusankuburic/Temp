@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Temp.Database.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class addAute1hMigrati1on : Migration
+    public partial class initMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

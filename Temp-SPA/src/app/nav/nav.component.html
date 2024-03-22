@@ -7,10 +7,9 @@
         </span>
         <span class="dropdown-toggle text-light" dropdownToggle>
           {{authService.decodedToken?.unique_name | titlecase}}
-          {{authService.decodedToken?.role}}
         </span>    
-        <ul class="dropdown-menu mt-3" *dropdownMenu>
-          <li><a class="dropdown-item" href="#" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        <ul class="dropdown-menu" *dropdownMenu>
+          <li><a class="dropdown-item" href="#" (click)="logout()"><fa-icon [icon]="signOutIcon"></fa-icon> Logout</a></li>
         </ul>
       </div>
   </div>
