@@ -25,9 +25,9 @@
                     </h5>
                 </td>
                 <td *ngIf="application.status === false">
-                    <a (click)="updateStatus(application.id, application.teamId)" class="btn btn-info">
+                    <button type="button" (click)="updateStatus(application.id, application.teamId)" (keydown.enter)="updateStatus(application.id, application.teamId)" (keydown.space)="updateStatus(application.id, application.teamId)" class="btn btn-info" aria-label="Update status">
                         <fa-icon [icon]="bookmarkIcon"></fa-icon>
-                    </a>
+                    </button>
                 </td>
                 <td>
                     <a class="btn btn-primary" [routerLink]="['/applications/moderator/', application.id]">
