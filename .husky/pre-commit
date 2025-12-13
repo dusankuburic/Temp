@@ -1,0 +1,21 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "Running pre-commit checks..."
+
+# Run .NET format check
+echo "Checking .NET code formatting..."
+dotnet format --verify-no-changes || {
+    echo "Code formatting issues detected. Run 'dotnet format' to fix."
+    exit 1
+}
+
+# Run Angular linting
+echo "Checking Angular code..."
+cd Temp-SPA
+npm run lint || {
+    echo "Linting issues detected. Please fix before committing."
+    exit 1
+}
+
+echo "Pre-commit checks passed!"

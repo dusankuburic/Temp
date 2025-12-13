@@ -96,13 +96,13 @@ temp.spa.angular-prod Up (healthy)
 
 ```bash
 # Test Angular app health
-curl http://localhost/healthcheck
+curl http://localhost/health
 
 # Test API health (development)
-curl -k https://localhost:5001/healthcheck
+curl -k https://localhost:5001/health
 
 # Production (on server)
-curl -k https://localhost:5001/healthcheck
+curl -k https://localhost:5001/health
 ```
 
 ---
@@ -174,8 +174,8 @@ openssl pkcs12 -export \
 | SQL Server | `sqlcmd -Q "SELECT 1"` | Returns 1 |
 | Redis | `redis-cli ping` | PONG |
 | Azurite | `nc -z localhost 10000` | Connection success |
-| API | `curl https://localhost:8081/healthcheck` | HTTP 200 |
-| Angular | `curl http://localhost/healthcheck` | "Healthy" |
+| API | `curl https://localhost:8081/health` | HTTP 200 |
+| Angular | `curl http://localhost/health` | "Healthy" |
 
 ### Manual Health Check
 
@@ -197,7 +197,7 @@ docker inspect temp.api-prod --format='{{json .State.Health}}' | jq
 docker compose logs temp.api
 
 # Execute health check manually inside container
-docker exec temp.api curl -k https://localhost:8081/healthcheck
+docker exec temp.api curl -k https://localhost:8081/health
 
 # Enter container shell
 docker exec -it temp.api /bin/bash

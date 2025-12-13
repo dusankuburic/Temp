@@ -86,7 +86,7 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -k -f https://localhost:8081/healthcheck || exit 1"]
+      test: ["CMD-SHELL", "curl -k -f https://localhost:8081/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -109,7 +109,7 @@ services:
       temp.api:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/healthcheck"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
       interval: 30s
       timeout: 10s
       retries: 3

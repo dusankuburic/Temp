@@ -22,8 +22,22 @@ Employee management system built with .NET 8 and Angular 17.
 3. **Never commit `.env` to version control!**
 
 ### Startup
+
+**Option 1: Using Docker Compose**
 ```bash
 docker compose up --detach
+```
+
+**Option 2: Using Helper Scripts**
+```bash
+# Linux/Mac
+./scripts/dev.sh start
+
+# Windows PowerShell
+.\scripts\dev.ps1 start
+
+# Any platform with make
+make start
 ```
 
 ---
@@ -138,6 +152,58 @@ For production at scale, consider:
 - **Storage:** Use Azure Blob Storage instead of Azurite
 - **Load Balancing:** Add nginx or cloud load balancer in front of services
 - **Container Orchestration:** Deploy to Kubernetes (AKS, EKS, GKE) for high availability
+
+---
+## CI/CD & Automation
+
+This project includes comprehensive CI/CD automation using GitHub Actions.
+
+### Quick Commands
+
+**Development Helper Scripts:**
+```bash
+# Linux/Mac
+./scripts/dev.sh [command]
+
+# Windows PowerShell
+.\scripts\dev.ps1 [command]
+
+# Cross-platform (Make)
+make [command]
+```
+
+**Available Commands:**
+- `start` - Start development environment
+- `stop` - Stop development environment
+- `restart` - Restart services
+- `logs` - View logs
+- `rebuild` - Rebuild containers
+- `health` - Check service health
+- `test` - Run all tests
+- `db-migrate` - Run database migrations
+
+### GitHub Actions Workflows
+
+**CI Pipeline (`.github/workflows/ci.yml`):**
+- ✅ Builds .NET API and Angular SPA
+- ✅ Runs automated tests
+- ✅ Performs code quality checks
+- ✅ Builds and pushes Docker images
+- ✅ Security scanning with Trivy
+
+**Deployment Pipeline (`.github/workflows/deploy.yml`):**
+- 🚀 Automated deployment to staging/production
+- 🔄 Automatic rollback on failure
+- 📊 Health check verification
+- 💬 Slack notifications (optional)
+
+**Triggers:**
+- Push to `master` or `develop` → Run CI
+- Pull request → Run CI
+- New release → Deploy to production
+- Manual workflow dispatch → Deploy to any environment
+
+For detailed CI/CD documentation, see [CI-CD.md](CI-CD.md)
 
 ---
 ### UI (admin workflow)
