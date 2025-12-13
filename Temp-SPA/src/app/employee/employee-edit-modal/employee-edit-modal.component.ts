@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { initOffset } from 'ngx-bootstrap/chronos/units/offset';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
@@ -9,7 +8,6 @@ import { Group, ModeratorGroups } from 'src/app/core/models/group';
 import { ModeratorMin } from 'src/app/core/models/moderator';
 import { FullTeam } from 'src/app/core/models/team';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';

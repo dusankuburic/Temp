@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h4 class="modal-title pull-left">{{title}}</h4>
-    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()" (keydown.enter)="bsModalRef.hide()" (keydown.space)="bsModalRef.hide()">
       <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
 </div>
@@ -55,7 +55,11 @@
                 <tbody>
                   <tr *ngFor="let group of currentModeratorGroups">
                     <td>{{group.name}}</td>
-                    <td><a class="btn btn-danger" (click)="updateGroup(employeeId, group.id)"><fa-icon [icon]="minusIcon"></fa-icon></a></td>
+                    <td>
+                      <button type="button" class="btn btn-danger" (click)="updateGroup(employeeId, group.id)" (keydown.enter)="updateGroup(employeeId, group.id)" (keydown.space)="updateGroup(employeeId, group.id)" aria-label="Remove group">
+                        <fa-icon [icon]="minusIcon"></fa-icon>
+                      </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -71,7 +75,11 @@
                 <tbody>
                   <tr *ngFor="let group of freeModeratorGroups">
                     <td>{{group.name}}</td>
-                    <td><a class="btn btn-success" (click)="updateGroup(employeeId, group.id)"><fa-icon [icon]="plusIcon"></fa-icon></a></td>
+                    <td>
+                      <button type="button" class="btn btn-success" (click)="updateGroup(employeeId, group.id)" (keydown.enter)="updateGroup(employeeId, group.id)" (keydown.space)="updateGroup(employeeId, group.id)" aria-label="Add group">
+                        <fa-icon [icon]="plusIcon"></fa-icon>
+                      </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
