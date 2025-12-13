@@ -18,7 +18,9 @@
         </form>
     </div> 
     <div class="col-lg-2">
-        <a class="btn btn-success float-end" (click)="openCreateModal()"><fa-icon [icon]="plusIcon"></fa-icon></a>
+                <button type="button" class="btn btn-success float-end" (click)="openCreateModal()" (keydown.enter)="openCreateModal()" (keydown.space)="openCreateModal()" aria-label="Create employee">
+                    <fa-icon [icon]="plusIcon"></fa-icon>
+                </button>
     </div>
 </div>
 <div class="row justify-content-center">
@@ -48,17 +50,23 @@
                         </span>
                     </td>
                     <td>
-                        <a class="btn btn-primary" (click)="openEditModal(employee.id)"><fa-icon [icon]="editIcon"></fa-icon></a>
+                        <button type="button" class="btn btn-primary" (click)="openEditModal(employee.id)" (keydown.enter)="openEditModal(employee.id)" (keydown.space)="openEditModal(employee.id)" aria-label="Edit employee">
+                            <fa-icon [icon]="editIcon"></fa-icon>
+                        </button>
                     </td>
                     <td *ngIf="employee.role === 'None'">
-                        <a class="btn btn-info" (click)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)"><fa-icon [icon]="assignRoleIcon"></fa-icon></a>
+                        <button type="button" class="btn btn-info" (click)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)" (keydown.enter)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)" (keydown.space)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)" aria-label="Assign role">
+                            <fa-icon [icon]="assignRoleIcon"></fa-icon>
+                        </button>
                     </td>
                     <td *ngIf="employee.role !== 'None'">
                         <div class="btn-group">
-                            <a (click)="changeStatus(employee.id)" class="btn" [ngClass]="{'btn-success': employee.isAppUserActive, 'btn-warning': !employee.isAppUserActive}">
-                                <fa-icon [icon]="employee.isAppUserActive ? deactivateUserIcon : activateUserIcon"></fa-icon>
-                            </a>
-                            <a (click)="removeRole(employee.id)" class="btn btn-danger"><fa-icon [icon]="removeRoleIcon"></fa-icon></a> 
+                        <button type="button" (click)="changeStatus(employee.id)" (keydown.enter)="changeStatus(employee.id)" (keydown.space)="changeStatus(employee.id)" class="btn" [ngClass]="{'btn-success': employee.isAppUserActive, 'btn-warning': !employee.isAppUserActive}" aria-label="Change status">
+                            <fa-icon [icon]="employee.isAppUserActive ? deactivateUserIcon : activateUserIcon"></fa-icon>
+                        </button>
+                        <button type="button" (click)="removeRole(employee.id)" (keydown.enter)="removeRole(employee.id)" (keydown.space)="removeRole(employee.id)" class="btn btn-danger" aria-label="Remove role">
+                            <fa-icon [icon]="removeRoleIcon"></fa-icon>
+                        </button>
                         </div>
                     </td>
                 </tr>

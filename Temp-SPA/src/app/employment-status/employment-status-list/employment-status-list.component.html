@@ -8,7 +8,9 @@
         </form>
     </div>    
     <div class="col-lg-2">
-        <a class="btn btn-success float-end" (click)="openCreateModal()"><fa-icon [icon]="plusIcon"></fa-icon></a>
+        <button type="button" class="btn btn-success float-end" (click)="openCreateModal()" (keydown.enter)="openCreateModal()" (keydown.space)="openCreateModal()" aria-label="Create employment status">
+            <fa-icon [icon]="plusIcon"></fa-icon>
+        </button>
     </div>
 </div>
 <div class="row justify-content-center">
@@ -26,8 +28,12 @@
                 <td>{{employment.name}}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn btn-primary" (click)="openEditModal(employment.id)" ><fa-icon [icon]="editIcon"></fa-icon></a>
-                        <a class="btn btn-danger" (click)="changeStatus(employment.id)"><fa-icon [icon]="archiveIcon"></fa-icon></a>
+                        <button type="button" class="btn btn-primary" (click)="openEditModal(employment.id)" (keydown.enter)="openEditModal(employment.id)" (keydown.space)="openEditModal(employment.id)" aria-label="Edit employment status">
+                            <fa-icon [icon]="editIcon"></fa-icon>
+                        </button>
+                        <button type="button" class="btn btn-danger" (click)="changeStatus(employment.id)" (keydown.enter)="changeStatus(employment.id)" (keydown.space)="changeStatus(employment.id)" aria-label="Archive employment status">
+                            <fa-icon [icon]="archiveIcon"></fa-icon>
+                        </button>
                     </div>
                 </td>
             </tr>

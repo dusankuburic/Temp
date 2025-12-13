@@ -8,7 +8,9 @@
   </form>
   </div>
   <div class="col-lg-2">
-    <a class="btn btn-success float-end" (click)="openCreateModal(group.id)"><fa-icon [icon]="plusIcon"></fa-icon></a>  
+    <button type="button" class="btn btn-success float-end" (click)="openCreateModal(group.id)" (keydown.enter)="openCreateModal(group.id)" (keydown.space)="openCreateModal(group.id)" aria-label="Create team">
+      <fa-icon [icon]="plusIcon"></fa-icon>
+    </button>
   </div>
 </div>
 
@@ -27,8 +29,12 @@
           <td>{{team.name}}</td>
           <td>
             <div class="btn-group" role="group">
-              <a class="btn btn-primary" (click)="openEditModal(team.id, group.id)"><fa-icon [icon]="editTeamIcon"></fa-icon></a>
-              <a class="btn btn-danger" (click)="changeStatus(team.id)"><fa-icon [icon]="archiveTeamIcon"></fa-icon></a>
+              <button type="button" class="btn btn-primary" (click)="openEditModal(team.id, group.id)" (keydown.enter)="openEditModal(team.id, group.id)" (keydown.space)="openEditModal(team.id, group.id)" aria-label="Edit team">
+                <fa-icon [icon]="editTeamIcon"></fa-icon>
+              </button>
+              <button type="button" class="btn btn-danger" (click)="changeStatus(team.id)" (keydown.enter)="changeStatus(team.id)" (keydown.space)="changeStatus(team.id)" aria-label="Archive team">
+                <fa-icon [icon]="archiveTeamIcon"></fa-icon>
+              </button>
             </div>
           </td>  
         </tr>

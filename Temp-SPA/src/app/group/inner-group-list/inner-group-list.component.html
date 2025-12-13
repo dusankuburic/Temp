@@ -15,7 +15,9 @@
     </form>
   </div>
   <div class="col-lg-2">
-    <a class="btn btn-success float-end" (click)="openCreateModal(organization.id)"><fa-icon [icon]="plusIcon"></fa-icon></a>
+    <button type="button" class="btn btn-success float-end" (click)="openCreateModal(organization.id)" (keydown.enter)="openCreateModal(organization.id)" (keydown.space)="openCreateModal(organization.id)" aria-label="Create group">
+      <fa-icon [icon]="plusIcon"></fa-icon>
+    </button>
   </div>
 </div>
 
@@ -35,14 +37,22 @@
           <td>{{group.name}}</td>
           <td>
             <div class="btn-group" role="group">
-              <a class="btn btn-primary" (click)="openEditModal(group.id, organization.id)"><fa-icon [icon]="editGroupIcon"></fa-icon></a>
-              <a class="btn btn-danger" (click)="changeStatus(group.id)"><fa-icon [icon]="archiveGroupIcon"></fa-icon></a>
+              <button type="button" class="btn btn-primary" (click)="openEditModal(group.id, organization.id)" (keydown.enter)="openEditModal(group.id, organization.id)" (keydown.space)="openEditModal(group.id, organization.id)" aria-label="Edit group">
+                <fa-icon [icon]="editGroupIcon"></fa-icon>
+              </button>
+              <button type="button" class="btn btn-danger" (click)="changeStatus(group.id)" (keydown.enter)="changeStatus(group.id)" (keydown.space)="changeStatus(group.id)" aria-label="Archive group">
+                <fa-icon [icon]="archiveGroupIcon"></fa-icon>
+              </button>
             </div>
           </td>
           <td>
             <div class="btn-group" role="group">
-              <a class="btn" [ngClass]="group.hasActiveTeam ? 'btn-warning': 'btn-danger'"  [routerLink]="['/teams/group/', group.id]"><fa-icon [icon]="innerTeamsIcon"></fa-icon></a>
-              <a class="btn btn-info"  [routerLink]="['/teams/create/group/', group.id]"><fa-icon [icon]="plusIcon"></fa-icon></a>  
+              <button type="button" class="btn" [ngClass]="group.hasActiveTeam ? 'btn-warning': 'btn-danger'"  [routerLink]="['/teams/group/', group.id]" aria-label="View teams">
+                <fa-icon [icon]="innerTeamsIcon"></fa-icon>
+              </button>
+              <button type="button" class="btn btn-info"  [routerLink]="['/teams/create/group/', group.id]" aria-label="Create team">
+                <fa-icon [icon]="plusIcon"></fa-icon>
+              </button>
             </div>
           </td>
         </tr>

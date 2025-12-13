@@ -15,7 +15,9 @@
         </form>
     </div>
     <div class="col-lg-2">
-        <a class="btn btn-success float-end" (click)="openCreateModal()"><fa-icon [icon]="plusIcon"></fa-icon></a> 
+        <button type="button" class="btn btn-success float-end" (click)="openCreateModal()" (keydown.enter)="openCreateModal()" (keydown.space)="openCreateModal()" aria-label="Create organization">
+            <fa-icon [icon]="plusIcon"></fa-icon>
+        </button>
     </div>
 </div>
 <div class="row justify-content-center">
@@ -34,14 +36,22 @@
                 <td>{{organization.name}}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn btn-primary" (click)="openEditModal(organization.id)" ><fa-icon [icon]="editOrganizationIcon"></fa-icon></a>
-                        <a class="btn btn-danger" (click)="changeStatus(organization.id)"><fa-icon [icon]="archiveOrganizationIcon"></fa-icon></a>
+                        <button type="button" class="btn btn-primary" (click)="openEditModal(organization.id)" (keydown.enter)="openEditModal(organization.id)" (keydown.space)="openEditModal(organization.id)" aria-label="Edit organization">
+                            <fa-icon [icon]="editOrganizationIcon"></fa-icon>
+                        </button>
+                        <button type="button" class="btn btn-danger" (click)="changeStatus(organization.id)" (keydown.enter)="changeStatus(organization.id)" (keydown.space)="changeStatus(organization.id)" aria-label="Archive organization">
+                            <fa-icon [icon]="archiveOrganizationIcon"></fa-icon>
+                        </button>
                     </div>
                 </td>       
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn" [ngClass]="organization.hasActiveGroup ? 'btn-warning' : 'btn-danger'" [routerLink]="['/groups/organization/', organization.id]"><fa-icon [icon]="innerGroupsIcon"></fa-icon></a>
-                        <a class="btn btn-info" [routerLink]="['/groups/create/organization/', organization.id]"><fa-icon [icon]="plusIcon"></fa-icon></a>
+                        <button type="button" class="btn" [ngClass]="organization.hasActiveGroup ? 'btn-warning' : 'btn-danger'" [routerLink]="['/groups/organization/', organization.id]" aria-label="View groups">
+                            <fa-icon [icon]="innerGroupsIcon"></fa-icon>
+                        </button>
+                        <button type="button" class="btn btn-info" [routerLink]="['/groups/create/organization/', organization.id]" aria-label="Create group">
+                            <fa-icon [icon]="plusIcon"></fa-icon>
+                        </button>
                     </div>
                 </td>
             </tr>
