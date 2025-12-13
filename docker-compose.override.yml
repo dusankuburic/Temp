@@ -1,15 +1,19 @@
-version: '3.8'
-
 services:
   tempdb:
     container_name: tempdb
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=YourStrong!Passw0rd
+      - MSSQL_SA_PASSWORD=${SQL_SA_PASSWORD:-YourStrong!Passw0rd}
       - MSSQL_PID=Developer
     restart: always
     ports:
       - 1433:1433
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $${MSSQL_SA_PASSWORD} -Q 'SELECT 1' -C || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   azurite:
     container_name: backend-azurite
@@ -19,6 +23,12 @@ services:
       - "10000:10000"
       - "10001:10001"
       - "10002:10002"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "10000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
       
   redis:
     container_name: "redis-cache"
@@ -27,13 +37,19 @@ services:
       - 6379:6379
     volumes:
       - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   redis-commander:
     container_name: "redis-cache-ui"
     environment:
       - REDIS_HOST=redis
-      - HTTP_USER=root
-      - HTTP_PASSWORD=toor
+      - HTTP_USER=${REDIS_UI_USER:-root}
+      - HTTP_PASSWORD=${REDIS_UI_PASSWORD:-toor}
     ports:
       - 8081:8081
     depends_on:
@@ -47,22 +63,44 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=ZH4no7TVVeuzxq6+uLI4ym7yZnA=
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certs/aspnetapp.pfx
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings__DefaultConnection=Server=tempdb;User=sa;Password=YourStrong!Passw0rd;Database=Temp;Trusted_Connection=false;MultipleActiveResultSets=True;TrustServerCertificate=True;"
-      - "ConnectionStrings__AzureConnection=AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;DefaultEndpointsProtocol=http;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;TableEndpoint=http://azurite:10002/devstoreaccount1;"
+      # JWT Configuration - Use environment variables for security
+      - AppSettings__Token=${JWT_SECRET:-mLBI7dJZ53cYhYvRVHZbLh415i+y5QhLHpl/u1vurr+ewP+nv+EIjEpMplov0NRUyC2nQVk+2PpB5pG4e1aqGQ==}
+      - AppSettings__Issuer=${JWT_ISSUER:-https://localhost:5001}
+      # Database connections
+      - ConnectionStrings__DefaultConnection=${SQL_CONNECTION_DOCKER:-Server=tempdb;User=sa;Password=YourStrong!Passw0rd;Database=Temp;Trusted_Connection=false;MultipleActiveResultSets=True;TrustServerCertificate=True;}
+      - ConnectionStrings__AzureConnection=${AZURE_STORAGE_CONNECTION:-AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;DefaultEndpointsProtocol=http;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;TableEndpoint=http://azurite:10002/devstoreaccount1;}
+      - ConnectionStrings__Redis=${REDIS_CONNECTION:-redis-cache:6379}
     ports:
       - 5000:8080
       - 5001:8081
     depends_on:
-      - tempdb
-      - azurite
-      - redis
+      tempdb:
+        condition: service_healthy
+      azurite:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -k -f https://localhost:8081/healthcheck || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   temp.spa.angular:
     container_name: temp.spa.angular
     ports:
       - 4323:80
+      - 4443:443
     depends_on:
-      - temp.api
+      temp.api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 volumes:
   redis-data:

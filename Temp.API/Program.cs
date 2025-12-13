@@ -37,10 +37,9 @@ using (var scope = app.Services.CreateScope()) {
         Seed.SeedEmploymentStatuses(ctx);
         Seed.SeedWorkplaces(ctx);
         Seed.SeedEmployees(ctx);
-        Seed.SeedWorkplaces(ctx);
         var userManager = services.GetRequiredService<UserManager<AppUser>>();
 
-        if (userManager.Users.AnyAsync().Result == false) {
+        if (!await userManager.Users.AnyAsync()) {
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
             await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });

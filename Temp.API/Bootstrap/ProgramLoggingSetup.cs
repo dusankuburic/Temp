@@ -23,7 +23,7 @@ public static class ProgramLoggingSetup
         services.AddScoped<ILoggingBroker, LoggingBroker>();
 
         services.AddHttpLogging(logging => {
-            logging.RequestHeaders.Add("Authorization");
+            // NOTE: Authorization header is intentionally NOT logged to prevent JWT token exposure
             logging.LoggingFields = HttpLoggingFields.All;
             logging.MediaTypeOptions.AddText("application/javascript");
             logging.RequestBodyLogLimit = 4096;

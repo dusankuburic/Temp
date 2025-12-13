@@ -1,0 +1,135 @@
+# Production Docker Compose Configuration
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  tempdb:
+    container_name: tempdb-prod
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${SQL_SA_PASSWORD}
+      - MSSQL_PID=Standard
+    restart: unless-stopped
+    ports:
+      - 1433:1433
+    volumes:
+      - mssql-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $${MSSQL_SA_PASSWORD} -Q 'SELECT 1' -C || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - temp-network
+
+  azurite:
+    # For production, replace with real Azure Storage
+    container_name: backend-azurite-prod
+    hostname: azurite
+    restart: unless-stopped
+    ports:
+      - 10000:10000
+      - 10001:10001
+      - 10002:10002
+    volumes:
+      - azurite-data:/data
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "10000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - temp-network
+
+  redis:
+    container_name: redis-cache-prod
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}"]
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - temp-network
+
+  temp.api:
+    container_name: temp.api-prod
+    environment:
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certs/aspnetapp.pfx
+      - ASPNETCORE_ENVIRONMENT=Production
+      # JWT Configuration
+      - AppSettings__Token=${JWT_SECRET}
+      - AppSettings__Issuer=${JWT_ISSUER}
+      # Database connections
+      - ConnectionStrings__DefaultConnection=${SQL_CONNECTION_DOCKER}
+      - ConnectionStrings__AzureConnection=${AZURE_STORAGE_CONNECTION}
+      - ConnectionStrings__Redis=${REDIS_CONNECTION}
+    restart: unless-stopped
+    ports:
+      - 5000:8080
+      - 5001:8081
+    depends_on:
+      tempdb:
+        condition: service_healthy
+      azurite:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -k -f https://localhost:8081/healthcheck || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    networks:
+      - temp-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  temp.spa.angular:
+    container_name: temp.spa.angular-prod
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      temp.api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - temp-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  redis-data:
+    driver: local
+  mssql-data:
+    driver: local
+  azurite-data:
+    driver: local
+
+networks:
+  temp-network:
+    driver: bridge
