@@ -1,4 +1,4 @@
-﻿using Temp.Database;
+﻿using Temp.Database.UnitOfWork;
 using Temp.Domain.Models;
 using Temp.Services._Helpers;
 using Temp.Services.Integrations.Loggings;
@@ -10,17 +10,17 @@ namespace Temp.Services.Organizations;
 
 public partial class OrganizationService : IOrganizationService
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ILoggingBroker _loggingBroker;
     private readonly IIdentityProvider _identityProvider;
 
     public OrganizationService(
-        ApplicationDbContext ctx,
+        IUnitOfWork unitOfWork,
         IMapper mapper,
         ILoggingBroker loggingBroker,
         IIdentityProvider identityProvider) {
-        _ctx = ctx;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
         _loggingBroker = loggingBroker;
         _identityProvider = identityProvider;
@@ -34,8 +34,8 @@ public partial class OrganizationService : IOrganizationService
 
             ValidateOrganizationOnCreate(organization);
 
-            _ctx.Organizations.Add(organization);
-            await _ctx.SaveChangesAsync();
+            await _unitOfWork.Organizations.AddAsync(organization);
+            await _unitOfWork.SaveChangesAsync();
 
             return _mapper.Map<CreateOrganizationResponse>(organization);
         });
@@ -43,24 +43,22 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<PagedList<GetOrganizationResponse>> GetPagedOrganizations(GetOrganizationsRequest request) =>
         TryCatch(async () => {
-            var organizationsQuery = _ctx.Organizations
-                .Where(x => x.IsActive)
-                .AsQueryable();
+            var organizationsQuery = _unitOfWork.Organizations
+                .QueryNoTracking()
+                .Where(x => x.IsActive);
 
             if (!string.IsNullOrEmpty(request.Name)) {
-                organizationsQuery = organizationsQuery.Where(x => x.Name.Contains(request.Name))
-                    .AsQueryable();
+                organizationsQuery = organizationsQuery.Where(x => x.Name.Contains(request.Name));
             }
 
             organizationsQuery = request.WithGroups switch {
                 "all" => organizationsQuery,
-                "yes" => organizationsQuery.Where(x => x.HasActiveGroup == true).AsQueryable(),
-                "no" => organizationsQuery.Where(x => x.HasActiveGroup == false).AsQueryable(),
+                "yes" => organizationsQuery.Where(x => x.HasActiveGroup == true),
+                "no" => organizationsQuery.Where(x => x.HasActiveGroup == false),
                 _ => organizationsQuery
             };
 
-            organizationsQuery = organizationsQuery.OrderBy(x => x.Name)
-                .AsQueryable();
+            organizationsQuery = organizationsQuery.OrderBy(x => x.Name);
 
             return await PagedList<GetOrganizationResponse>.CreateAsync(
                 organizationsQuery.ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider),
@@ -70,31 +68,30 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<GetPagedInnerGroupsResponse> GetPagedInnerGroups(GetOrganizationInnerGroupsRequest request) =>
         TryCatch(async () => {
-            var innerGroupsQurey = _ctx.Groups
-                .Where(x => x.OrganizationId == request.OrganizationId && x.IsActive)
-                .AsQueryable();
+            var innerGroupsQurey = _unitOfWork.Groups
+                .QueryNoTracking()
+                .Where(x => x.OrganizationId == request.OrganizationId && x.IsActive);
 
             if (!string.IsNullOrEmpty(request.Name)) {
-                innerGroupsQurey = innerGroupsQurey.Where(x => x.Name.Contains(request.Name))
-                    .AsQueryable();
+                innerGroupsQurey = innerGroupsQurey.Where(x => x.Name.Contains(request.Name));
             }
 
             innerGroupsQurey = request.WithTeams switch {
                 "all" => innerGroupsQurey,
-                "yes" => innerGroupsQurey.Where(x => x.HasActiveTeam == true).AsQueryable(),
-                "no" => innerGroupsQurey.Where(x => x.HasActiveTeam == false).AsQueryable(),
+                "yes" => innerGroupsQurey.Where(x => x.HasActiveTeam == true),
+                "no" => innerGroupsQurey.Where(x => x.HasActiveTeam == false),
                 _ => innerGroupsQurey
             };
 
-            innerGroupsQurey = innerGroupsQurey.OrderBy(x => x.Name)
-                .AsQueryable();
+            innerGroupsQurey = innerGroupsQurey.OrderBy(x => x.Name);
 
             var pagedGroups = await PagedList<InnerGroup>.CreateAsync(
                 innerGroupsQurey.ProjectTo<InnerGroup>(_mapper.ConfigurationProvider),
                 request.PageNumber,
                 request.PageSize);
 
-            var organizationName = await _ctx.Organizations
+            var organizationName = await _unitOfWork.Organizations
+                .QueryNoTracking()
                 .Where(x => x.Id == request.OrganizationId && x.IsActive)
                 .Select(x => x.Name)
                 .FirstOrDefaultAsync();
@@ -108,7 +105,8 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<List<InnerGroup>> GetInnerGroups(int id) =>
         TryCatch(async () => {
-            var innerGroups = await _ctx.Groups
+            var innerGroups = await _unitOfWork.Groups
+                .Query()
                 .Include(x => x.Teams.Where(x => x.IsActive))
                 .Where(x => x.OrganizationId == id && x.IsActive && x.Teams.Count > 0)
                 .OrderBy(x => x.Name)
@@ -121,10 +119,10 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<GetOrganizationResponse> GetOrganization(GetOrganizationRequest request) =>
          TryCatch(async () => {
-             var organizaiton = await _ctx.Organizations
+             var organizaiton = await _unitOfWork.Organizations
+                .QueryNoTracking()
                 .Where(x => x.Id == request.Id && x.IsActive)
                 .ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider)
-                .AsNoTracking()
                 .FirstOrDefaultAsync();
 
              ValidateGetOrganizationViewModel(organizaiton);
@@ -135,7 +133,8 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<IEnumerable<GetOrganizationResponse>> GetOrganizations() =>
         TryCatch(async () => {
-            var organizations = await _ctx.Organizations
+            var organizations = await _unitOfWork.Organizations
+                .Query()
                 .Include(x => x.Groups.Where(x => x.IsActive))
                 .Where(x => x.IsActive && x.HasActiveGroup && x.Groups.Any(x => x.HasActiveTeam == true))
                 .OrderBy(x => x.Name)
@@ -150,9 +149,8 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<UpdateOrganizationResponse> UpdateOrganization(UpdateOrganizationRequest request) =>
          TryCatch(async () => {
-             var organization = await _ctx.Organizations
-                .Where(x => x.Id == request.Id)
-                .FirstOrDefaultAsync();
+             var organization = await _unitOfWork.Organizations
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
 
              organization.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
 
@@ -160,7 +158,8 @@ public partial class OrganizationService : IOrganizationService
 
              ValidateOrganizationOnUpdate(organization);
 
-             await _ctx.SaveChangesAsync();
+             _unitOfWork.Organizations.Update(organization);
+             await _unitOfWork.SaveChangesAsync();
 
              return new UpdateOrganizationResponse();
          });
@@ -168,23 +167,23 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<UpdateOrganizationStatusResponse> UpdateOrganizationStatus(UpdateOrganizationStatusRequest request) =>
         TryCatch(async () => {
-            var organization = await _ctx.Organizations
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync();
+            var organization = await _unitOfWork.Organizations
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
 
             organization.IsActive = !organization.IsActive;
             organization.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
 
             ValidateOrganizationOnUpdate(organization);
 
-            await _ctx.SaveChangesAsync();
+            _unitOfWork.Organizations.Update(organization);
+            await _unitOfWork.SaveChangesAsync();
 
             return new UpdateOrganizationStatusResponse();
         });
 
     public Task<bool> OrganizationExists(string name) =>
         TryCatch(async () => {
-            return await _ctx.Organizations.AnyAsync(x => x.Name == name);
+            return await _unitOfWork.Organizations.AnyAsync(x => x.Name == name);
         });
 
 }

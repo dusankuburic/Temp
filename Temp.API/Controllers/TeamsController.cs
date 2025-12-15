@@ -2,6 +2,7 @@
 using Temp.Services.Teams.Exceptions;
 using Temp.Services.Teams.Models.Commands;
 using Temp.Services.Teams.Models.Queries;
+using System.Collections.Generic;
 
 namespace Temp.API.Controllers;
 
@@ -104,6 +105,37 @@ public class TeamsController : ControllerBase
         } catch (TeamValidationException teamValidationException) {
             return BadRequest(GetInnerMessage(teamValidationException));
         }
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteTeam([FromRoute] int id)
+    {
+        try
+        {
+            await _teamService.DeleteTeamAsync(id);
+            return NoContent();
+        }
+        catch (TeamValidationException teamValidationException)
+        {
+            return BadRequest(GetInnerMessage(teamValidationException));
+        }
+        catch (TeamNotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
+    [Authorize]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(IEnumerable<GetTeamResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetTeams() {
+        var response = await _teamService.GetAllTeamsAsync();
+        return Ok(response);
     }
 
     private static string GetInnerMessage(Exception exception) {

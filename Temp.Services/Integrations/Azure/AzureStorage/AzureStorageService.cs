@@ -1,11 +1,13 @@
 ﻿using Azure.Storage.Blobs;
+using Azure.Storage.Sas;
 using Microsoft.AspNetCore.Http;
+using Temp.Services.Abstractions;
 using Temp.Services.Integrations.Azure.AzureStorage.Models;
 
 namespace Temp.Services.Integrations.Azure.AzureStorage;
 
 
-public class AzureStorageService : IAzureStorageService
+public class AzureStorageService : IAzureStorageService, IStorageService
 {
     private readonly string _connectionString;
     private readonly string _metadataKeyTitle = "title";
@@ -106,5 +108,80 @@ public class AzureStorageService : IAzureStorageService
             Error = false,
             Status = $"File: {blobFilename} has been successffully deleted"
         };
+    }
+
+    // IStorageService implementation
+    async Task<string> IStorageService.UploadAsync(Stream fileStream, string fileName, string contentType, CancellationToken cancellationToken)
+    {
+        var cloudBlobContainer = await GetStorageClient();
+        var uniqueFileName = UniqueFileName(fileName);
+        var client = cloudBlobContainer.GetBlobClient(uniqueFileName);
+
+        await client.UploadAsync(fileStream, cancellationToken);
+        return uniqueFileName;
+    }
+
+    async Task<Stream> IStorageService.DownloadAsync(string fileName, CancellationToken cancellationToken)
+    {
+        var cloudBlobContainer = await GetStorageClient();
+        var file = cloudBlobContainer.GetBlobClient(fileName);
+
+        if (await file.ExistsAsync(cancellationToken))
+        {
+            return await file.OpenReadAsync(cancellationToken: cancellationToken);
+        }
+
+        throw new FileNotFoundException($"File '{fileName}' not found in storage");
+    }
+
+    async Task<bool> IStorageService.DeleteAsync(string fileName, CancellationToken cancellationToken)
+    {
+        var cloudBlobContainer = await GetStorageClient();
+        var file = cloudBlobContainer.GetBlobClient(fileName);
+        return await file.DeleteIfExistsAsync(cancellationToken: cancellationToken);
+    }
+
+    async Task<bool> IStorageService.ExistsAsync(string fileName, CancellationToken cancellationToken)
+    {
+        var cloudBlobContainer = await GetStorageClient();
+        var file = cloudBlobContainer.GetBlobClient(fileName);
+        return await file.ExistsAsync(cancellationToken);
+    }
+
+    async Task<string> IStorageService.GetDownloadUrlAsync(string fileName, TimeSpan expiresIn, CancellationToken cancellationToken)
+    {
+        var cloudBlobContainer = await GetStorageClient();
+        var file = cloudBlobContainer.GetBlobClient(fileName);
+
+        if (!await file.ExistsAsync(cancellationToken))
+        {
+            throw new FileNotFoundException($"File '{fileName}' not found in storage");
+        }
+
+        var sasBuilder = new BlobSasBuilder
+        {
+            BlobContainerName = _containerName,
+            BlobName = fileName,
+            Resource = "b",
+            StartsOn = DateTimeOffset.UtcNow,
+            ExpiresOn = DateTimeOffset.UtcNow.Add(expiresIn)
+        };
+
+        sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+        return file.GenerateSasUri(sasBuilder).ToString();
+    }
+
+    async Task<IEnumerable<string>> IStorageService.ListFilesAsync(string? prefix, CancellationToken cancellationToken)
+    {
+        var cloudBlobContainer = await GetStorageClient();
+        var files = new List<string>();
+
+        await foreach (var file in cloudBlobContainer.GetBlobsAsync(prefix: prefix, cancellationToken: cancellationToken))
+        {
+            files.Add(file.Name);
+        }
+
+        return files;
     }
 }

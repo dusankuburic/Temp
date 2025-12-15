@@ -1,4 +1,5 @@
-﻿using Temp.Services.Applications;
+﻿using Temp.Database.UnitOfWork;
+using Temp.Services.Applications;
 using Temp.Services.Auth;
 using Temp.Services.Employees;
 using Temp.Services.EmploymentStatuses;
@@ -15,6 +16,9 @@ namespace Temp.API.Bootstrap;
 public static class ProgramServiceCollection
 {
     public static IServiceCollection AddProgramServices(this IServiceCollection services, IConfiguration configuration) {
+
+        // Register UnitOfWork
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IEmploymentStatusService, EmploymentStatusService>();
         services.AddScoped<IEngagementService, EngagementService>();

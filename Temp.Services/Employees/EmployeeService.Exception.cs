@@ -13,6 +13,7 @@ public partial class EmployeeService
     private delegate Task<UpdateEmployeeResponse> ReturningUpdateEmployeeFunction();
     private delegate Task<PagedList<GetEmployeesWithoutEngagementResponse>> ReturningEmployeesWithoutEngagement();
     private delegate Task<PagedList<GetEmployeesWithEngagementResponse>> ReturningEmployeesWithEngagement();
+    private delegate Task<DeleteEmployeeResponse> ReturningDeleteEmployeeFunction();
 
     private async Task<CreateEmployeeResponse> TryCatch(ReturningCreateEmployeeFunction returningCreateEmployeeFunction) {
         try {
@@ -83,6 +84,18 @@ public partial class EmployeeService
             return await returningEmployeesWithEngagement();
         } catch (EmployeeWithEngagementStorageException employeeWithEngagementStorageException) {
             throw CreateAndLogValidationException(employeeWithEngagementStorageException);
+        } catch (SqlException sqlException) {
+            throw CreateAndLogCriticalDependencyException(sqlException);
+        } catch (Exception exception) {
+            throw CreateAndLogServiceException(exception);
+        }
+    }
+
+    private async Task<DeleteEmployeeResponse> TryCatch(ReturningDeleteEmployeeFunction returningDeleteEmployeeFunction) {
+        try {
+            return await returningDeleteEmployeeFunction();
+        } catch (EmployeeNotFoundException employeeNotFoundException) {
+            throw CreateAndLogValidationException(employeeNotFoundException);
         } catch (SqlException sqlException) {
             throw CreateAndLogCriticalDependencyException(sqlException);
         } catch (Exception exception) {

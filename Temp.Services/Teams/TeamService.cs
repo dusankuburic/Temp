@@ -1,7 +1,8 @@
-﻿using Temp.Database;
+﻿using Temp.Database.UnitOfWork;
 using Temp.Domain.Models;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Providers;
+using Temp.Services.Teams.Exceptions;
 using Temp.Services.Teams.Models.Commands;
 using Temp.Services.Teams.Models.Queries;
 
@@ -9,17 +10,17 @@ namespace Temp.Services.Teams;
 
 public partial class TeamService : ITeamService
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ILoggingBroker _loggingBroker;
     private readonly IIdentityProvider _identityProvider;
 
     public TeamService(
-        ApplicationDbContext ctx,
+        IUnitOfWork unitOfWork,
         IMapper mapper,
         ILoggingBroker loggingBroker,
         IIdentityProvider identityProvider) {
-        _ctx = ctx;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
         _loggingBroker = loggingBroker;
         _identityProvider = identityProvider;
@@ -33,10 +34,11 @@ public partial class TeamService : ITeamService
 
              ValidateTeamOnCreate(team);
 
-             _ctx.Teams.Add(team);
-             await _ctx.SaveChangesAsync();
+             await _unitOfWork.Teams.AddAsync(team);
+             await _unitOfWork.SaveChangesAsync();
 
-             var group = await _ctx.Groups
+             var group = await _unitOfWork.Groups
+                .Query()
                 .Include(x => x.Organization)
                 .Where(x => x.Id == request.GroupId)
                 .FirstOrDefaultAsync();
@@ -44,14 +46,15 @@ public partial class TeamService : ITeamService
              group.HasActiveTeam = true;
              group.Organization.HasActiveGroup = true;
 
-             await _ctx.SaveChangesAsync();
+             await _unitOfWork.SaveChangesAsync();
 
              return _mapper.Map<CreateTeamResponse>(team);
          });
 
     public Task<GetFullTeamTreeResponse> GetFullTeamTree(GetFullTeamTreeRequest requst) =>
         TryCatch(async () => {
-            var team = await _ctx.Teams
+            var team = await _unitOfWork.Teams
+                .Query()
                 .Include(x => x.Group)
                 .ThenInclude(x => x.Organization)
                 .Where(x => x.Id == requst.Id && x.IsActive)
@@ -63,7 +66,8 @@ public partial class TeamService : ITeamService
 
     public Task<GetTeamResponse> GetTeam(GetTeamRequest request) =>
        TryCatch(async () => {
-           var team = await _ctx.Teams
+           var team = await _unitOfWork.Teams
+                .Query()
                 .Include(x => x.Group)
                 .Where(x => x.Id == request.Id && x.IsActive)
                 .ProjectTo<GetTeamResponse>(_mapper.ConfigurationProvider)
@@ -76,7 +80,8 @@ public partial class TeamService : ITeamService
 
     public Task<GetUserTeamResponse> GetUserTeam(GetUserTeamRequest request) =>
         TryCatch(async () => {
-            var team = await _ctx.Employees
+            var team = await _unitOfWork.Employees
+                .Query()
                 .Include(x => x.Team)
                 .Where(x => x.Id == request.Id)
                 .ProjectTo<GetUserTeamResponse>(_mapper.ConfigurationProvider)
@@ -89,56 +94,89 @@ public partial class TeamService : ITeamService
 
     public Task<UpdateTeamResponse> UpdateTeam(UpdateTeamRequest request) =>
         TryCatch(async () => {
-            var team = await _ctx.Teams
-                .Where(x => x.Id == request.Id)
-                .FirstOrDefaultAsync();
+            var team = await _unitOfWork.Teams
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
 
             _mapper.Map(request, team);
 
             team.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
 
             ValidateTeamOnUpdate(team);
-            await _ctx.SaveChangesAsync();
+            _unitOfWork.Teams.Update(team);
+            await _unitOfWork.SaveChangesAsync();
 
             return new UpdateTeamResponse();
         });
 
     public Task<UpdateTeamStatusResponse> UpdateTeamStatus(UpdateTeamStatusRequest request) =>
         TryCatch(async () => {
-            var team = await _ctx.Teams
-                .Where(x => x.Id == request.Id)
-                .FirstOrDefaultAsync();
+            var team = await _unitOfWork.Teams
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
 
             team.IsActive = !team.IsActive;
             team.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
 
             ValidateTeamOnUpdate(team);
+            _unitOfWork.Teams.Update(team);
+            await _unitOfWork.SaveChangesAsync();
 
-            await _ctx.SaveChangesAsync();
-
-            var group = await _ctx.Groups
+            var group = await _unitOfWork.Groups
+                .Query()
                 .Include(x => x.Organization)
                 .Where(x => x.Id == team.GroupId)
                 .FirstOrDefaultAsync();
 
-            group.HasActiveTeam = await _ctx.Groups
+            group.HasActiveTeam = await _unitOfWork.Groups
+                .Query()
                 .Include(x => x.Teams)
                 .Where(x => x.Id == group.Id)
                 .AnyAsync(x => x.Teams.Any(x => x.IsActive));
 
-            group.Organization.HasActiveGroup = await _ctx.Organizations
+            group.Organization.HasActiveGroup = await _unitOfWork.Organizations
+                .Query()
                 .Include(x => x.Groups)
                 .Where(x => x.Id == group.Organization.Id)
                 .AnyAsync(x => x.Groups.Any(x => x.IsActive && x.HasActiveTeam));
-            await _ctx.SaveChangesAsync();
+            _unitOfWork.Groups.Update(group);
+            await _unitOfWork.SaveChangesAsync();
 
             return new UpdateTeamStatusResponse();
         });
 
     public Task<bool> TeamExists(string name, int groupId) =>
         TryCatch(async () => {
-            return await _ctx.Teams.AnyAsync(x => x.Name == name && x.GroupId == groupId);
+            return await _unitOfWork.Teams.AnyAsync(x => x.Name == name && x.GroupId == groupId);
         });
+
+    public async Task DeleteTeamAsync(int id)
+    {
+        await TryCatch(async () =>
+        {
+            var team = await _unitOfWork.Teams.GetByIdAsync(id);
+
+            if (team == null)
+            {
+                throw new TeamNotFoundException();
+            }
+
+            _unitOfWork.Teams.Remove(team);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new UpdateTeamStatusResponse();
+        });
+    }
+
+    public async Task<IEnumerable<GetTeamResponse>> GetAllTeamsAsync()
+    {
+        return await _unitOfWork.Teams
+            .QueryNoTracking()
+            .Select(team => new GetTeamResponse
+            {
+                Id = team.Id,
+                Name = team.Name,
+                GroupId = team.GroupId
+            }).ToListAsync();
+    }
 
 }
 

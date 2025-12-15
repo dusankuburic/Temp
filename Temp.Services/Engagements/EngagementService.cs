@@ -1,4 +1,4 @@
-﻿using Temp.Database;
+﻿using Temp.Database.UnitOfWork;
 using Temp.Domain.Models;
 using Temp.Services.Engagements.Models.Commands;
 using Temp.Services.Engagements.Models.Queries;
@@ -9,17 +9,17 @@ namespace Temp.Services.Engagements;
 
 public partial class EngagementService : IEngagementService
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ILoggingBroker _loggingBroker;
     private readonly IIdentityProvider _identityProvider;
 
     public EngagementService(
-        ApplicationDbContext ctx,
+        IUnitOfWork unitOfWork,
         IMapper mapper,
         ILoggingBroker loggingBroker,
         IIdentityProvider identityProvider) {
-        _ctx = ctx;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
         _loggingBroker = loggingBroker;
         _identityProvider = identityProvider;
@@ -33,20 +33,22 @@ public partial class EngagementService : IEngagementService
 
             ValidateEngagementOnCreate(engagement);
 
-            _ctx.Engagements.Add(engagement);
-            await _ctx.SaveChangesAsync();
+            await _unitOfWork.Engagements.AddAsync(engagement);
+            await _unitOfWork.SaveChangesAsync();
 
             return _mapper.Map<CreateEngagementResponse>(engagement);
         });
 
     public Task<List<GetUserEmployeeEngagementsResponse>> GetUserEmployeeEngagements(GetUserEmployeeEngagementsRequest request) =>
         TryCatch(async () => {
-            var userEmployeeId = await _ctx.Employees
+            var userEmployeeId = await _unitOfWork.Employees
+                .QueryNoTracking()
                 .Where(x => x.Id == request.Id)
                 .Select(x => x.Id)
                 .FirstOrDefaultAsync();
 
-            var engagements = await _ctx.Engagements
+            var engagements = await _unitOfWork.Engagements
+                .Query()
                 .Include(x => x.Workplace)
                 .Include(x => x.EmploymentStatus)
                 .Where(x => x.EmployeeId == userEmployeeId)
@@ -58,7 +60,8 @@ public partial class EngagementService : IEngagementService
 
     public Task<List<GetEngagementsForEmployeeResponse>> GetEngagementForEmployee(GetEngagementsForEmployeeRequest request) =>
         TryCatch(async () => {
-            var engagements = await _ctx.Engagements
+            var engagements = await _unitOfWork.Engagements
+                .Query()
                 .Include(x => x.Workplace)
                 .Include(x => x.EmploymentStatus)
                 .Where(x => x.EmployeeId == request.Id)

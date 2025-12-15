@@ -1,4 +1,4 @@
-﻿using Temp.Database;
+﻿using Temp.Database.UnitOfWork;
 using Temp.Domain.Models;
 using Temp.Services._Helpers;
 using Temp.Services.Integrations.Loggings;
@@ -10,17 +10,17 @@ namespace Temp.Services.Workplaces;
 
 public partial class WorkplaceService : IWorkplaceService
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ILoggingBroker _loggingBroker;
     private readonly IIdentityProvider _identityProvider;
 
     public WorkplaceService(
-        ApplicationDbContext ctx,
+        IUnitOfWork unitOfWork,
         IMapper mapper,
         ILoggingBroker loggingBroker,
         IIdentityProvider identityProvider) {
-        _ctx = ctx;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
         _loggingBroker = loggingBroker;
         _identityProvider = identityProvider;
@@ -34,26 +34,24 @@ public partial class WorkplaceService : IWorkplaceService
 
              ValidateWorkplaceOnCreate(workplace);
 
-             _ctx.Workplaces.Add(workplace);
-             await _ctx.SaveChangesAsync();
+             await _unitOfWork.Workplaces.AddAsync(workplace);
+             await _unitOfWork.SaveChangesAsync();
 
              return _mapper.Map<CreateWorkplaceResponse>(workplace);
          });
 
     public Task<PagedList<GetWorkplacesResponse>> GetPagedWorkplaces(GetWorkplacesRequest request) =>
          TryCatch(async () => {
-             var workplacesQuery =  _ctx.Workplaces
+             var workplacesQuery = _unitOfWork.Workplaces
+                .QueryNoTracking()
                 .Where(x => x.IsActive)
-                .ProjectTo<GetWorkplacesResponse>(_mapper.ConfigurationProvider)
-                .AsQueryable();
+                .ProjectTo<GetWorkplacesResponse>(_mapper.ConfigurationProvider);
 
              if (!string.IsNullOrEmpty(request.Name)) {
-                 workplacesQuery = workplacesQuery.Where(x => x.Name.Contains(request.Name))
-                    .AsQueryable();
+                 workplacesQuery = workplacesQuery.Where(x => x.Name.Contains(request.Name));
              }
 
-             workplacesQuery = workplacesQuery.OrderBy(x => x.Name)
-                .AsQueryable();
+             workplacesQuery = workplacesQuery.OrderBy(x => x.Name);
 
              return await PagedList<GetWorkplacesResponse>.CreateAsync(
                  workplacesQuery,
@@ -63,7 +61,8 @@ public partial class WorkplaceService : IWorkplaceService
 
     public Task<List<GetWorkplaceResponse>> GetWorkplaces() =>
         TryCatch(async () => {
-            var workplaces = await _ctx.Workplaces
+            var workplaces = await _unitOfWork.Workplaces
+                .QueryNoTracking()
                 .Where(x => x.IsActive)
                 .OrderBy(x => x.Name)
                 .ProjectTo<GetWorkplaceResponse>(_mapper.ConfigurationProvider)
@@ -74,7 +73,8 @@ public partial class WorkplaceService : IWorkplaceService
 
     public Task<GetWorkplaceResponse> GetWorkplace(int id) =>
         TryCatch(async () => {
-            var workplace = await _ctx.Workplaces
+            var workplace = await _unitOfWork.Workplaces
+                .QueryNoTracking()
                 .Where(x => x.IsActive && x.Id == id)
                 .ProjectTo<GetWorkplaceResponse>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
@@ -84,9 +84,8 @@ public partial class WorkplaceService : IWorkplaceService
 
     public Task<UpdateWorkplaceResponse> UpdateWorkplace(UpdateWorkplaceRequest request) =>
         TryCatch(async () => {
-            var workplace = await _ctx.Workplaces
-                .Where(x => x.Id == request.Id)
-                .FirstOrDefaultAsync();
+            var workplace = await _unitOfWork.Workplaces
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
 
             _mapper.Map(request, workplace);
 
@@ -94,23 +93,24 @@ public partial class WorkplaceService : IWorkplaceService
 
             ValidateWorkplaceOnUpdate(workplace);
 
-            await _ctx.SaveChangesAsync();
+            _unitOfWork.Workplaces.Update(workplace);
+            await _unitOfWork.SaveChangesAsync();
 
             return new UpdateWorkplaceResponse();
         });
 
     public Task<UpdateWorkplaceStatusResponse> UpdateWorkplaceStatus(UpdateWorkplaceStatusRequest request) =>
         TryCatch(async () => {
-            var workplace = await _ctx.Workplaces
-                .Where(x => x.Id == request.Id)
-                .FirstOrDefaultAsync();
+            var workplace = await _unitOfWork.Workplaces
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
 
             workplace.IsActive = !workplace.IsActive;
             workplace.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
 
             ValidateWorkplaceOnStatusUpdate(workplace);
 
-            await _ctx.SaveChangesAsync();
+            _unitOfWork.Workplaces.Update(workplace);
+            await _unitOfWork.SaveChangesAsync();
 
             return new UpdateWorkplaceStatusResponse();
         });
@@ -118,7 +118,7 @@ public partial class WorkplaceService : IWorkplaceService
 
     public Task<bool> WorkplaceExists(string name) =>
         TryCatch(async () => {
-            return await _ctx.Workplaces.AnyAsync(x => x.Name == name);
+            return await _unitOfWork.Workplaces.AnyAsync(x => x.Name == name);
         });
 
 

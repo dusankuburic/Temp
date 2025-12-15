@@ -1,4 +1,5 @@
-﻿using Temp.Domain.Models.ModeratorGroups.Exceptions;
+﻿using Temp.Database.UnitOfWork;
+using Temp.Domain.Models.ModeratorGroups.Exceptions;
 using Temp.Services.Moderators;
 
 namespace Temp.API.Controllers;
@@ -7,10 +8,10 @@ namespace Temp.API.Controllers;
 [ApiController]
 public class ModeratorsController : ControllerBase
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ModeratorsController(ApplicationDbContext ctx) {
-        _ctx = ctx;
+    public ModeratorsController(IUnitOfWork unitOfWork) {
+        _unitOfWork = unitOfWork;
     }
 
     [Authorize(Roles = "Admin")]
@@ -19,7 +20,7 @@ public class ModeratorsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateGroups(int id, UpdateModeratorGroupsRequest request) {
         try {
-            var response = await new UpdateModeratorGroups(_ctx).Do(id, request);
+            var response = await new UpdateModeratorGroups(_unitOfWork).Do(id, request);
             if (response.Status)
                 return NoContent();
 

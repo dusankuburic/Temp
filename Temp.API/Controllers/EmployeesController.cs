@@ -69,6 +69,21 @@ public class EmployeesController : ControllerBase
         }
     }
 
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteEmployee([FromRoute] int id) {
+        try {
+            await _employeeService.DeleteEmployeeAsync(id);
+            return NoContent();
+        } catch (EmployeeNotFoundException) {
+            return NotFound();
+        } catch (EmployeeValidationException employeeValidationException) {
+            return BadRequest(GetInnerMessage(employeeValidationException));
+        }
+    }
+
     private static string GetInnerMessage(Exception exception) =>
         exception.InnerException.Message;
 }

@@ -17,4 +17,6 @@ public interface IEmployeeService
     Task<PagedList<GetEmployeesWithoutEngagementResponse>> GetEmployeesWithoutEngagement(GetEmployeesWithoutEngagementRequest request);
 
     Task<UpdateEmployeeResponse> UpdateEmployee(UpdateEmployeeRequest request);
+
+    Task<DeleteEmployeeResponse> DeleteEmployeeAsync(int id);
 }

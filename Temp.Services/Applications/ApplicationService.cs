@@ -1,4 +1,4 @@
-﻿using Temp.Database;
+﻿using Temp.Database.UnitOfWork;
 using Temp.Domain.Models.Applications;
 using Temp.Services.Applications.Models.Commands;
 using Temp.Services.Applications.Models.Queries;
@@ -9,17 +9,17 @@ namespace Temp.Services.Applications;
 
 public partial class ApplicationService : IApplicationService
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ILoggingBroker _loggingBroker;
     private readonly IIdentityProvider _identityProvider;
 
     public ApplicationService(
-        ApplicationDbContext ctx,
+        IUnitOfWork unitOfWork,
         IMapper mapper,
         ILoggingBroker loggingBroker,
         IIdentityProvider identityProvider) {
-        _ctx = ctx;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
         _loggingBroker = loggingBroker;
         _identityProvider = identityProvider;
@@ -34,17 +34,16 @@ public partial class ApplicationService : IApplicationService
         ValidateApplicationOnCreate(application);
 
         application.Status = false;
-        _ctx.Applications.Add(application);
-        await _ctx.SaveChangesAsync();
+        await _unitOfWork.Applications.AddAsync(application);
+        await _unitOfWork.SaveChangesAsync();
 
         return _mapper.Map<CreateApplicationResponse>(application);
     });
 
     public Task<UpdateApplicationStatusResponse> UpdateApplicationStatus(UpdateApplicationStatusRequest request) =>
     TryCatch(async () => {
-        var application = await _ctx.Applications
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync();
+        var application = await _unitOfWork.Applications
+            .FirstOrDefaultAsync(x => x.Id == request.Id);
 
         application.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
 
@@ -52,7 +51,8 @@ public partial class ApplicationService : IApplicationService
 
         _mapper.Map(request, application);
 
-        await _ctx.SaveChangesAsync();
+        _unitOfWork.Applications.Update(application);
+        await _unitOfWork.SaveChangesAsync();
 
         return new UpdateApplicationStatusResponse {
             Id = application.Id,
@@ -62,8 +62,8 @@ public partial class ApplicationService : IApplicationService
 
     public Task<GetApplicationResponse> GetApplication(GetApplicationRequest request) =>
     TryCatch(async () => {
-        var application = await _ctx.Applications
-            .AsNoTracking()
+        var application = await _unitOfWork.Applications
+            .QueryNoTracking()
             .Where(x => x.Id == request.Id)
             .ProjectTo<GetApplicationResponse>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
@@ -75,8 +75,8 @@ public partial class ApplicationService : IApplicationService
 
     public Task<IEnumerable<GetUserApplicationsResponse>> GetUserApplications(GetUserApplicationsRequest request) =>
     TryCatch(async () => {
-        var applications = await _ctx.Applications
-            .AsNoTracking()
+        var applications = await _unitOfWork.Applications
+            .QueryNoTracking()
             .Where(x => x.UserId == request.Id)
             .OrderByDescending(x => x.CreatedAt)
             .ThenBy(x => x.Status)
@@ -88,7 +88,8 @@ public partial class ApplicationService : IApplicationService
 
     public Task<IEnumerable<GetTeamApplicationsResponse>> GetTeamApplications(GetTeamApplicationsRequest request) =>
     TryCatch(async () => {
-        var applications = await _ctx.Applications
+        var applications = await _unitOfWork.Applications
+            .QueryNoTracking()
             .Where(x => x.TeamId == request.TeamId)
             //.Where(x => (x.ModeratorId == request.ModeratorId) || (x.Status == false))
             .OrderBy(x => x.Status)

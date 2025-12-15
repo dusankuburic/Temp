@@ -1,4 +1,4 @@
-﻿using Temp.Database;
+﻿using Temp.Database.UnitOfWork;
 using Temp.Domain.Models;
 using Temp.Services.Moderators.Service;
 
@@ -6,39 +6,37 @@ namespace Temp.Services.Moderators;
 
 public class UpdateModeratorGroups : ModeratorService
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateModeratorGroups(ApplicationDbContext ctx) {
-        _ctx = ctx;
+    public UpdateModeratorGroups(IUnitOfWork unitOfWork) {
+        _unitOfWork = unitOfWork;
     }
 
     public Task<UpdateModeratorGroupsResponse> Do(int id, UpdateModeratorGroupsRequest request) =>
     TryCatch(async () => {
         if (request.Groups.Count() == 0) {
-            var mod = await _ctx.ModeratorGroups
-                    .Where(x => x.ModeratorId == id)
-                    .FirstOrDefaultAsync();
+            var mod = await _unitOfWork.ModeratorGroups
+                    .FirstOrDefaultAsync(x => x.ModeratorId == id);
 
-            _ctx.Remove(mod);
+            _unitOfWork.ModeratorGroups.Remove(mod);
         } else {
-            var moderatorGroups = await _ctx.ModeratorGroups
-                    .Where(x => x.ModeratorId == id)
-                    .ToListAsync();
+            var moderatorGroups = await _unitOfWork.ModeratorGroups
+                    .FindAsync(x => x.ModeratorId == id);
 
 
-            ValidateModeratorGroups(moderatorGroups);
+            ValidateModeratorGroups(moderatorGroups.ToList());
 
-            _ctx.RemoveRange(moderatorGroups);
+            _unitOfWork.ModeratorGroups.RemoveRange(moderatorGroups);
 
             foreach (var group in request.Groups) {
-                _ctx.ModeratorGroups.Add(new ModeratorGroup {
+                await _unitOfWork.ModeratorGroups.AddAsync(new ModeratorGroup {
                     ModeratorId = id,
                     GroupId = group
                 });
             }
         }
 
-        await _ctx.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
 
         return new UpdateModeratorGroupsResponse {
             Message = $"Groups are assigned",

@@ -1,4 +1,4 @@
-﻿using Temp.Database;
+﻿using Temp.Database.UnitOfWork;
 using Temp.Domain.Models.Identity;
 using Temp.Services.Auth.Models.Commands;
 using Temp.Services.Integrations.Loggings;
@@ -8,7 +8,7 @@ namespace Temp.Services.Auth;
 
 public partial class AuthService : IAuthService
 {
-    private readonly ApplicationDbContext _ctx;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IConfiguration _config;
 
     private readonly UserManager<AppUser> _userManager;
@@ -19,13 +19,13 @@ public partial class AuthService : IAuthService
     public AuthService(
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
-        ApplicationDbContext ctx,
+        IUnitOfWork unitOfWork,
         IConfiguration config,
         ILoggingBroker loggingBroker,
         IIdentityProvider identityProvider) {
         _userManager = userManager;
         _signInManager = signInManager;
-        _ctx = ctx;
+        _unitOfWork = unitOfWork;
         _config = config;
         _loggingBroker = loggingBroker;
         _identityProvider = identityProvider;
@@ -39,10 +39,11 @@ public partial class AuthService : IAuthService
             var result = await _signInManager.CheckPasswordSignInAsync(appUser, request.Password, false);
             ValidateOnLogin(result);
 
-            var employeeId = await _ctx.Employees
-            .Where(x => x.AppUserId == appUser.Id)
-            .Select(x => x.Id)
-            .FirstOrDefaultAsync();
+            var employeeId = await _unitOfWork.Employees
+                .QueryNoTracking()
+                .Where(x => x.AppUserId == appUser.Id)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync();
 
             await _identityProvider.StoreCurrentUser(appUser.Id, appUser.Email);
 
@@ -95,7 +96,7 @@ public partial class AuthService : IAuthService
 
     public Task<AppUser> RemoveEmployeeRole(RemoveEmployeeRoleRequest request) =>
         TryCatch(async () => {
-            var employee = await _ctx.Employees.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var employee = await _unitOfWork.Employees.FirstOrDefaultAsync(x => x.Id == request.Id);
 
             var appUser = await _userManager.FindByIdAsync(employee.AppUserId);
             ValidateUserIdIsNull(appUser.Id);
@@ -105,16 +106,16 @@ public partial class AuthService : IAuthService
             employee.AppUserId = null;
             employee.Role = "None";
 
-            await _ctx.SaveChangesAsync();
+            _unitOfWork.Employees.Update(employee);
+            await _unitOfWork.SaveChangesAsync();
 
             return appUser;
         });
 
     public Task<AppUser> UpdateEmployeeAccountStatus(int employeeId) =>
         TryCatch(async () => {
-            var employee = await _ctx.Employees
-            .Where(x => x.Id == employeeId)
-            .FirstOrDefaultAsync();
+            var employee = await _unitOfWork.Employees
+                .FirstOrDefaultAsync(x => x.Id == employeeId);
             ValidateUserIdIsNull(employee.AppUserId);
 
             var appUser = await _userManager.FindByIdAsync(employee.AppUserId);
@@ -128,20 +129,22 @@ public partial class AuthService : IAuthService
                 employee.IsAppUserActive = false;
             }
 
-            await _ctx.SaveChangesAsync();
+            _unitOfWork.Employees.Update(employee);
+            await _unitOfWork.SaveChangesAsync();
 
             return appUser;
         });
 
     private async Task<bool> UpdateEmployeeRole(string RoleName, int EmployeeId, string appUserId) {
-        var empolyee = await _ctx.Employees
-            .Where(x => x.Id == EmployeeId)
-            .FirstOrDefaultAsync();
+        var empolyee = await _unitOfWork.Employees
+            .FirstOrDefaultAsync(x => x.Id == EmployeeId);
 
         empolyee.Role = RoleName;
         empolyee.AppUserId = appUserId;
         empolyee.IsAppUserActive = false;
-        await _ctx.SaveChangesAsync();
+        
+        _unitOfWork.Employees.Update(empolyee);
+        await _unitOfWork.SaveChangesAsync();
 
         return empolyee.Role == RoleName;
     }
@@ -169,7 +172,8 @@ public partial class AuthService : IAuthService
 
     public async Task<string> GetEmployeeUsername(int id) {
 
-        var appUserId = await _ctx.Employees
+        var appUserId = await _unitOfWork.Employees
+            .QueryNoTracking()
             .Where(x => x.Id == id)
             .Select(x => x.AppUserId)
             .FirstOrDefaultAsync();

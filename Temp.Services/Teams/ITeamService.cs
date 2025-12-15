@@ -12,5 +12,7 @@ public interface ITeamService
     Task<UpdateTeamStatusResponse> UpdateTeamStatus(UpdateTeamStatusRequest request);
     Task<GetUserTeamResponse> GetUserTeam(GetUserTeamRequest request);
     Task<bool> TeamExists(string name, int groupId);
+    Task DeleteTeamAsync(int id);
+    Task<IEnumerable<GetTeamResponse>> GetAllTeamsAsync();
 }
 
