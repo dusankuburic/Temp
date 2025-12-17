@@ -1,14 +1,12 @@
 using FluentAssertions;
 using Temp.Services.Results;
-using Xunit;
 
 namespace Temp.Tests.Unit.Results;
 
 public class ResultTests
 {
     [Fact]
-    public void Success_CreatesSuccessfulResult()
-    {
+    public void Success_CreatesSuccessfulResult() {
         // Act
         var result = Result.Success();
 
@@ -19,8 +17,7 @@ public class ResultTests
     }
 
     [Fact]
-    public void Failure_CreatesFailedResult()
-    {
+    public void Failure_CreatesFailedResult() {
         // Arrange
         var error = "Operation failed";
         var errorCode = "OP_FAILED";
@@ -36,8 +33,7 @@ public class ResultTests
     }
 
     [Fact]
-    public void ValidationFailure_CreatesValidationFailedResult()
-    {
+    public void ValidationFailure_CreatesValidationFailedResult() {
         // Arrange
         var error = "Validation failed";
         var validationErrors = new Dictionary<string, string[]>
@@ -55,8 +51,7 @@ public class ResultTests
     }
 
     [Fact]
-    public void SuccessWithValue_CreatesSuccessfulResultWithValue()
-    {
+    public void SuccessWithValue_CreatesSuccessfulResultWithValue() {
         // Arrange
         var value = "Test Value";
 
@@ -69,8 +64,7 @@ public class ResultTests
     }
 
     [Fact]
-    public void FailureWithType_CreatesFailedResultOfType()
-    {
+    public void FailureWithType_CreatesFailedResultOfType() {
         // Arrange
         var error = "Not found";
         var errorCode = "NOT_FOUND";
@@ -86,8 +80,7 @@ public class ResultTests
     }
 
     [Fact]
-    public void ValidationFailureWithType_CreatesValidationFailedResultOfType()
-    {
+    public void ValidationFailureWithType_CreatesValidationFailedResultOfType() {
         // Arrange
         var error = "Validation failed";
         var validationErrors = new Dictionary<string, string[]>
@@ -106,8 +99,7 @@ public class ResultTests
 
     // Note: Constructor is protected, tested through public API
     [Fact]
-    public void Success_DoesNotHaveError()
-    {
+    public void Success_DoesNotHaveError() {
         // Act
         var result = Result.Success();
 
@@ -116,8 +108,7 @@ public class ResultTests
     }
 
     [Fact]
-    public void Failure_AlwaysHasError()
-    {
+    public void Failure_AlwaysHasError() {
         // Act
         var result = Result.Failure("Error message");
 
@@ -126,35 +117,27 @@ public class ResultTests
     }
 
     [Fact]
-    public void Result_CanBeUsedInConditionals()
-    {
+    public void Result_CanBeUsedInConditionals() {
         // Arrange
         var successResult = Result.Success();
         var failureResult = Result.Failure("Error");
 
         // Act & Assert
-        if (successResult.IsSuccess)
-        {
+        if (successResult.IsSuccess) {
             Assert.True(true); // Success path
-        }
-        else
-        {
+        } else {
             Assert.Fail("Should be success");
         }
 
-        if (failureResult.IsFailure)
-        {
+        if (failureResult.IsFailure) {
             Assert.True(true); // Failure path
-        }
-        else
-        {
+        } else {
             Assert.Fail("Should be failure");
         }
     }
 
     [Fact]
-    public void ResultOfT_WithValue_CanAccessValue()
-    {
+    public void ResultOfT_WithValue_CanAccessValue() {
         // Arrange
         var testObject = new { Id = 1, Name = "Test" };
 

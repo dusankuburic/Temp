@@ -1,15 +1,12 @@
 using AutoFixture;
 using AutoMapper;
-using FluentAssertions;
 using Moq;
 using Temp.Database.UnitOfWork;
 using Temp.Domain.Models;
 using Temp.Services.Employees;
 using Temp.Services.Employees.Models.Commands;
-using Temp.Services.Exceptions;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Providers;
-using Xunit;
 
 namespace Temp.Tests.Unit.Services;
 
@@ -22,8 +19,7 @@ public class EmployeeServiceTests
     private readonly IFixture _fixture;
     private readonly IEmployeeService _service;
 
-    public EmployeeServiceTests()
-    {
+    public EmployeeServiceTests() {
         _mockUnitOfWork = new Mock<IUnitOfWork>();
         _mockMapper = new Mock<IMapper>();
         _mockLoggingBroker = new Mock<ILoggingBroker>();
@@ -43,8 +39,7 @@ public class EmployeeServiceTests
     }
 
     [Fact]
-    public async Task GetEmployee_WithValidId_ReturnsEmployee()
-    {
+    public async Task GetEmployee_WithValidId_ReturnsEmployee() {
         // Arrange
         var employeeId = 1;
         var expectedEmployee = _fixture.Build<Employee>()
@@ -63,8 +58,7 @@ public class EmployeeServiceTests
     }
 
     [Fact]
-    public async Task GetEmployee_WithInvalidId_ThrowsNotFoundException()
-    {
+    public async Task GetEmployee_WithInvalidId_ThrowsNotFoundException() {
         // Arrange
         var invalidId = 999;
         _mockUnitOfWork.Setup(uow => uow.Employees.GetByIdAsync(invalidId, default))
@@ -76,8 +70,7 @@ public class EmployeeServiceTests
     }
 
     [Fact]
-    public async Task CreateEmployee_WithValidData_ReturnsCreatedEmployee()
-    {
+    public async Task CreateEmployee_WithValidData_ReturnsCreatedEmployee() {
         // Arrange
         var request = _fixture.Build<CreateEmployeeRequest>()
             .Create();
@@ -103,8 +96,7 @@ public class EmployeeServiceTests
     }
 
     [Fact]
-    public async Task CreateEmployee_WithInvalidData_ThrowsValidationException()
-    {
+    public async Task CreateEmployee_WithInvalidData_ThrowsValidationException() {
         // Arrange
         var invalidRequest = _fixture.Build<CreateEmployeeRequest>()
             .With(r => r.FirstName, "") // Invalid: empty name
@@ -116,8 +108,7 @@ public class EmployeeServiceTests
     }
 
     [Fact]
-    public async Task UpdateEmployee_WithValidData_ReturnsUpdatedEmployee()
-    {
+    public async Task UpdateEmployee_WithValidData_ReturnsUpdatedEmployee() {
         // Arrange
         var employeeId = 1;
         var existingEmployee = _fixture.Build<Employee>()
@@ -145,8 +136,7 @@ public class EmployeeServiceTests
     }
 
     [Fact]
-    public async Task DeleteEmployee_WithValidId_DeletesEmployee()
-    {
+    public async Task DeleteEmployee_WithValidId_DeletesEmployee() {
         // Arrange
         var employeeId = 1;
         var existingEmployee = _fixture.Build<Employee>()

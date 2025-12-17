@@ -1,14 +1,12 @@
 using FluentAssertions;
 using Temp.Services.Exceptions;
-using Xunit;
 
 namespace Temp.Tests.Unit.Exceptions;
 
 public class ServiceExceptionTests
 {
     [Fact]
-    public void ValidationException_WithFieldErrors_SetsPropertiesCorrectly()
-    {
+    public void ValidationException_WithFieldErrors_SetsPropertiesCorrectly() {
         // Arrange
         var fieldName = "Email";
         var error = "Email is required";
@@ -24,8 +22,7 @@ public class ServiceExceptionTests
     }
 
     [Fact]
-    public void ValidationException_WithMultipleErrors_SetsAllErrors()
-    {
+    public void ValidationException_WithMultipleErrors_SetsAllErrors() {
         // Arrange
         var errors = new Dictionary<string, string[]>
         {
@@ -43,8 +40,7 @@ public class ServiceExceptionTests
     }
 
     [Fact]
-    public void NotFoundException_WithResourceAndKey_FormatsMessageCorrectly()
-    {
+    public void NotFoundException_WithResourceAndKey_FormatsMessageCorrectly() {
         // Arrange
         var resourceName = "Employee";
         var key = 123;
@@ -58,8 +54,7 @@ public class ServiceExceptionTests
     }
 
     [Fact]
-    public void NotFoundException_WithCustomMessage_UsesProvidedMessage()
-    {
+    public void NotFoundException_WithCustomMessage_UsesProvidedMessage() {
         // Arrange
         var message = "Custom not found message";
 
@@ -72,8 +67,7 @@ public class ServiceExceptionTests
     }
 
     [Fact]
-    public void BusinessRuleException_WithMessage_SetsPropertiesCorrectly()
-    {
+    public void BusinessRuleException_WithMessage_SetsPropertiesCorrectly() {
         // Arrange
         var message = "Cannot delete employee with active engagements";
 
@@ -86,8 +80,7 @@ public class ServiceExceptionTests
     }
 
     [Fact]
-    public void DependencyException_WithInnerException_PreservesInnerException()
-    {
+    public void DependencyException_WithInnerException_PreservesInnerException() {
         // Arrange
         var innerException = new Exception("Database connection failed");
         var message = "Failed to access database";
@@ -103,8 +96,7 @@ public class ServiceExceptionTests
     }
 
     [Fact]
-    public void UnauthorizedAccessException_WithMessage_SetsPropertiesCorrectly()
-    {
+    public void UnauthorizedAccessException_WithMessage_SetsPropertiesCorrectly() {
         // Arrange
         var message = "User does not have permission to perform this action";
 
@@ -117,8 +109,7 @@ public class ServiceExceptionTests
     }
 
     [Fact]
-    public void ConflictException_WithMessage_SetsPropertiesCorrectly()
-    {
+    public void ConflictException_WithMessage_SetsPropertiesCorrectly() {
         // Arrange
         var message = "Employee with this email already exists";
 
@@ -131,8 +122,7 @@ public class ServiceExceptionTests
     }
 
     [Fact]
-    public void ConflictException_WithInnerException_PreservesInnerException()
-    {
+    public void ConflictException_WithInnerException_PreservesInnerException() {
         // Arrange
         var innerException = new Exception("Unique constraint violation");
         var message = "Duplicate entry detected";

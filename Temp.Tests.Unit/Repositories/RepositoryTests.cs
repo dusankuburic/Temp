@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Temp.Database;
 using Temp.Database.Repositories;
 using Temp.Domain.Models;
-using Xunit;
 
 namespace Temp.Tests.Unit.Repositories;
 
@@ -12,8 +11,7 @@ public class RepositoryTests : IDisposable
     private readonly ApplicationDbContext _context;
     private readonly Repository<Team> _repository;
 
-    public RepositoryTests()
-    {
+    public RepositoryTests() {
         // Setup in-memory database
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
@@ -24,8 +22,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task GetByIdAsync_WithValidId_ReturnsEntity()
-    {
+    public async Task GetByIdAsync_WithValidId_ReturnsEntity() {
         // Arrange
         var team = new Team { Id = 1, Name = "Test Team" };
         await _context.Teams.AddAsync(team);
@@ -40,8 +37,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task GetByIdAsync_WithInvalidId_ReturnsNull()
-    {
+    public async Task GetByIdAsync_WithInvalidId_ReturnsNull() {
         // Act
         var result = await _repository.GetByIdAsync(999);
 
@@ -50,8 +46,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task GetAllAsync_ReturnsAllEntities()
-    {
+    public async Task GetAllAsync_ReturnsAllEntities() {
         // Arrange
         var teams = new[]
         {
@@ -72,8 +67,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task FindAsync_WithPredicate_ReturnsMatchingEntities()
-    {
+    public async Task FindAsync_WithPredicate_ReturnsMatchingEntities() {
         // Arrange
         var teams = new[]
         {
@@ -95,8 +89,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task FirstOrDefaultAsync_WithMatchingPredicate_ReturnsFirst()
-    {
+    public async Task FirstOrDefaultAsync_WithMatchingPredicate_ReturnsFirst() {
         // Arrange
         var teams = new[]
         {
@@ -116,8 +109,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task FirstOrDefaultAsync_WithNonMatchingPredicate_ReturnsNull()
-    {
+    public async Task FirstOrDefaultAsync_WithNonMatchingPredicate_ReturnsNull() {
         // Act
         var result = await _repository.FirstOrDefaultAsync(t => t.Name == "NonExistent");
 
@@ -126,8 +118,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task AnyAsync_WithMatchingPredicate_ReturnsTrue()
-    {
+    public async Task AnyAsync_WithMatchingPredicate_ReturnsTrue() {
         // Arrange
         var team = new Team { Id = 1, Name = "Test Team" };
         await _context.Teams.AddAsync(team);
@@ -141,8 +132,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task AnyAsync_WithNonMatchingPredicate_ReturnsFalse()
-    {
+    public async Task AnyAsync_WithNonMatchingPredicate_ReturnsFalse() {
         // Act
         var result = await _repository.AnyAsync(t => t.Name == "NonExistent");
 
@@ -151,8 +141,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task CountAsync_WithoutPredicate_ReturnsTotal()
-    {
+    public async Task CountAsync_WithoutPredicate_ReturnsTotal() {
         // Arrange
         var teams = new[]
         {
@@ -172,8 +161,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task CountAsync_WithPredicate_ReturnsMatchingCount()
-    {
+    public async Task CountAsync_WithPredicate_ReturnsMatchingCount() {
         // Arrange
         var teams = new[]
         {
@@ -193,8 +181,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task AddAsync_AddsEntityToDatabase()
-    {
+    public async Task AddAsync_AddsEntityToDatabase() {
         // Arrange
         var team = new Team { Id = 1, Name = "New Team" };
 
@@ -209,8 +196,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task AddRangeAsync_AddsMultipleEntities()
-    {
+    public async Task AddRangeAsync_AddsMultipleEntities() {
         // Arrange
         var teams = new[]
         {
@@ -228,8 +214,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task Update_ModifiesExistingEntity()
-    {
+    public async Task Update_ModifiesExistingEntity() {
         // Arrange
         var team = new Team { Id = 1, Name = "Original Name" };
         await _context.Teams.AddAsync(team);
@@ -246,8 +231,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task Remove_DeletesEntity()
-    {
+    public async Task Remove_DeletesEntity() {
         // Arrange
         var team = new Team { Id = 1, Name = "Team to Delete" };
         await _context.Teams.AddAsync(team);
@@ -263,8 +247,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task RemoveRange_DeletesMultipleEntities()
-    {
+    public async Task RemoveRange_DeletesMultipleEntities() {
         // Arrange
         var teams = new[]
         {
@@ -285,8 +268,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public void Query_ReturnsQueryable()
-    {
+    public void Query_ReturnsQueryable() {
         // Act
         var query = _repository.Query();
 
@@ -296,8 +278,7 @@ public class RepositoryTests : IDisposable
     }
 
     [Fact]
-    public void QueryNoTracking_ReturnsQueryableWithNoTracking()
-    {
+    public void QueryNoTracking_ReturnsQueryableWithNoTracking() {
         // Act
         var query = _repository.QueryNoTracking();
 
@@ -306,8 +287,7 @@ public class RepositoryTests : IDisposable
         query.Should().BeAssignableTo<IQueryable<Team>>();
     }
 
-    public void Dispose()
-    {
+    public void Dispose() {
         _context.Database.EnsureDeleted();
         _context.Dispose();
     }

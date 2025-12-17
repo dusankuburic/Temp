@@ -1,192 +1,93 @@
+using System.Linq.Expressions;
 using AutoFixture;
+using AutoMapper;
 using FluentAssertions;
+using MockQueryable.Moq;
 using Moq;
+using Temp.Database.Repositories;
 using Temp.Database.UnitOfWork;
 using Temp.Domain.Models;
-using Xunit;
+using Temp.Services.Integrations.Loggings;
+using Temp.Services.Providers;
+using Temp.Services.Teams;
+using Temp.Services.Teams.Exceptions;
 
 namespace Temp.Tests.Unit.Services;
 
 public class TeamServiceTests
 {
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
+    private readonly Mock<IRepository<Team>> _mockTeamRepository;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggingBroker> _mockLoggingBroker;
+    private readonly Mock<IIdentityProvider> _mockIdentityProvider;
     private readonly IFixture _fixture;
+    private readonly ITeamService _service;
 
-    public TeamServiceTests()
-    {
+    public TeamServiceTests() {
         _mockUnitOfWork = new Mock<IUnitOfWork>();
+        _mockTeamRepository = new Mock<IRepository<Team>>();
+        _mockMapper = new Mock<IMapper>();
+        _mockLoggingBroker = new Mock<ILoggingBroker>();
+        _mockIdentityProvider = new Mock<IIdentityProvider>();
         _fixture = new Fixture();
 
-        // Configure AutoFixture to handle circular references in EF models
+        _mockUnitOfWork.Setup(uow => uow.Teams).Returns(_mockTeamRepository.Object);
+
+        _service = new TeamService(
+            _mockUnitOfWork.Object,
+            _mockMapper.Object,
+            _mockLoggingBroker.Object,
+            _mockIdentityProvider.Object);
+
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
     }
 
     [Fact]
-    public async Task GetTeamById_WithValidId_ReturnsTeam()
-    {
-        // Arrange
+    public async Task DeleteTeamAsync_WithValidId_DeletesTeam() {
         var teamId = 1;
-        var team = new Team
-        {
-            Id = teamId,
-            Name = "Development Team"
-        };
+        var team = _fixture.Build<Team>().With(t => t.Id, teamId).Create();
 
-        _mockUnitOfWork.Setup(x => x.Teams.GetByIdAsync(teamId, default))
-            .ReturnsAsync(team);
+        _mockTeamRepository.Setup(r => r.GetByIdAsync(teamId, default)).ReturnsAsync(team);
+        _mockTeamRepository.Setup(r => r.Remove(It.IsAny<Team>()));
+        _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default)).ReturnsAsync(1);
 
-        // Act - NOTE: Replace with actual service method when implementing
-        var result = await _mockUnitOfWork.Object.Teams.GetByIdAsync(teamId);
+        await _service.DeleteTeamAsync(teamId);
 
-        // Assert
+        _mockTeamRepository.Verify(r => r.Remove(team), Times.Once);
+        _mockUnitOfWork.Verify(uow => uow.SaveChangesAsync(default), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteTeamAsync_WithNonExistentId_ThrowsTeamNotFoundException() {
+        var nonExistentId = 999;
+        _mockTeamRepository.Setup(r => r.GetByIdAsync(nonExistentId, default)).ReturnsAsync((Team?)null);
+
+        await Assert.ThrowsAsync<TeamServiceException>(async () => await _service.DeleteTeamAsync(nonExistentId));
+    }
+
+    [Fact]
+    public async Task TeamExists_WithExistingName_ReturnsTrue() {
+        var teamName = "Existing Team";
+        var groupId = 1;
+
+        _mockTeamRepository.Setup(r => r.AnyAsync(It.IsAny<Expression<Func<Team, bool>>>(), default)).ReturnsAsync(true);
+
+        var result = await _service.TeamExists(teamName, groupId);
+
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GetAllTeamsAsync_ReturnsAllTeams() {
+        var teams = _fixture.Build<Team>().CreateMany(5).ToList();
+        _mockTeamRepository.Setup(r => r.QueryNoTracking()).Returns(teams.AsQueryable().BuildMock());
+
+        var result = await _service.GetAllTeamsAsync();
+
         result.Should().NotBeNull();
-        result!.Id.Should().Be(teamId);
-        result.Name.Should().Be("Development Team");
-    }
-
-    [Fact]
-    public async Task GetTeamById_WithInvalidId_ReturnsNull()
-    {
-        // Arrange
-        var invalidId = 999;
-        _mockUnitOfWork.Setup(x => x.Teams.GetByIdAsync(invalidId, default))
-            .ReturnsAsync((Team?)null);
-
-        // Act
-        var result = await _mockUnitOfWork.Object.Teams.GetByIdAsync(invalidId);
-
-        // Assert
-        result.Should().BeNull();
-    }
-
-    [Fact]
-    public async Task GetAllTeams_ReturnsTeamList()
-    {
-        // Arrange
-        var teams = new List<Team>
-        {
-            new Team { Id = 1, Name = "Team 1" },
-            new Team { Id = 2, Name = "Team 2" },
-            new Team { Id = 3, Name = "Team 3" }
-        };
-
-        _mockUnitOfWork.Setup(x => x.Teams.GetAllAsync(default))
-            .ReturnsAsync(teams);
-
-        // Act
-        var result = await _mockUnitOfWork.Object.Teams.GetAllAsync();
-
-        // Assert
-        result.Should().HaveCount(3);
-        result.Should().Contain(t => t.Name == "Team 1");
-    }
-
-    [Fact]
-    public async Task AddTeam_WithValidTeam_SavesSuccessfully()
-    {
-        // Arrange
-        var newTeam = new Team
-        {
-            Name = "New Team"
-        };
-
-        _mockUnitOfWork.Setup(x => x.Teams.AddAsync(newTeam, default))
-            .Returns(Task.CompletedTask);
-
-        _mockUnitOfWork.Setup(x => x.SaveChangesAsync(default))
-            .ReturnsAsync(1);
-
-        // Act
-        await _mockUnitOfWork.Object.Teams.AddAsync(newTeam);
-        var savedCount = await _mockUnitOfWork.Object.SaveChangesAsync();
-
-        // Assert
-        savedCount.Should().Be(1);
-        _mockUnitOfWork.Verify(x => x.Teams.AddAsync(newTeam, default), Times.Once);
-        _mockUnitOfWork.Verify(x => x.SaveChangesAsync(default), Times.Once);
-    }
-
-    [Fact]
-    public async Task UpdateTeam_WithValidTeam_UpdatesSuccessfully()
-    {
-        // Arrange
-        var existingTeam = new Team
-        {
-            Id = 1,
-            Name = "Old Name"
-        };
-
-        existingTeam.Name = "Updated Name";
-
-        _mockUnitOfWork.Setup(x => x.Teams.Update(existingTeam));
-        _mockUnitOfWork.Setup(x => x.SaveChangesAsync(default))
-            .ReturnsAsync(1);
-
-        // Act
-        _mockUnitOfWork.Object.Teams.Update(existingTeam);
-        var savedCount = await _mockUnitOfWork.Object.SaveChangesAsync();
-
-        // Assert
-        savedCount.Should().Be(1);
-        _mockUnitOfWork.Verify(x => x.Teams.Update(existingTeam), Times.Once);
-    }
-
-    [Fact]
-    public async Task DeleteTeam_WithValidId_DeletesSuccessfully()
-    {
-        // Arrange
-        var teamToDelete = new Team { Id = 1, Name = "Team to Delete" };
-
-        _mockUnitOfWork.Setup(x => x.Teams.Remove(teamToDelete));
-        _mockUnitOfWork.Setup(x => x.SaveChangesAsync(default))
-            .ReturnsAsync(1);
-
-        // Act
-        _mockUnitOfWork.Object.Teams.Remove(teamToDelete);
-        var savedCount = await _mockUnitOfWork.Object.SaveChangesAsync();
-
-        // Assert
-        savedCount.Should().Be(1);
-        _mockUnitOfWork.Verify(x => x.Teams.Remove(teamToDelete), Times.Once);
-    }
-
-    [Fact]
-    public async Task UnitOfWork_Transaction_CommitsSuccessfully()
-    {
-        // Arrange
-        _mockUnitOfWork.Setup(x => x.BeginTransactionAsync(default))
-            .Returns(Task.CompletedTask);
-
-        _mockUnitOfWork.Setup(x => x.CommitTransactionAsync(default))
-            .Returns(Task.CompletedTask);
-
-        // Act
-        await _mockUnitOfWork.Object.BeginTransactionAsync();
-        await _mockUnitOfWork.Object.CommitTransactionAsync();
-
-        // Assert
-        _mockUnitOfWork.Verify(x => x.BeginTransactionAsync(default), Times.Once);
-        _mockUnitOfWork.Verify(x => x.CommitTransactionAsync(default), Times.Once);
-    }
-
-    [Fact]
-    public async Task UnitOfWork_Transaction_RollsBackOnError()
-    {
-        // Arrange
-        _mockUnitOfWork.Setup(x => x.BeginTransactionAsync(default))
-            .Returns(Task.CompletedTask);
-
-        _mockUnitOfWork.Setup(x => x.RollbackTransactionAsync(default))
-            .Returns(Task.CompletedTask);
-
-        // Act
-        await _mockUnitOfWork.Object.BeginTransactionAsync();
-        await _mockUnitOfWork.Object.RollbackTransactionAsync();
-
-        // Assert
-        _mockUnitOfWork.Verify(x => x.BeginTransactionAsync(default), Times.Once);
-        _mockUnitOfWork.Verify(x => x.RollbackTransactionAsync(default), Times.Once);
+        result.Should().HaveCount(5);
     }
 }

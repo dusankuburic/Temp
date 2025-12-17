@@ -3,7 +3,6 @@ using Moq;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using Temp.Services.Caching;
-using Xunit;
 
 namespace Temp.Tests.Unit.Caching;
 
@@ -13,8 +12,7 @@ public class CacheServiceTests
     private readonly Mock<IDatabase> _mockDatabase;
     private readonly RedisCacheService _cacheService;
 
-    public CacheServiceTests()
-    {
+    public CacheServiceTests() {
         _mockRedis = new Mock<IConnectionMultiplexer>();
         _mockDatabase = new Mock<IDatabase>();
 
@@ -25,8 +23,7 @@ public class CacheServiceTests
     }
 
     [Fact]
-    public async Task GetAsync_WithExistingKey_ReturnsValue()
-    {
+    public async Task GetAsync_WithExistingKey_ReturnsValue() {
         // Arrange
         var key = "test:key";
         var testData = new TestCacheData { Id = 1, Name = "Test" };
@@ -51,8 +48,7 @@ public class CacheServiceTests
     }
 
     [Fact]
-    public async Task GetAsync_WithNonExistingKey_ReturnsDefault()
-    {
+    public async Task GetAsync_WithNonExistingKey_ReturnsDefault() {
         // Arrange
         var key = "nonexistent:key";
 
@@ -67,8 +63,7 @@ public class CacheServiceTests
     }
 
     [Fact]
-    public async Task SetAsync_WithValue_StoresInCache()
-    {
+    public async Task SetAsync_WithValue_StoresInCache() {
         // Arrange
         var key = "test:key";
         var value = new { Id = 1, Name = "Test" };
@@ -97,8 +92,7 @@ public class CacheServiceTests
     }
 
     [Fact]
-    public async Task RemoveAsync_WithKey_DeletesFromCache()
-    {
+    public async Task RemoveAsync_WithKey_DeletesFromCache() {
         // Arrange
         var key = "test:key";
 
@@ -113,8 +107,7 @@ public class CacheServiceTests
     }
 
     [Fact]
-    public async Task ExistsAsync_WithExistingKey_ReturnsTrue()
-    {
+    public async Task ExistsAsync_WithExistingKey_ReturnsTrue() {
         // Arrange
         var key = "test:key";
 
@@ -129,8 +122,7 @@ public class CacheServiceTests
     }
 
     [Fact]
-    public async Task ExistsAsync_WithNonExistingKey_ReturnsFalse()
-    {
+    public async Task ExistsAsync_WithNonExistingKey_ReturnsFalse() {
         // Arrange
         var key = "nonexistent:key";
 
@@ -145,8 +137,7 @@ public class CacheServiceTests
     }
 
     [Fact]
-    public void CacheKeys_User_GeneratesCorrectKey()
-    {
+    public void CacheKeys_User_GeneratesCorrectKey() {
         // Arrange
         var email = "test@example.com";
 
@@ -158,8 +149,7 @@ public class CacheServiceTests
     }
 
     [Fact]
-    public void CacheKeys_Employee_GeneratesCorrectKey()
-    {
+    public void CacheKeys_Employee_GeneratesCorrectKey() {
         // Arrange
         var id = 123;
 
@@ -171,8 +161,7 @@ public class CacheServiceTests
     }
 
     [Fact]
-    public void CacheKeys_UserPattern_ReturnsCorrectPattern()
-    {
+    public void CacheKeys_UserPattern_ReturnsCorrectPattern() {
         // Act
         var pattern = CacheKeys.UserPattern();
 

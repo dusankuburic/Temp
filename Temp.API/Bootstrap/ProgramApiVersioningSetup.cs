@@ -4,10 +4,8 @@ namespace Temp.API.Bootstrap;
 
 public static class ProgramApiVersioningSetup
 {
-    public static IServiceCollection AddApiVersioningConfiguration(this IServiceCollection services)
-    {
-        services.AddApiVersioning(options =>
-        {
+    public static IServiceCollection AddApiVersioningConfiguration(this IServiceCollection services) {
+        services.AddApiVersioning(options => {
             options.DefaultApiVersion = new ApiVersion(1, 0);
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.ReportApiVersions = true;
@@ -17,8 +15,7 @@ public static class ProgramApiVersioningSetup
                 new MediaTypeApiVersionReader("ver")
             );
         })
-        .AddApiExplorer(options =>
-        {
+        .AddApiExplorer(options => {
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
         });

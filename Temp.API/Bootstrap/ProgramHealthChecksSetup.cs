@@ -7,14 +7,12 @@ public static class ProgramHealthChecksSetup
 {
     public static IServiceCollection AddHealthChecksConfiguration(
         this IServiceCollection services,
-        IConfiguration configuration)
-    {
+        IConfiguration configuration) {
         var healthChecksBuilder = services.AddHealthChecks();
 
         // Add SQL Server health check if connection string is configured
         var sqlConnection = configuration.GetConnectionString("DefaultConnection");
-        if (!string.IsNullOrEmpty(sqlConnection))
-        {
+        if (!string.IsNullOrEmpty(sqlConnection)) {
             healthChecksBuilder.AddSqlServer(
                 connectionString: sqlConnection,
                 healthQuery: "SELECT 1;",
@@ -25,8 +23,7 @@ public static class ProgramHealthChecksSetup
 
         // Add Redis health check if connection string is configured
         var redisConnection = configuration.GetConnectionString("Redis");
-        if (!string.IsNullOrEmpty(redisConnection))
-        {
+        if (!string.IsNullOrEmpty(redisConnection)) {
             healthChecksBuilder.AddRedis(
                 redisConnectionString: redisConnection,
                 name: "redis",
@@ -37,8 +34,7 @@ public static class ProgramHealthChecksSetup
 
         // Add Azure Blob Storage health check if connection string is configured
         var azureConnection = configuration.GetConnectionString("AzureConnection");
-        if (!string.IsNullOrEmpty(azureConnection))
-        {
+        if (!string.IsNullOrEmpty(azureConnection)) {
             services.AddSingleton(_ => new BlobServiceClient(azureConnection));
             healthChecksBuilder.AddAzureBlobStorage(
                 name: "azure-blob-storage",

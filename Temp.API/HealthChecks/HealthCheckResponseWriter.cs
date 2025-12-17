@@ -1,12 +1,11 @@
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Text.Json;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Temp.API.HealthChecks;
 
 public static class HealthCheckResponseWriter
 {
-    public static async Task WriteResponse(HttpContext context, HealthReport report)
-    {
+    public static async Task WriteResponse(HttpContext context, HealthReport report) {
         context.Response.ContentType = "application/json";
 
         var response = new
