@@ -9,7 +9,7 @@
     <tab heading="Form">
       <div class="col-lg-12 pt-3">
         <div class="alert alert-info text-center" role="alert">
-            <h4>Name: {{this.employee?.firstName}}  {{employee?.lastName}}</h4>
+            <h4>Name: {{employee.firstName}}  {{employee.lastName}}</h4>
         </div>
         <form class="row g-2" [formGroup]="createEngagementForm" (ngSubmit)="create()">
             <div class="form-group">

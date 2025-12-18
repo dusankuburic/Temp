@@ -14,7 +14,7 @@ export class ApplicationUserListComponent extends DestroyableComponent implement
   commentIcon = faComment
   eyeIcon = faEye;
 
-  applications: UserListApplication[];
+  applications!: UserListApplication[];
 
   constructor(private route: ActivatedRoute) {
     super();

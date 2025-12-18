@@ -16,25 +16,26 @@ export class SidebarComponent implements OnInit {
   applicationIcon = faFileAlt
   groupsIcon = faUsers
 
-  user: any;
+  user!: any;
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {}
 
   loggedIn(): any {
-    this.user = JSON.parse(localStorage.getItem('user'));
+    const userJson = localStorage.getItem('user');
+    this.user = userJson ? JSON.parse(userJson) : null;
     return this.authService.loggedIn();
   }
 
   isAdmin(): boolean {
-    return this.authService.decodedToken.role === 'Admin'? true : false;
+    return this.authService.decodedToken?.role === 'Admin'? true : false;
   }
 
   isUser(): boolean {
-    return this.authService.decodedToken.role === 'User' ? true : false;
+    return this.authService.decodedToken?.role === 'User' ? true : false;
   }
 
   isModerator(): boolean {
-    return this.authService.decodedToken.role === 'Moderator' ? true : false;
+    return this.authService.decodedToken?.role === 'Moderator' ? true : false;
   }
 }

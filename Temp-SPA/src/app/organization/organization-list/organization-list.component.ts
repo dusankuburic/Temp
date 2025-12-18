@@ -25,11 +25,11 @@ export class OrganizationListComponent extends DestroyableComponent implements O
   plusIcon = faPlusCircle;
 
   bsModalRef?: BsModalRef;
-  subscriptions: Subscription;
-  filtersForm: FormGroup;
-  organizations: Organization[];
-  pagination: Pagination;
-  organizationParams: OrganizationParams;
+  subscriptions!: Subscription;
+  filtersForm!: FormGroup;
+  organizations!: Organization[];
+  pagination!: Pagination;
+  organizationParams!: OrganizationParams;
   groupsSelect: SelectionOption[] = [
     {value: '', display: 'Select with groups', disabled: true },
     {value: 'all', display: 'All'},
@@ -54,7 +54,7 @@ export class OrganizationListComponent extends DestroyableComponent implements O
     
   ngAfterViewInit(): void {
     const withGroupsControl = this.filtersForm.get('withGroups');
-    withGroupsControl.valueChanges.pipe(
+    withGroupsControl?.valueChanges.pipe(
       debounceTime(100),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -68,7 +68,7 @@ export class OrganizationListComponent extends DestroyableComponent implements O
     })
 
     const nameControl = this.filtersForm.get('name');
-    nameControl.valueChanges.pipe(
+    nameControl?.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -100,7 +100,7 @@ export class OrganizationListComponent extends DestroyableComponent implements O
     this.bsModalRef = this.bsModalService.show(OrganizationCreateModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadOrganizations();
 
         this.unsubscribe();
@@ -120,7 +120,7 @@ export class OrganizationListComponent extends DestroyableComponent implements O
     this.bsModalRef = this.bsModalService.show(OrganizationEditModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadOrganizations();
 
           this.unsubscribe();

@@ -13,8 +13,8 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './employment-status-create-modal.component.html'
 })
 export class EmploymentStatusCreateModalComponent extends DestroyableComponent implements OnInit {
-  createEmploymentStatusForm: FormGroup;
-  employmentStatus: EmploymentStatus;
+  createEmploymentStatusForm!: FormGroup;
+  employmentStatus!: EmploymentStatus;
   title?: string;
 
   name = new FormControl('',[

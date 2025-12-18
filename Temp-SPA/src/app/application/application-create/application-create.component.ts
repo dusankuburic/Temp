@@ -13,10 +13,10 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './application-create.component.html'
 })
 export class ApplicationCreateComponent extends DestroyableComponent implements OnInit {
-  createApplicationForm: FormGroup;
-  application: CreateApplication;
-  team: Team;
-  user: any;
+  createApplicationForm!: FormGroup;
+  application!: CreateApplication;
+  team!: Team;
+  user!: any;
 
   constructor(
     private applicationService: ApplicationService,
@@ -30,7 +30,7 @@ export class ApplicationCreateComponent extends DestroyableComponent implements 
     this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.team = data['team'];
     });
-    this.user = JSON.parse(localStorage.getItem('user'));
+    this.user = JSON.parse(localStorage.getItem('user') ?? '{}');
     this.createForm();
   }
 

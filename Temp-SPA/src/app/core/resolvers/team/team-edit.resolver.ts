@@ -7,14 +7,14 @@ import { AlertifyService } from '../../services/alertify.service';
 import { TeamService } from '../../services/team.service';
 
 @Injectable()
-export class TeamEditResolver implements Resolve<Team> {
+export class TeamEditResolver implements Resolve<Team | null> {
 
     constructor(
         private teamService: TeamService,
         private router: Router,
         private alertify: AlertifyService) {}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<Team>  {
+    resolve(route: ActivatedRouteSnapshot): Observable<Team | null> {
         return this.teamService.getTeam(route.params['id']).pipe(
             catchError(() => {
                 this.alertify.error('Unable to get Team');

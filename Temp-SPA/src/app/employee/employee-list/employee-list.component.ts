@@ -28,10 +28,10 @@ export class EmployeeListComponent extends DestroyableComponent implements OnIni
   plusIcon = faPlusCircle;
 
   bsModalRef?: BsModalRef;
-  subscriptions: Subscription;
-  filtersForm: FormGroup;
-  employees: Employee[];
-  unassignRoleDto: UnassignRoleDto;
+  subscriptions!: Subscription;
+  filtersForm!: FormGroup;
+  employees!: Employee[];
+  unassignRoleDto!: UnassignRoleDto;
   rolesSelect: SelectionOption[] = [
     {value: '', display: 'Select Role', disabled: true},
     {value: '', display: 'All'},
@@ -39,8 +39,8 @@ export class EmployeeListComponent extends DestroyableComponent implements OnIni
     {value: 'Admin', display: 'Admin'},
     {value: 'Moderator', display: 'Moderator'},
     {value: 'None', display: 'None'}];
-  employeeParams: EmployeeParams;
-  pagination: Pagination;
+  employeeParams!: EmployeeParams;
+  pagination!: Pagination;
 
   constructor(
     private route: ActivatedRoute,
@@ -60,7 +60,7 @@ export class EmployeeListComponent extends DestroyableComponent implements OnIni
     
   ngAfterViewInit(): void {
     const roleControl = this.filtersForm.get('role');
-    roleControl.valueChanges.pipe(
+    roleControl?.valueChanges.pipe(
       debounceTime(100),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -74,7 +74,7 @@ export class EmployeeListComponent extends DestroyableComponent implements OnIni
     });
 
     const firstNameControl = this.filtersForm.get('firstName');
-    firstNameControl.valueChanges.pipe(
+    firstNameControl?.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -88,7 +88,7 @@ export class EmployeeListComponent extends DestroyableComponent implements OnIni
     });
 
     const lastNameControl = this.filtersForm.get('lastName');
-    lastNameControl.valueChanges.pipe(
+    lastNameControl?.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -122,7 +122,7 @@ export class EmployeeListComponent extends DestroyableComponent implements OnIni
     this.bsModalRef = this.bsModalService.show(EmployeeCreateModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadEmployees();
         
         this.unsubscribe();
@@ -142,7 +142,7 @@ export class EmployeeListComponent extends DestroyableComponent implements OnIni
     this.bsModalRef = this.bsModalService.show(EmployeeEditModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadEmployees();
         
         this.unsubscribe();
@@ -164,7 +164,7 @@ export class EmployeeListComponent extends DestroyableComponent implements OnIni
     this.bsModalRef = this.bsModalService.show(EmployeeAssignRoleModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadEmployees();
         
         this.unsubscribe();

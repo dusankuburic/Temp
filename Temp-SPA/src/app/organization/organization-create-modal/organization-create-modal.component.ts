@@ -13,8 +13,8 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './organization-create-modal.component.html',
 })
 export class OrganizationCreateModalComponent extends DestroyableComponent implements OnInit {
-  createOrganizationForm: FormGroup;
-  organization: Organization;
+  createOrganizationForm!: FormGroup;
+  organization!: Organization;
   title?: string;
 
   name = new FormControl('',[

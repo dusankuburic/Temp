@@ -13,10 +13,10 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './organization-edit-modal.component.html',
 })
 export class OrganizationEditModalComponent extends DestroyableComponent implements OnInit {
-  editOrganizationForm: FormGroup;
-  organization: Organization;
+  editOrganizationForm!: FormGroup;
+  organization!: Organization;
   title?: string;
-  organizationId: number;
+  organizationId!: number;
 
   name = new FormControl('', [
     Validators.required,

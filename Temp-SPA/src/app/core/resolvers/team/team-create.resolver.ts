@@ -7,7 +7,7 @@ import { AlertifyService } from '../../services/alertify.service';
 import { GroupService } from '../../services/group.service';
 
 @Injectable()
-export class TeamCreateResolver implements Resolve<Group> {
+export class TeamCreateResolver implements Resolve<Group | null> {
 
     constructor(
         private groupService: GroupService,
@@ -15,7 +15,7 @@ export class TeamCreateResolver implements Resolve<Group> {
         private alertify: AlertifyService
     ){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<Group> {
+    resolve(route: ActivatedRouteSnapshot): Observable<Group | null> {
         return this.groupService.getGroup(route.params['id']).pipe(
             catchError(() => {
                 this.alertify.error('Unable to get Group');

@@ -7,14 +7,14 @@ import { AlertifyService } from '../../services/alertify.service';
 import { WorkplaceService } from '../../services/workplace.service';
 
 @Injectable()
-export class WorkplaceEditResolver implements Resolve<Workplace> {
+export class WorkplaceEditResolver implements Resolve<Workplace | null> {
 
     constructor(
         private workplaceService: WorkplaceService,
         private router: Router,
         private alertify: AlertifyService){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<Workplace> {
+    resolve(route: ActivatedRouteSnapshot): Observable<Workplace | null> {
         return this.workplaceService.getWorkplace(route.params['id']).pipe(
             catchError(() => {
                 this.alertify.error('Unable to get Workplace');

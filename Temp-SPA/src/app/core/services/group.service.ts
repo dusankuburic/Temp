@@ -50,13 +50,14 @@ getInnerGroups(organizationId: number): Observable<PagedInnerGroups> {
   return this.http.get<InnerGroups>(this.baseUrl + 'organizations/paged-inner-groups', {observe: 'response', params})
     .pipe(
       map(response => {
-        paginatedResult.result = response.body.groups;
+        const body = response.body!;
+        paginatedResult.result = body.groups;
         if (response.headers.get('Pagination') != null) {
-          paginatedResult.pagination =  JSON.parse(response.headers.get('Pagination'));
+          paginatedResult.pagination =  JSON.parse(response.headers.get('Pagination') ?? '{}');
         }
         return {
-          id: response.body.id,
-          name: response.body.name,
+          id: body.id,
+          name: body.name,
           groups: paginatedResult
         };
       })
@@ -104,7 +105,7 @@ getModeratorFreeGroups(organizationId: number, moderator: ModeratorMin): Observa
   return this.http.get<Group[]>(this.baseUrl + 'groups/moderator-free-groups/' + organizationId + '/moderator/' + moderator.id);
 }
 
-updateModeratorGroups(id: number, groups): Observable<void> {
+updateModeratorGroups(id: number, groups: number[]): Observable<void> {
   return this.http.put<void>(this.baseUrl + 'moderators/update-groups/' + id, groups);
 }
 

@@ -14,9 +14,9 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './team-create.component.html'
 })
 export class TeamCreateComponent extends DestroyableComponent implements OnInit {
-  createTeamForm: FormGroup;
-  group: Group;
-  team: Team;
+  createTeamForm!: FormGroup;
+  group!: Group;
+  team!: Team;
   
   name = new FormControl('',[
     Validators.required,

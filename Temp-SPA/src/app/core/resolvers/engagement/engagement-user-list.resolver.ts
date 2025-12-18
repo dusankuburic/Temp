@@ -7,14 +7,14 @@ import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EngagementService } from 'src/app/core/services/engagement.service';
 
 @Injectable()
-export class EngagementUserListResolver implements Resolve<UserEngagement[]> {
+export class EngagementUserListResolver implements Resolve<UserEngagement[] | null> {
 
     constructor(
         private engagementService: EngagementService,
         private route: Router,
         private alertify: AlertifyService){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<UserEngagement[]> {
+    resolve(route: ActivatedRouteSnapshot): Observable<UserEngagement[] | null> {
         return this.engagementService.getUserEmployeeEngagements(route.params['id']).pipe(
             catchError(() => {
                 this.alertify.error('Unable to list Employee Engagements');

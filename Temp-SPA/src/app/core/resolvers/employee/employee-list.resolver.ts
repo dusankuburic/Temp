@@ -8,13 +8,13 @@ import { EmployeeService } from '../../services/employee.service';
 import { PaginatedResult } from 'src/app/core/models/pagination';
 
 @Injectable()
-export class EmployeeListResolver implements Resolve<PaginatedResult<Employee[]>> {
+export class EmployeeListResolver implements Resolve<PaginatedResult<Employee[]> | null> {
     constructor(
         private employeeService: EmployeeService,
         private router: Router,
         private alertify: AlertifyService){}
 
-    resolve(): Observable<PaginatedResult<Employee[]>> {
+    resolve(): Observable<PaginatedResult<Employee[]> | null> {
         this.employeeService.resetEmployeeParams();
         return this.employeeService.getEmployees().pipe(
             catchError(() => {

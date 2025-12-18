@@ -13,8 +13,8 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './workplace-create-modal.component.html'
 })
 export class WorkplaceCreateModalComponent extends DestroyableComponent implements OnInit {
-  createWorkplaceForm: FormGroup;
-  workplace: Workplace;
+  createWorkplaceForm!: FormGroup;
+  workplace!: Workplace;
   title?: string;
   
   name = new FormControl('', [

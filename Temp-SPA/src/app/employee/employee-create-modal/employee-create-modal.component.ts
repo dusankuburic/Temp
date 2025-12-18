@@ -16,11 +16,11 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 })
 export class EmployeeCreateModalComponent extends DestroyableComponent implements OnInit{
   title?: string;
-  createEmployeeForm: FormGroup;
-  employee: Employee;
-  organizationsSelect: SelectionOption[];
-  innerGroupsSelect: SelectionOption[];
-  innerTeamsSelect: SelectionOption[];
+  createEmployeeForm!: FormGroup;
+  employee!: Employee;
+  organizationsSelect!: SelectionOption[];
+  innerGroupsSelect!: SelectionOption[];
+  innerTeamsSelect!: SelectionOption[];
 
   firstName = new FormControl('', [
     Validators.required,
@@ -63,7 +63,7 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
     });
   }
 
-  loadInnerGroups(id): void {
+  loadInnerGroups(id: number | null): void {
     if (id == null)
       return;
     this.organizationService.getInnerGroupsForSelect(id)
@@ -74,13 +74,13 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
           {value: null, display: 'Select Group', hidden: true},
             ...res
           ];
-          this.createEmployeeForm.get('groupId').setValue(null);
+          this.createEmployeeForm.get('groupId')?.setValue(null);
           this.innerTeamsSelect = [{value: null, display: 'Select Team', hidden: true}];
         }
       });
   }
 
-  loadInnerTeams(id): void {
+  loadInnerTeams(id: number | null): void {
     if (id == null)
       return;
     this.groupService.getInnerTeamsForSelect(id)
@@ -92,7 +92,7 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
             {value: null, display: 'Select Team', hidden: true},
             ...res
           ];
-          this.createEmployeeForm.get('teamId').setValue(null);
+          this.createEmployeeForm.get('teamId')?.setValue(null);
         }
       });
   }

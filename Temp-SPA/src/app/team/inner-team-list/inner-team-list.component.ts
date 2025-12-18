@@ -23,12 +23,12 @@ export class TeamListComponent extends DestroyableComponent implements OnInit, A
   plusIcon = faPlusCircle;
 
   bsModalRef?: BsModalRef;
-  subscriptions: Subscription;
-  filtersForm: FormGroup;
-  innerTeams: InnerTeam[];
-  pagination: Pagination;
-  group: InnerGroup;
-  teamParams: TeamParams;
+  subscriptions!: Subscription;
+  filtersForm!: FormGroup;
+  innerTeams!: InnerTeam[];
+  pagination!: Pagination;
+  group!: InnerGroup;
+  teamParams!: TeamParams;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,7 +46,7 @@ export class TeamListComponent extends DestroyableComponent implements OnInit, A
 
   ngAfterViewInit(): void {
     const nameControl = this.filtersForm.get('name');
-    nameControl.valueChanges.pipe(
+    nameControl?.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -84,7 +84,7 @@ export class TeamListComponent extends DestroyableComponent implements OnInit, A
     this.bsModalRef = this.bsModalService.show(TeamCreateModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadTeams();
 
         this.unsubscribe();
@@ -105,7 +105,7 @@ export class TeamListComponent extends DestroyableComponent implements OnInit, A
     this.bsModalRef = this.bsModalService.show(TeamEditModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadTeams();
 
         this.unsubscribe();

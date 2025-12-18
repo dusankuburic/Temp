@@ -7,13 +7,13 @@ import { AlertifyService } from '../../services/alertify.service';
 import { GroupService } from '../../services/group.service';
 
 @Injectable()
-export class GroupListResolver implements Resolve<PagedInnerGroups> {
+export class GroupListResolver implements Resolve<PagedInnerGroups | null> {
     constructor(
         private groupService: GroupService,
         private router: Router,
         private alertify: AlertifyService){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<PagedInnerGroups> {
+    resolve(route: ActivatedRouteSnapshot): Observable<PagedInnerGroups | null> {
         const organizationId = parseInt(route.params['id']);
         this.groupService.resetGroupParams();
         return this.groupService.getInnerGroups(organizationId).pipe(

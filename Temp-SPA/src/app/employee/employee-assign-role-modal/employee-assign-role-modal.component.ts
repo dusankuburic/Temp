@@ -15,11 +15,11 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 export class EmployeeAssignRoleModalComponent extends DestroyableComponent implements OnInit {
 
   title?: string;
-  firstName: string;
-  lastName: string;
-  employeeId: number;
-  createAssignRoleForm: FormGroup;
-  assignDto: AssignRoleDto;
+  firstName!: string;
+  lastName!: string;
+  employeeId!: number;
+  createAssignRoleForm!: FormGroup;
+  assignDto!: AssignRoleDto;
   
   displayName = new FormControl('', [
     Validators.required,
@@ -58,7 +58,7 @@ export class EmployeeAssignRoleModalComponent extends DestroyableComponent imple
   }
 
   setupForm(): void {
-    this.createAssignRoleForm.get('role').setValue('User');
+    this.createAssignRoleForm.get('role')?.setValue('User');
     this.createAssignRoleForm.addValidators([PasswordValidator.match('password', 'confirmPassword')]);
   }
 
@@ -70,7 +70,7 @@ export class EmployeeAssignRoleModalComponent extends DestroyableComponent imple
         this.createAssignRoleForm.disable();
         this.alertify.success('Successful user registration');
         this.bsModalRef.hide();
-      }, error => {
+      }, (error: any) => {
         this.alertify.error(error.error);
       });
     }

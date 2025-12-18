@@ -22,11 +22,11 @@ export class WorkplaceListComponent extends DestroyableComponent implements OnIn
   plusIcon = faPlusCircle;
 
   bsModalRef?: BsModalRef;
-  subscriptions: Subscription;
-  filtersForm: FormGroup;
-  workplaces: Workplace[];
-  pagination: Pagination;
-  workplaceParams: WorkplaceParams;
+  subscriptions!: Subscription;
+  filtersForm!: FormGroup;
+  workplaces!: Workplace[];
+  pagination!: Pagination;
+  workplaceParams!: WorkplaceParams;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,7 +42,7 @@ export class WorkplaceListComponent extends DestroyableComponent implements OnIn
     }
     
   ngAfterViewInit(): void {
-    this.filtersForm.get('name').valueChanges.pipe(
+    this.filtersForm.get('name')?.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -74,7 +74,7 @@ export class WorkplaceListComponent extends DestroyableComponent implements OnIn
     this.bsModalRef = this.bsModalService.show(WorkplaceCreateModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadWorkplaces();
 
         this.unsubscribe();
@@ -95,7 +95,7 @@ export class WorkplaceListComponent extends DestroyableComponent implements OnIn
 
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadWorkplaces();
 
         this.unsubscribe();

@@ -8,14 +8,13 @@ export class AddAuthHeaderInterceptor implements HttpInterceptor {
     jwtHelper = new JwtHelperService();
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        let token = localStorage.getItem('token')?.toString();
-        if (this.jwtHelper.isTokenExpired(token))
-            token = '';
-        else 
-            token = `Bearer ${token}`
+        let token = localStorage.getItem('token');
+        let authHeader = '';
+        if (!this.jwtHelper.isTokenExpired(token ?? null))
+            authHeader = `Bearer ${token}`
 
         const authorized: HttpRequest<any> = req.clone({
-            setHeaders: {'Authorization': token}
+            setHeaders: {'Authorization': authHeader}
         });
 
         return next.handle(authorized);

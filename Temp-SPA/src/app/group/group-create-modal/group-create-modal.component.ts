@@ -13,9 +13,9 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './group-create-modal.component.html'
 })
 export class GroupCreateModalComponent extends DestroyableComponent {
-  createGroupForm: FormGroup;
-  group: Group;
-  organizationId: number;
+  createGroupForm!: FormGroup;
+  group!: Group;
+  organizationId!: number;
   title?: string;
 
   name = new FormControl('', [

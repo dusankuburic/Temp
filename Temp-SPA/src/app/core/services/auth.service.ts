@@ -57,8 +57,8 @@ registerUser(user: User): Observable<unknown> {
 
 
 loggedIn(): boolean {
-  const token = localStorage.getItem('token')?.toString();
-  return !this.jwtHelper.isTokenExpired(token);
+  const token = localStorage.getItem('token');
+  return !this.jwtHelper.isTokenExpired(token ?? null);
 }
 
 logout(): Observable<void> {
@@ -69,7 +69,7 @@ clearStorage(): void {
   localStorage.removeItem('token');
   this.decodedToken = null;
   localStorage.removeItem('user');
-  this.currentUser = null;
+  this.currentUser = null as unknown as User;
 }
 
 }

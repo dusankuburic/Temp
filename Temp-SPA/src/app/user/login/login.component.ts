@@ -12,8 +12,8 @@ import { DestroyableComponent } from '../../core/base/destroyable.component';
   templateUrl: './login.component.html'
 })
 export class LoginComponent extends DestroyableComponent implements OnInit {
-  loginForm: FormGroup;
-  user: User;
+  loginForm!: FormGroup;
+  user!: User;
 
   username = new FormControl('', [Validators.required]);
   password = new FormControl('', [Validators.required]);

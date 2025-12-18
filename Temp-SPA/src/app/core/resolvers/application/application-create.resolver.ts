@@ -7,7 +7,7 @@ import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { TeamService } from 'src/app/core/services/team.service';
 
 @Injectable()
-export class ApplicationCreateResolver implements Resolve<Team> {
+export class ApplicationCreateResolver implements Resolve<Team | null> {
 
     constructor(
         private teamService: TeamService,
@@ -15,7 +15,7 @@ export class ApplicationCreateResolver implements Resolve<Team> {
         private alertify: AlertifyService
     ){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<Team> {
+    resolve(route: ActivatedRouteSnapshot): Observable<Team | null> {
         return  this.teamService.getUserTeam(route.params['id']).pipe(
             catchError(() => {
                 this.alertify.error('Unable to get user team');

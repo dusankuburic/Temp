@@ -6,7 +6,7 @@ import { AlertifyService } from '../../services/alertify.service';
 import { EngagementService } from '../../services/engagement.service';
 
 @Injectable()
-export class EngagementCreateResolver implements Resolve<any> {
+export class EngagementCreateResolver implements Resolve<any | null> {
 
     constructor(
         private engagementService: EngagementService,
@@ -14,7 +14,7 @@ export class EngagementCreateResolver implements Resolve<any> {
         private alertify: AlertifyService){}
 
     //TODO: pass id into modal, then call db, discard this resolver you don;nt need it
-    resolve(route: ActivatedRouteSnapshot): Observable<any> {
+    resolve(route: ActivatedRouteSnapshot): Observable<any | null> {
         return  this.engagementService.getEngagementForEmployee(route.params['id']).pipe(
             catchError(() => {
                 this.alertify.error('Unable to get Employee engagement');

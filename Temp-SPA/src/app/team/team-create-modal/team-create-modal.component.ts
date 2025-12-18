@@ -13,9 +13,9 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './team-create-modal.component.html'
 })
 export class TeamCreateModalComponent extends DestroyableComponent implements OnInit {
-  createTeamForm: FormGroup;
-  team: Team;
-  groupId: number;
+  createTeamForm!: FormGroup;
+  team!: Team;
+  groupId!: number;
   title?: string;
   
   name = new FormControl('',[

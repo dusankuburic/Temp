@@ -9,7 +9,7 @@ import { UserEngagement } from 'src/app/core/models/engagement';
   templateUrl: './engagement-user-list.component.html'
 })
 export class EngagementUserListComponent extends DestroyableComponent implements OnInit {
-  engagements: UserEngagement[];
+  engagements!: UserEngagement[];
 
   constructor(
     private route: ActivatedRoute) {

@@ -7,14 +7,14 @@ import { AlertifyService } from '../../services/alertify.service';
 import { OrganizationService } from '../../services/organization.service';
 
 @Injectable()
-export class OrganizationEditResolver implements Resolve<Organization> {
+export class OrganizationEditResolver implements Resolve<Organization | null> {
 
     constructor(
         private organizationService: OrganizationService,
         private router: Router,
         private alertify: AlertifyService){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<Organization>{
+    resolve(route: ActivatedRouteSnapshot): Observable<Organization | null> {
         return this.organizationService.getOrganization(route.params['id']).pipe(
             catchError(() => {
                 this.alertify.error('Unable to get Organization');

@@ -11,7 +11,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 })
 export class AssignedGroupsComponent extends DestroyableComponent implements OnInit {
   usersIcon = faUsers;
-  groups: Group[];
+  groups!: Group[];
   constructor(private route: ActivatedRoute) {
     super();
   }

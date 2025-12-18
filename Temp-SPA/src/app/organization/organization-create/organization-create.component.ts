@@ -12,8 +12,8 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './organization-create.component.html'
 })
 export class OrganizationCreateComponent extends DestroyableComponent implements OnInit {
-  createOrganizationForm: FormGroup;
-  organization: Organization;
+  createOrganizationForm!: FormGroup;
+  organization!: Organization;
 
   name = new FormControl('',[
     Validators.required,

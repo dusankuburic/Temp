@@ -12,8 +12,8 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './employment-status-create.component.html'
 })
 export class EmploymentStatusCreateComponent extends DestroyableComponent implements OnInit {
-  createEmploymentStatusForm: FormGroup;
-  employmentStatus: EmploymentStatus;
+  createEmploymentStatusForm!: FormGroup;
+  employmentStatus!: EmploymentStatus;
 
   name = new FormControl('',[
     Validators.required,

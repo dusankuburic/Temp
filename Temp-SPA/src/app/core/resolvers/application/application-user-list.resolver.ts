@@ -7,14 +7,14 @@ import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { ApplicationService } from 'src/app/core/services/application.service';
 
 @Injectable()
-export class ApplicationUserListResolver implements Resolve<UserListApplication[]> {
+export class ApplicationUserListResolver implements Resolve<UserListApplication[] | null> {
 
     constructor(
         private applicationService: ApplicationService,
         private router: Router,
         private alertify: AlertifyService){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<UserListApplication[]>  {
+    resolve(route: ActivatedRouteSnapshot): Observable<UserListApplication[] | null> {
         return this.applicationService.getUserApplications(route.params['id']).pipe(
             catchError(() => {
                 this.alertify.error('Unable to list user applications');

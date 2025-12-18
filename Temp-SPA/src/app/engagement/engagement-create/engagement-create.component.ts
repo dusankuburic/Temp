@@ -17,14 +17,14 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
   templateUrl: './engagement-create.component.html'
 })
 export class EngagementCreateComponent extends DestroyableComponent implements OnInit {
-  employeeId: number;
-  createEngagementForm: FormGroup;
-  engagement: Engagement;
+  employeeId!: number;
+  createEngagementForm!: FormGroup;
+  engagement!: Engagement;
 
-  existingEngagements: ExistingEngagement[];
-  employee: Employee;
-  workplacesList: SelectionOption[];
-  employmentStatusesList: SelectionOption[];
+  existingEngagements!: ExistingEngagement[];
+  employee!: Employee;
+  workplacesList!: SelectionOption[];
+  employmentStatusesList!: SelectionOption[];
 
   salary = new FormControl('', [
     Validators.required,
@@ -65,7 +65,7 @@ export class EngagementCreateComponent extends DestroyableComponent implements O
   }
 
   loadEmployee(): void {
-    const employeeId = parseInt(this.route.snapshot.paramMap.get('id'))
+    const employeeId = parseInt(this.route.snapshot.paramMap.get('id') ?? '0')
     this.employeeService.getEmployee(employeeId).pipe(takeUntil(this.destroy$)).subscribe({
         next: (res: any) => {
           this.employee = res;

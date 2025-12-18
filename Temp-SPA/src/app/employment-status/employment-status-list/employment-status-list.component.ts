@@ -22,11 +22,11 @@ export class EmploymentStatusListComponent extends DestroyableComponent implemen
   plusIcon = faPlusCircle;
   
   bsModalRef?: BsModalRef;
-  subscriptions: Subscription;
-  filtersForm: FormGroup;
-  employmentStatuses: EmploymentStatus[];
-  pagination: Pagination;
-  employmentStatusParams: EmploymentStatusParams;
+  subscriptions!: Subscription;
+  filtersForm!: FormGroup;
+  employmentStatuses!: EmploymentStatus[];
+  pagination!: Pagination;
+  employmentStatusParams!: EmploymentStatusParams;
 
   constructor(
     private route: ActivatedRoute,
@@ -43,7 +43,7 @@ export class EmploymentStatusListComponent extends DestroyableComponent implemen
 
   ngAfterViewInit(): void {
     const nameControl = this.filtersForm.get('name');
-    nameControl.valueChanges.pipe(
+    nameControl?.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -75,7 +75,7 @@ export class EmploymentStatusListComponent extends DestroyableComponent implemen
     this.bsModalRef = this.bsModalService.show(EmploymentStatusCreateModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadEmploymentStatuses();
 
         this.unsubscribe();
@@ -95,7 +95,7 @@ export class EmploymentStatusListComponent extends DestroyableComponent implemen
     this.bsModalRef = this.bsModalService.show(EmploymentStatusEditModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadEmploymentStatuses();
         
         this.unsubscribe();

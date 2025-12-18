@@ -8,13 +8,13 @@ import { WorkplaceService } from '../../services/workplace.service';
 import { PaginatedResult } from 'src/app/core/models/pagination';
 
 @Injectable()
-export class WorkplaceListResolver implements Resolve<PaginatedResult<Workplace[]>> {
+export class WorkplaceListResolver implements Resolve<PaginatedResult<Workplace[]> | null> {
     constructor(
         private workplaceService: WorkplaceService,
         private router: Router,
         private alertify: AlertifyService){}
 
-    resolve(): Observable<PaginatedResult<Workplace[]>>  {
+    resolve(): Observable<PaginatedResult<Workplace[]> | null>  {
         this.workplaceService.resetWorkplaceParams();
         return this.workplaceService.getPagedWorkplaces().pipe(
             catchError(() => {

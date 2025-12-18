@@ -15,9 +15,9 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 })
 
 export class GroupCreateComponent extends DestroyableComponent implements OnInit {
-  createGroupForm: FormGroup;
-  organization: Organization;
-  group: Group;
+  createGroupForm!: FormGroup;
+  organization!: Organization;
+  group!: Group;
 
   name = new FormControl('', [
     Validators.required,

@@ -10,7 +10,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 export class TmpDatepickerComponent implements ControlValueAccessor {
   @Input() placeholder = '';
   @Input() label = '';
-  bsConfig: Partial<BsDatepickerConfig>;
+  bsConfig!: Partial<BsDatepickerConfig>;
   
   constructor(@Self() public controlDir: NgControl) {
     this.controlDir.valueAccessor = this;

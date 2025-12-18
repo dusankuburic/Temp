@@ -21,8 +21,8 @@ export class EngagementWithEmployeeListComponent extends DestroyableComponent im
   addEngagementIcon = faCodeBranch
 
   bsModalRef?: BsModalRef;
-  subscriptions: Subscription;
-  filtersForm: FormGroup;
+  subscriptions!: Subscription;
+  filtersForm!: FormGroup;
   rolesSelect: SelectionOption[] = [
     {value: '', display: 'Select Role', disabled: true},
     {value: '', display: 'All'},
@@ -30,9 +30,9 @@ export class EngagementWithEmployeeListComponent extends DestroyableComponent im
     {value: 'Admin', display: 'Admin'},
     {value: 'Moderator', display: 'Moderator'},
     {value: 'None', display: 'None'}];
-  employees: Employee[];
-  pagination: Pagination;
-  engagementParams: EngagementParams;
+  employees!: Employee[];
+  pagination!: Pagination;
+  engagementParams!: EngagementParams;
 
   constructor(
     private route: ActivatedRoute,
@@ -54,7 +54,7 @@ export class EngagementWithEmployeeListComponent extends DestroyableComponent im
   ngAfterViewInit(): void {
     
     const roleControl = this.filtersForm.get('role');
-    roleControl.valueChanges.pipe(
+    roleControl?.valueChanges.pipe(
       debounceTime(100),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -68,7 +68,7 @@ export class EngagementWithEmployeeListComponent extends DestroyableComponent im
     });
 
     const firstNameControl = this.filtersForm.get('firstName');
-    firstNameControl.valueChanges.pipe(
+    firstNameControl?.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -82,7 +82,7 @@ export class EngagementWithEmployeeListComponent extends DestroyableComponent im
     });
 
     const lastNameControl = this.filtersForm.get('lastName');
-    lastNameControl.valueChanges.pipe(
+    lastNameControl?.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -115,7 +115,7 @@ export class EngagementWithEmployeeListComponent extends DestroyableComponent im
     this.bsModalRef = this.bsModalService.show(EngagementCreateModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadEmployeesWithEngagement();
 
         this.unsubscribe();

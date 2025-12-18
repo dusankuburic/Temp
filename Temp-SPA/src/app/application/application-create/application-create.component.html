@@ -11,7 +11,7 @@
 
         <div class="form-group">
           <h4>Content</h4>
-          <textarea [ngClass]="{'is-invalid': createApplicationForm.get('content').errors && createApplicationForm.get('content').touched}"
+          <textarea [ngClass]="{'is-invalid': createApplicationForm.get('content')?.errors && createApplicationForm.get('content')?.touched}"
             class="form-control"
             rows="7"
             formControlName="content">

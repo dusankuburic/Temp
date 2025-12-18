@@ -12,8 +12,8 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './workplace-create.component.html'
 })
 export class WorkplaceCreateComponent extends DestroyableComponent implements OnInit {
-  createWorkplaceForm: FormGroup;
-  workplace: Workplace;
+  createWorkplaceForm!: FormGroup;
+  workplace!: Workplace;
 
   name = new FormControl('', [
     Validators.required, 

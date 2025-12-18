@@ -11,7 +11,7 @@ export class ControlValueAccessorDirective<T> implements ControlValueAccessor, O
 
     private _isDisabled = false;
     private _destroy$ = new Subject<void>();
-    private _onTouched: () => T;
+    private _onTouched!: () => T;
      
     constructor(@Inject(Injector) private injector: Injector) {}
     
@@ -40,7 +40,7 @@ export class ControlValueAccessorDirective<T> implements ControlValueAccessor, O
     }
 
     writeValue(value: T): void {
-        if (this.control.value === value)
+        if (this.control?.value === value)
             return;
         this.control 
             ? this.control.setValue(value)

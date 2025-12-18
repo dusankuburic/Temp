@@ -13,11 +13,11 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './group-edit-modal.component.html'
 })
 export class GroupEditModalComponent extends DestroyableComponent implements OnInit {
-  editGroupForm: FormGroup;
-  group: Group;
+  editGroupForm!: FormGroup;
+  group!: Group;
 
-  organizationId: number;
-  groupId: number;
+  organizationId!: number;
+  groupId!: number;
   title?: string;
 
   name = new FormControl('',[

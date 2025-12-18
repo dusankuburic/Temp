@@ -7,14 +7,14 @@ import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { ApplicationService } from 'src/app/core/services/application.service';
 
 @Injectable()
-export class ApplicationModeratorListResolver implements Resolve<ModeratorListApplication[]> {
+export class ApplicationModeratorListResolver implements Resolve<ModeratorListApplication[] | null> {
 
     constructor(
         private applicationService: ApplicationService,
         private alertify: AlertifyService){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<ModeratorListApplication[]> {
-        const user = JSON.parse(localStorage.getItem('user'));
+    resolve(route: ActivatedRouteSnapshot): Observable<ModeratorListApplication[] | null> {
+        const user = JSON.parse(localStorage.getItem('user') ?? '{}');
         return this.applicationService.getTeamApplicationsForModerator(
             route.params['id'], 
             user.id).pipe(

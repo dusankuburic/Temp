@@ -7,14 +7,14 @@ import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { GroupService } from 'src/app/core/services/group.service';
 
 @Injectable()
-export class ModeratorAssignedGroupsResolver implements Resolve<Group[]> {
+export class ModeratorAssignedGroupsResolver implements Resolve<Group[] | null> {
 
     constructor(
         private groupService: GroupService,
         private router: Router,
         private alertify: AlertifyService){}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<Group[]> {
+    resolve(route: ActivatedRouteSnapshot): Observable<Group[] | null> {
         return this.groupService.getModeratorGroups(route.params['id']).pipe(
             catchError(error => {
                 this.alertify.error(error.error);

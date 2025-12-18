@@ -15,8 +15,8 @@ export class ApplicationModeratorListComponent extends DestroyableComponent impl
   eyeIcon = faEye;
   commentIcon = faComment
   bookmarkIcon = faBookmark;
-  applications: ModeratorListApplication[];
-  user: any;
+  applications!: ModeratorListApplication[];
+  user!: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,7 +30,7 @@ export class ApplicationModeratorListComponent extends DestroyableComponent impl
       this.applications = data['applications'];
     });
 
-    this.user = JSON.parse(localStorage.getItem('user'));
+    this.user = JSON.parse(localStorage.getItem('user') ?? '{}');
   }
 
   updateStatus(applicationId: number, teamId: number): void {

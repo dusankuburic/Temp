@@ -13,8 +13,8 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './employment-status-edit.component.html'
 })
 export class EmploymentStatusEditComponent extends DestroyableComponent implements OnInit {
-  editEmploymentStatusForm: FormGroup;
-  employmentStatus: EmploymentStatus;
+  editEmploymentStatusForm!: FormGroup;
+  employmentStatus!: EmploymentStatus;
 
   name = new FormControl('', [
     Validators.required,

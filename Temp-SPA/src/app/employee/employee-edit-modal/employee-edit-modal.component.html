@@ -21,7 +21,7 @@
               [options]="organizationsSelect"
               [label]="'Organization'"
               formControlName="organizationId"
-              (change)="loadInnerGroups(editEmployeeForm.get('organizationId').value)">
+              (change)="loadInnerGroups(editEmployeeForm.get('organizationId')?.value)">
             </tmp-select>
           </div>
           <div class="form-group">
@@ -29,7 +29,7 @@
               [options]="innerGroupsSelect"
               [label]="'Group'"
               formControlName="groupId"
-              (change)="loadInnerTeams(editEmployeeForm.get('groupId').value)">
+              (change)="loadInnerTeams(editEmployeeForm.get('groupId')?.value)">
             </tmp-select>
           </div>
           <div class="form-group">                 

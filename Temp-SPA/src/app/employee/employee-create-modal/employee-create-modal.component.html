@@ -17,18 +17,18 @@
             [options]="organizationsSelect"
             [label]="'Organization'"
             formControlName="organizationId"
-            (change)="loadInnerGroups(createEmployeeForm.get('organizationId').value)">
+            (change)="loadInnerGroups(createEmployeeForm.get('organizationId')?.value)">
             </tmp-select>
         </div>
-        <div class="form-group" *ngIf="createEmployeeForm.get('organizationId').value">
+        <div class="form-group" *ngIf="createEmployeeForm.get('organizationId')?.value">
             <tmp-select
             [options]="innerGroupsSelect"
             [label]="'Group'"
             formControlName="groupId"
-            (change)="loadInnerTeams(createEmployeeForm.get('groupId').value)">
+            (change)="loadInnerTeams(createEmployeeForm.get('groupId')?.value)">
             </tmp-select>
         </div>
-        <div class="form-group" *ngIf="createEmployeeForm.get('groupId').value">
+        <div class="form-group" *ngIf="createEmployeeForm.get('groupId')?.value">
             <tmp-select [options]="innerTeamsSelect" [label]="'Team'" formControlName="teamId"></tmp-select>
         </div>
         <div class="form-gorup">

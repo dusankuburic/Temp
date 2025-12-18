@@ -7,14 +7,14 @@ import { AlertifyService } from '../../services/alertify.service';
 import { TeamService } from '../../services/team.service';
 
 @Injectable()
-export class TeamListResolver implements Resolve<PagedInnerTeams> {
+export class TeamListResolver implements Resolve<PagedInnerTeams | null> {
     
     constructor(
         private teamService: TeamService,
         private router: Router,
         private alertify: AlertifyService) {}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<PagedInnerTeams>  {
+    resolve(route: ActivatedRouteSnapshot): Observable<PagedInnerTeams | null> {
         const groupId = parseInt(route.params['id']);
         this.teamService.resetTeamParams();
         return this.teamService.getInnerTeams(groupId).pipe(

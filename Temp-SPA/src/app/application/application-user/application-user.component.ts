@@ -9,7 +9,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './application-user.component.html'
 })
 export class ApplicationUserComponent extends DestroyableComponent implements OnInit {
-  application: Application;
+  application!: Application;
 
   constructor(private route: ActivatedRoute) {
     super();

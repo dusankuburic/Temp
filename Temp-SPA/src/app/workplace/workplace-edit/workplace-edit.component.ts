@@ -13,8 +13,8 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './workplace-edit.component.html'
 })
 export class WorkplaceEditComponent extends DestroyableComponent implements OnInit {
-  editWorkplaceForm: FormGroup;
-  workplace: Workplace;
+  editWorkplaceForm!: FormGroup;
+  workplace!: Workplace;
 
   name = new FormControl('', [
     Validators.required, 

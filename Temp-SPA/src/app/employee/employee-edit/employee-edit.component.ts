@@ -23,14 +23,14 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
   minusIcon = faMinus;
   plusIcon = faPlus;
 
-  editEmployeeForm: FormGroup;
-  employee: Employee;
-  fullTeam: FullTeam;
-  organizationsSelect: SelectionOption[];
-  innerGroupsSelect: SelectionOption[];
-  innerTeamsSelect: SelectionOption[];
-  currentModeratorGroups: Group[];
-  freeModeratorGroups: Group[];
+  editEmployeeForm!: FormGroup;
+  employee!: Employee;
+  fullTeam!: FullTeam;
+  organizationsSelect!: SelectionOption[];
+  innerGroupsSelect!: SelectionOption[];
+  innerTeamsSelect!: SelectionOption[];
+  currentModeratorGroups!: Group[];
+  freeModeratorGroups!: Group[];
 
   firstName = new FormControl('', [
     Validators.required,
@@ -63,7 +63,7 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
       groupId: [null, Validators.required],
       teamId: [null, Validators.required]
     });
-    this.editEmployeeForm.get('organizationId').disable();
+    this.editEmployeeForm.get('organizationId')?.disable();
 
     this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.employee = data['employee'];
@@ -96,14 +96,14 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
       });
   }
 
-  loadFullTeam(id): void {
+  loadFullTeam(id: number): void {
     this.teamService.getFullTeam(id).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       this.fullTeam = res;
       this.loadOrgData(this.fullTeam);
     });
   }
 
-  async loadModeratorGroups(id, EmployeeId: number) {
+  async loadModeratorGroups(id: number, EmployeeId: number) {
     try {
       const fullTeam = await lastValueFrom(this.teamService.getFullTeam(id).pipe(takeUntil(this.destroy$)));
       this.fullTeam = fullTeam;
@@ -115,7 +115,7 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
       try {
         const currModerGroup = await firstValueFrom(this.groupService.getModeratorGroups(moderator.id).pipe(takeUntil(this.destroy$)));
         this.currentModeratorGroups = currModerGroup;
-      } catch (error) {
+      } catch (error: any) {
         this.currentModeratorGroups = [];
         this.alertify.error(error.error);
       }
@@ -123,7 +123,7 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
       try {
         const res = await firstValueFrom(this.groupService.getModeratorFreeGroups(this.fullTeam.organizationId, moderatorMin).pipe(takeUntil(this.destroy$)));
         this.freeModeratorGroups = res;
-      } catch (error) {
+      } catch (error: any) {
         this.alertify.error(error.error);
       }
     } catch (error) {
@@ -132,7 +132,7 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
   }
 
   loadOrgData(fullTeam: FullTeam) {
-    this.editEmployeeForm.get('organizationId').setValue(fullTeam.organizationId);
+    this.editEmployeeForm.get('organizationId')?.setValue(fullTeam.organizationId);
     this.organizationService.getInnerGroupsForSelect(fullTeam.organizationId).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res !== null) {
         this.innerGroupsSelect = [
@@ -142,7 +142,7 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
       }
     });
 
-    this.editEmployeeForm.get('groupId').setValue(fullTeam.groupId);
+    this.editEmployeeForm.get('groupId')?.setValue(fullTeam.groupId);
     this.groupService.getInnerTeamsForSelect(fullTeam.groupId).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res !== null) {
         this.innerTeamsSelect = [];
@@ -152,10 +152,10 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
         ];
       }
     });
-    this.editEmployeeForm.get('teamId').setValue(fullTeam.teamId);
+    this.editEmployeeForm.get('teamId')?.setValue(fullTeam.teamId);
   }
 
-  loadInnerGroups(id): void {
+  loadInnerGroups(id: number | null): void {
     if (id == null)
       return;
     this.organizationService.getInnerGroupsForSelect(id).pipe(takeUntil(this.destroy$)).subscribe((res) => {
@@ -164,12 +164,12 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
           {value: null, display: 'Select Group', hidden: true},
           ...res
         ];
-        this.editEmployeeForm.get('teamId').setValue(null);
+        this.editEmployeeForm.get('teamId')?.setValue(null);
       }
     });
   }
 
-  loadInnerTeams(id): void {
+  loadInnerTeams(id: number | null): void {
     if (id == null)
       return;
     this.groupService.getInnerTeamsForSelect(id).pipe(takeUntil(this.destroy$)).subscribe((res) => {
@@ -179,7 +179,7 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
           {value: null, display: 'Select Team', hidden: true},
           ...res
         ];
-        this.editEmployeeForm.get('teamId').setValue(null);
+        this.editEmployeeForm.get('teamId')?.setValue(null);
       }
     });
   }
@@ -199,7 +199,7 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
       .filter(elem => elem !== newGroupId);
     }
 
-    this.groupService.updateModeratorGroups(moderatorId, moderatorGroups).pipe(takeUntil(this.destroy$)).subscribe({
+    this.groupService.updateModeratorGroups(moderatorId, moderatorGroups.groups).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.loadModeratorGroups(this.employee.teamId, this.employee.id);
         this.alertify.success('Success');

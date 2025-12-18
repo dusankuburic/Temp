@@ -8,13 +8,13 @@ import { EngagementService } from '../../services/engagement.service';
 import { PaginatedResult } from 'src/app/core/models/pagination';
 
 @Injectable()
-export class EngagementWithEmployeeResolver implements Resolve<PaginatedResult<Employee[]>> {
+export class EngagementWithEmployeeResolver implements Resolve<PaginatedResult<Employee[]> | null> {
     constructor(
         private engagementService: EngagementService,
         private router: Router,
         private alertify: AlertifyService){}
 
-    resolve(): Observable<PaginatedResult<Employee[]>> {
+    resolve(): Observable<PaginatedResult<Employee[]> | null> {
         this.engagementService.resetEngagementParams();
         return this.engagementService.getEmployeesWithEngagement().pipe(
             catchError(() => {

@@ -44,13 +44,14 @@ getInnerTeams(groupId: number): Observable<PagedInnerTeams> {
   return this.http.get<InnerTeams>(this.baseUrl + 'groups/paged-inner-teams', {observe: 'response', params})
     .pipe(
       map(response => {
-        paginatedResult.result = response.body.teams;
+        const body = response.body!;
+        paginatedResult.result = body.teams;
         if (response.headers.get('Pagination') != null) {
-          paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+          paginatedResult.pagination = JSON.parse(response.headers.get('Pagination') ?? '{}');
         }
         return {
-          id: response.body.id,
-          name: response.body.name,
+          id: body.id,
+          name: body.name,
           teams: paginatedResult
         }
       })

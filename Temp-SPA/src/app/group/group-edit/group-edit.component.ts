@@ -13,9 +13,9 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
   templateUrl: './group-edit.component.html'
 })
 export class GroupEditComponent extends DestroyableComponent implements OnInit {
-  editGroupForm: FormGroup;
-  group: Group;
-  organizationId: number;
+  editGroupForm!: FormGroup;
+  group!: Group;
+  organizationId!: number;
 
   name = new FormControl('',[
     Validators.required,
@@ -37,7 +37,7 @@ export class GroupEditComponent extends DestroyableComponent implements OnInit {
       name: this.name
     });
 
-    this.organizationId = parseInt(this.route.snapshot.paramMap.get('organizationId'));
+    this.organizationId = parseInt(this.route.snapshot.paramMap.get('organizationId') ?? '0');
 
     this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.group = data['group'];

@@ -7,7 +7,7 @@ import { AlertifyService } from '../../services/alertify.service';
 import { EmployeeService } from '../../services/employee.service';
 
 @Injectable()
-export class EmployeeEditResolver implements Resolve<Employee> {
+export class EmployeeEditResolver implements Resolve<Employee | null> {
 
     constructor(
         private employeeService: EmployeeService,
@@ -15,7 +15,7 @@ export class EmployeeEditResolver implements Resolve<Employee> {
         private alertify: AlertifyService) {}
 
 
-    resolve(route: ActivatedRouteSnapshot): Observable<Employee>{
+    resolve(route: ActivatedRouteSnapshot): Observable<Employee | null> {
         return this.employeeService.getEmployee(route.params['id']).pipe(
             catchError(() => {
                 this.alertify.error('Unable to get Employee');

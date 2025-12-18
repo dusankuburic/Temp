@@ -20,14 +20,14 @@ export class EngagementCreateModalComponent extends DestroyableComponent impleme
   
 
   title?: string;
-  employeeId: number;
-  createEngagementForm: FormGroup;
-  engagement: Engagement;
+  employeeId!: number;
+  createEngagementForm!: FormGroup;
+  engagement!: Engagement;
 
-  existingEngagements: ExistingEngagement[];
-  employee: Employee;
-  workplacesList: SelectionOption[];
-  employmentStatusesList: SelectionOption[];
+  existingEngagements!: ExistingEngagement[];
+  employee!: Employee;
+  workplacesList!: SelectionOption[];
+  employmentStatusesList!: SelectionOption[];
 
   salary = new FormControl('', [
     Validators.required,
@@ -59,7 +59,7 @@ export class EngagementCreateModalComponent extends DestroyableComponent impleme
     });
 
     this.engagementService.getEngagementForEmployee(this.employeeId).pipe(takeUntil(this.destroy$)).subscribe({
-      next: (res) => {
+      next: (res: ExistingEngagement[]) => {
         this.existingEngagements = res;
       },
       error: () => {

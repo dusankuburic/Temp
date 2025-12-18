@@ -7,14 +7,14 @@ import { AlertifyService } from '../../services/alertify.service';
 import { EmploymentStatusService } from '../../services/employment-status.service';
 
 @Injectable()
-export class EmploymentStatusEditResolver implements Resolve<EmploymentStatus> {
+export class EmploymentStatusEditResolver implements Resolve<EmploymentStatus | null> {
 
     constructor(
         private employmentStatusService: EmploymentStatusService,
         private router: Router,
         private alertify: AlertifyService) {}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<EmploymentStatus> {
+    resolve(route: ActivatedRouteSnapshot): Observable<EmploymentStatus | null> {
         return this.employmentStatusService.getEmploymentStatus(route.params['id']).pipe(
             catchError(() => {
                 this.alertify.error('Unable to get Employment status');

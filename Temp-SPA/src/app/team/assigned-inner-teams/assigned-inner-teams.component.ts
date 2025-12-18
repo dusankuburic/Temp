@@ -13,9 +13,9 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 })
 export class AssignedInnerTeamsComponent extends DestroyableComponent implements OnInit {
   listIcon = faList;
-  group: InnerGroup;
-  innerTeams: InnerTeam[];
-  pagination: Pagination;
+  group!: InnerGroup;
+  innerTeams!: InnerTeam[];
+  pagination!: Pagination;
 
   constructor(
     private route: ActivatedRoute) {

@@ -45,9 +45,9 @@ getPagedEmploymentStatuses(): Observable<PaginatedResult<EmploymentStatus[]>> {
   return this.http.get<EmploymentStatus[]>(this.baseUrl + 'employmentStatuses/paged-employmentstatuses', {observe: 'response', params})
     .pipe(
       map(response => {
-        paginatedResult.result = response.body;
+        paginatedResult.result = response.body ?? [];
         if(response.headers.get('Pagination') != null) {
-          paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+          paginatedResult.pagination = JSON.parse(response.headers.get('Pagination') ?? '{}');
         }
         return paginatedResult;
       })

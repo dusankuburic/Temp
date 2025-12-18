@@ -27,12 +27,12 @@ export class GroupListComponent extends DestroyableComponent implements OnInit, 
   plusIcon = faPlusCircle;
 
   bsModalRef?: BsModalRef;
-  subscriptions: Subscription;
-  filtersForm: FormGroup;
-  innerGroups: InnerGroup[];
-  pagination: Pagination;
-  organization: Organization;
-  groupParams: GroupParams;
+  subscriptions!: Subscription;
+  filtersForm!: FormGroup;
+  innerGroups!: InnerGroup[];
+  pagination!: Pagination;
+  organization!: Organization;
+  groupParams!: GroupParams;
   teamSelect: SelectionOption[] = [
     {value: '', display: 'Select with teams', disabled: true},
     {value: 'all', display: 'All'},
@@ -57,7 +57,7 @@ export class GroupListComponent extends DestroyableComponent implements OnInit, 
 
   ngAfterViewInit(): void {
     const withTeamsControl = this.filtersForm.get('withTeams');
-    withTeamsControl.valueChanges.pipe(
+    withTeamsControl?.valueChanges.pipe(
       debounceTime(100),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -71,7 +71,7 @@ export class GroupListComponent extends DestroyableComponent implements OnInit, 
     });
 
     const nameControl = this.filtersForm.get('name');
-    nameControl.valueChanges.pipe(
+    nameControl?.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -109,7 +109,7 @@ export class GroupListComponent extends DestroyableComponent implements OnInit, 
     this.bsModalRef = this.bsModalService.show(GroupCreateModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadGroups();
 
         this.unsubscribe();
@@ -130,7 +130,7 @@ export class GroupListComponent extends DestroyableComponent implements OnInit, 
     this.bsModalRef = this.bsModalService.show(GroupEditModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
       this.subscriptions.add(this.bsModalRef.onHidden.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        if (this.bsModalRef.content.isSaved)
+        if (this.bsModalRef?.content?.isSaved)
           this.loadGroups();
 
         this.unsubscribe();

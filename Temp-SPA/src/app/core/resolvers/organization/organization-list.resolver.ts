@@ -8,13 +8,13 @@ import { OrganizationService } from '../../services/organization.service';
 import { PaginatedResult } from '../../models/pagination';
 
 @Injectable()
-export class OrganizationListResolver implements Resolve<PaginatedResult<Organization[]>> {
+export class OrganizationListResolver implements Resolve<PaginatedResult<Organization[]> | null> {
     constructor(
         private organizationService: OrganizationService,
         private router: Router,
         private alertify: AlertifyService) {}
     
-    resolve(): Observable<PaginatedResult<Organization[]>> {
+    resolve(): Observable<PaginatedResult<Organization[]> | null> {
         this.organizationService.resetOrganizationParams();
         return this.organizationService.getPagedOrganizations().pipe(
             catchError(() => {
