@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Group } from '../../models/group';
@@ -7,7 +7,7 @@ import { AlertifyService } from '../../services/alertify.service';
 import { GroupService } from '../../services/group.service';
 
 @Injectable()
-export class GroupEditResolver  {
+export class GroupEditResolver implements Resolve<Group> {
 
     constructor(
         private groupService: GroupService,

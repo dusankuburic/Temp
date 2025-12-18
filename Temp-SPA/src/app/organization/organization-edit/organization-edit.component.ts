@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { takeUntil } from 'rxjs';
 import { Organization } from 'src/app/core/models/organization';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-organization-edit',
   templateUrl: './organization-edit.component.html'
 })
-export class OrganizationEditComponent implements OnInit {
+export class OrganizationEditComponent extends DestroyableComponent implements OnInit {
   editOrganizationForm: FormGroup;
   organization: Organization;
 
@@ -22,14 +24,16 @@ export class OrganizationEditComponent implements OnInit {
     private organizationService: OrganizationService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private alertify: AlertifyService) { }
+    private alertify: AlertifyService) {
+    super();
+  }
 
   ngOnInit(): void {
     this.editOrganizationForm = this.fb.group({
       name: this.name
     });
 
-    this.route.data.subscribe(data => {
+    this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.organization = data['organization'];
       this.setupForm(this.organization);
     });
@@ -46,7 +50,7 @@ export class OrganizationEditComponent implements OnInit {
 
   update(): void {
     const request: Organization = {...this.editOrganizationForm.value, id: this.organization.id};
-    this.organizationService.updateOrganization(request).subscribe({
+    this.organizationService.updateOrganization(request).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.alertify.success('Successfully updated');
       },

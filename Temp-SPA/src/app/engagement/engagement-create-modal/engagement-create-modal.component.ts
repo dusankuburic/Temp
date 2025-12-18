@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { takeUntil } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
 import { Engagement, ExistingEngagement } from 'src/app/core/models/engagement';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -9,12 +10,13 @@ import { EmploymentStatusService } from 'src/app/core/services/employment-status
 import { EngagementService } from 'src/app/core/services/engagement.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-engagement-create-modal',
   templateUrl: './engagement-create-modal.component.html'
 })
-export class EngagementCreateModalComponent implements OnInit{
+export class EngagementCreateModalComponent extends DestroyableComponent implements OnInit{
   
 
   title?: string;
@@ -43,7 +45,9 @@ export class EngagementCreateModalComponent implements OnInit{
     private workplaceService: WorkplaceService,
     private fb: FormBuilder,
     private alertify: AlertifyService,
-    public bsModalRef: BsModalRef) { }
+    public bsModalRef: BsModalRef) {
+    super();
+  }
 
   ngOnInit(): void {
     this.createEngagementForm = this.fb.group({
@@ -54,7 +58,7 @@ export class EngagementCreateModalComponent implements OnInit{
       employmentStatusId: [null, Validators.required]
     });
 
-    this.engagementService.getEngagementForEmployee(this.employeeId).subscribe({
+    this.engagementService.getEngagementForEmployee(this.employeeId).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.existingEngagements = res;
       },
@@ -69,7 +73,7 @@ export class EngagementCreateModalComponent implements OnInit{
   }
 
   loadEmployee(): void {
-    this.employeeService.getEmployee(this.employeeId).subscribe({
+    this.employeeService.getEmployee(this.employeeId).pipe(takeUntil(this.destroy$)).subscribe({
         next: (res: any) => {
           this.employee = res;
         },
@@ -80,7 +84,7 @@ export class EngagementCreateModalComponent implements OnInit{
   }
 
   loadWorkplaces(): void {
-    this.workplaceService.getWorkplacesForSelect().subscribe({
+    this.workplaceService.getWorkplacesForSelect().pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.workplacesList = [
           {value: null, display: 'Select Workplace', disabled: true},
@@ -94,7 +98,7 @@ export class EngagementCreateModalComponent implements OnInit{
   }
 
   loadEmploymentStatuses(): void {
-    this.employmentStatusService.getEmploymentStatusesForSelect().subscribe({
+    this.employmentStatusService.getEmploymentStatusesForSelect().pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.employmentStatusesList = [
           {value: null, display: 'Select Team', disabled: true},
@@ -108,7 +112,7 @@ export class EngagementCreateModalComponent implements OnInit{
   }
 
   loadEngagements(): void {
-    this.engagementService.getEngagementForEmployee(this.employee.id).subscribe({
+    this.engagementService.getEngagementForEmployee(this.employee.id).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res: any) => {
         this.existingEngagements = res;
       },
@@ -120,7 +124,7 @@ export class EngagementCreateModalComponent implements OnInit{
 
   create(): void {
     this.engagement = { ...this.createEngagementForm.value, employeeId: this.employee.id };
-    this.engagementService.createEngagement(this.engagement).subscribe({
+    this.engagementService.createEngagement(this.engagement).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.bsModalRef.content.isSaved = true;
         this.loadEngagements();

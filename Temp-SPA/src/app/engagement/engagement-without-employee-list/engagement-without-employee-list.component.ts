@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subscription, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 import { Employee } from 'src/app/core/models/employee';
 import { EngagementParams } from 'src/app/core/models/engagement';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
@@ -16,7 +17,7 @@ import { EngagementCreateModalComponent } from '../engagement-create-modal/engag
   selector: 'app-engagement-without-employee-list',
   templateUrl: './engagement-without-employee-list.component.html'
 })
-export class EngagementWithoutEmployeeListComponent implements OnInit, AfterViewInit {
+export class EngagementWithoutEmployeeListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   addEngagementIcon = faCodeBranch
 
   bsModalRef?: BsModalRef;
@@ -38,7 +39,8 @@ export class EngagementWithoutEmployeeListComponent implements OnInit, AfterView
     private engagementService: EngagementService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private bsModalService: BsModalService) { 
+    private bsModalService: BsModalService) {
+      super();
       this.engagementParams = engagementService.getEngagementParams();
 
       this.filtersForm = this.fb.group({
@@ -53,6 +55,7 @@ export class EngagementWithoutEmployeeListComponent implements OnInit, AfterView
     roleControl.valueChanges.pipe(
       debounceTime(100),
       distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe((searchFor) => {
       const params = this.engagementService.getEngagementParams();
       params.pageNumber = 1;
@@ -65,7 +68,8 @@ export class EngagementWithoutEmployeeListComponent implements OnInit, AfterView
     const firstNameControl = this.filtersForm.get('firstName');
     firstNameControl.valueChanges.pipe(
       debounceTime(600),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe((searchFor) => {
       const params = this.engagementService.getEngagementParams();
       params.pageNumber = 1;
@@ -78,7 +82,8 @@ export class EngagementWithoutEmployeeListComponent implements OnInit, AfterView
     const lastNameControl = this.filtersForm.get('lastName');
     lastNameControl.valueChanges.pipe(
       debounceTime(600),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe((searchFor) => {
       const params = this.engagementService.getEngagementParams();
       params.pageNumber = 1;
@@ -90,7 +95,7 @@ export class EngagementWithoutEmployeeListComponent implements OnInit, AfterView
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
+    this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.employees = data['employeesWithout'].result;
       this.pagination = data['employeesWithout'].pagination;
     });
@@ -107,7 +112,7 @@ export class EngagementWithoutEmployeeListComponent implements OnInit, AfterView
     this.subscriptions = new Subscription();
     this.bsModalRef = this.bsModalService.show(EngagementCreateModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
-      this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
+      this.subscriptions.add(this.bsModalRef.onHidden.pipe(takeUntil(this.destroy$)).subscribe(() => {
         if (this.bsModalRef.content.isSaved)
           this.loadEmployeesWithoutEngagement();
 
@@ -122,6 +127,7 @@ export class EngagementWithoutEmployeeListComponent implements OnInit, AfterView
 
   loadEmployeesWithoutEngagement(): void {
     this.engagementService.getEmployeesWithoutEngagement()
+    .pipe(takeUntil(this.destroy$))
     .subscribe({
       next: (res: PaginatedResult<Employee[]>) => {
         this.employees = res.result;

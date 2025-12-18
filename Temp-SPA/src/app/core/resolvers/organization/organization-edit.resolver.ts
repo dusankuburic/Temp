@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Organization } from '../../models/organization';
@@ -7,7 +7,7 @@ import { AlertifyService } from '../../services/alertify.service';
 import { OrganizationService } from '../../services/organization.service';
 
 @Injectable()
-export class OrganizationEditResolver  {
+export class OrganizationEditResolver implements Resolve<Organization> {
 
     constructor(
         private organizationService: OrganizationService,

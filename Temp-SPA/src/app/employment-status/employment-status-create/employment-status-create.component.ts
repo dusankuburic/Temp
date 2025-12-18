@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmploymentStatusService } from 'src/app/core/services/employment-status.service';
 import { EmploymentStatusValidators } from '../employment-status-validators';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-employment-status-create',
   templateUrl: './employment-status-create.component.html'
 })
-export class EmploymentStatusCreateComponent implements OnInit {
+export class EmploymentStatusCreateComponent extends DestroyableComponent implements OnInit {
   createEmploymentStatusForm: FormGroup;
   employmentStatus: EmploymentStatus;
 
@@ -23,7 +25,9 @@ export class EmploymentStatusCreateComponent implements OnInit {
     private employmentStatusService: EmploymentStatusService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private validators: EmploymentStatusValidators) { }
+    private validators: EmploymentStatusValidators) {
+      super();
+    }
 
   ngOnInit(): void {
     this.createEmploymentStatusForm = this.fb.group({
@@ -33,7 +37,7 @@ export class EmploymentStatusCreateComponent implements OnInit {
 
   create(): void {
     this.employmentStatus = { ...this.createEmploymentStatusForm.value };
-    this.employmentStatusService.createEmploymentStatus(this.employmentStatus).subscribe({
+    this.employmentStatusService.createEmploymentStatus(this.employmentStatus).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.alertify.success('Successfully created');
         this.createEmploymentStatusForm.reset();

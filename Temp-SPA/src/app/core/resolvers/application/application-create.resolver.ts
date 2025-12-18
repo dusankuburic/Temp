@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Team } from 'src/app/core/models/team';
@@ -7,7 +7,7 @@ import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { TeamService } from 'src/app/core/services/team.service';
 
 @Injectable()
-export class ApplicationCreateResolver  {
+export class ApplicationCreateResolver implements Resolve<Team> {
 
     constructor(
         private teamService: TeamService,

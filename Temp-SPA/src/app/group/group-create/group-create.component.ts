@@ -1,18 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { takeUntil } from 'rxjs';
 import { Group } from 'src/app/core/models/group';
 import { Organization } from 'src/app/core/models/organization';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { GroupValidators } from '../group-validators';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-group-create',
   templateUrl: './group-create.component.html'
 })
 
-export class GroupCreateComponent implements OnInit {
+export class GroupCreateComponent extends DestroyableComponent implements OnInit {
   createGroupForm: FormGroup;
   organization: Organization;
   group: Group;
@@ -27,14 +29,16 @@ export class GroupCreateComponent implements OnInit {
     private route: ActivatedRoute,
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private validators: GroupValidators) { }
+    private validators: GroupValidators) {
+      super();
+    }
 
   ngOnInit(): void {
     this.createGroupForm = this.fb.group({
       name: this.name
     });
 
-    this.route.data.subscribe(data => {
+    this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.organization = data['organization'];
       this.setupForm(this.organization);
     });
@@ -46,7 +50,7 @@ export class GroupCreateComponent implements OnInit {
 
   create(): void {
     this.group = {...this.createGroupForm.value, organizationId: this.organization.id };
-    this.groupService.createGroup(this.group).subscribe({
+    this.groupService.createGroup(this.group).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.alertify.success('Successfully created');
         this.createGroupForm.reset();
@@ -55,6 +59,6 @@ export class GroupCreateComponent implements OnInit {
         this.alertify.error('Unable to create group');
       }
     });
-  
+
   }
 }

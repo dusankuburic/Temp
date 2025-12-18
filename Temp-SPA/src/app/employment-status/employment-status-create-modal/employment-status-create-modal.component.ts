@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 import { EmploymentStatus } from 'src/app/core/models/employmentStatus';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmploymentStatusService } from 'src/app/core/services/employment-status.service';
 import { EmploymentStatusValidators } from '../employment-status-validators';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-employment-status-create-modal',
   templateUrl: './employment-status-create-modal.component.html'
 })
-export class EmploymentStatusCreateModalComponent implements OnInit {
+export class EmploymentStatusCreateModalComponent extends DestroyableComponent implements OnInit {
   createEmploymentStatusForm: FormGroup;
   employmentStatus: EmploymentStatus;
   title?: string;
@@ -26,7 +28,9 @@ export class EmploymentStatusCreateModalComponent implements OnInit {
     private fb: FormBuilder,
     private alertify: AlertifyService,
     private validators: EmploymentStatusValidators,
-    public bsModalRef: BsModalRef) { }
+    public bsModalRef: BsModalRef) {
+      super();
+    }
 
   ngOnInit(): void {
     this.createEmploymentStatusForm = this.fb.group({
@@ -36,7 +40,7 @@ export class EmploymentStatusCreateModalComponent implements OnInit {
 
   create(): void {
     this.employmentStatus = { ...this.createEmploymentStatusForm.value };
-    this.employmentStatusService.createEmploymentStatus(this.employmentStatus).subscribe({
+    this.employmentStatusService.createEmploymentStatus(this.employmentStatus).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.bsModalRef.content.isSaved = true;
         this.alertify.success('Successfully created');

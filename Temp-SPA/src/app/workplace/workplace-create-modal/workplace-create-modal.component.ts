@@ -5,12 +5,14 @@ import { Workplace } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
 import { WorkplaceValidators } from 'src/app/workplace/workplace-validators';
+import { takeUntil } from 'rxjs';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'workplace-create-modal',
   templateUrl: './workplace-create-modal.component.html'
 })
-export class WorkplaceCreateModalComponent implements OnInit {
+export class WorkplaceCreateModalComponent extends DestroyableComponent implements OnInit {
   createWorkplaceForm: FormGroup;
   workplace: Workplace;
   title?: string;
@@ -26,7 +28,9 @@ export class WorkplaceCreateModalComponent implements OnInit {
     private alertify: AlertifyService,
     private fb: FormBuilder,
     private validators: WorkplaceValidators,
-    public bsModalRef: BsModalRef) {}
+    public bsModalRef: BsModalRef) {
+      super();
+    }
     
 
     ngOnInit(): void {
@@ -37,7 +41,7 @@ export class WorkplaceCreateModalComponent implements OnInit {
 
     create(): void {
       this.workplace = { ...this.createWorkplaceForm.value };
-      this.workplaceService.createWorkplace(this.workplace).subscribe({
+      this.workplaceService.createWorkplace(this.workplace).pipe(takeUntil(this.destroy$)).subscribe({
         next: () => {
           this.bsModalRef.content.isSaved = true;
           this.createWorkplaceForm.reset();

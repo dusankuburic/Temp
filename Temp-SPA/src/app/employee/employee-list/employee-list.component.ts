@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faLock, faLockOpen, faPlusCircle, faSitemap, faUserTimes } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subscription, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { Employee, EmployeeParams } from 'src/app/core/models/employee';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { UnassignRoleDto } from 'src/app/core/models/unassignRoleDto';
@@ -13,12 +13,13 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
 import { EmployeeCreateModalComponent } from '../employee-create-modal/employee-create-modal.component';
 import { EmployeeEditModalComponent } from '../employee-edit-modal/employee-edit-modal.component';
 import { EmployeeAssignRoleModalComponent } from '../employee-assign-role-modal/employee-assign-role-modal.component';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-employee-list',
   templateUrl: './employee-list.component.html'
 })
-export class EmployeeListComponent implements OnInit, AfterViewInit {
+export class EmployeeListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   editIcon = faEdit
   assignRoleIcon = faSitemap
   removeRoleIcon = faUserTimes
@@ -46,7 +47,8 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
     private employeeService: EmployeeService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private bsModalService: BsModalService) {  
+    private bsModalService: BsModalService) {
+      super();
       this.employeeParams = employeeService.getEmployeeParams();
 
       this.filtersForm = this.fb.group({
@@ -60,7 +62,8 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
     const roleControl = this.filtersForm.get('role');
     roleControl.valueChanges.pipe(
       debounceTime(100),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe((searchFor) => {
         const params = this.employeeService.getEmployeeParams();
         params.pageNumber = 1;
@@ -69,11 +72,12 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
         this.employeeParams = params;
         this.loadEmployees();
     });
-    
+
     const firstNameControl = this.filtersForm.get('firstName');
     firstNameControl.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe((searchFor) => {
         const params = this.employeeService.getEmployeeParams();
         params.pageNumber = 1;
@@ -87,6 +91,7 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
     lastNameControl.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe((searchFor) => {
       const params = this.employeeService.getEmployeeParams();
       params.pageNumber = 1;
@@ -98,7 +103,9 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
+    this.route.data.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(data => {
       this.employees = data['employees'].result;
       this.pagination = data['employees'].pagination;
     });
@@ -171,6 +178,7 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
 
   loadEmployees(): void {
     this.employeeService.getEmployees()
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: PaginatedResult<Employee[]>) => {
           this.employees = res.result;
@@ -195,28 +203,32 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
 
   removeRole(id: number): void {
     this.unassignRoleDto = {id: id};
-    this.employeeService.unassignRole(this.unassignRoleDto).subscribe({
-      next: () => {
-        this.loadEmployees();
-        this.alertify.success('Remove role');
-      },
-      error: () => {
-        this.alertify.error('Unable to remove role');
-      }
-    });
+    this.employeeService.unassignRole(this.unassignRoleDto)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.loadEmployees();
+          this.alertify.success('Remove role');
+        },
+        error: () => {
+          this.alertify.error('Unable to remove role');
+        }
+      });
   }
 
   changeStatus(id: number): void {
     this.unassignRoleDto = {id: id};
-    this.employeeService.changeStatus(id).subscribe({
-      next: () => {
-        this.loadEmployees();
-        this.alertify.success('Status changed');
-      },
-      error: () => {
-        this.alertify.error('Unable to change status');
-      }
-    });
+    this.employeeService.changeStatus(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.loadEmployees();
+          this.alertify.success('Status changed');
+        },
+        error: () => {
+          this.alertify.error('Unable to change status');
+        }
+      });
   }
 
 

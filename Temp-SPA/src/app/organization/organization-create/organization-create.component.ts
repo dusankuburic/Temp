@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 import { Organization } from 'src/app/core/models/organization';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
 import { OrganizationValidators } from '../organization-validators';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-organization-create',
   templateUrl: './organization-create.component.html'
 })
-export class OrganizationCreateComponent implements OnInit {
+export class OrganizationCreateComponent extends DestroyableComponent implements OnInit {
   createOrganizationForm: FormGroup;
   organization: Organization;
 
@@ -23,7 +25,9 @@ export class OrganizationCreateComponent implements OnInit {
     private organizationService: OrganizationService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private validators: OrganizationValidators) { }
+    private validators: OrganizationValidators) {
+    super();
+  }
 
   ngOnInit(): void {
     this.createOrganizationForm = this.fb.group({
@@ -33,7 +37,7 @@ export class OrganizationCreateComponent implements OnInit {
 
   create(): void {
     this.organization = {...this.createOrganizationForm.value};
-    this.organizationService.createOrganization(this.organization).subscribe({
+    this.organizationService.createOrganization(this.organization).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.alertify.success('Successfully created');
         this.createOrganizationForm.reset();

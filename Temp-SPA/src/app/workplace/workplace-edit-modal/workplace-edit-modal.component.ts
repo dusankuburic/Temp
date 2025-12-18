@@ -5,12 +5,14 @@ import { WorkplaceService } from 'src/app/core/services/workplace.service';
 import { WorkplaceValidators } from '../workplace-validators';
 import { Workplace } from 'src/app/core/models/workplace';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { takeUntil } from 'rxjs';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'workplace-edit-modal',
   templateUrl: './workplace-edit-modal.component.html'
 })
-export class WorkplaceEditModalComponent implements OnInit {
+export class WorkplaceEditModalComponent extends DestroyableComponent implements OnInit {
   editWorkplaceForm: FormGroup;
   workplace: Workplace;
   title?: string;
@@ -26,14 +28,16 @@ export class WorkplaceEditModalComponent implements OnInit {
     private fb: FormBuilder,
     private alertify: AlertifyService,
     private validators: WorkplaceValidators,
-    public bsModalRef: BsModalRef) {}
+    public bsModalRef: BsModalRef) {
+      super();
+    }
 
     ngOnInit(): void {
       this.editWorkplaceForm = this.fb.group({
         name: this.name
       });
 
-      this.workplaceService.getWorkplace(this.workplaceId).subscribe({
+      this.workplaceService.getWorkplace(this.workplaceId).pipe(takeUntil(this.destroy$)).subscribe({
         next: (res) => {
           this.workplace = res;
           this.setupForm(this.workplace);
@@ -54,7 +58,7 @@ export class WorkplaceEditModalComponent implements OnInit {
   
     update(): void {
       const workplaceForm = { ...this.editWorkplaceForm.value, id: this.workplace.id};
-      this.workplaceService.updateWorkplace(workplaceForm).subscribe({
+      this.workplaceService.updateWorkplace(workplaceForm).pipe(takeUntil(this.destroy$)).subscribe({
         next: () => {
           this.bsModalRef.content.isSaved = true;
           this.alertify.success('Successfully updated');

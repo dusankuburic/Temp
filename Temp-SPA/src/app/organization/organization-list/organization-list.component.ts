@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faPlusCircle, faProjectDiagram, faTrashAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subscription, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { Organization, OrganizationParams } from 'src/app/core/models/organization';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -11,12 +11,13 @@ import { OrganizationService } from 'src/app/core/services/organization.service'
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 import { OrganizationCreateModalComponent } from '../organization-create-modal/organization-create-modal.component';
 import { OrganizationEditModalComponent } from '../organization-edit-modal/organization-edit-modal.component';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-organization-list',
   templateUrl: './organization-list.component.html'
 })
-export class OrganizationListComponent implements OnInit, AfterViewInit {
+export class OrganizationListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   editOrganizationIcon = faEdit
   archiveOrganizationIcon = faTrashAlt
   innerGroupsIcon = faUsers
@@ -41,7 +42,8 @@ export class OrganizationListComponent implements OnInit, AfterViewInit {
     private organizationsService: OrganizationService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private bsModalService: BsModalService) { 
+    private bsModalService: BsModalService) {
+      super();
       this.organizationParams = organizationsService.getOrganizationParams();
 
       this.filtersForm = this.fb.group({
@@ -54,7 +56,8 @@ export class OrganizationListComponent implements OnInit, AfterViewInit {
     const withGroupsControl = this.filtersForm.get('withGroups');
     withGroupsControl.valueChanges.pipe(
       debounceTime(100),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe((searchFor) => {
       const params = this.organizationsService.getOrganizationParams();
       params.pageNumber = 1;
@@ -67,7 +70,8 @@ export class OrganizationListComponent implements OnInit, AfterViewInit {
     const nameControl = this.filtersForm.get('name');
     nameControl.valueChanges.pipe(
       debounceTime(600),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe((searchFor) => {
       const params = this.organizationsService.getOrganizationParams();
       params.pageNumber = 1;
@@ -79,7 +83,7 @@ export class OrganizationListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
+    this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.organizations = data['organizations'].result;
       this.pagination = data['organizations'].pagination;
     });
@@ -95,10 +99,10 @@ export class OrganizationListComponent implements OnInit, AfterViewInit {
     this.subscriptions = new Subscription();
     this.bsModalRef = this.bsModalService.show(OrganizationCreateModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
-      this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
+      this.subscriptions.add(this.bsModalRef.onHidden.pipe(takeUntil(this.destroy$)).subscribe(() => {
         if (this.bsModalRef.content.isSaved)
           this.loadOrganizations();
-        
+
         this.unsubscribe();
       }))
     }
@@ -115,10 +119,10 @@ export class OrganizationListComponent implements OnInit, AfterViewInit {
     this.subscriptions = new Subscription();
     this.bsModalRef = this.bsModalService.show(OrganizationEditModalComponent, initialState);
     if (this.bsModalRef?.onHidden) {
-      this.subscriptions.add(this.bsModalRef.onHidden.subscribe(() => {
+      this.subscriptions.add(this.bsModalRef.onHidden.pipe(takeUntil(this.destroy$)).subscribe(() => {
         if (this.bsModalRef.content.isSaved)
           this.loadOrganizations();
-        
+
           this.unsubscribe();
       }))
     }
@@ -130,6 +134,7 @@ export class OrganizationListComponent implements OnInit, AfterViewInit {
 
   loadOrganizations(): void {
     this.organizationsService.getPagedOrganizations()
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: PaginatedResult<Organization[]>) => {
           this.organizations = res.result;
@@ -153,7 +158,7 @@ export class OrganizationListComponent implements OnInit, AfterViewInit {
   }
 
   changeStatus(id: number): void {
-    this.organizationsService.changeStatus(id).subscribe({
+    this.organizationsService.changeStatus(id).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.loadOrganizations();
         this.alertify.success('Status changed');

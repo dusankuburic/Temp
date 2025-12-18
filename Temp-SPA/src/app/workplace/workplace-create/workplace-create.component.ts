@@ -4,12 +4,14 @@ import { Workplace } from 'src/app/core/models/workplace';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
 import { WorkplaceValidators } from '../workplace-validators';
+import { takeUntil } from 'rxjs';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-workplace-create',
   templateUrl: './workplace-create.component.html'
 })
-export class WorkplaceCreateComponent implements OnInit {
+export class WorkplaceCreateComponent extends DestroyableComponent implements OnInit {
   createWorkplaceForm: FormGroup;
   workplace: Workplace;
 
@@ -23,7 +25,9 @@ export class WorkplaceCreateComponent implements OnInit {
     private workplaceService: WorkplaceService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private validators: WorkplaceValidators) { }
+    private validators: WorkplaceValidators) {
+      super();
+    }
 
   ngOnInit(): void {
     this.createWorkplaceForm = this.fb.group({
@@ -33,7 +37,7 @@ export class WorkplaceCreateComponent implements OnInit {
 
   create(): void {
     this.workplace = { ...this.createWorkplaceForm.value };
-    this.workplaceService.createWorkplace(this.workplace).subscribe({
+    this.workplaceService.createWorkplace(this.workplace).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.alertify.success('Successfully created');
         this.createWorkplaceForm.reset();

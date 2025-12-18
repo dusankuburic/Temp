@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 import { Group } from 'src/app/core/models/group';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { GroupValidators } from '../group-validators';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-group-edit-modal',
   templateUrl: './group-edit-modal.component.html'
 })
-export class GroupEditModalComponent implements OnInit {
+export class GroupEditModalComponent extends DestroyableComponent implements OnInit {
   editGroupForm: FormGroup;
   group: Group;
 
@@ -29,14 +31,16 @@ export class GroupEditModalComponent implements OnInit {
     private fb: FormBuilder,
     private alertify: AlertifyService,
     public validators: GroupValidators,
-    public bsModalRef: BsModalRef) { }
+    public bsModalRef: BsModalRef) {
+      super();
+    }
 
   ngOnInit(): void {
     this.editGroupForm = this.fb.group({
       name: this.name
     });
 
-    this.groupService.getGroup(this.groupId).subscribe({
+    this.groupService.getGroup(this.groupId).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res: Group) => {
         this.group = res;
         this.setupForm(this.group);
@@ -58,7 +62,7 @@ export class GroupEditModalComponent implements OnInit {
   update(): void {
     const groupForm = { ...this.editGroupForm.value };
     this.group.name = groupForm.name;
-    this.groupService.updateGroup(this.group.id, this.group).subscribe({
+    this.groupService.updateGroup(this.group.id, this.group).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.bsModalRef.content.isSaved = true;
         this.alertify.success('Successfully updated');

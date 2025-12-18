@@ -14,6 +14,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AddAuthHeaderInterceptor } from './core/interceptors/auth-interceptor.interceptor';
+import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { UserModule } from './user/user.module';
 
 export function tokenGetter(): any {
@@ -46,6 +47,7 @@ export function tokenGetter(): any {
     FontAwesomeModule
   ],
   providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: AddAuthHeaderInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]

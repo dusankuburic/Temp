@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 import { Group } from 'src/app/core/models/group';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { GroupValidators } from '../group-validators';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-group-create-modal',
   templateUrl: './group-create-modal.component.html'
 })
-export class GroupCreateModalComponent {
+export class GroupCreateModalComponent extends DestroyableComponent {
   createGroupForm: FormGroup;
   group: Group;
   organizationId: number;
@@ -26,7 +28,9 @@ export class GroupCreateModalComponent {
     private alertify: AlertifyService,
     private fb: FormBuilder,
     private validators: GroupValidators,
-    public bsModalRef: BsModalRef) { }
+    public bsModalRef: BsModalRef) {
+      super();
+    }
 
 
     ngOnInit(): void {
@@ -39,7 +43,7 @@ export class GroupCreateModalComponent {
   
     create(): void {
       this.group = {...this.createGroupForm.value, organizationId: this.organizationId };
-      this.groupService.createGroup(this.group).subscribe({
+      this.groupService.createGroup(this.group).pipe(takeUntil(this.destroy$)).subscribe({
         next: () => {
           this.bsModalRef.content.isSaved = true;
           this.alertify.success('Successfully created');

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { takeUntil } from 'rxjs';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 import { Employee } from 'src/app/core/models/employee';
 import { Engagement, ExistingEngagement } from 'src/app/core/models/engagement';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
@@ -14,7 +16,7 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
   selector: 'app-engagement-create',
   templateUrl: './engagement-create.component.html'
 })
-export class EngagementCreateComponent implements OnInit {
+export class EngagementCreateComponent extends DestroyableComponent implements OnInit {
   employeeId: number;
   createEngagementForm: FormGroup;
   engagement: Engagement;
@@ -40,7 +42,9 @@ export class EngagementCreateComponent implements OnInit {
     private employeeService: EmployeeService,
     private workplaceService: WorkplaceService,
     private fb: FormBuilder,
-    private alertify: AlertifyService) { }
+    private alertify: AlertifyService) {
+    super();
+  }
 
   ngOnInit(): void {
     this.createEngagementForm = this.fb.group({
@@ -51,7 +55,7 @@ export class EngagementCreateComponent implements OnInit {
       employmentStatusId: [null, Validators.required]
     });
 
-    this.route.data.subscribe(data => {
+    this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.existingEngagements = data['employeeData'];
     });
 
@@ -62,7 +66,7 @@ export class EngagementCreateComponent implements OnInit {
 
   loadEmployee(): void {
     const employeeId = parseInt(this.route.snapshot.paramMap.get('id'))
-    this.employeeService.getEmployee(employeeId).subscribe({
+    this.employeeService.getEmployee(employeeId).pipe(takeUntil(this.destroy$)).subscribe({
         next: (res: any) => {
           this.employee = res;
         },
@@ -73,7 +77,7 @@ export class EngagementCreateComponent implements OnInit {
   }
 
   loadWorkplaces(): void {
-    this.workplaceService.getWorkplacesForSelect().subscribe({
+    this.workplaceService.getWorkplacesForSelect().pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.workplacesList = [
           {value: null, display: 'Select Workplace', disabled: true},
@@ -87,7 +91,7 @@ export class EngagementCreateComponent implements OnInit {
   }
 
   loadEmploymentStatuses(): void {
-    this.employmentStatusService.getEmploymentStatusesForSelect().subscribe({
+    this.employmentStatusService.getEmploymentStatusesForSelect().pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.employmentStatusesList = [
           {value: null, display: 'Select Team', disabled: true},
@@ -101,7 +105,7 @@ export class EngagementCreateComponent implements OnInit {
   }
 
   loadEngagements(): void {
-    this.engagementService.getEngagementForEmployee(this.employee.id).subscribe({
+    this.engagementService.getEngagementForEmployee(this.employee.id).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res: any) => {
         this.existingEngagements = res;
       },
@@ -113,7 +117,7 @@ export class EngagementCreateComponent implements OnInit {
 
   create(): void {
     this.engagement = { ...this.createEngagementForm.value, employeeId: this.employee.id };
-    this.engagementService.createEngagement(this.engagement).subscribe({
+    this.engagementService.createEngagement(this.engagement).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.loadEngagements();
         this.alertify.success('Successfully created');

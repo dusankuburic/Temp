@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { takeUntil } from 'rxjs';
 import { Group } from 'src/app/core/models/group';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { GroupValidators } from '../group-validators';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-group-edit',
   templateUrl: './group-edit.component.html'
 })
-export class GroupEditComponent implements OnInit {
+export class GroupEditComponent extends DestroyableComponent implements OnInit {
   editGroupForm: FormGroup;
   group: Group;
   organizationId: number;
@@ -26,7 +28,9 @@ export class GroupEditComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private alertify: AlertifyService,
-    public validators: GroupValidators) { }
+    public validators: GroupValidators) {
+      super();
+    }
 
   ngOnInit(): void {
     this.editGroupForm = this.fb.group({
@@ -35,7 +39,7 @@ export class GroupEditComponent implements OnInit {
 
     this.organizationId = parseInt(this.route.snapshot.paramMap.get('organizationId'));
 
-    this.route.data.subscribe(data => {
+    this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.group = data['group'];
       this.setupForm(this.group);
     });
@@ -55,7 +59,7 @@ export class GroupEditComponent implements OnInit {
   update(): void {
     const groupForm = { ...this.editGroupForm.value };
     this.group.name = groupForm.name;
-    this.groupService.updateGroup(this.group.id, this.group).subscribe({
+    this.groupService.updateGroup(this.group.id, this.group).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.alertify.success('Successfully updated');
       },

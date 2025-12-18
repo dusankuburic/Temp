@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { takeUntil } from 'rxjs';
 import { AlertifyService } from '../core/services/alertify.service';
 import { AuthService } from '../core/services/auth.service';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { DestroyableComponent } from '../core/base/destroyable.component';
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss']
 })
-export class NavComponent {
+export class NavComponent extends DestroyableComponent {
   signOutIcon = faSignOutAlt
   model: any = {};
 
@@ -17,7 +19,9 @@ export class NavComponent {
   constructor(
     public authService: AuthService,
     private alertify: AlertifyService,
-    private router: Router) { }
+    private router: Router) {
+    super();
+  }
 
 
   loggedIn(): any {
@@ -25,17 +29,19 @@ export class NavComponent {
   }
 
   logout(): void {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.authService.clearStorage();
-        this.alertify.message('logged out');
-        this.router.navigate(['']);
-      },
-      error: () => {
-        this.authService.clearStorage();
-        this.alertify.error('Unable to logout');
-      }
-    })
+    this.authService.logout()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.authService.clearStorage();
+          this.alertify.message('logged out');
+          this.router.navigate(['']);
+        },
+        error: () => {
+          this.authService.clearStorage();
+          this.alertify.error('Unable to logout');
+        }
+      });
   }
 
   

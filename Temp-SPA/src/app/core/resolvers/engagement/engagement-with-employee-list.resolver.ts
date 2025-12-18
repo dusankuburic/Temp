@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Resolve, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Employee } from '../../models/employee';
@@ -8,7 +8,7 @@ import { EngagementService } from '../../services/engagement.service';
 import { PaginatedResult } from 'src/app/core/models/pagination';
 
 @Injectable()
-export class EngagementWithEmployeeResolver  {
+export class EngagementWithEmployeeResolver implements Resolve<PaginatedResult<Employee[]>> {
     constructor(
         private engagementService: EngagementService,
         private router: Router,

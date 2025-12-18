@@ -4,6 +4,26 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+
+interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+interface LoginResponse {
+  token: string;
+  user: User;
+}
+
+interface JwtPayload {
+  unique_name: string;
+  nameid: string;
+  role: string;
+  nbf: number;
+  exp: number;
+  iat: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,38 +31,38 @@ import { map } from 'rxjs/operators';
 export class AuthService {
   baseUrl = environment.apiUrl;
   jwtHelper = new JwtHelperService();
-  decodedToken: any;
+  decodedToken: JwtPayload | null = null;
   currentUser!: User;
 
 constructor(private http: HttpClient) { }
 
-login(model: any): any {
-  return this.http.post(this.baseUrl + 'accounts/login', model)
+login(model: LoginRequest): Observable<void> {
+  return this.http.post<LoginResponse>(this.baseUrl + 'accounts/login', model)
   .pipe(
-    map((response: any) => {
+    map((response: LoginResponse) => {
       const user = response;
       if (user) {
         localStorage.setItem('token', user.token);
         localStorage.setItem('user', JSON.stringify(user.user));
-        this.decodedToken = this.jwtHelper.decodeToken(user.token);
+        this.decodedToken = this.jwtHelper.decodeToken(user.token) as JwtPayload;
         this.currentUser = user.user;
       }
     })
   );
 }
 
-registerUser(user: User): any {
+registerUser(user: User): Observable<unknown> {
   return this.http.post(this.baseUrl + 'accounts/register', user);
 }
 
 
-loggedIn(): any {
+loggedIn(): boolean {
   const token = localStorage.getItem('token')?.toString();
   return !this.jwtHelper.isTokenExpired(token);
 }
 
-logout(): any {
-  return this.http.post(this.baseUrl + 'accounts/logout', {});
+logout(): Observable<void> {
+  return this.http.post<void>(this.baseUrl + 'accounts/logout', {});
 }
 
 clearStorage(): void {

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AlertifyService } from '../../services/alertify.service';
 import { EngagementService } from '../../services/engagement.service';
 
 @Injectable()
-export class EngagementCreateResolver  {
+export class EngagementCreateResolver implements Resolve<any> {
 
     constructor(
         private engagementService: EngagementService,

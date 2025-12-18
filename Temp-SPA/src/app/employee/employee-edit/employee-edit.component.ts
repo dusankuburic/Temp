@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom, takeUntil } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
 import { Group, ModeratorGroups } from 'src/app/core/models/group';
 import { ModeratorMin } from 'src/app/core/models/moderator';
@@ -13,12 +13,13 @@ import { OrganizationService } from 'src/app/core/services/organization.service'
 import { TeamService } from 'src/app/core/services/team.service';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-employee-edit',
   templateUrl: './employee-edit.component.html'
 })
-export class EmployeeEditComponent implements OnInit {
+export class EmployeeEditComponent extends DestroyableComponent implements OnInit {
   minusIcon = faMinus;
   plusIcon = faPlus;
 
@@ -50,7 +51,9 @@ export class EmployeeEditComponent implements OnInit {
     private teamService: TeamService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private alertify: AlertifyService) { }
+    private alertify: AlertifyService) {
+    super();
+  }
 
   ngOnInit(): void {
     this.editEmployeeForm = this.fb.group({
@@ -62,7 +65,7 @@ export class EmployeeEditComponent implements OnInit {
     });
     this.editEmployeeForm.get('organizationId').disable();
 
-    this.route.data.subscribe(data => {
+    this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.employee = data['employee'];
       this.setupForm(this.employee);
     });
@@ -74,6 +77,7 @@ export class EmployeeEditComponent implements OnInit {
     }
 
     this.organizationService.getOrganizationsForSelect()
+      .pipe(takeUntil(this.destroy$))
       .subscribe(res => {
         this.organizationsSelect = [
           {value: null, display: 'Select Organization', hidden: true},
@@ -93,43 +97,43 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   loadFullTeam(id): void {
-    this.teamService.getFullTeam(id).subscribe((res) => {
+    this.teamService.getFullTeam(id).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       this.fullTeam = res;
       this.loadOrgData(this.fullTeam);
     });
   }
 
   async loadModeratorGroups(id, EmployeeId: number) {
-    let moderatorMin: ModeratorMin; 
-
-    await lastValueFrom(this.teamService.getFullTeam(id)).then((fullTeam) => {
+    try {
+      const fullTeam = await lastValueFrom(this.teamService.getFullTeam(id).pipe(takeUntil(this.destroy$)));
       this.fullTeam = fullTeam;
       this.loadOrgData(this.fullTeam);
 
-      firstValueFrom(this.employeeService.getModerator(EmployeeId)).then((moderator) => {
-        //this.Moderator = moderator;
-        moderatorMin = {id: moderator.id};
+      const moderator = await firstValueFrom(this.employeeService.getModerator(EmployeeId).pipe(takeUntil(this.destroy$)));
+      const moderatorMin: ModeratorMin = {id: moderator.id};
 
-        firstValueFrom(this.groupService.getModeratorGroups(moderator.id)).then((currModerGroup) => {
-          this.currentModeratorGroups = currModerGroup;
-        }, error => {
-          this.currentModeratorGroups = [];
-          this.alertify.error(error.error);
-        })
+      try {
+        const currModerGroup = await firstValueFrom(this.groupService.getModeratorGroups(moderator.id).pipe(takeUntil(this.destroy$)));
+        this.currentModeratorGroups = currModerGroup;
+      } catch (error) {
+        this.currentModeratorGroups = [];
+        this.alertify.error(error.error);
+      }
 
-        firstValueFrom(this.groupService.getModeratorFreeGroups(this.fullTeam.organizationId, moderatorMin)).then((res) => {
-          this.freeModeratorGroups = res;
-        }, error => {
-          this.alertify.error(error.error);
-        });
-
-      });
-    });
+      try {
+        const res = await firstValueFrom(this.groupService.getModeratorFreeGroups(this.fullTeam.organizationId, moderatorMin).pipe(takeUntil(this.destroy$)));
+        this.freeModeratorGroups = res;
+      } catch (error) {
+        this.alertify.error(error.error);
+      }
+    } catch (error) {
+      this.alertify.error('Failed to load moderator groups');
+    }
   }
 
   loadOrgData(fullTeam: FullTeam) {
     this.editEmployeeForm.get('organizationId').setValue(fullTeam.organizationId);
-    this.organizationService.getInnerGroupsForSelect(fullTeam.organizationId).subscribe((res) => {
+    this.organizationService.getInnerGroupsForSelect(fullTeam.organizationId).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res !== null) {
         this.innerGroupsSelect = [
           {value: null, display: 'Select Group', hidden: true},
@@ -139,7 +143,7 @@ export class EmployeeEditComponent implements OnInit {
     });
 
     this.editEmployeeForm.get('groupId').setValue(fullTeam.groupId);
-    this.groupService.getInnerTeamsForSelect(fullTeam.groupId).subscribe((res) => {
+    this.groupService.getInnerTeamsForSelect(fullTeam.groupId).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res !== null) {
         this.innerTeamsSelect = [];
         this.innerTeamsSelect = [
@@ -154,7 +158,7 @@ export class EmployeeEditComponent implements OnInit {
   loadInnerGroups(id): void {
     if (id == null)
       return;
-    this.organizationService.getInnerGroupsForSelect(id).subscribe((res) => {
+    this.organizationService.getInnerGroupsForSelect(id).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res !== null) {
         this.innerGroupsSelect = [
           {value: null, display: 'Select Group', hidden: true},
@@ -168,7 +172,7 @@ export class EmployeeEditComponent implements OnInit {
   loadInnerTeams(id): void {
     if (id == null)
       return;
-    this.groupService.getInnerTeamsForSelect(id).subscribe((res) => {
+    this.groupService.getInnerTeamsForSelect(id).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res !== null) {
         this.innerTeamsSelect = [];
         this.innerTeamsSelect = [
@@ -195,7 +199,7 @@ export class EmployeeEditComponent implements OnInit {
       .filter(elem => elem !== newGroupId);
     }
 
-    this.groupService.updateModeratorGroups(moderatorId, moderatorGroups).subscribe({
+    this.groupService.updateModeratorGroups(moderatorId, moderatorGroups).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.loadModeratorGroups(this.employee.teamId, this.employee.id);
         this.alertify.success('Success');
@@ -213,7 +217,7 @@ export class EmployeeEditComponent implements OnInit {
       employeeForm.teamId = this.employee.teamId;
     }
 
-    this.employeeService.updateEmployee(employeeForm).subscribe({
+    this.employeeService.updateEmployee(employeeForm).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.alertify.success('Successfully updated');
       },

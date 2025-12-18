@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { debounceTime, finalize, map, switchMap, take } from 'rxjs';
+import { debounceTime, finalize, map, switchMap, take, takeUntil } from 'rxjs';
 import { AssignRoleDto } from 'src/app/core/models/assignRoleDto';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
 import { PasswordValidator } from 'src/app/shared/validators/password.validators';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-employee-assign-role-modal',
   templateUrl: './employee-assign-role-modal.component.html'
 })
-export class EmployeeAssignRoleModalComponent implements OnInit {
+export class EmployeeAssignRoleModalComponent extends DestroyableComponent implements OnInit {
 
   title?: string;
   firstName: string;
@@ -40,7 +41,9 @@ export class EmployeeAssignRoleModalComponent implements OnInit {
     private employeeService: EmployeeService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    public bsModalRef: BsModalRef) { }
+    public bsModalRef: BsModalRef) {
+    super();
+  }
 
   ngOnInit(): void {
     this.createAssignRoleForm = this.fb.group({
@@ -62,7 +65,7 @@ export class EmployeeAssignRoleModalComponent implements OnInit {
   register(): void {
     if (this.createAssignRoleForm.valid) {
       this.assignDto = { ...this.createAssignRoleForm.value, employeeId: this.employeeId };
-      this.employeeService.assignRole(this.assignDto).subscribe(() => {
+      this.employeeService.assignRole(this.assignDto).pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.bsModalRef.content.isSaved = true;
         this.createAssignRoleForm.disable();
         this.alertify.success('Successful user registration');

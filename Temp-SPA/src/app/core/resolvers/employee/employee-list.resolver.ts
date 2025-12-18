@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Resolve, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Employee } from '../../models/employee';
@@ -8,7 +8,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { PaginatedResult } from 'src/app/core/models/pagination';
 
 @Injectable()
-export class EmployeeListResolver {
+export class EmployeeListResolver implements Resolve<PaginatedResult<Employee[]>> {
     constructor(
         private employeeService: EmployeeService,
         private router: Router,

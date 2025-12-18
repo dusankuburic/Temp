@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UserEngagement } from 'src/app/core/models/engagement';
@@ -7,7 +7,7 @@ import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EngagementService } from 'src/app/core/services/engagement.service';
 
 @Injectable()
-export class EngagementUserListResolver  {
+export class EngagementUserListResolver implements Resolve<UserEngagement[]> {
 
     constructor(
         private engagementService: EngagementService,

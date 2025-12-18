@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { EmploymentStatus } from '../../models/employmentStatus';
@@ -7,7 +7,7 @@ import { AlertifyService } from '../../services/alertify.service';
 import { EmploymentStatusService } from '../../services/employment-status.service';
 
 @Injectable()
-export class EmploymentStatusEditResolver  {
+export class EmploymentStatusEditResolver implements Resolve<EmploymentStatus> {
 
     constructor(
         private employmentStatusService: EmploymentStatusService,

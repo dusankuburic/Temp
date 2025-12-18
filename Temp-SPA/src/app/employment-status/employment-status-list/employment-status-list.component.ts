@@ -3,19 +3,20 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEdit, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subscription, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { EmploymentStatus, EmploymentStatusParams } from 'src/app/core/models/employmentStatus';
 import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmploymentStatusService } from 'src/app/core/services/employment-status.service';
 import { EmploymentStatusCreateModalComponent } from '../employment-status-create-modal/employment-status-create-modal.component';
 import { EmploymentStatusEditModalComponent } from '../employment-status-edit-modal/employment-status-edit-modal.component';
+import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
   selector: 'app-employment-status-list',
   templateUrl: './employment-status-list.component.html'
 })
-export class EmploymentStatusListComponent implements OnInit, AfterViewInit {
+export class EmploymentStatusListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   editIcon = faEdit;
   archiveIcon = faTrashAlt;
   plusIcon = faPlusCircle;
@@ -32,7 +33,8 @@ export class EmploymentStatusListComponent implements OnInit, AfterViewInit {
     private employmentStatusService: EmploymentStatusService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private bsModalService: BsModalService) { 
+    private bsModalService: BsModalService) {
+      super();
       this.employmentStatusParams = employmentStatusService.getEmploymentStatusParams();
       this.filtersForm = this.fb.group({
         name: ['']
@@ -43,7 +45,8 @@ export class EmploymentStatusListComponent implements OnInit, AfterViewInit {
     const nameControl = this.filtersForm.get('name');
     nameControl.valueChanges.pipe(
       debounceTime(600),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe((searchFor) => {
       const params = this.employmentStatusService.getEmploymentStatusParams();
       params.pageNumber = 1;
@@ -55,7 +58,7 @@ export class EmploymentStatusListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
+    this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.employmentStatuses = data['employmentStatuses'].result;
       this.pagination = data['employmentStatuses'].pagination;
     });
@@ -102,6 +105,7 @@ export class EmploymentStatusListComponent implements OnInit, AfterViewInit {
 
   loadEmploymentStatuses(): void {
     this.employmentStatusService.getPagedEmploymentStatuses()
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: PaginatedResult<EmploymentStatus[]>) => {
           this.employmentStatuses = res.result;
@@ -125,7 +129,7 @@ export class EmploymentStatusListComponent implements OnInit, AfterViewInit {
   }
 
   changeStatus(id: number): void {
-    this.employmentStatusService.changeStatus(id).subscribe({
+    this.employmentStatusService.changeStatus(id).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.loadEmploymentStatuses();
         this.alertify.success('Status changed');
