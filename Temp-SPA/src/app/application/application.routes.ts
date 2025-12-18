@@ -1,46 +1,46 @@
 import { Routes } from "@angular/router";
-import { UserGuard } from "../core/guards/user.guard";
+import { userGuard } from "../core/guards/user.guard";
 import { ApplicationCreateComponent } from "./application-create/application-create.component";
-import { ApplicationCreateResolver } from "../core/resolvers/application/application-create.resolver";
+import { applicationCreateResolver } from "../core/resolvers/application/application-create.resolver";
 import { ApplicationUserListComponent } from "./application-user-list/application-user-list.component";
-import { ApplicationUserListResolver } from "../core/resolvers/application/application-user-list.resolver";
+import { applicationUserListResolver } from "../core/resolvers/application/application-user-list.resolver";
 import { ApplicationUserComponent } from "./application-user/application-user.component";
-import { ApplicationUserResolver } from "../core/resolvers/application/application-user.resolver";
-import { ModeratorGuard } from "../core/guards/moderator.guard";
+import { applicationUserResolver } from "../core/resolvers/application/application-user.resolver";
+import { moderatorGuard } from "../core/guards/moderator.guard";
 import { ApplicationModeratorListComponent } from "./application-moderator-list/application-moderator-list.component";
-import { ApplicationModeratorListResolver } from "../core/resolvers/application/application-moderator-list.resolver";
+import { applicationModeratorListResolver } from "../core/resolvers/application/application-moderator-list.resolver";
 import { ApplicationModeratorComponent } from "./application-moderator/application-moderator.component";
-import { ApplicationModeratorResolver } from "../core/resolvers/application/application-moderator.resolver";
+import { applicationModeratorResolver } from "../core/resolvers/application/application-moderator.resolver";
 
 export const applicationRoutes: Routes = [
     { 
-        canActivate: [UserGuard],
+        canActivate: [userGuard],
         path: 'create/:id', 
         component: ApplicationCreateComponent, 
-        resolve: { team: ApplicationCreateResolver }
+        resolve: { team: applicationCreateResolver }
     },
     { 
-        canActivate: [UserGuard],
+        canActivate: [userGuard],
         path: 'list/:id',
         component: ApplicationUserListComponent,
-        resolve: { applications: ApplicationUserListResolver }
+        resolve: { applications: applicationUserListResolver }
     },
     {
-        canActivate: [UserGuard],
+        canActivate: [userGuard],
         path: 'user/:id',
         component: ApplicationUserComponent,
-        resolve: { application: ApplicationUserResolver }
+        resolve: { application: applicationUserResolver }
     },
     {
-        canActivate: [ModeratorGuard],
+        canActivate: [moderatorGuard],
         path: 'list/team/:id',
         component: ApplicationModeratorListComponent,
-        resolve: { applications: ApplicationModeratorListResolver }
+        resolve: { applications: applicationModeratorListResolver }
     },
     {
-        canActivate: [ModeratorGuard],
+        canActivate: [moderatorGuard],
         path: 'moderator/:id',
         component: ApplicationModeratorComponent,
-        resolve: { application: ApplicationModeratorResolver }
+        resolve: { application: applicationModeratorResolver }
     } 
 ];

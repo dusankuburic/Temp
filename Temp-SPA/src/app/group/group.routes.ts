@@ -1,38 +1,38 @@
 import { Routes } from "@angular/router";
-import { AuthGuard } from "../core/guards/auth.guard";
+import { authGuard } from "../core/guards/auth.guard";
 import { GroupListComponent } from "./inner-group-list/inner-group-list.component";
-import { GroupListResolver } from "../core/resolvers/group/group-list.resolver";
+import { groupListResolver } from "../core/resolvers/group/group-list.resolver";
 import { GroupCreateComponent } from "./group-create/group-create.component";
-import { GroupCreateResolver } from "../core/resolvers/group/group-create.resolver";
+import { groupCreateResolver } from "../core/resolvers/group/group-create.resolver";
 import { GroupEditComponent } from "./group-edit/group-edit.component";
-import { GroupEditResolver } from "../core/resolvers/group/group-edit.resolver";
-import { ModeratorGuard } from "../core/guards/moderator.guard";
+import { groupEditResolver } from "../core/resolvers/group/group-edit.resolver";
+import { moderatorGuard } from "../core/guards/moderator.guard";
 import { AssignedGroupsComponent } from "./assigned-groups/assigned-groups.component";
-import { ModeratorAssignedGroupsResolver } from "../core/resolvers/group/moderator-assigned-groups.resolver";
+import { moderatorAssignedGroupsResolver } from "../core/resolvers/group/moderator-assigned-groups.resolver";
 
 export const groupRoutes: Routes = [    
     { 
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         path: 'organization/:id', 
         component: GroupListComponent, 
-        resolve: { innergroups: GroupListResolver }
+        resolve: { innergroups: groupListResolver }
     },
     { 
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         path: 'create/organization/:id', 
         component: GroupCreateComponent, 
-        resolve: { organization: GroupCreateResolver }
+        resolve: { organization: groupCreateResolver }
     },
     { 
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         path: ':id/edit/:organizationId/organization', 
         component: GroupEditComponent, 
-        resolve: { group: GroupEditResolver }
+        resolve: { group: groupEditResolver }
     },
     {
-        canActivate: [ModeratorGuard],
+        canActivate: [moderatorGuard],
         path: ':id/assigned-groups',
         component: AssignedGroupsComponent,
-        resolve: { groups: ModeratorAssignedGroupsResolver }
+        resolve: { groups: moderatorAssignedGroupsResolver }
     }
 ];

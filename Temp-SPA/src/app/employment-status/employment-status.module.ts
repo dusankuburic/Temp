@@ -5,8 +5,6 @@ import { EmploymentStatusListComponent } from './employment-status-list/employme
 import { RouterModule } from '@angular/router';
 import { employmentStatusRoutes } from './employment-status.routes';
 import { SharedModule } from '../shared/shared.module';
-import { EmploymentStatusListResolver } from '../core/resolvers/employment-status/employment-status-list.resolver';
-import { EmploymentStatusEditResolver } from '../core/resolvers/employment-status/employment-status-edit.resolver';
 import { EmploymentStatusEditModalComponent } from './employment-status-edit-modal/employment-status-edit-modal.component';
 import { EmploymentStatusCreateModalComponent } from './employment-status-create-modal/employment-status-create-modal.component';
 
@@ -23,9 +21,6 @@ import { EmploymentStatusCreateModalComponent } from './employment-status-create
         EmploymentStatusCreateModalComponent,
         EmploymentStatusEditModalComponent
     ],
-    providers: [
-        EmploymentStatusListResolver,
-        EmploymentStatusEditResolver,
-    ]
+    providers: []
 })
 export class EmploymentStatusModule { }

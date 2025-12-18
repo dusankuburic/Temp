@@ -1,26 +1,21 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, ResolveFn, Router } from '@angular/router';
+import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Team } from '../../models/team';
 import { AlertifyService } from '../../services/alertify.service';
 import { TeamService } from '../../services/team.service';
 
-@Injectable()
-export class TeamEditResolver implements Resolve<Team | null> {
+export const teamEditResolver: ResolveFn<Team | null> = (route: ActivatedRouteSnapshot) => {
+    const teamService = inject(TeamService);
+    const router = inject(Router);
+    const alertify = inject(AlertifyService);
 
-    constructor(
-        private teamService: TeamService,
-        private router: Router,
-        private alertify: AlertifyService) {}
-
-    resolve(route: ActivatedRouteSnapshot): Observable<Team | null> {
-        return this.teamService.getTeam(route.params['id']).pipe(
-            catchError(() => {
-                this.alertify.error('Unable to get Team');
-                this.router.navigate(['/organizations']);
-                return of(null);
-            })
-        );
-    }
-}
+    return teamService.getTeam(route.params['id']).pipe(
+        catchError(() => {
+            alertify.error('Unable to get Team');
+            router.navigate(['/organizations']);
+            return of(null);
+        })
+    );
+};

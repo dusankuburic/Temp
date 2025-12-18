@@ -1,28 +1,23 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, ResolveFn, Router } from '@angular/router';
+import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PagedInnerTeams } from '../../models/team';
 import { AlertifyService } from '../../services/alertify.service';
 import { TeamService } from '../../services/team.service';
 
-@Injectable()
-export class TeamListResolver implements Resolve<PagedInnerTeams | null> {
-    
-    constructor(
-        private teamService: TeamService,
-        private router: Router,
-        private alertify: AlertifyService) {}
+export const teamListResolver: ResolveFn<PagedInnerTeams | null> = (route: ActivatedRouteSnapshot) => {
+    const teamService = inject(TeamService);
+    const router = inject(Router);
+    const alertify = inject(AlertifyService);
 
-    resolve(route: ActivatedRouteSnapshot): Observable<PagedInnerTeams | null> {
-        const groupId = parseInt(route.params['id']);
-        this.teamService.resetTeamParams();
-        return this.teamService.getInnerTeams(groupId).pipe(
-            catchError(() => {
-                this.alertify.error('Unable to list Teams');
-                this.router.navigate(['']);
-                return of(null);
-            })
-        );
-    }
-}
+    const groupId = parseInt(route.params['id']);
+    teamService.resetTeamParams();
+    return teamService.getInnerTeams(groupId).pipe(
+        catchError(() => {
+            alertify.error('Unable to list Teams');
+            router.navigate(['']);
+            return of(null);
+        })
+    );
+};

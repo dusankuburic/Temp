@@ -1,27 +1,23 @@
-import { Injectable } from '@angular/core';
-import { Resolve, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { inject } from '@angular/core';
+import { ResolveFn, Router } from '@angular/router';
+import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Organization } from '../../models/organization';
 import { AlertifyService } from '../../services/alertify.service';
 import { OrganizationService } from '../../services/organization.service';
 import { PaginatedResult } from '../../models/pagination';
 
-@Injectable()
-export class OrganizationListResolver implements Resolve<PaginatedResult<Organization[]> | null> {
-    constructor(
-        private organizationService: OrganizationService,
-        private router: Router,
-        private alertify: AlertifyService) {}
-    
-    resolve(): Observable<PaginatedResult<Organization[]> | null> {
-        this.organizationService.resetOrganizationParams();
-        return this.organizationService.getPagedOrganizations().pipe(
-            catchError(() => {
-                this.alertify.error('Unable to list Organizations');
-                this.router.navigate(['']);
-                return of(null);
-            })
-        )
-    }
-}
+export const organizationListResolver: ResolveFn<PaginatedResult<Organization[]> | null> = () => {
+    const organizationService = inject(OrganizationService);
+    const router = inject(Router);
+    const alertify = inject(AlertifyService);
+
+    organizationService.resetOrganizationParams();
+    return organizationService.getPagedOrganizations().pipe(
+        catchError(() => {
+            alertify.error('Unable to list Organizations');
+            router.navigate(['']);
+            return of(null);
+        })
+    );
+};

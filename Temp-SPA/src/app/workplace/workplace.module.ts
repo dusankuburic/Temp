@@ -6,8 +6,6 @@ import { WorkplaceListComponent } from './workplace-list/workplace-list.componen
 import { RouterModule } from '@angular/router';
 import { workplaceRoutes } from './workplace.routes';
 import { SharedModule } from '../shared/shared.module';
-import { WorkplaceListResolver } from '../core/resolvers/workplace/workplace-list.resolver';
-import { WorkplaceEditResolver } from '../core/resolvers/workplace/workplace-edit.resolver';
 import { WorkplaceCreateModalComponent } from './workplace-create-modal/workplace-create-modal.component';
 import { WorkplaceEditModalComponent } from './workplace-edit-modal/workplace-edit-modal.component';
 
@@ -24,9 +22,6 @@ import { WorkplaceEditModalComponent } from './workplace-edit-modal/workplace-ed
         WorkplaceCreateModalComponent,
         WorkplaceEditModalComponent
     ],
-    providers: [
-        WorkplaceListResolver,
-        WorkplaceEditResolver,
-    ]
+    providers: []
 })
 export class WorkplaceModule { }

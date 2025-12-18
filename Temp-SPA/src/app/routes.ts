@@ -1,33 +1,33 @@
 import { Routes } from '@angular/router';
-import { UserGuard } from './core/guards/user.guard';
+import { userGuard } from './core/guards/user.guard';
 import { HomeComponent } from './home/home.component';
 import { UsersComponent } from './user/users/users.component';
-import { ModeratorGuard } from './core/guards/moderator.guard';
+import { moderatorGuard } from './core/guards/moderator.guard';
 import { ModeratorComponent } from './user/moderator/moderator.component';
-import { AuthGuard } from './core/guards/auth.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 export const appRoutes: Routes = [
     {
         path: 'employees',
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         loadChildren: () => import('./employee/employee.module')
             .then(m => m.EmployeeModule)
     },
     {
         path: 'employment-statuses',
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         loadChildren: () => import('./employment-status/employment-status.module')
             .then(m => m.EmploymentStatusModule)
     },
     {
         path: 'organizations',
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         loadChildren: () => import('./organization/organization.module')
             .then(m => m.OrganizationModule)
     },
     {
         path: 'workplaces',
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         loadChildren: () => import('./workplace/workplace.module')
             .then(m => m.WorkplaceModule)
     },
@@ -55,7 +55,7 @@ export const appRoutes: Routes = [
     {
         path: '',
         runGuardsAndResolvers: 'always',
-        canActivate: [UserGuard],
+        canActivate: [userGuard],
         children: [
             {path: 'users', component: UsersComponent},
         ]
@@ -63,7 +63,7 @@ export const appRoutes: Routes = [
     {
         path: '',
         runGuardsAndResolvers: 'always',
-        canActivate: [ModeratorGuard],
+        canActivate: [moderatorGuard],
         children: [
             {path: 'moderators', component: ModeratorComponent},
         ]

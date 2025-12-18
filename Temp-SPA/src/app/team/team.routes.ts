@@ -1,37 +1,37 @@
 import { Routes } from "@angular/router";
-import { AuthGuard } from "../core/guards/auth.guard";
+import { authGuard } from "../core/guards/auth.guard";
 import { TeamListComponent } from "./inner-team-list/inner-team-list.component";
-import { TeamListResolver } from "../core/resolvers/team/team-list.resolver";
+import { teamListResolver } from "../core/resolvers/team/team-list.resolver";
 import { TeamCreateComponent } from "./team-create/team-create.component";
-import { TeamCreateResolver } from "../core/resolvers/team/team-create.resolver";
+import { teamCreateResolver } from "../core/resolvers/team/team-create.resolver";
 import { TeamEditComponent } from "./team-edit/team-edit.component";
-import { TeamEditResolver } from "../core/resolvers/team/team-edit.resolver";
-import { ModeratorGuard } from "../core/guards/moderator.guard";
+import { teamEditResolver } from "../core/resolvers/team/team-edit.resolver";
+import { moderatorGuard } from "../core/guards/moderator.guard";
 import { AssignedInnerTeamsComponent } from "./assigned-inner-teams/assigned-inner-teams.component";
 
 export const teamRoutes: Routes = [
     {
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         path: 'group/:id',
         component: TeamListComponent,
-        resolve: { innerteams: TeamListResolver }
+        resolve: { innerteams: teamListResolver }
     },
     {
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         path: 'create/group/:id',
         component: TeamCreateComponent,
-        resolve: { group: TeamCreateResolver }
+        resolve: { group: teamCreateResolver }
     },
     {
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         path: ':id/edit/:groupId/group',
         component: TeamEditComponent,
-        resolve: { team: TeamEditResolver}
+        resolve: { team: teamEditResolver}
     },
     { 
-        canActivate: [ModeratorGuard],
+        canActivate: [moderatorGuard],
         path: ':id/assigned-groups',
         component: AssignedInnerTeamsComponent,
-        resolve: { innerteams: TeamListResolver }
+        resolve: { innerteams: teamListResolver }
     }
 ];

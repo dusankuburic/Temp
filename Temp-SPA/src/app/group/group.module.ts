@@ -6,10 +6,6 @@ import { AssignedGroupsComponent } from './assigned-groups/assigned-groups.compo
 import { RouterModule } from '@angular/router';
 import { groupRoutes } from './group.routes';
 import { SharedModule } from '../shared/shared.module';
-import { GroupListResolver } from '../core/resolvers/group/group-list.resolver';
-import { GroupCreateResolver } from '../core/resolvers/group/group-create.resolver';
-import { GroupEditResolver } from '../core/resolvers/group/group-edit.resolver';
-import { ModeratorAssignedGroupsResolver } from '../core/resolvers/group/moderator-assigned-groups.resolver';
 import { GroupCreateModalComponent } from './group-create-modal/group-create-modal.component';
 import { GroupEditModalComponent } from './group-edit-modal/group-edit-modal.component';
 
@@ -27,11 +23,6 @@ import { GroupEditModalComponent } from './group-edit-modal/group-edit-modal.com
         GroupCreateModalComponent,
         GroupEditModalComponent,
     ],
-    providers: [
-        GroupListResolver,
-        GroupCreateResolver,
-        GroupEditResolver,
-        ModeratorAssignedGroupsResolver
-    ]
+    providers: []
 })
 export class GroupModule { }

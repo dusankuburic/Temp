@@ -1,28 +1,18 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 import { AlertifyService } from '../services/alertify.service';
 import { AuthService } from '../services/auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+export const userGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  const alertify = inject(AlertifyService);
 
-export class UserGuard implements CanActivate {
-  role = 'User';
-
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private alertify: AlertifyService){}
-
-  canActivate(): boolean {
-    if (this.authService.loggedIn() && this.authService.decodedToken?.role === this.role){
-      return true;
-    }
-
-    this.alertify.error('You shall not pass!!!!');
-    this.router.navigate(['/home']);
-    return false;
+  if (authService.loggedIn() && authService.decodedToken?.role === 'User') {
+    return true;
   }
 
-}
+  alertify.error('You shall not pass!!!!');
+  router.navigate(['/home']);
+  return false;
+};

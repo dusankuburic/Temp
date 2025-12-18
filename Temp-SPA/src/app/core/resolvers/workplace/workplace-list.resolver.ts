@@ -1,27 +1,23 @@
-import { Injectable } from '@angular/core';
-import { Resolve, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { inject } from '@angular/core';
+import { ResolveFn, Router } from '@angular/router';
+import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Workplace } from '../../models/workplace';
 import { AlertifyService } from '../../services/alertify.service';
 import { WorkplaceService } from '../../services/workplace.service';
 import { PaginatedResult } from 'src/app/core/models/pagination';
 
-@Injectable()
-export class WorkplaceListResolver implements Resolve<PaginatedResult<Workplace[]> | null> {
-    constructor(
-        private workplaceService: WorkplaceService,
-        private router: Router,
-        private alertify: AlertifyService){}
+export const workplaceListResolver: ResolveFn<PaginatedResult<Workplace[]> | null> = () => {
+    const workplaceService = inject(WorkplaceService);
+    const router = inject(Router);
+    const alertify = inject(AlertifyService);
 
-    resolve(): Observable<PaginatedResult<Workplace[]> | null>  {
-        this.workplaceService.resetWorkplaceParams();
-        return this.workplaceService.getPagedWorkplaces().pipe(
-            catchError(() => {
-                this.alertify.error('Unable to list Workplaces');
-                this.router.navigate(['']);
-                return of(null);
-            })
-        );
-    }
-}
+    workplaceService.resetWorkplaceParams();
+    return workplaceService.getPagedWorkplaces().pipe(
+        catchError(() => {
+            alertify.error('Unable to list Workplaces');
+            router.navigate(['']);
+            return of(null);
+        })
+    );
+};

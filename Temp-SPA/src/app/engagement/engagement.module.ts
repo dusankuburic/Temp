@@ -6,10 +6,6 @@ import { EngagementWithoutEmployeeListComponent } from './engagement-without-emp
 import { RouterModule } from '@angular/router';
 import { engagementRoutes } from './engagement.routes';
 import { SharedModule } from '../shared/shared.module';
-import { EngagementWithEmployeeResolver } from '../core/resolvers/engagement/engagement-with-employee-list.resolver';
-import { EngagementWithoutEmployeeResolver } from '../core/resolvers/engagement/engagement-without-employee-list.resolver';
-import { EngagementUserListResolver } from '../core/resolvers/engagement/engagement-user-list.resolver';
-import { EngagementCreateResolver } from '../core/resolvers/engagement/engagement-create.resolver';
 import { EngagementCreateModalComponent } from './engagement-create-modal/engagement-create-modal.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 
@@ -27,11 +23,6 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
         EngagementWithoutEmployeeListComponent,
         EngagementCreateModalComponent,
     ],
-    providers: [
-        EngagementWithoutEmployeeResolver,
-        EngagementCreateResolver,
-        EngagementWithEmployeeResolver,
-        EngagementUserListResolver,
-    ]
+    providers: []
 })
 export class EngagementModule { }

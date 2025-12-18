@@ -1,27 +1,23 @@
-import { Injectable } from '@angular/core';
-import { Resolve, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { inject } from '@angular/core';
+import { ResolveFn, Router } from '@angular/router';
+import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Employee } from '../../models/employee';
 import { AlertifyService } from '../../services/alertify.service';
 import { EngagementService } from '../../services/engagement.service';
 import { PaginatedResult } from 'src/app/core/models/pagination';
 
-@Injectable()
-export class EngagementWithoutEmployeeResolver implements Resolve<PaginatedResult<Employee[]> | null> {
-    constructor(
-        private engagementService: EngagementService,
-        private router: Router,
-        private alertify: AlertifyService){}
+export const engagementWithoutEmployeeResolver: ResolveFn<PaginatedResult<Employee[]> | null> = () => {
+    const engagementService = inject(EngagementService);
+    const router = inject(Router);
+    const alertify = inject(AlertifyService);
 
-    resolve(): Observable<PaginatedResult<Employee[]> | null> {
-        this.engagementService.resetEngagementParams();
-        return this.engagementService.getEmployeesWithoutEngagement().pipe(
-            catchError(() => {
-                this.alertify.error('Unable to list Employees');
-                this.router.navigate(['']);
-                return of(null);
-            })
-        );
-    }
-}
+    engagementService.resetEngagementParams();
+    return engagementService.getEmployeesWithoutEngagement().pipe(
+        catchError(() => {
+            alertify.error('Unable to list Employees');
+            router.navigate(['']);
+            return of(null);
+        })
+    );
+};

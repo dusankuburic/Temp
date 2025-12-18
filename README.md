@@ -1,12 +1,12 @@
 # Temp (🚧 under construction)
-Employee management system built with .NET 8 and Angular 17.
+Employee management system built with .NET 8 and Angular 20.
 
 ## Quick Start
 
 ### Prerequisites
 - Docker & Docker Compose
 - .NET 8 SDK (for local development)
-- Node.js 18+ (for Angular development)
+- Node.js 20+ (for Angular development)
 
 ### Environment Setup
 

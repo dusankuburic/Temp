@@ -1,26 +1,21 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, ResolveFn, Router } from '@angular/router';
+import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UserEngagement } from 'src/app/core/models/engagement';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EngagementService } from 'src/app/core/services/engagement.service';
 
-@Injectable()
-export class EngagementUserListResolver implements Resolve<UserEngagement[] | null> {
+export const engagementUserListResolver: ResolveFn<UserEngagement[] | null> = (route: ActivatedRouteSnapshot) => {
+    const engagementService = inject(EngagementService);
+    const router = inject(Router);
+    const alertify = inject(AlertifyService);
 
-    constructor(
-        private engagementService: EngagementService,
-        private route: Router,
-        private alertify: AlertifyService){}
-
-    resolve(route: ActivatedRouteSnapshot): Observable<UserEngagement[] | null> {
-        return this.engagementService.getUserEmployeeEngagements(route.params['id']).pipe(
-            catchError(() => {
-                this.alertify.error('Unable to list Employee Engagements');
-                this.route.navigate(['']);
-                return of(null);
-            })
-        );
-    }
-}
+    return engagementService.getUserEmployeeEngagements(route.params['id']).pipe(
+        catchError(() => {
+            alertify.error('Unable to list Employee Engagements');
+            router.navigate(['']);
+            return of(null);
+        })
+    );
+};

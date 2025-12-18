@@ -7,11 +7,6 @@ import { ApplicationUserListComponent } from './application-user-list/applicatio
 import { RouterModule } from '@angular/router';
 
 import { applicationRoutes } from './application.routes';
-import { ApplicationCreateResolver } from '../core/resolvers/application/application-create.resolver';
-import { ApplicationModeratorListResolver } from '../core/resolvers/application/application-moderator-list.resolver';
-import { ApplicationUserListResolver } from '../core/resolvers/application/application-user-list.resolver';
-import { ApplicationUserResolver } from '../core/resolvers/application/application-user.resolver';
-import { ApplicationModeratorResolver } from '../core/resolvers/application/application-moderator.resolver';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -27,12 +22,6 @@ import { SharedModule } from '../shared/shared.module';
         ApplicationUserComponent,
         ApplicationUserListComponent,
     ],
-    providers: [
-        ApplicationCreateResolver,
-        ApplicationUserListResolver,
-        ApplicationUserResolver,
-        ApplicationModeratorListResolver,
-        ApplicationModeratorResolver,
-    ]
+    providers: []
 })
 export class ApplicationModule { }

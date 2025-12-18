@@ -5,8 +5,6 @@ import { OrganizationListComponent } from './organization-list/organization-list
 import { RouterModule } from '@angular/router';
 import { organizationRoutes } from './organization.routes';
 import { SharedModule } from '../shared/shared.module';
-import { OrganizationListResolver } from '../core/resolvers/organization/organization-list.resolver';
-import { OrganizationEditResolver } from '../core/resolvers/organization/organization-edit.resolver';
 import { OrganizationCreateModalComponent } from './organization-create-modal/organization-create-modal.component';
 import { OrganizationEditModalComponent } from './organization-edit-modal/organization-edit-modal.component';
 
@@ -23,9 +21,6 @@ import { OrganizationEditModalComponent } from './organization-edit-modal/organi
         OrganizationCreateModalComponent,
         OrganizationEditModalComponent,
     ],
-    providers: [
-        OrganizationListResolver,
-        OrganizationEditResolver,
-    ]
+    providers: []
 })
 export class OrganizationModule { }

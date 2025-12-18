@@ -1,27 +1,22 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
+import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ModeratorListApplication } from 'src/app/core/models/application';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { ApplicationService } from 'src/app/core/services/application.service';
 
-@Injectable()
-export class ApplicationModeratorListResolver implements Resolve<ModeratorListApplication[] | null> {
+export const applicationModeratorListResolver: ResolveFn<ModeratorListApplication[] | null> = (route: ActivatedRouteSnapshot) => {
+    const applicationService = inject(ApplicationService);
+    const alertify = inject(AlertifyService);
 
-    constructor(
-        private applicationService: ApplicationService,
-        private alertify: AlertifyService){}
-
-    resolve(route: ActivatedRouteSnapshot): Observable<ModeratorListApplication[] | null> {
-        const user = JSON.parse(localStorage.getItem('user') ?? '{}');
-        return this.applicationService.getTeamApplicationsForModerator(
-            route.params['id'], 
-            user.id).pipe(
-            catchError(error => {
-                this.alertify.error(error.error);
-                return of(null);
-            })
-        );
-    }
-}
+    const user = JSON.parse(localStorage.getItem('user') ?? '{}');
+    return applicationService.getTeamApplicationsForModerator(
+        route.params['id'],
+        user.id).pipe(
+        catchError(error => {
+            alertify.error(error.error);
+            return of(null);
+        })
+    );
+};
