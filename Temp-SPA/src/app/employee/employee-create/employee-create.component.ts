@@ -10,8 +10,9 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-employee-create',
-  templateUrl: './employee-create.component.html'
+    selector: 'app-employee-create',
+    templateUrl: './employee-create.component.html',
+    standalone: false
 })
 export class EmployeeCreateComponent extends DestroyableComponent implements OnInit {
   createEmployeeForm!: FormGroup;

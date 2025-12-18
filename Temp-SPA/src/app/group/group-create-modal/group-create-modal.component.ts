@@ -9,8 +9,9 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-group-create-modal',
-  templateUrl: './group-create-modal.component.html'
+    selector: 'app-group-create-modal',
+    templateUrl: './group-create-modal.component.html',
+    standalone: false
 })
 export class GroupCreateModalComponent extends DestroyableComponent {
   createGroupForm!: FormGroup;

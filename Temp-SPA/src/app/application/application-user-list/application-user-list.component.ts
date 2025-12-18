@@ -7,8 +7,9 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 
 @Component({
-  selector: 'app-application-user-list',
-  templateUrl: './application-user-list.component.html'
+    selector: 'app-application-user-list',
+    templateUrl: './application-user-list.component.html',
+    standalone: false
 })
 export class ApplicationUserListComponent extends DestroyableComponent implements OnInit {
   commentIcon = faComment

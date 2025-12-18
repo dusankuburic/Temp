@@ -6,8 +6,9 @@ import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-assigned-groups',
-  templateUrl: './assigned-groups.component.html'
+    selector: 'app-assigned-groups',
+    templateUrl: './assigned-groups.component.html',
+    standalone: false
 })
 export class AssignedGroupsComponent extends DestroyableComponent implements OnInit {
   usersIcon = faUsers;

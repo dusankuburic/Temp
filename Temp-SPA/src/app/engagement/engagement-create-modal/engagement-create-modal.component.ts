@@ -13,8 +13,9 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-engagement-create-modal',
-  templateUrl: './engagement-create-modal.component.html'
+    selector: 'app-engagement-create-modal',
+    templateUrl: './engagement-create-modal.component.html',
+    standalone: false
 })
 export class EngagementCreateModalComponent extends DestroyableComponent implements OnInit{
   

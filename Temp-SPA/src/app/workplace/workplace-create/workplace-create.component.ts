@@ -8,8 +8,9 @@ import { takeUntil } from 'rxjs';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-workplace-create',
-  templateUrl: './workplace-create.component.html'
+    selector: 'app-workplace-create',
+    templateUrl: './workplace-create.component.html',
+    standalone: false
 })
 export class WorkplaceCreateComponent extends DestroyableComponent implements OnInit {
   createWorkplaceForm!: FormGroup;

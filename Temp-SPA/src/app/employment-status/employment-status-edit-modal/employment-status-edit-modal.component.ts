@@ -9,8 +9,9 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-employment-status-edit-modal',
-  templateUrl: './employment-status-edit-modal.component.html'
+    selector: 'app-employment-status-edit-modal',
+    templateUrl: './employment-status-edit-modal.component.html',
+    standalone: false
 })
 export class EmploymentStatusEditModalComponent extends DestroyableComponent implements OnInit {
   editEmploymentStatusForm!: FormGroup;

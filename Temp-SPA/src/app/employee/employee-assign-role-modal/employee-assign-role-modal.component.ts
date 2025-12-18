@@ -9,8 +9,9 @@ import { PasswordValidator } from 'src/app/shared/validators/password.validators
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-employee-assign-role-modal',
-  templateUrl: './employee-assign-role-modal.component.html'
+    selector: 'app-employee-assign-role-modal',
+    templateUrl: './employee-assign-role-modal.component.html',
+    standalone: false
 })
 export class EmployeeAssignRoleModalComponent extends DestroyableComponent implements OnInit {
 

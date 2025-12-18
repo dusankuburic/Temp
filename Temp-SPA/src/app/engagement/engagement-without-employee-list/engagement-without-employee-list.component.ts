@@ -14,8 +14,9 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
 import { EngagementCreateModalComponent } from '../engagement-create-modal/engagement-create-modal.component';
 
 @Component({
-  selector: 'app-engagement-without-employee-list',
-  templateUrl: './engagement-without-employee-list.component.html'
+    selector: 'app-engagement-without-employee-list',
+    templateUrl: './engagement-without-employee-list.component.html',
+    standalone: false
 })
 export class EngagementWithoutEmployeeListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   addEngagementIcon = faCodeBranch

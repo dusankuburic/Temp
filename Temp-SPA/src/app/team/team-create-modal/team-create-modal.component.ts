@@ -9,8 +9,9 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-team-create-modal',
-  templateUrl: './team-create-modal.component.html'
+    selector: 'app-team-create-modal',
+    templateUrl: './team-create-modal.component.html',
+    standalone: false
 })
 export class TeamCreateModalComponent extends DestroyableComponent implements OnInit {
   createTeamForm!: FormGroup;

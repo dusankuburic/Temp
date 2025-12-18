@@ -17,8 +17,9 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-employee-edit-modal',
-  templateUrl: './employee-edit-modal.component.html',
+    selector: 'app-employee-edit-modal',
+    templateUrl: './employee-edit-modal.component.html',
+    standalone: false
 })
 export class EmployeeEditModalComponent extends DestroyableComponent implements OnInit { 
   minusIcon = faMinus;

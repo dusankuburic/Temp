@@ -5,8 +5,9 @@ import { Application } from 'src/app/core/models/application';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-application-user',
-  templateUrl: './application-user.component.html'
+    selector: 'app-application-user',
+    templateUrl: './application-user.component.html',
+    standalone: false
 })
 export class ApplicationUserComponent extends DestroyableComponent implements OnInit {
   application!: Application;

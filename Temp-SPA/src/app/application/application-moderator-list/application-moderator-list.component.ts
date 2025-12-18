@@ -8,8 +8,9 @@ import { ApplicationService } from 'src/app/core/services/application.service';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-application-moderator-list',
-  templateUrl: './application-moderator-list.component.html'
+    selector: 'app-application-moderator-list',
+    templateUrl: './application-moderator-list.component.html',
+    standalone: false
 })
 export class ApplicationModeratorListComponent extends DestroyableComponent implements OnInit {
   eyeIcon = faEye;

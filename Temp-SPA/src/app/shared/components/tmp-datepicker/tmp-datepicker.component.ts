@@ -3,9 +3,10 @@ import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
-  selector: 'tmp-datepicker',
-  templateUrl: './tmp-datepicker.component.html',
-  styleUrl: './tmp-datepicker.component.css'
+    selector: 'tmp-datepicker',
+    templateUrl: './tmp-datepicker.component.html',
+    styleUrl: './tmp-datepicker.component.css',
+    standalone: false
 })
 export class TmpDatepickerComponent implements ControlValueAccessor {
   @Input() placeholder = '';

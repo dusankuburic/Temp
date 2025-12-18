@@ -5,16 +5,17 @@ import { ControlValueAccessorDirective } from '../control-value-accessor.directi
 type InputType = 'text' | 'number' | 'email' | 'password';
 
 @Component({
-  selector: 'tmp-input',
-  templateUrl: './tmp-input.component.html',
-  styleUrl: './tmp-input.component.css',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => TmpInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'tmp-input',
+    templateUrl: './tmp-input.component.html',
+    styleUrl: './tmp-input.component.css',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => TmpInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class TmpInputComponent<T> extends ControlValueAccessorDirective<T> { 
   @Input() type: InputType = 'text';

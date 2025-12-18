@@ -10,8 +10,9 @@ import { GroupValidators } from '../group-validators';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-group-create',
-  templateUrl: './group-create.component.html'
+    selector: 'app-group-create',
+    templateUrl: './group-create.component.html',
+    standalone: false
 })
 
 export class GroupCreateComponent extends DestroyableComponent implements OnInit {

@@ -14,8 +14,9 @@ import { OrganizationEditModalComponent } from '../organization-edit-modal/organ
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-organization-list',
-  templateUrl: './organization-list.component.html'
+    selector: 'app-organization-list',
+    templateUrl: './organization-list.component.html',
+    standalone: false
 })
 export class OrganizationListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   editOrganizationIcon = faEdit

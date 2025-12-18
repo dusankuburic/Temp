@@ -8,8 +8,9 @@ import { InnerTeam } from 'src/app/core/models/team';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-assigned-inner-teams',
-  templateUrl: './assigned-inner-teams.component.html'
+    selector: 'app-assigned-inner-teams',
+    templateUrl: './assigned-inner-teams.component.html',
+    standalone: false
 })
 export class AssignedInnerTeamsComponent extends DestroyableComponent implements OnInit {
   listIcon = faList;

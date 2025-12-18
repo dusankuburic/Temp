@@ -9,8 +9,9 @@ import { OrganizationValidators } from '../organization-validators';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-organization-edit-modal',
-  templateUrl: './organization-edit-modal.component.html',
+    selector: 'app-organization-edit-modal',
+    templateUrl: './organization-edit-modal.component.html',
+    standalone: false
 })
 export class OrganizationEditModalComponent extends DestroyableComponent implements OnInit {
   editOrganizationForm!: FormGroup;

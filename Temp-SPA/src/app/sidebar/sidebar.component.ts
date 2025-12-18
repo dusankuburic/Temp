@@ -3,8 +3,9 @@ import { AuthService } from '../core/services/auth.service';
 import { faAddressBook, faAngleRight, faBriefcase, faClipboard, faFileAlt, faHotel, faIndustry, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html'
+    selector: 'app-sidebar',
+    templateUrl: './sidebar.component.html',
+    standalone: false
 })
 export class SidebarComponent implements OnInit {
   arrowIcon = faAngleRight

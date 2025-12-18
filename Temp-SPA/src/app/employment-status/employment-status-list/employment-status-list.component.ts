@@ -13,8 +13,9 @@ import { EmploymentStatusEditModalComponent } from '../employment-status-edit-mo
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-employment-status-list',
-  templateUrl: './employment-status-list.component.html'
+    selector: 'app-employment-status-list',
+    templateUrl: './employment-status-list.component.html',
+    standalone: false
 })
 export class EmploymentStatusListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   editIcon = faEdit;

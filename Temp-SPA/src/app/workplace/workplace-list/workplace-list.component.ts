@@ -13,8 +13,9 @@ import { WorkplaceEditModalComponent } from '../workplace-edit-modal/workplace-e
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-workplace-list',
-  templateUrl: './workplace-list.component.html'
+    selector: 'app-workplace-list',
+    templateUrl: './workplace-list.component.html',
+    standalone: false
 })
 export class WorkplaceListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   archiveIcon = faTrashAlt;

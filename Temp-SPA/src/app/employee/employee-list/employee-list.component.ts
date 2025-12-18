@@ -16,8 +16,9 @@ import { EmployeeAssignRoleModalComponent } from '../employee-assign-role-modal/
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-employee-list',
-  templateUrl: './employee-list.component.html'
+    selector: 'app-employee-list',
+    templateUrl: './employee-list.component.html',
+    standalone: false
 })
 export class EmployeeListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   editIcon = faEdit

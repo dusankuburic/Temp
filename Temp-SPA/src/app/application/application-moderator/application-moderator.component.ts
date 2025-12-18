@@ -7,7 +7,8 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
     selector: 'app-application-moderator',
-    templateUrl: './application-user.component.html'
+    templateUrl: './application-user.component.html',
+    standalone: false
 })
 export class ApplicationModeratorComponent extends DestroyableComponent implements OnInit {
     application!: Application;

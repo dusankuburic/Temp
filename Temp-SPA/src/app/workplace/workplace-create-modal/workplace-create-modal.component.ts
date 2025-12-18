@@ -9,8 +9,9 @@ import { takeUntil } from 'rxjs';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'workplace-create-modal',
-  templateUrl: './workplace-create-modal.component.html'
+    selector: 'workplace-create-modal',
+    templateUrl: './workplace-create-modal.component.html',
+    standalone: false
 })
 export class WorkplaceCreateModalComponent extends DestroyableComponent implements OnInit {
   createWorkplaceForm!: FormGroup;

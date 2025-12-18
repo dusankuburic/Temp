@@ -16,8 +16,9 @@ import { GroupEditModalComponent } from '../group-edit-modal/group-edit-modal.co
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-group-list',
-  templateUrl: './inner-group-list.component.html'
+    selector: 'app-group-list',
+    templateUrl: './inner-group-list.component.html',
+    standalone: false
 })
 export class GroupListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   editGroupIcon = faEdit;

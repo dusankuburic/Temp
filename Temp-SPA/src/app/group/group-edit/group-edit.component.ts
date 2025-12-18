@@ -9,8 +9,9 @@ import { GroupValidators } from '../group-validators';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-group-edit',
-  templateUrl: './group-edit.component.html'
+    selector: 'app-group-edit',
+    templateUrl: './group-edit.component.html',
+    standalone: false
 })
 export class GroupEditComponent extends DestroyableComponent implements OnInit {
   editGroupForm!: FormGroup;

@@ -11,8 +11,9 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-employee-create-modal',
-  templateUrl: './employee-create-modal.component.html',
+    selector: 'app-employee-create-modal',
+    templateUrl: './employee-create-modal.component.html',
+    standalone: false
 })
 export class EmployeeCreateModalComponent extends DestroyableComponent implements OnInit{
   title?: string;

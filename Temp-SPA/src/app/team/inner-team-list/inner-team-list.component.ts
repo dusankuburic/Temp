@@ -14,8 +14,9 @@ import { TeamEditModalComponent } from '../team-edit-modal/team-edit-modal.compo
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-team-list',
-  templateUrl: './inner-team-list.component.html'
+    selector: 'app-team-list',
+    templateUrl: './inner-team-list.component.html',
+    standalone: false
 })
 export class TeamListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   editTeamIcon = faEdit;

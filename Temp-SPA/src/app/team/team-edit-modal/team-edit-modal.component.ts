@@ -9,8 +9,9 @@ import { TeamValidators } from '../team-validators';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-team-edit-modal',
-  templateUrl: './team-edit-modal.component.html'
+    selector: 'app-team-edit-modal',
+    templateUrl: './team-edit-modal.component.html',
+    standalone: false
 })
 export class TeamEditModalComponent extends DestroyableComponent implements OnInit{
   editTeamForm!: FormGroup;

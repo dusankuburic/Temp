@@ -10,8 +10,9 @@ import { TeamValidators } from '../team-validators';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-team-create',
-  templateUrl: './team-create.component.html'
+    selector: 'app-team-create',
+    templateUrl: './team-create.component.html',
+    standalone: false
 })
 export class TeamCreateComponent extends DestroyableComponent implements OnInit {
   createTeamForm!: FormGroup;

@@ -5,8 +5,9 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 import { UserEngagement } from 'src/app/core/models/engagement';
 
 @Component({
-  selector: 'app-engagement-user-list',
-  templateUrl: './engagement-user-list.component.html'
+    selector: 'app-engagement-user-list',
+    templateUrl: './engagement-user-list.component.html',
+    standalone: false
 })
 export class EngagementUserListComponent extends DestroyableComponent implements OnInit {
   engagements!: UserEngagement[];

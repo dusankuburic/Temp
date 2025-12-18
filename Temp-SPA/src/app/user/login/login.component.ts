@@ -8,8 +8,9 @@ import { AuthService } from '../../core/services/auth.service';
 import { DestroyableComponent } from '../../core/base/destroyable.component';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html'
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    standalone: false
 })
 export class LoginComponent extends DestroyableComponent implements OnInit {
   loginForm!: FormGroup;

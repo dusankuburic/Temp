@@ -9,8 +9,9 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-group-edit-modal',
-  templateUrl: './group-edit-modal.component.html'
+    selector: 'app-group-edit-modal',
+    templateUrl: './group-edit-modal.component.html',
+    standalone: false
 })
 export class GroupEditModalComponent extends DestroyableComponent implements OnInit {
   editGroupForm!: FormGroup;

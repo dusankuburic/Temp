@@ -7,9 +7,10 @@ import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { DestroyableComponent } from '../core/base/destroyable.component';
 
 @Component({
-  selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.scss']
+    selector: 'app-nav',
+    templateUrl: './nav.component.html',
+    styleUrls: ['./nav.component.scss'],
+    standalone: false
 })
 export class NavComponent extends DestroyableComponent {
   signOutIcon = faSignOutAlt

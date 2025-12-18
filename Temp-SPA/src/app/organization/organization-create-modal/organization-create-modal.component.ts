@@ -9,8 +9,9 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-organization-create-modal',
-  templateUrl: './organization-create-modal.component.html',
+    selector: 'app-organization-create-modal',
+    templateUrl: './organization-create-modal.component.html',
+    standalone: false
 })
 export class OrganizationCreateModalComponent extends DestroyableComponent implements OnInit {
   createOrganizationForm!: FormGroup;

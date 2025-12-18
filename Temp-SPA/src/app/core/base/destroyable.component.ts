@@ -14,7 +14,8 @@ import { Subject } from 'rxjs';
  * }
  */
 @Component({
-  template: ''
+    template: '',
+    standalone: false
 })
 export abstract class DestroyableComponent implements OnDestroy {
   protected destroy$ = new Subject<void>();

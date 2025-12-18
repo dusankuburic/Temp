@@ -9,8 +9,9 @@ import { EmploymentStatusValidators } from '../employment-status-validators';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-employment-status-edit',
-  templateUrl: './employment-status-edit.component.html'
+    selector: 'app-employment-status-edit',
+    templateUrl: './employment-status-edit.component.html',
+    standalone: false
 })
 export class EmploymentStatusEditComponent extends DestroyableComponent implements OnInit {
   editEmploymentStatusForm!: FormGroup;

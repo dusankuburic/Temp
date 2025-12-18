@@ -3,8 +3,9 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthService } from './core/services/auth.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html'
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    standalone: false
 })
 export class AppComponent implements OnInit {
   jwtHelper = new JwtHelperService();

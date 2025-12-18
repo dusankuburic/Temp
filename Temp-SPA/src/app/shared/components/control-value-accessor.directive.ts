@@ -3,7 +3,8 @@ import { ControlValueAccessor, FormControl, FormControlDirective, FormControlNam
 import { Subject, distinctUntilChanged, startWith, takeUntil, tap } from "rxjs";
 
 @Directive({
-    selector: '[tmpControlValueAccessor]'
+    selector: '[tmpControlValueAccessor]',
+    standalone: false
 })
 export class ControlValueAccessorDirective<T> implements ControlValueAccessor, OnInit {
     control: FormControl | undefined;

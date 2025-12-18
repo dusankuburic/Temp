@@ -13,8 +13,9 @@ import { WorkplaceService } from 'src/app/core/services/workplace.service';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 
 @Component({
-  selector: 'app-engagement-create',
-  templateUrl: './engagement-create.component.html'
+    selector: 'app-engagement-create',
+    templateUrl: './engagement-create.component.html',
+    standalone: false
 })
 export class EngagementCreateComponent extends DestroyableComponent implements OnInit {
   employeeId!: number;

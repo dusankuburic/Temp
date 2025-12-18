@@ -8,8 +8,9 @@ import { OrganizationService } from 'src/app/core/services/organization.service'
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-organization-edit',
-  templateUrl: './organization-edit.component.html'
+    selector: 'app-organization-edit',
+    templateUrl: './organization-edit.component.html',
+    standalone: false
 })
 export class OrganizationEditComponent extends DestroyableComponent implements OnInit {
   editOrganizationForm!: FormGroup;

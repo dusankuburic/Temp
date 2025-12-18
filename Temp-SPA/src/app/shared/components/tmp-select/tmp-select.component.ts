@@ -10,16 +10,17 @@ export interface SelectionOption {
 }
 
 @Component({
-  selector: 'tmp-select',
-  templateUrl: './tmp-select.component.html',
-  styleUrl: './tmp-select.component.css',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => TmpSelectComponent),
-      multi: true,
-    }
-  ]
+    selector: 'tmp-select',
+    templateUrl: './tmp-select.component.html',
+    styleUrl: './tmp-select.component.css',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => TmpSelectComponent),
+            multi: true,
+        }
+    ],
+    standalone: false
 })
 export class TmpSelectComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() options: SelectionOption[] = [];

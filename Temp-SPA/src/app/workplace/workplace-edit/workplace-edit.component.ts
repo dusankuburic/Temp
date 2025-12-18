@@ -9,8 +9,9 @@ import { takeUntil } from 'rxjs';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
 @Component({
-  selector: 'app-workplace-edit',
-  templateUrl: './workplace-edit.component.html'
+    selector: 'app-workplace-edit',
+    templateUrl: './workplace-edit.component.html',
+    standalone: false
 })
 export class WorkplaceEditComponent extends DestroyableComponent implements OnInit {
   editWorkplaceForm!: FormGroup;
