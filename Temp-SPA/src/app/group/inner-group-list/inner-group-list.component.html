@@ -1,6 +1,8 @@
 <div class="row justify-content-around">
   <div class="col-lg-2 col-md-6 col-sm-6">
-    <h4 class="text-center" *ngIf="innerGroups">{{organization.name}} groups</h4>
+    @if (innerGroups) {
+    <h4 class="text-center">{{organization.name}} groups</h4>
+    }
   </div>
   <div class="col-lg-7">
     <form class="form" [formGroup]="filtersForm">
@@ -32,8 +34,10 @@
             <th>Team Options</th>
           </tr>
       </thead>  
-      <tbody *ngIf="innerGroups"> 
-        <tr *ngFor="let group of innerGroups">
+      @if (innerGroups) {
+      <tbody> 
+        @for (group of innerGroups; track group.id) {
+        <tr>
           <td>{{group.name}}</td>
           <td>
             <div class="btn-group" role="group">
@@ -56,16 +60,21 @@
             </div>
           </td>
         </tr>
+        }
       </tbody>
+      }
     </table>
   </div>
-  <div class="col-lg-6" *ngIf="!innerGroups.length">
+  @if (!innerGroups.length) {
+  <div class="col-lg-6">
     <div class="alert alert-info text-center" role="alert">
       <h5>There are no groups inside organization</h5>
     </div>
   </div>
+  }
 </div>
-<div *ngIf="innerGroups.length" class="d-flex justify-content-center">
+@if (innerGroups.length) {
+<div class="d-flex justify-content-center">
   <tmp-pagination
     [totalCount]="pagination.totalItems"
     [pageSize]="pagination.itemsPerPage"
@@ -73,3 +82,4 @@
     (pageChanged)="pageChanged($event)">
   </tmp-pagination>
 </div>
+}

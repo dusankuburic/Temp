@@ -9,21 +9,27 @@
             <th>Team Options</th>
           </tr>
       </thead>
-      <tbody *ngIf="groups"> 
-        <tr *ngFor="let group of groups">
+      @if (groups) {
+      <tbody> 
+        @for (group of groups; track group.id) {
+        <tr>
           <td>{{group.name}}</td>
           <td>
             <a class="btn btn-success"[routerLink]="['/teams/', group.id, 'assigned-groups']"><fa-icon [icon]="usersIcon"></fa-icon></a>
           </td>
         </tr>
+        }
       </tbody>
+      }
     </table>
   </div>
-  <div class="col-lg-6" *ngIf="!groups">
+  @if (!groups) {
+  <div class="col-lg-6">
     <div class="alert alert-info text-center" role="alert">
       <h5>There are no assigned groups</h5>
     </div>
   </div>
+  }
   </div>
   
   

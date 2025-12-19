@@ -37,7 +37,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let employee of employees">
+                @for (employee of employees; track employee.id) {
+                <tr>
                     <td>{{employee.firstName}}</td>
                     <td>{{employee.lastName}}</td>
                     <td>
@@ -54,12 +55,15 @@
                             <fa-icon [icon]="editIcon"></fa-icon>
                         </button>
                     </td>
-                    <td *ngIf="employee.role === 'None'">
+                    @if (employee.role === 'None') {
+                    <td>
                         <button type="button" class="btn btn-info" (click)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)" (keydown.enter)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)" (keydown.space)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)" aria-label="Assign role">
                             <fa-icon [icon]="assignRoleIcon"></fa-icon>
                         </button>
                     </td>
-                    <td *ngIf="employee.role !== 'None'">
+                    }
+                    @if (employee.role !== 'None') {
+                    <td>
                         <div class="btn-group">
                         <button type="button" (click)="changeStatus(employee.id)" (keydown.enter)="changeStatus(employee.id)" (keydown.space)="changeStatus(employee.id)" class="btn" [ngClass]="{'btn-success': employee.isAppUserActive, 'btn-warning': !employee.isAppUserActive}" aria-label="Change status">
                             <fa-icon [icon]="employee.isAppUserActive ? deactivateUserIcon : activateUserIcon"></fa-icon>
@@ -69,16 +73,20 @@
                         </button>
                         </div>
                     </td>
+                    }
                 </tr>
+                }
                 </tbody>
             </table>
         </div>
     </div>
-    <div class="col-lg-6" *ngIf="!employees.length">
+    @if (!employees.length) {
+    <div class="col-lg-6">
         <div class="alert alert-info text-center" role="alert">
             <h5>There are no employees</h5>
         </div>
     </div>
+    }
 </div>
 <div class="d-flex justify-content-center">
     <tmp-pagination

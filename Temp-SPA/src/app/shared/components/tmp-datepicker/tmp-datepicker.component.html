@@ -7,9 +7,11 @@
         class="form-control"
         [ngClass]="(control.touched) ? control.invalid ? 'is-invalid' : 'is-valid' : null">
         <label>{{label}}</label>
-    <ng-container *ngIf="control.touched && control.invalid">
-        <div *ngIf="control.errors?.required" class="invalid-feedback">
+    @if (control.touched && control.invalid) {
+        @if (control.errors?.required) {
+        <div class="invalid-feedback">
             Please choose {{label}}.
         </div>
-    </ng-container>
+        }
+    }
 </div>

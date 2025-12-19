@@ -11,7 +11,8 @@
               </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let application of applications">
+            @for (application of applications; track application.id) {
+            <tr>
                 <td>{{application.category}}</td>
                 <td>{{application.createdAt | date}}</td>
                 <td>
@@ -27,6 +28,7 @@
                     </a>
                 </td>
             </tr>
+            }
           </tbody>
       </table>
 </div>

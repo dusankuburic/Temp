@@ -46,20 +46,26 @@
                   <th>To</th>
               </tr>
             </thead>
-            <tbody *ngIf="existingEngagements?.length !== 0">
-              <tr *ngFor="let data of existingEngagements">
+            @if (existingEngagements?.length !== 0) {
+            <tbody>
+              @for (data of existingEngagements; track data.workplaceName) {
+              <tr>
                 <td>{{data.workplaceName}}</td>
                 <td>{{data.employmentStatusName}}</td>
                 <td>{{data.salary}}</td>
                 <td>{{data.dateFrom | date }}</td>
                 <td>{{data.dateTo | date }}</td>
               </tr>
-            </tbody>                     
+              }
+            </tbody>
+            }                     
           </table>
         </div>
-        <div *ngIf="existingEngagements?.length === 0" class="alert alert-danger text-center" role="alert">
+        @if (existingEngagements?.length === 0) {
+        <div class="alert alert-danger text-center" role="alert">
             Employee doesn't have assigned engagement
-        </div>                     
+        </div>
+        }                     
     </div>
     </tab>
   </tabset>

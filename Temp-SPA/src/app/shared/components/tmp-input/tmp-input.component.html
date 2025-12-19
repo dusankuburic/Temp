@@ -1,4 +1,5 @@
-<div class="form-floating" *ngIf="control">
+@if (control) {
+<div class="form-floating">
     <input
         [type]="type" 
         [formControl]="control"
@@ -6,44 +7,62 @@
         class="form-control"
         [ngClass]="(isFilter) ? null : (control.touched) ? control.invalid ? 'is-invalid' : 'is-valid' : null">
         <label>{{label}}</label>
-    <ng-container *ngIf="isFilter === false && control.touched && control.invalid">
-        <div *ngIf="control.errors?.pattern" class="invalid-feedback">
+    @if (isFilter === false && control.touched && control.invalid) {
+        @if (control.errors?.pattern) {
+        <div class="invalid-feedback">
             Passwords must be at least 8 characters long, have 1 uppercase letter, 1
             lowercase letter, and 1 number.
         </div>
-        <div *ngIf="control.errors?.required" class="invalid-feedback">
+        }
+        @if (control.errors?.required) {
+        <div class="invalid-feedback">
             Please enter {{label}}.
         </div>
-        <div *ngIf="control.errors?.minlength" class="invalid-feedback">
+        }
+        @if (control.errors?.minlength) {
+        <div class="invalid-feedback">
             The value you inputted is
             {{ control.errors?.minlength.actualLength }}
             characters long. It must be at least
             {{ control.errors?.minlength.requiredLength }}
             characters long.
         </div>
-        <div *ngIf="control.errors?.maxlength" class="invalid-feedback">
+        }
+        @if (control.errors?.maxlength) {
+        <div class="invalid-feedback">
             The value you inputted is
             {{ control.errors?.maxlength.actualLength }}
             characters long. It must be less than
             {{ control.errors?.maxlength.requiredLength }}
             characters long.
         </div>
-        <div *ngIf="control.errors?.email" class="invalid-feedback">
+        }
+        @if (control.errors?.email) {
+        <div class="invalid-feedback">
             You must enter a valid email.
         </div>
-        <div *ngIf="control.errors?.usernameExists" class="invalid-feedback">
+        }
+        @if (control.errors?.usernameExists) {
+        <div class="invalid-feedback">
             Username is already taken.
         </div>
-        <div *ngIf="control.errors?.pattern" class="invalid-feedback">
-            Password not complex enough.
-        </div>
-        <div *ngIf="control.errors?.noMatch" class="invalid-feedback">
+        }
+        @if (control.errors?.noMatch) {
+        <div class="invalid-feedback">
             Passwords do not match.
         </div>
-        <div *ngIf="control.errors?.nameExists" class="invalid-feedback">
+        }
+        @if (control.errors?.nameExists) {
+        <div class="invalid-feedback">
             Name taken. Please try another name.
         </div>
-        <div *ngIf="control.errors?.min" class="invalid-feedback">Value too low.</div>
-        <div *ngIf="control.errors?.max" class="invalid-feedback">Value too high.</div>
-    </ng-container>
+        }
+        @if (control.errors?.min) {
+        <div class="invalid-feedback">Value too low.</div>
+        }
+        @if (control.errors?.max) {
+        <div class="invalid-feedback">Value too high.</div>
+        }
+    }
 </div>
+}

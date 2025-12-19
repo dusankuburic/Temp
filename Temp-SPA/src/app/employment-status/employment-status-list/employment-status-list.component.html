@@ -24,7 +24,8 @@
                 </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let employment of employmentStatuses">
+            @for (employment of employmentStatuses; track employment.id) {
+            <tr>
                 <td>{{employment.name}}</td>
                 <td>
                     <div class="btn-group" role="group">
@@ -37,14 +38,17 @@
                     </div>
                 </td>
             </tr>
+            }
             </tbody>
         </table>
     </div>
-    <div class="col-lg-6" *ngIf="!employmentStatuses.length">
+    @if (!employmentStatuses.length) {
+    <div class="col-lg-6">
         <div class="alert alert-info text-center" role="alert">
             <h5>There are no employment statuses</h5>
         </div>
     </div>
+    }
 </div>
 <div class="d-flex justify-content-center">
     <tmp-pagination

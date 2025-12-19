@@ -3,11 +3,13 @@
     <h1 class="text-center">Edit Employee</h1>
       <div class="row justify-content-center">
           <div class="col-lg-6 col-sm-6 col-8">
-            <div *ngIf="fullTeam" class="alert alert-info text-center" role="alert">
+            @if (fullTeam) {
+            <div class="alert alert-info text-center" role="alert">
               <h4>Organization: {{fullTeam.organizationName}}</h4>
               <h4>Group: {{fullTeam.groupName}}</h4>
               <h4>Team: {{fullTeam.teamName}}</h4>
             </div>
+            }
               <form class="row g-2" [formGroup]="editEmployeeForm" (ngSubmit)="update()">
                 <div class="form-group">
                   <tmp-input [formControl]="firstName" [label]="'First Name'" [placeholder]="'Enter First Name'"></tmp-input>
@@ -42,7 +44,8 @@
       </div>
   </div>
 
-  <div *ngIf="employee.role === 'Moderator'" class="col-lg-6">
+  @if (employee.role === 'Moderator') {
+  <div class="col-lg-6">
     <div class="container">
       <h1 class="text-center">Assign Groups</h1>
       <div class="row justify-content-center">
@@ -55,7 +58,8 @@
               <th>Options</th>
             </thead>
             <tbody>
-              <tr *ngFor="let group of currentModeratorGroups">
+              @for (group of currentModeratorGroups; track group.id) {
+              <tr>
                 <td>{{group.name}}</td>
                 <td>
                   <button type="button" class="btn btn-danger" (click)="updateGroup(this.employee.id, group.id)" (keydown.enter)="updateGroup(this.employee.id, group.id)" (keydown.space)="updateGroup(this.employee.id, group.id)" aria-label="Remove group">
@@ -63,6 +67,7 @@
                   </button>
                 </td>
               </tr>
+              }
             </tbody>
           </table>
         </div>
@@ -75,7 +80,8 @@
               <th>Options</th>
             </thead>
             <tbody>
-              <tr *ngFor="let group of freeModeratorGroups">
+              @for (group of freeModeratorGroups; track group.id) {
+              <tr>
                 <td>{{group.name}}</td>
                 <td>
                   <button type="button" class="btn btn-success" (click)="updateGroup(this.employee.id, group.id)" (keydown.enter)="updateGroup(this.employee.id, group.id)" (keydown.space)="updateGroup(this.employee.id, group.id)" aria-label="Add group">
@@ -83,7 +89,7 @@
                   </button>
                 </td>
               </tr>
-              
+              }
             </tbody>
           </table>
         </div>
@@ -91,5 +97,6 @@
       </div>
     </div>
   </div>
+  }
 
 </div>

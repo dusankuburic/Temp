@@ -32,7 +32,8 @@
                 </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let organization of organizations">
+            @for (organization of organizations; track organization.id) {
+            <tr>
                 <td>{{organization.name}}</td>
                 <td>
                     <div class="btn-group" role="group">
@@ -55,14 +56,17 @@
                     </div>
                 </td>
             </tr>
+            }
             </tbody>
         </table>
     </div>
-    <div class="col-lg-6" *ngIf="!organizations.length">
+    @if (!organizations.length) {
+    <div class="col-lg-6">
         <div class="alert alert-info text-center" role="alert">
             <h5>There are no organizations</h5>
         </div>
     </div>
+    }
 </div>
 <div class="d-flex justify-content-center">
     <tmp-pagination

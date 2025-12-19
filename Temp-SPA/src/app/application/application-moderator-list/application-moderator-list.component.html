@@ -13,7 +13,8 @@
               </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let application of applications">
+            @for (application of applications; track application.id) {
+            <tr>
                 <td>{{application.category}}</td>
                 <td>{{application.username}}</td>
                 <td>{{application.createdAt | date}}</td>
@@ -24,17 +25,20 @@
                         </span>
                     </h5>
                 </td>
-                <td *ngIf="application.status === false">
+                @if (application.status === false) {
+                <td>
                     <button type="button" (click)="updateStatus(application.id, application.teamId)" (keydown.enter)="updateStatus(application.id, application.teamId)" (keydown.space)="updateStatus(application.id, application.teamId)" class="btn btn-info" aria-label="Update status">
                         <fa-icon [icon]="bookmarkIcon"></fa-icon>
                     </button>
                 </td>
+                }
                 <td>
                     <a class="btn btn-primary" [routerLink]="['/applications/moderator/', application.id]">
                         <fa-icon [icon]="eyeIcon"></fa-icon>
                     </a>
                 </td>
             </tr>
+            }
           </tbody>
       </table>
 </div>

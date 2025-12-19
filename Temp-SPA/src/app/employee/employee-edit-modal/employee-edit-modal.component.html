@@ -6,9 +6,11 @@
 </div>
 <div class="modal-body">
     <div class="row justify-content-center">
-      <div *ngIf="username" class="alert alert-info text-center" role="alert">
+      @if (username) {
+      <div class="alert alert-info text-center" role="alert">
         <h4>{{username}}</h4>
       </div>
+      }
       <form class="row g-2" [formGroup]="editEmployeeForm" (ngSubmit)="update()">
           <div class="form-group">
             <tmp-input [formControl]="firstName" [label]="'First Name'" [placeholder]="'Enter First Name'"></tmp-input>
@@ -40,7 +42,8 @@
           </div>
         </form>
     </div>
-    <div *ngIf="employee?.role === 'Moderator'">
+    @if (employee?.role === 'Moderator') {
+        <div>
         <div class="container">
           <h3 class="text-center">Assign Groups</h3>
           <div class="row justify-content-center">
@@ -53,7 +56,8 @@
                   <th>Options</th>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let group of currentModeratorGroups">
+                  @for (group of currentModeratorGroups; track group.id) {
+                  <tr>
                     <td>{{group.name}}</td>
                     <td>
                       <button type="button" class="btn btn-danger" (click)="updateGroup(employeeId, group.id)" (keydown.enter)="updateGroup(employeeId, group.id)" (keydown.space)="updateGroup(employeeId, group.id)" aria-label="Remove group">
@@ -61,6 +65,7 @@
                       </button>
                     </td>
                   </tr>
+                  }
                 </tbody>
               </table>
             </div>
@@ -73,7 +78,8 @@
                   <th>Options</th>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let group of freeModeratorGroups">
+                  @for (group of freeModeratorGroups; track group.id) {
+                  <tr>
                     <td>{{group.name}}</td>
                     <td>
                       <button type="button" class="btn btn-success" (click)="updateGroup(employeeId, group.id)" (keydown.enter)="updateGroup(employeeId, group.id)" (keydown.space)="updateGroup(employeeId, group.id)" aria-label="Add group">
@@ -81,6 +87,7 @@
                       </button>
                     </td>
                   </tr>
+                  }
                 </tbody>
               </table>
             </div>
@@ -88,4 +95,5 @@
           </div>
         </div>
     </div>
+    }
 </div>

@@ -1,20 +1,27 @@
-<div class="form-floating" *ngIf="control">
+@if (control) {
+<div class="form-floating">
     <select 
         [formControl]="control" 
         class="form-select"
         [ngClass]="(isFilter) ? null : (control.touched) ? control.invalid ? 'is-invalid' : 'is-valid' : null">
+        @for (option of options; track option.value) {
         <option 
             [value]="option.value"
             [disabled]="option.disabled"
-            [hidden]="option.hidden"
-            *ngFor="let option of options">
+            [hidden]="option.hidden">
             {{option.display}}
         </option>
+        }
     </select>
-    <label *ngIf="label">{{label}}</label>
-    <ng-container *ngIf="isFilter === false && control.touched && control.invalid">
-        <div *ngIf="control.errors?.required" class="invalid-feedback">
+    @if (label) {
+    <label>{{label}}</label>
+    }
+    @if (isFilter === false && control.touched && control.invalid) {
+        @if (control.errors?.required) {
+        <div class="invalid-feedback">
             Please choose one of the options.
         </div>
-    </ng-container>
-</div> 
+        }
+    }
+</div>
+} 

@@ -1,4 +1,5 @@
-<pagination *ngIf="totalCount && pageSize"
+@if (totalCount && pageSize) {
+<pagination
     [boundaryLinks]="true"
     [totalItems]="totalCount"
     [itemsPerPage]="pageSize"
@@ -9,3 +10,4 @@
     firstText="&laquo;"
     lastText="&raquo;">
 </pagination>
+}

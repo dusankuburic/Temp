@@ -1,7 +1,8 @@
 <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Temp</a>
-      <div *ngIf="loggedIn()" class="dropdown" dropdown>
+      @if (loggedIn()) {
+      <div class="dropdown" dropdown>
         <span class="mr-1">
           <img height="46" width="46" src="{{'../../assets/user.png'}}" alt="user image">
         </span>
@@ -12,5 +13,6 @@
           <li><a class="dropdown-item" href="#" (click)="logout()"><fa-icon [icon]="signOutIcon"></fa-icon> Logout</a></li>
         </ul>
       </div>
+      }
   </div>
 </nav>

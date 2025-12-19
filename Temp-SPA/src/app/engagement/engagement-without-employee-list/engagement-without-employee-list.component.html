@@ -32,7 +32,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let employee of employees">
+                    @for (employee of employees; track employee.id) {
+                    <tr>
                         <td>{{employee.firstName}}</td>
                         <td>{{employee.lastName}}</td>
                         <td>
@@ -50,15 +51,18 @@
                             </button>
                         </td>
                     </tr>
+                    }
                 </tbody>
             </table>
         </div>
     </div>
-    <div class="col-lg-6" *ngIf="!employees.length">
+    @if (!employees.length) {
+    <div class="col-lg-6">
         <div class="alert alert-info text-center" role="alert">
           <h5>There are employees without engagement</h5>
         </div>
     </div>
+    }
 </div>
 <div class="d-flex justify-content-center">
     <tmp-pagination
