@@ -1,12 +1,12 @@
-﻿namespace Temp.Services.Teams.Exceptions;
+using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class InvalidTeamException : Exception
+namespace Temp.Services.Teams.Exceptions;
+
+public class InvalidTeamException : ValidationEx
 {
     public InvalidTeamException(string parameterName, object parameterValue)
-        : base($"Invalid Team, " +
-                $"Parameter Name: {parameterName}, " +
-                $"Parameter Value: {parameterValue}.") {
-
+        : base($"Invalid team property: {parameterName}",
+               parameterName,
+               $"Invalid value: {parameterValue}") {
     }
 }
-

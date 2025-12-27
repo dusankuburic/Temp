@@ -12,5 +12,15 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(x => x.Name)
             .HasMaxLength(100)
             .IsRequired();
+
+
+        builder.HasIndex(x => x.IsActive)
+            .HasDatabaseName("IX_Organizations_IsActive");
+
+        builder.HasIndex(x => x.Name)
+            .HasDatabaseName("IX_Organizations_Name");
+
+        builder.HasIndex(x => new { x.IsActive, x.HasActiveGroup })
+            .HasDatabaseName("IX_Organizations_IsActive_HasActiveGroup");
     }
 }

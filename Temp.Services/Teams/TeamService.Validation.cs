@@ -47,4 +47,3 @@ public partial class TeamService
         return string.IsNullOrWhiteSpace(input);
     }
 }
-

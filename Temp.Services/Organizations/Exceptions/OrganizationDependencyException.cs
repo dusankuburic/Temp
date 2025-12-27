@@ -1,10 +1,14 @@
-﻿namespace Temp.Services.Organizations.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class OrganizationDependencyException : Exception
+namespace Temp.Services.Organizations.Exceptions;
+
+public class OrganizationDependencyException : DependencyException
 {
     public OrganizationDependencyException(Exception innerException)
-        : base("Service dependency error occurred, contact support", innerException) {
+        : base("Organization service dependency error occurred", innerException) {
+    }
 
+    public OrganizationDependencyException(string message, Exception innerException)
+        : base(message, innerException) {
     }
 }
-

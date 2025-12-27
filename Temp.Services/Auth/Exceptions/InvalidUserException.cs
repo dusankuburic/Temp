@@ -1,10 +1,15 @@
-﻿namespace Temp.Services.Auth.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class InvalidUserException : Exception
+namespace Temp.Services.Auth.Exceptions;
+
+public class InvalidUserException : ValidationEx
 {
+    public InvalidUserException(string message)
+        : base(message, "User", message) {
+    }
 
     public InvalidUserException(string parameterName, object parameterValue)
-        : base(message: $"Invalid user, " +
-            $"parameter name: {parameterName}, " +
-            $"parameter value: {parameterValue}.") { }
+        : base($"Invalid user property: {parameterName}",
+               parameterName,
+               $"Invalid value: {parameterValue}") { }
 }

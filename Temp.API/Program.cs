@@ -19,6 +19,7 @@ builder.Services.AddControllers()
 builder.Services.AddHealthChecks();
 builder.Services.AddDataProtection();
 builder.Services.ConfigureCORS();
+builder.Services.AddRateLimitingConfiguration();
 builder.Services.AddResponseCompression(options => {
     options.EnableForHttps = true;
 });
@@ -27,9 +28,39 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope()) {
     var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
     try {
         var ctx = services.GetRequiredService<ApplicationDbContext>();
-        ctx.Database.Migrate();
+
+
+        int maxRetries = 5;
+        int retryCount = 0;
+        bool success = false;
+
+        while (retryCount < maxRetries && !success) {
+            try {
+                bool databaseExists = await ctx.Database.CanConnectAsync();
+
+                if (!databaseExists) {
+                    await ctx.Database.EnsureCreatedAsync();
+                    logger.LogInformation("Database created successfully from model");
+                } else {
+                    await ctx.Database.MigrateAsync();
+                    logger.LogInformation("Database migrations applied successfully");
+                }
+
+                success = true;
+            } catch (Exception ex) {
+                retryCount++;
+                if (retryCount >= maxRetries) {
+                    logger.LogError(ex, "Failed to initialize database after {RetryCount} attempts", maxRetries);
+                    throw;
+                }
+
+                logger.LogWarning(ex, "Database initialization attempt {RetryCount} failed. Retrying in 2 seconds...", retryCount);
+                await Task.Delay(2000);
+            }
+        }
 
         Seed.SeedOrganizations(ctx);
         Seed.SeedGroups(ctx);
@@ -37,6 +68,7 @@ using (var scope = app.Services.CreateScope()) {
         Seed.SeedEmploymentStatuses(ctx);
         Seed.SeedWorkplaces(ctx);
         Seed.SeedEmployees(ctx);
+
         var userManager = services.GetRequiredService<UserManager<AppUser>>();
 
         if (!await userManager.Users.AnyAsync()) {
@@ -68,14 +100,15 @@ using (var scope = app.Services.CreateScope()) {
             var employee = await ctx.Employees
                 .Where(x => x.Id == 1)
                 .FirstOrDefaultAsync();
-            employee.AppUserId = user.Id;
-            employee.IsAppUserActive = true;
-            await ctx.SaveChangesAsync();
+            if (employee != null) {
+                employee.AppUserId = user.Id;
+                employee.IsAppUserActive = true;
+                await ctx.SaveChangesAsync();
+            }
         }
 
     } catch (Exception exMsg) {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(exMsg, "Migration error");
+        logger.LogError(exMsg, "Error during application initialization");
     }
 }
 app.UseHttpLogging();
@@ -85,6 +118,7 @@ app.UseSwaggerDoc();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("CorsPolicy");
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapHealthChecks("/health", new HealthCheckOptions {
@@ -99,5 +133,5 @@ app.MapControllers();
 
 app.Run();
 
-// Make Program class accessible for integration tests
+
 public partial class Program { }

@@ -29,5 +29,18 @@ public class EngagementConfiguration : IEntityTypeConfiguration<Engagement>
 
         builder.Property(x => x.Salary)
             .IsRequired();
+
+
+        builder.HasIndex(x => x.EmployeeId)
+            .HasDatabaseName("IX_Engagements_EmployeeId");
+
+        builder.HasIndex(x => x.DateTo)
+            .HasDatabaseName("IX_Engagements_DateTo");
+
+        builder.HasIndex(x => new { x.EmployeeId, x.DateTo })
+            .HasDatabaseName("IX_Engagements_EmployeeId_DateTo");
+
+        builder.HasIndex(x => new { x.DateFrom, x.DateTo })
+            .HasDatabaseName("IX_Engagements_DateRange");
     }
 }

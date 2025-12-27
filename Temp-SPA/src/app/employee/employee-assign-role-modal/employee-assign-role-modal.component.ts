@@ -65,7 +65,7 @@ export class EmployeeAssignRoleModalComponent extends DestroyableComponent imple
 
   register(): void {
     if (this.createAssignRoleForm.valid) {
-      this.assignDto = { ...this.createAssignRoleForm.value, employeeId: this.employeeId };
+      this.assignDto = { ...this.createAssignRoleForm.value, employeeId: this.employeeId, firstName: this.firstName, lastName: this.lastName };
       this.employeeService.assignRole(this.assignDto).pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.bsModalRef.content.isSaved = true;
         this.createAssignRoleForm.disable();

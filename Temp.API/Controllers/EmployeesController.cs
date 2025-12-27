@@ -20,53 +20,37 @@ public class EmployeesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PagedList<GetEmployeesResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmployees([FromQuery] GetEmployeesRequest request) {
-        try {
-            var response = await _employeeService.GetEmployees(request);
-            Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
+        var response = await _employeeService.GetEmployees(request);
+        Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
 
-            return Ok(response);
-        } catch (EmployeeValidationException employeeValidationException) {
-            return BadRequest(GetInnerMessage(employeeValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetEmployeesResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmployee([FromRoute] int id) {
-        try {
-            var response = await _employeeService.GetEmployee(id);
+        var response = await _employeeService.GetEmployee(id);
 
-            return Ok(response);
-        } catch (EmployeeValidationException employeeValidationException) {
-            return BadRequest(GetInnerMessage(employeeValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(CreateEmployeeResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create([FromBody] CreateEmployeeRequest request) {
-        try {
-            var response = await _employeeService.CreateEmployee(request);
+        var response = await _employeeService.CreateEmployee(request);
 
-            return Ok(response);
-        } catch (EmployeeValidationException employeeValidationException) {
-            return BadRequest(GetInnerMessage(employeeValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeRequest request) {
-        try {
-            var response = await _employeeService.UpdateEmployee(request);
+        var response = await _employeeService.UpdateEmployee(request);
 
-            return NoContent();
-        } catch (EmployeeValidationException employeeValidationException) {
-            return BadRequest(GetInnerMessage(employeeValidationException));
-        }
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
@@ -74,17 +58,8 @@ public class EmployeesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteEmployee([FromRoute] int id) {
-        try {
-            await _employeeService.DeleteEmployeeAsync(id);
-            return NoContent();
-        } catch (EmployeeNotFoundException) {
-            return NotFound();
-        } catch (EmployeeValidationException employeeValidationException) {
-            return BadRequest(GetInnerMessage(employeeValidationException));
-        }
+        await _employeeService.DeleteEmployeeAsync(id);
+        return NoContent();
     }
 
-    private static string GetInnerMessage(Exception exception) =>
-        exception.InnerException.Message;
 }
-

@@ -105,20 +105,20 @@ public partial class EmployeeService
 
     private EmployeeServiceException CreateAndLogServiceException(Exception exception) {
         var employeeServiceException = new EmployeeServiceException(exception);
-        _loggingBroker.LogError(employeeServiceException);
+        Logger.LogError(exception);
+        Logger.LogError(employeeServiceException);
         return employeeServiceException;
     }
 
     private EmployeeValidationException CreateAndLogValidationException(Exception exception) {
         var employeeValidationException = new EmployeeValidationException(exception);
-        _loggingBroker.LogError(employeeValidationException);
+        Logger.LogError(employeeValidationException);
         return employeeValidationException;
     }
 
     private EmployeeDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
         var employeeDependencyException = new EmployeeDependencyException(exception);
-        _loggingBroker.LogCritical(employeeDependencyException);
+        Logger.LogCritical(employeeDependencyException);
         return employeeDependencyException;
     }
 }
-

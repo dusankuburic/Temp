@@ -11,7 +11,6 @@ public static class ProgramCorsSetup
                 .WithOrigins("http://localhost:4323", "http://localhost:4200");
             });
         });
-
         return services;
     }
 }

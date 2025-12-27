@@ -14,6 +14,6 @@ public class GetOrganizationInnerGroupsRequest
         set { _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
     }
 
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public string WithTeams { get; set; } = "all";
 }

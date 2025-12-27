@@ -1,10 +1,14 @@
-﻿namespace Temp.Services.Teams.Exceptions;
+using Temp.Services.Exceptions;
 
-public class TeamDependencyException : Exception
+namespace Temp.Services.Teams.Exceptions;
+
+public class TeamDependencyException : DependencyException
 {
     public TeamDependencyException(Exception innerException)
-        : base("Service dependency error occurred, contact support", innerException) {
+        : base("Team service dependency error occurred", innerException) {
+    }
 
+    public TeamDependencyException(string message, Exception innerException)
+        : base(message, innerException) {
     }
 }
-

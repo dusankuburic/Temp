@@ -20,93 +20,65 @@ public class OrganizationsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PagedList<GetOrganizationResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPagedOrganizations([FromQuery] GetOrganizationsRequest request) {
-        try {
-            var response = await _organizationService.GetPagedOrganizations(request);
-            Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
+        var response = await _organizationService.GetPagedOrganizations(request);
+        Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
 
-            return Ok(response);
-        } catch (OrganizationValidationException organizationValidationException) {
-            return BadRequest(GetInnerMessage(organizationValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(IEnumerable<GetOrganizationResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOrganizations() {
-        try {
-            var response = await _organizationService.GetOrganizations();
+        var response = await _organizationService.GetOrganizations();
 
-            return Ok(response);
-        } catch (OrganizationValidationException organizationValidationException) {
-            return BadRequest(GetInnerMessage(organizationValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetOrganizationResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOrganization([FromRoute] GetOrganizationRequest request) {
-        try {
-            var response = await _organizationService.GetOrganization(request);
+        var response = await _organizationService.GetOrganization(request);
 
-            return Ok(response);
-        } catch (OrganizationValidationException organizationValidationException) {
-            return BadRequest(GetInnerMessage(organizationValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpGet("paged-inner-groups")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetPagedInnerGroupsResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPagedInnerGroups([FromQuery] GetOrganizationInnerGroupsRequest request) {
-        try {
-            var response = await _organizationService.GetPagedInnerGroups(request);
-            Response.AddPagination(response.Groups.CurrentPage, response.Groups.PageSize, response.Groups.TotalCount, response.Groups.TotalPages);
+        var response = await _organizationService.GetPagedInnerGroups(request);
+        Response.AddPagination(response.Groups.CurrentPage, response.Groups.PageSize, response.Groups.TotalCount, response.Groups.TotalPages);
 
-            return Ok(response);
-        } catch (OrganizationValidationException organizationValidationException) {
-            return BadRequest(GetInnerMessage(organizationValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpGet("inner-groups/{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(List<InnerGroup>), StatusCodes.Status200OK)]
     public async Task<IActionResult> InnerGroups([FromRoute] int id) {
-        try {
-            var response = await _organizationService.GetInnerGroups(id);
+        var response = await _organizationService.GetInnerGroups(id);
 
-            return Ok(response);
-        } catch (OrganizationValidationException organizationValidationException) {
-            return BadRequest(GetInnerMessage(organizationValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(CreateOrganizationResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create([FromBody] CreateOrganizationRequest request) {
-        try {
-            var response = await _organizationService.CreateOrganization(request);
+        var response = await _organizationService.CreateOrganization(request);
 
-            return Ok(response);
-        } catch (OrganizationValidationException organizationValidationException) {
-            return BadRequest(GetInnerMessage(organizationValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateOrganization([FromBody] UpdateOrganizationRequest request) {
-        try {
-            var response = await _organizationService.UpdateOrganization(request);
+        var response = await _organizationService.UpdateOrganization(request);
 
-            return NoContent();
-        } catch (OrganizationValidationException organizationValidationException) {
-            return BadRequest(GetInnerMessage(organizationValidationException));
-        }
+        return NoContent();
     }
 
     [HttpPut("change-status/{id}")]
@@ -122,16 +94,9 @@ public class OrganizationsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> OrganizationExists([FromQuery] string name) {
-        try {
-            var response = await _organizationService.OrganizationExists(name);
+        var response = await _organizationService.OrganizationExists(name);
 
-            return Ok(response);
-        } catch (OrganizationValidationException organizationValidationException) {
-            return BadRequest(GetInnerMessage(organizationValidationException));
-        }
+        return Ok(response);
     }
 
-    private static string GetInnerMessage(Exception exception) {
-        return exception.InnerException.Message;
-    }
 }

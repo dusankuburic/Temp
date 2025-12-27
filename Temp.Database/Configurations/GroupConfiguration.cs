@@ -16,5 +16,18 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
 
         builder.Property(x => x.OrganizationId)
             .IsRequired();
+
+
+        builder.HasIndex(x => x.OrganizationId)
+            .HasDatabaseName("IX_Groups_OrganizationId");
+
+        builder.HasIndex(x => x.IsActive)
+            .HasDatabaseName("IX_Groups_IsActive");
+
+        builder.HasIndex(x => new { x.OrganizationId, x.IsActive })
+            .HasDatabaseName("IX_Groups_OrganizationId_IsActive");
+
+        builder.HasIndex(x => x.Name)
+            .HasDatabaseName("IX_Groups_Name");
     }
 }

@@ -56,19 +56,19 @@ public partial class EngagementService
 
     private EngagementServiceException CreateAndLogServiceException(Exception exception) {
         var engagementServiceException = new EngagementServiceException(exception);
-        _loggingBroker.LogError(engagementServiceException);
+        Logger.LogError(engagementServiceException);
         return engagementServiceException;
     }
 
     private EngagementValidationException CreateAndLogValidationException(Exception exception) {
         var engagementValidationException = new EngagementValidationException(exception);
-        _loggingBroker.LogError(engagementValidationException);
+        Logger.LogError(engagementValidationException);
         return engagementValidationException;
     }
 
     private EngagementDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
         var engagementDependencyException = new EngagementDependencyException(exception);
-        _loggingBroker.LogCritical(engagementDependencyException);
+        Logger.LogCritical(engagementDependencyException);
         return engagementDependencyException;
     }
 }

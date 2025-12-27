@@ -1,7 +1,14 @@
-﻿namespace Temp.Services.Auth.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class AlreadyExistsUserException : Exception
+namespace Temp.Services.Auth.Exceptions;
+
+public class AlreadyExistsUserException : ConflictException
 {
-    public AlreadyExistsUserException(Exception innerException)
-        : base("User with same id already exists.", innerException) { }
+    public AlreadyExistsUserException()
+        : base("A user with the same identifier already exists") {
+    }
+
+    public AlreadyExistsUserException(string userId)
+        : base($"A user with identifier '{userId}' already exists") {
+    }
 }

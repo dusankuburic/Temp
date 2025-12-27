@@ -2,6 +2,6 @@
 
 public class CurrentUser
 {
-    public string Email { get; set; }
-    public string AppUserId { get; set; }
+    public string? Email { get; set; }
+    public string? AppUserId { get; set; }
 }

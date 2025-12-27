@@ -1,7 +1,10 @@
-﻿namespace Temp.Services.Workplaces.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class WorkplaceEmptyStorageException : Exception
+namespace Temp.Services.Workplaces.Exceptions;
+
+public class WorkplaceEmptyStorageException : NotFoundException
 {
     public WorkplaceEmptyStorageException()
-        : base("No Workplaces found in storage") { }
+        : base("No Workplaces found in storage") {
+    }
 }

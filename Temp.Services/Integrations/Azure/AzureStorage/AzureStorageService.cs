@@ -9,18 +9,18 @@ namespace Temp.Services.Integrations.Azure.AzureStorage;
 
 public class AzureStorageService : IAzureStorageService, IStorageService
 {
-    private readonly string _connectionString;
+    private readonly BlobServiceClient _blobServiceClient;
     private readonly string _metadataKeyTitle = "title";
     private readonly string _metadataKeyDescription = "description";
 
-    public AzureStorageService(string connectionString) {
-        _connectionString = connectionString;
+    public AzureStorageService(BlobServiceClient blobServiceClient) {
+        _blobServiceClient = blobServiceClient;
     }
 
     private string _containerName = "files";
     public string ContainerName
     {
-        get { return _connectionString; }
+        get { return _containerName; }
         set { _containerName = value; }
     }
 
@@ -30,7 +30,7 @@ public class AzureStorageService : IAzureStorageService, IStorageService
 
 
     private async Task<BlobContainerClient> GetStorageClient() {
-        var cloudBlobContainer = new BlobServiceClient(_connectionString)
+        var cloudBlobContainer = _blobServiceClient
             .GetBlobContainerClient(_containerName);
 
         await cloudBlobContainer.CreateIfNotExistsAsync();
@@ -110,9 +110,8 @@ public class AzureStorageService : IAzureStorageService, IStorageService
         };
     }
 
-    // IStorageService implementation
-    async Task<string> IStorageService.UploadAsync(Stream fileStream, string fileName, string contentType, CancellationToken cancellationToken)
-    {
+
+    async Task<string> IStorageService.UploadAsync(Stream fileStream, string fileName, string contentType, CancellationToken cancellationToken) {
         var cloudBlobContainer = await GetStorageClient();
         var uniqueFileName = UniqueFileName(fileName);
         var client = cloudBlobContainer.GetBlobClient(uniqueFileName);
@@ -121,40 +120,34 @@ public class AzureStorageService : IAzureStorageService, IStorageService
         return uniqueFileName;
     }
 
-    async Task<Stream> IStorageService.DownloadAsync(string fileName, CancellationToken cancellationToken)
-    {
+    async Task<Stream> IStorageService.DownloadAsync(string fileName, CancellationToken cancellationToken) {
         var cloudBlobContainer = await GetStorageClient();
         var file = cloudBlobContainer.GetBlobClient(fileName);
 
-        if (await file.ExistsAsync(cancellationToken))
-        {
+        if (await file.ExistsAsync(cancellationToken)) {
             return await file.OpenReadAsync(cancellationToken: cancellationToken);
         }
 
         throw new FileNotFoundException($"File '{fileName}' not found in storage");
     }
 
-    async Task<bool> IStorageService.DeleteAsync(string fileName, CancellationToken cancellationToken)
-    {
+    async Task<bool> IStorageService.DeleteAsync(string fileName, CancellationToken cancellationToken) {
         var cloudBlobContainer = await GetStorageClient();
         var file = cloudBlobContainer.GetBlobClient(fileName);
         return await file.DeleteIfExistsAsync(cancellationToken: cancellationToken);
     }
 
-    async Task<bool> IStorageService.ExistsAsync(string fileName, CancellationToken cancellationToken)
-    {
+    async Task<bool> IStorageService.ExistsAsync(string fileName, CancellationToken cancellationToken) {
         var cloudBlobContainer = await GetStorageClient();
         var file = cloudBlobContainer.GetBlobClient(fileName);
         return await file.ExistsAsync(cancellationToken);
     }
 
-    async Task<string> IStorageService.GetDownloadUrlAsync(string fileName, TimeSpan expiresIn, CancellationToken cancellationToken)
-    {
+    async Task<string> IStorageService.GetDownloadUrlAsync(string fileName, TimeSpan expiresIn, CancellationToken cancellationToken) {
         var cloudBlobContainer = await GetStorageClient();
         var file = cloudBlobContainer.GetBlobClient(fileName);
 
-        if (!await file.ExistsAsync(cancellationToken))
-        {
+        if (!await file.ExistsAsync(cancellationToken)) {
             throw new FileNotFoundException($"File '{fileName}' not found in storage");
         }
 
@@ -172,13 +165,11 @@ public class AzureStorageService : IAzureStorageService, IStorageService
         return file.GenerateSasUri(sasBuilder).ToString();
     }
 
-    async Task<IEnumerable<string>> IStorageService.ListFilesAsync(string? prefix, CancellationToken cancellationToken)
-    {
+    async Task<IEnumerable<string>> IStorageService.ListFilesAsync(string? prefix, CancellationToken cancellationToken) {
         var cloudBlobContainer = await GetStorageClient();
         var files = new List<string>();
 
-        await foreach (var file in cloudBlobContainer.GetBlobsAsync(prefix: prefix, cancellationToken: cancellationToken))
-        {
+        await foreach (var file in cloudBlobContainer.GetBlobsAsync(prefix: prefix, cancellationToken: cancellationToken)) {
             files.Add(file.Name);
         }
 

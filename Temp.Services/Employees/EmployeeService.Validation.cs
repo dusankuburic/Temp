@@ -66,4 +66,3 @@ public partial class EmployeeService
         return string.IsNullOrWhiteSpace(input);
     }
 }
-

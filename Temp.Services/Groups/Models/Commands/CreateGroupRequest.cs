@@ -2,6 +2,6 @@
 
 public class CreateGroupRequest
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public int OrganizationId { get; set; }
 }

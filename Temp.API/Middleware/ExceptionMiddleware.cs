@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Temp.API.Models;
 using Temp.Services.Exceptions;
 
@@ -14,35 +13,28 @@ public class ExceptionMiddleware
     public ExceptionMiddleware(
         RequestDelegate next,
         IHostEnvironment env,
-        ILogger<ExceptionMiddleware> logger)
-    {
+        ILogger<ExceptionMiddleware> logger) {
         _next = next;
         _env = env;
         _logger = logger;
     }
 
-    public async Task InvokeAsync(HttpContext context)
-    {
-        try
-        {
+    public async Task InvokeAsync(HttpContext context) {
+        try {
             await _next(context);
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             await HandleExceptionAsync(context, exception);
         }
     }
 
-    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
-    {
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception) {
         var errorResponse = new ErrorResponse
         {
             TraceId = context.TraceIdentifier,
             Timestamp = DateTime.UtcNow
         };
 
-        switch (exception)
-        {
+        switch (exception) {
             case ValidationException validationEx:
                 _logger.LogWarning(validationEx, "Validation error occurred");
                 errorResponse.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -96,9 +88,8 @@ public class ExceptionMiddleware
                 break;
         }
 
-        // Only include stack trace in development
-        if (_env.IsDevelopment())
-        {
+
+        if (_env.IsDevelopment()) {
             errorResponse.StackTrace = exception.StackTrace;
         }
 

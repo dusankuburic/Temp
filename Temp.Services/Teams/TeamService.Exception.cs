@@ -50,7 +50,6 @@ public partial class TeamService
         }
     }
 
-
     private async Task<GetUserTeamResponse> TryCatch(ReturningGetUserTeamFunction returningGetUserTeamFunction) {
         try {
             return await returningGetUserTeamFunction();
@@ -103,20 +102,19 @@ public partial class TeamService
 
     private TeamValidationException CreateAndLogValidationException(Exception exception) {
         var teamValidationException = new TeamValidationException(exception);
-        _loggingBroker.LogError(teamValidationException);
+        Logger.LogError(teamValidationException);
         return teamValidationException;
     }
 
     private TeamServiceException CreateAndLogServiceException(Exception exception) {
         var teamServiceException = new TeamServiceException(exception);
-        _loggingBroker.LogError(teamServiceException);
+        Logger.LogError(teamServiceException);
         return teamServiceException;
     }
 
     private TeamDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
         var teamDependencyException = new TeamDependencyException(exception);
-        _loggingBroker.LogCritical(teamDependencyException);
+        Logger.LogCritical(teamDependencyException);
         return teamDependencyException;
     }
 }
-

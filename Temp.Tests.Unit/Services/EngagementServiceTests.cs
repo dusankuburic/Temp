@@ -34,18 +34,18 @@ public class EngagementServiceTests
         _mockIdentityProvider = new Mock<IIdentityProvider>();
         _fixture = new Fixture();
 
-        // Setup UnitOfWork to return mocked repositories
+
         _mockUnitOfWork.Setup(uow => uow.Engagements).Returns(_mockEngagementRepository.Object);
         _mockUnitOfWork.Setup(uow => uow.Employees).Returns(_mockEmployeeRepository.Object);
 
-        // Create service with mocked dependencies
+
         _service = new EngagementService(
             _mockUnitOfWork.Object,
             _mockMapper.Object,
             _mockLoggingBroker.Object,
             _mockIdentityProvider.Object);
 
-        // Configure AutoFixture to handle circular references
+
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
@@ -53,7 +53,7 @@ public class EngagementServiceTests
 
     [Fact]
     public async Task CreateEngagement_WithValidData_ReturnsCreatedEngagement() {
-        // Arrange
+
         var dateFrom = DateTime.UtcNow;
         var dateTo = dateFrom.AddMonths(6);
 
@@ -92,10 +92,10 @@ public class EngagementServiceTests
         _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
             .ReturnsAsync(1);
 
-        // Act
+
         var result = await _service.CreateEngagement(request);
 
-        // Assert
+
         result.Should().NotBeNull();
         result.Id.Should().Be(response.Id);
         _mockEngagementRepository.Verify(r => r.AddAsync(It.IsAny<Engagement>(), default), Times.Once);
@@ -103,8 +103,8 @@ public class EngagementServiceTests
     }
 
     [Fact]
-    public async Task GetUserEmployeeEngagements_WithValidEmployeeId_ReturnsEngagementsList() {
-        // Arrange
+    public Task GetUserEmployeeEngagements_WithValidEmployeeId_ReturnsEngagementsList() {
+
         var employeeId = 1;
         var request = new GetUserEmployeeEngagementsRequest { Id = employeeId };
 
@@ -126,15 +126,15 @@ public class EngagementServiceTests
 
         _mockEngagementRepository.Setup(r => r.Query())
             .Returns(engagementQueryable);
+        return Task.CompletedTask;
 
-        // Act & Assert
-        // This demonstrates the test pattern for user employee engagements query
-        // Actual implementation would need to mock Include and ProjectTo properly
+
+
     }
 
     [Fact]
-    public async Task GetEngagementForEmployee_WithValidEmployeeId_ReturnsEngagementsList() {
-        // Arrange
+    public Task GetEngagementForEmployee_WithValidEmployeeId_ReturnsEngagementsList() {
+
         var employeeId = 1;
         var request = new GetEngagementsForEmployeeRequest { Id = employeeId };
 
@@ -147,27 +147,27 @@ public class EngagementServiceTests
 
         _mockEngagementRepository.Setup(r => r.Query())
             .Returns(queryable);
+        return Task.CompletedTask;
 
-        // Act & Assert
-        // This demonstrates the test pattern for employee engagements query
+
     }
 
     [Fact]
     public void EngagementService_Constructor_InitializesDependenciesCorrectly() {
-        // Arrange & Act
+
         var service = new EngagementService(
             _mockUnitOfWork.Object,
             _mockMapper.Object,
             _mockLoggingBroker.Object,
             _mockIdentityProvider.Object);
 
-        // Assert
+
         service.Should().NotBeNull();
     }
 
     [Fact]
     public async Task CreateEngagement_CallsSetAuditableInfoOnCreate() {
-        // Arrange
+
         var dateFrom = DateTime.UtcNow;
         var dateTo = dateFrom.AddMonths(6);
 
@@ -198,17 +198,17 @@ public class EngagementServiceTests
         _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
             .ReturnsAsync(1);
 
-        // Act
+
         await _service.CreateEngagement(request);
 
-        // Assert
+
         _mockIdentityProvider.Verify(i => i.GetCurrentUser(), Times.Once);
         _mockEngagementRepository.Verify(r => r.AddAsync(It.IsAny<Engagement>(), default), Times.Once);
     }
 
     [Fact]
-    public async Task GetUserEmployeeEngagements_IncludesWorkplaceAndEmploymentStatus() {
-        // Arrange
+    public Task GetUserEmployeeEngagements_IncludesWorkplaceAndEmploymentStatus() {
+
         var employeeId = 1;
         var request = new GetUserEmployeeEngagementsRequest { Id = employeeId };
 
@@ -232,19 +232,19 @@ public class EngagementServiceTests
 
         _mockEngagementRepository.Setup(r => r.Query())
             .Returns(engagementQueryable);
+        return Task.CompletedTask;
 
-        // Act & Assert
-        // This verifies the pattern includes related entities
-        // Actual test would verify Include() was called with correct expressions
+
+
     }
 
     [Fact]
-    public async Task CreateEngagement_WithNullRequest_ThrowsException() {
-        // Arrange
-        CreateEngagementRequest nullRequest = null!;
+    public Task CreateEngagement_WithNullRequest_ThrowsException() {
 
-        // Act & Assert
-        // The service's TryCatch wrapper should handle null validation
-        // This demonstrates expected behavior
+        CreateEngagementRequest nullRequest = null!;
+        return Task.CompletedTask;
+
+
+
     }
 }

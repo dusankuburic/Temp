@@ -1,8 +1,14 @@
-﻿namespace Temp.Services.Engagements.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class EngagementServiceException : Exception
+namespace Temp.Services.Engagements.Exceptions;
+
+public class EngagementServiceException : ServiceException
 {
     public EngagementServiceException(Exception innerException)
-        : base("Service error, contact support", innerException) { }
+        : base("Engagement service error occurred", "ENGAGEMENT_SERVICE_ERROR", innerException) {
+    }
 
+    public EngagementServiceException(string message, Exception innerException)
+        : base(message, "ENGAGEMENT_SERVICE_ERROR", innerException) {
+    }
 }

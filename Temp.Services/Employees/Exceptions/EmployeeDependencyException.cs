@@ -1,9 +1,14 @@
-﻿namespace Temp.Services.Employees.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class EmployeeDependencyException : Exception
+namespace Temp.Services.Employees.Exceptions;
+
+public class EmployeeDependencyException : DependencyException
 {
     public EmployeeDependencyException(Exception innerException)
-        : base("Service dependency error occurred, contact support", innerException) {
+        : base("Employee service dependency error occurred", innerException) {
+    }
 
+    public EmployeeDependencyException(string message, Exception innerException)
+        : base(message, innerException) {
     }
 }

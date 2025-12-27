@@ -23,18 +23,18 @@ public partial class ModeratorService
 
     private ModeratorGroupValidationException CreateAndLogValidationException(Exception exception) {
         var moderatorGroupValidationException = new ModeratorGroupValidationException(exception);
-        //LOG
+
         return moderatorGroupValidationException;
     }
     private ModeratorGroupsServiceException CreateAndLogServiceException(Exception exception) {
         var moderatorGroupsServiceException = new ModeratorGroupsServiceException(exception);
-        //LOG
+
         return moderatorGroupsServiceException;
     }
 
     private ModeratorGroupsDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
         var moderatorGroupsDependencyException = new ModeratorGroupsDependencyException(exception);
-        //LOG
+
         return moderatorGroupsDependencyException;
     }
 }

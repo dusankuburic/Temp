@@ -1,19 +1,18 @@
-using System;
+using Temp.Services.Exceptions;
 
-namespace Temp.Services.Teams.Exceptions
+namespace Temp.Services.Teams.Exceptions;
+
+public class TeamNotFoundException : NotFoundException
 {
-    public class TeamNotFoundException : Exception
-    {
-        public TeamNotFoundException() : base("The specified team was not found.")
-        {
-        }
+    public TeamNotFoundException()
+        : base("Team", "unknown") {
+    }
 
-        public TeamNotFoundException(string message) : base(message)
-        {
-        }
+    public TeamNotFoundException(int teamId)
+        : base("Team", teamId) {
+    }
 
-        public TeamNotFoundException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    public TeamNotFoundException(string message)
+        : base(message) {
     }
 }

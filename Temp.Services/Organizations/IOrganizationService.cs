@@ -16,4 +16,3 @@ public interface IOrganizationService
     Task<UpdateOrganizationStatusResponse> UpdateOrganizationStatus(UpdateOrganizationStatusRequest request);
     Task<bool> OrganizationExists(string name);
 }
-

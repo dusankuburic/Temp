@@ -12,7 +12,7 @@ constructor() { }
       if(event){
         okCallback()
       } else {
-        //do nothing
+        
       }
     });
   }

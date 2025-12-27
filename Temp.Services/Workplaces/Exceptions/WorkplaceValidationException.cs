@@ -1,7 +1,17 @@
-﻿namespace Temp.Services.Workplaces.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class WorkplaceValidationException : Exception
+namespace Temp.Services.Workplaces.Exceptions;
+
+public class WorkplaceValidationException : ValidationEx
 {
     public WorkplaceValidationException(Exception innerException)
-        : base("Invalid input, contact support", innerException) { }
+        : base("Workplace validation failed", new Dictionary<string, string[]>
+        {
+            { "Error", new[] { innerException.Message } }
+        }) {
+    }
+
+    public WorkplaceValidationException(string fieldName, string errorMessage)
+        : base($"Workplace validation failed: {errorMessage}", fieldName, errorMessage) {
+    }
 }

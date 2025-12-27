@@ -13,5 +13,9 @@ public class WorkplaceConfiguration : IEntityTypeConfiguration<Workplace>
         builder.Property(x => x.Name)
             .HasMaxLength(100)
             .IsRequired();
+
+
+        builder.HasIndex(x => x.Name)
+            .HasDatabaseName("IX_Workplaces_Name");
     }
 }

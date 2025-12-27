@@ -1,9 +1,12 @@
-﻿namespace Temp.Services.Engagements.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class InvalidEngagementException : Exception
+namespace Temp.Services.Engagements.Exceptions;
+
+public class InvalidEngagementException : ValidationEx
 {
     public InvalidEngagementException(string parameterName, object parameterValue)
-        : base($"Invalid Engagement, " +
-            $"ParameterName : {parameterName}" +
-            $"ParameterValue: {parameterValue}.") { }
+        : base($"Invalid engagement property: {parameterName}",
+               parameterName,
+               $"Invalid value: {parameterValue}") {
+    }
 }

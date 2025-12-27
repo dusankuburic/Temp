@@ -1,20 +1,18 @@
 ﻿using Temp.Database.UnitOfWork;
 using Temp.Domain.Models.Identity;
+using Temp.Services._Shared;
+using Temp.Services.Auth.Exceptions;
 using Temp.Services.Auth.Models.Commands;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Providers;
 
 namespace Temp.Services.Auth;
 
-public partial class AuthService : IAuthService
+public partial class AuthService : BaseService, IAuthService
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IConfiguration _config;
-
     private readonly UserManager<AppUser> _userManager;
     private readonly SignInManager<AppUser> _signInManager;
-    private readonly ILoggingBroker _loggingBroker;
-    private readonly IIdentityProvider _identityProvider;
 
     public AuthService(
         UserManager<AppUser> userManager,
@@ -22,13 +20,11 @@ public partial class AuthService : IAuthService
         IUnitOfWork unitOfWork,
         IConfiguration config,
         ILoggingBroker loggingBroker,
-        IIdentityProvider identityProvider) {
+        IIdentityProvider identityProvider)
+        : base(unitOfWork, null, loggingBroker, identityProvider) {
         _userManager = userManager;
         _signInManager = signInManager;
-        _unitOfWork = unitOfWork;
         _config = config;
-        _loggingBroker = loggingBroker;
-        _identityProvider = identityProvider;
     }
 
     public Task<LoginAppUserResponse> Login(LoginAppUserRequest request) =>
@@ -39,13 +35,13 @@ public partial class AuthService : IAuthService
             var result = await _signInManager.CheckPasswordSignInAsync(appUser, request.Password, false);
             ValidateOnLogin(result);
 
-            var employeeId = await _unitOfWork.Employees
+            var employeeId = await UnitOfWork.Employees
                 .QueryNoTracking()
                 .Where(x => x.AppUserId == appUser.Id)
                 .Select(x => x.Id)
                 .FirstOrDefaultAsync();
 
-            await _identityProvider.StoreCurrentUser(appUser.Id, appUser.Email);
+            await IdentityProvider.StoreCurrentUser(appUser.Id, appUser.Email);
 
             return new LoginAppUserResponse {
                 User = new LoginAppUser {
@@ -57,7 +53,7 @@ public partial class AuthService : IAuthService
         });
 
     public async Task<bool> Logout() {
-        await _identityProvider.RemoveCurrentUser();
+        await IdentityProvider.RemoveCurrentUser();
 
         return true;
     }
@@ -66,9 +62,13 @@ public partial class AuthService : IAuthService
         return await _userManager.FindByEmailAsync(username) != null;
     }
 
-
     public Task<AppUser> Register(RegisterAppUserRequest request) =>
         TryCatch(async () => {
+
+            var allowedRoles = new[] { "Admin", "User", "Moderator" };
+            if (!allowedRoles.Contains(request.Role))
+                throw new InvalidUserException($"Invalid role: {request.Role}");
+
             var user = new AppUser {
                 DisplayName = request.DisplayName,
                 Email = request.Email,
@@ -96,25 +96,26 @@ public partial class AuthService : IAuthService
 
     public Task<AppUser> RemoveEmployeeRole(RemoveEmployeeRoleRequest request) =>
         TryCatch(async () => {
-            var employee = await _unitOfWork.Employees.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var employee = await UnitOfWork.Employees.FirstOrDefaultAsync(x => x.Id == request.Id);
+            ValidateUserIdIsNull(employee?.AppUserId);
 
-            var appUser = await _userManager.FindByIdAsync(employee.AppUserId);
-            ValidateUserIdIsNull(appUser.Id);
+            var appUser = await _userManager.FindByIdAsync(employee!.AppUserId!);
+            ValidateUserIsNull(appUser);
 
             await _userManager.DeleteAsync(appUser);
 
             employee.AppUserId = null;
             employee.Role = "None";
 
-            _unitOfWork.Employees.Update(employee);
-            await _unitOfWork.SaveChangesAsync();
+            UnitOfWork.Employees.Update(employee);
+            await UnitOfWork.SaveChangesAsync();
 
             return appUser;
         });
 
     public Task<AppUser> UpdateEmployeeAccountStatus(int employeeId) =>
         TryCatch(async () => {
-            var employee = await _unitOfWork.Employees
+            var employee = await UnitOfWork.Employees
                 .FirstOrDefaultAsync(x => x.Id == employeeId);
             ValidateUserIdIsNull(employee.AppUserId);
 
@@ -129,24 +130,24 @@ public partial class AuthService : IAuthService
                 employee.IsAppUserActive = false;
             }
 
-            _unitOfWork.Employees.Update(employee);
-            await _unitOfWork.SaveChangesAsync();
+            UnitOfWork.Employees.Update(employee);
+            await UnitOfWork.SaveChangesAsync();
 
             return appUser;
         });
 
     private async Task<bool> UpdateEmployeeRole(string RoleName, int EmployeeId, string appUserId) {
-        var empolyee = await _unitOfWork.Employees
+        var employee = await UnitOfWork.Employees
             .FirstOrDefaultAsync(x => x.Id == EmployeeId);
 
-        empolyee.Role = RoleName;
-        empolyee.AppUserId = appUserId;
-        empolyee.IsAppUserActive = false;
-        
-        _unitOfWork.Employees.Update(empolyee);
-        await _unitOfWork.SaveChangesAsync();
+        employee.Role = RoleName;
+        employee.AppUserId = appUserId;
+        employee.IsAppUserActive = false;
 
-        return empolyee.Role == RoleName;
+        UnitOfWork.Employees.Update(employee);
+        await UnitOfWork.SaveChangesAsync();
+
+        return employee.Role == RoleName;
     }
 
     private async Task<string> GenerateToken(AppUser appUser) {
@@ -160,7 +161,8 @@ public partial class AuthService : IAuthService
             Subject = new ClaimsIdentity(appUserClaims),
             Expires = DateTime.UtcNow.AddDays(1),
             SigningCredentials = creds,
-            Issuer = _config["AppSettings:Issuer"]
+            Issuer = _config["AppSettings:Issuer"],
+            Audience = _config["AppSettings:Audience"] ?? _config["AppSettings:Issuer"]
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -169,17 +171,19 @@ public partial class AuthService : IAuthService
         return tokenHandler.WriteToken(token);
     }
 
-
     public async Task<string> GetEmployeeUsername(int id) {
 
-        var appUserId = await _unitOfWork.Employees
+        var appUserId = await UnitOfWork.Employees
             .QueryNoTracking()
             .Where(x => x.Id == id)
             .Select(x => x.AppUserId)
             .FirstOrDefaultAsync();
 
+        if (string.IsNullOrEmpty(appUserId))
+            return string.Empty;
+
         var appUser = await _userManager.FindByIdAsync(appUserId);
 
-        return appUser.Email;
+        return appUser?.Email ?? string.Empty;
     }
 }

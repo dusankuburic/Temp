@@ -1,9 +1,14 @@
-﻿namespace Temp.Services.Teams.Exceptions;
+using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class NullTeamException : Exception
+namespace Temp.Services.Teams.Exceptions;
+
+public class NullTeamException : ValidationEx
 {
-    public NullTeamException() : base("team is null") {
+    public NullTeamException()
+        : base("Team cannot be null", "Team", "Team object is required") {
+    }
 
+    public NullTeamException(string fieldName)
+        : base($"{fieldName} cannot be null", fieldName, "Value is required") {
     }
 }
-

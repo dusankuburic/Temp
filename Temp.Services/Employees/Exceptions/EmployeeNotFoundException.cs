@@ -1,19 +1,18 @@
-using System;
+using Temp.Services.Exceptions;
 
-namespace Temp.Services.Employees.Exceptions
+namespace Temp.Services.Employees.Exceptions;
+
+public class EmployeeNotFoundException : NotFoundException
 {
-    public class EmployeeNotFoundException : Exception
-    {
-        public EmployeeNotFoundException() : base("The specified employee was not found.")
-        {
-        }
+    public EmployeeNotFoundException()
+        : base("Employee", "unknown") {
+    }
 
-        public EmployeeNotFoundException(string message) : base(message)
-        {
-        }
+    public EmployeeNotFoundException(int employeeId)
+        : base("Employee", employeeId) {
+    }
 
-        public EmployeeNotFoundException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    public EmployeeNotFoundException(string message)
+        : base(message) {
     }
 }

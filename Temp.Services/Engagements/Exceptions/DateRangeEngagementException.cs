@@ -1,7 +1,10 @@
-﻿namespace Temp.Services.Engagements.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class DateRangeEngagementException : Exception
+namespace Temp.Services.Engagements.Exceptions;
+
+public class DateRangeEngagementException : ValidationEx
 {
     public DateRangeEngagementException()
-        : base("Date From cant be higher than Date To") { }
+        : base("Invalid date range", "DateRange", "Date From cannot be higher than Date To") {
+    }
 }

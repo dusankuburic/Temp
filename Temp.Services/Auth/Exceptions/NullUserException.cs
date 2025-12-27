@@ -1,7 +1,14 @@
-﻿namespace Temp.Services.Auth.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class NullUserException : Exception
+namespace Temp.Services.Auth.Exceptions;
+
+public class NullUserException : ValidationEx
 {
     public NullUserException()
-        : base("App user is null.") { }
+        : base("User cannot be null", "User", "User object is required") {
+    }
+
+    public NullUserException(string fieldName)
+        : base($"{fieldName} cannot be null", fieldName, "Value is required") {
+    }
 }

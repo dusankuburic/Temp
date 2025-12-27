@@ -20,94 +20,64 @@ public class WorkplacesController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PagedList<GetWorkplacesResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPagedWorkplaces([FromQuery] GetWorkplacesRequest request) {
-        try {
-            var response = await _workplaceService.GetPagedWorkplaces(request);
-            Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
+        var response = await _workplaceService.GetPagedWorkplaces(request);
+        Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
 
-            return Ok(response);
-        } catch (WorkplaceValidationException workplaceValidationException) {
-            return BadRequest(GetInnerMessage(workplaceValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(List<GetWorkplaceResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetWorkplaces() {
-        try {
-            var response = await _workplaceService.GetWorkplaces();
+        var response = await _workplaceService.GetWorkplaces();
 
-            return Ok(response);
-        } catch (WorkplaceValidationException workplaceValidationException) {
-            return BadRequest(GetInnerMessage(workplaceValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetWorkplaceResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetWorkplace([FromRoute] int id) {
-        try {
-            var response = await _workplaceService.GetWorkplace(id);
+        var response = await _workplaceService.GetWorkplace(id);
 
-            return Ok(response);
-        } catch (WorkplaceValidationException workplaceValidationException) {
-            return BadRequest(GetInnerMessage(workplaceValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(CreateWorkplaceResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateWorkplace([FromBody] CreateWorkplaceRequest request) {
-        try {
-            var response = await _workplaceService.CreateWorkplace(request);
+        var response = await _workplaceService.CreateWorkplace(request);
 
-            return Ok(request);
-        } catch (WorkplaceValidationException workplaceValidationException) {
-            return BadRequest(GetInnerMessage(workplaceValidationException));
-        }
+        return Ok(request);
     }
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateWorkplace([FromBody] UpdateWorkplaceRequest request) {
-        try {
-            var response = await _workplaceService.UpdateWorkplace(request);
+        var response = await _workplaceService.UpdateWorkplace(request);
 
-            return NoContent();
-        } catch (WorkplaceValidationException workplaceValidationException) {
-            return BadRequest(GetInnerMessage(workplaceValidationException));
-        }
+        return NoContent();
     }
 
     [HttpPut("change-status/{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateWorkplaceStatus([FromBody] UpdateWorkplaceStatusRequest request) {
-        try {
-            var response = await _workplaceService.UpdateWorkplaceStatus(request);
+        var response = await _workplaceService.UpdateWorkplaceStatus(request);
 
-            return NoContent();
-        } catch (WorkplaceValidationException workplaceValidationException) {
-            return BadRequest(GetInnerMessage(workplaceValidationException));
-        }
+        return NoContent();
     }
 
     [HttpGet("workplace-exists")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     public async Task<IActionResult> WorkplaceExists([FromQuery] string name) {
-        try {
-            var response = await _workplaceService.WorkplaceExists(name);
+        var response = await _workplaceService.WorkplaceExists(name);
 
-            return Ok(response);
-        } catch (WorkplaceValidationException workplaceValidationException) {
-            return BadRequest(GetInnerMessage(workplaceValidationException));
-        }
+        return Ok(response);
     }
 
-    private static string GetInnerMessage(Exception exception) =>
-        exception.InnerException.Message;
 }

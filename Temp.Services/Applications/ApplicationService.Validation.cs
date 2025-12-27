@@ -41,7 +41,6 @@ namespace Temp.Services.Applications
             }
         }
 
-
         private void ValidateApplicationString(Application application) {
             switch (application) {
                 case { } when IsInvalid(application.Content):

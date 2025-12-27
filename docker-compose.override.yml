@@ -1,6 +1,8 @@
 services:
   tempdb:
     container_name: tempdb
+    networks:
+      - temp-network
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${SQL_SA_PASSWORD:-YourStrong!Passw0rd}
@@ -19,6 +21,8 @@ services:
     container_name: backend-azurite
     hostname: azurite
     restart: always
+    networks:
+      - temp-network
     ports:
       - "10000:10000"
       - "10001:10001"
@@ -33,6 +37,8 @@ services:
   redis:
     container_name: "redis-cache"
     command: ["redis-server", "--appendonly", "yes"]
+    networks:
+      - temp-network
     ports:
       - 6379:6379
     volumes:
@@ -46,6 +52,8 @@ services:
 
   redis-commander:
     container_name: "redis-cache-ui"
+    networks:
+      - temp-network
     environment:
       - REDIS_HOST=redis
       - HTTP_USER=${REDIS_UI_USER:-root}
@@ -57,6 +65,8 @@ services:
 
   temp.api:
     container_name: temp.api
+    networks:
+      - temp-network
     environment:
       - ASPNETCORE_HTTPS_PORTS=8081
       - ASPNETCORE_HTTP_PORTS=8080
@@ -89,6 +99,8 @@ services:
 
   temp.spa.angular:
     container_name: temp.spa.angular
+    networks:
+      - temp-network
     ports:
       - 4323:80
       - 4443:443
@@ -96,7 +108,7 @@ services:
       temp.api:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/healthcheck"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -104,5 +116,7 @@ services:
 
 volumes:
   redis-data:
-      
-    
+
+networks:
+  temp-network:
+    driver: bridge

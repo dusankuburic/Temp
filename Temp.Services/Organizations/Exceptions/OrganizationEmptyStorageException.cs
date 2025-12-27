@@ -1,10 +1,10 @@
-﻿namespace Temp.Services.Organizations.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class OrganizationEmptyStorageException : Exception
+namespace Temp.Services.Organizations.Exceptions;
+
+public class OrganizationEmptyStorageException : NotFoundException
 {
-    public OrganizationEmptyStorageException() :
-        base("No Organizations found in storage") {
-
+    public OrganizationEmptyStorageException()
+        : base("No Organizations found in storage") {
     }
 }
-

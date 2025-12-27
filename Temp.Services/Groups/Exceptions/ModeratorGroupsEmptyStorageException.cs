@@ -1,7 +1,10 @@
-﻿namespace Temp.Services.Groups.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class ModeratorGroupsEmptyStorageException : Exception
+namespace Temp.Services.Groups.Exceptions;
+
+public class ModeratorGroupsEmptyStorageException : NotFoundException
 {
     public ModeratorGroupsEmptyStorageException()
-        : base("Moderator doesn't have any assigned Groups") { }
+        : base("Moderator doesn't have any assigned Groups") {
+    }
 }

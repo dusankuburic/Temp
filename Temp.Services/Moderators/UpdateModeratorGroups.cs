@@ -18,7 +18,9 @@ public class UpdateModeratorGroups : ModeratorService
             var mod = await _unitOfWork.ModeratorGroups
                     .FirstOrDefaultAsync(x => x.ModeratorId == id);
 
-            _unitOfWork.ModeratorGroups.Remove(mod);
+            if (mod != null) {
+                _unitOfWork.ModeratorGroups.Remove(mod);
+            }
         } else {
             var moderatorGroups = await _unitOfWork.ModeratorGroups
                     .FindAsync(x => x.ModeratorId == id);
@@ -50,11 +52,11 @@ public class UpdateModeratorGroups : ModeratorService
 public class UpdateModeratorGroupsRequest
 {
     [Required]
-    public IEnumerable<int> Groups { get; set; }
+    public IEnumerable<int>? Groups { get; set; }
 }
 
 public class UpdateModeratorGroupsResponse
 {
     public bool Status { get; set; }
-    public string Message { get; set; }
+    public string? Message { get; set; }
 }

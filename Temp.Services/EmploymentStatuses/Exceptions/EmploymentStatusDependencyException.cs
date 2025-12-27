@@ -1,9 +1,14 @@
-﻿namespace Temp.Services.EmploymentStatuses.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class EmploymentStatusDependencyException : Exception
+namespace Temp.Services.EmploymentStatuses.Exceptions;
+
+public class EmploymentStatusDependencyException : DependencyException
 {
     public EmploymentStatusDependencyException(Exception innerException)
-        : base("Service dependency error occurred, contaxt support", innerException) {
+        : base("EmploymentStatus service dependency error occurred", innerException) {
+    }
 
+    public EmploymentStatusDependencyException(string message, Exception innerException)
+        : base(message, innerException) {
     }
 }

@@ -24,7 +24,6 @@ public static class ProgramMappingsCollection
             cfg.AddProfile<WorkpacesMappingProfile>();
         });
 
-
         return services;
     }
 }

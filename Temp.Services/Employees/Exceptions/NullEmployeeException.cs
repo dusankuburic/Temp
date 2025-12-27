@@ -1,7 +1,14 @@
-﻿namespace Temp.Services.Employees.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class NullEmployeeException : Exception
+namespace Temp.Services.Employees.Exceptions;
+
+public class NullEmployeeException : ValidationEx
 {
     public NullEmployeeException()
-        : base("The employee is null.") { }
+        : base("Employee cannot be null", "Employee", "Employee object is required") {
+    }
+
+    public NullEmployeeException(string fieldName)
+        : base($"{fieldName} cannot be null", fieldName, "Value is required") {
+    }
 }

@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Storage;
 using Temp.Database.Repositories;
 using Temp.Domain.Models;
@@ -13,8 +10,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly ApplicationDbContext _context;
     private IDbContextTransaction? _transaction;
 
-    public UnitOfWork(ApplicationDbContext context)
-    {
+    public UnitOfWork(ApplicationDbContext context) {
         _context = context;
 
         Employees = new Repository<Employee>(context);
@@ -38,55 +34,51 @@ public class UnitOfWork : IUnitOfWork
     public IRepository<EmploymentStatus> EmploymentStatuses { get; }
     public IRepository<ModeratorGroup> ModeratorGroups { get; }
 
-    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
         return await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
-    {
+    public async Task BeginTransactionAsync(CancellationToken cancellationToken = default) {
         _transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
     }
 
-    public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
-    {
-        try
-        {
+    public async Task CommitTransactionAsync(CancellationToken cancellationToken = default) {
+        try {
             await _context.SaveChangesAsync(cancellationToken);
 
-            if (_transaction != null)
-            {
+            if (_transaction != null) {
                 await _transaction.CommitAsync(cancellationToken);
             }
-        }
-        catch
-        {
+        } catch {
             await RollbackTransactionAsync(cancellationToken);
             throw;
-        }
-        finally
-        {
-            if (_transaction != null)
-            {
+        } finally {
+            if (_transaction != null) {
                 await _transaction.DisposeAsync();
                 _transaction = null;
             }
         }
     }
 
-    public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
-    {
-        if (_transaction != null)
-        {
+    public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default) {
+        if (_transaction != null) {
             await _transaction.RollbackAsync(cancellationToken);
             await _transaction.DisposeAsync();
             _transaction = null;
         }
     }
 
-    public void Dispose()
-    {
+    public void Dispose() {
         _transaction?.Dispose();
         _context.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    public async ValueTask DisposeAsync() {
+        if (_transaction != null) {
+            await _transaction.DisposeAsync();
+        }
+        await _context.DisposeAsync();
+        GC.SuppressFinalize(this);
     }
 }

@@ -1,7 +1,14 @@
-﻿namespace Temp.Services.Auth.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class UserServiceException : Exception
+namespace Temp.Services.Auth.Exceptions;
+
+public class UserServiceException : ServiceException
 {
     public UserServiceException(Exception innerException)
-        : base("Service error occurred, contact support.", innerException) { }
+        : base("User service error occurred", "USER_SERVICE_ERROR", innerException) {
+    }
+
+    public UserServiceException(string message, Exception innerException)
+        : base(message, "USER_SERVICE_ERROR", innerException) {
+    }
 }

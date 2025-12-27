@@ -1,7 +1,17 @@
-﻿namespace Temp.Services.Employees.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class EmployeeValidationException : Exception
+namespace Temp.Services.Employees.Exceptions;
+
+public class EmployeeValidationException : ValidationEx
 {
     public EmployeeValidationException(Exception innerException)
-        : base("Invalid input, contact support.", innerException) { }
+        : base("Employee validation failed", new Dictionary<string, string[]>
+        {
+            { "Error", new[] { innerException.Message } }
+        }) {
+    }
+
+    public EmployeeValidationException(string fieldName, string errorMessage)
+        : base($"Employee validation failed: {errorMessage}", fieldName, errorMessage) {
+    }
 }

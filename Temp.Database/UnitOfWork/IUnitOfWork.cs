@@ -1,13 +1,10 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Temp.Database.Repositories;
 using Temp.Domain.Models;
 using Temp.Domain.Models.Applications;
 
 namespace Temp.Database.UnitOfWork;
 
-public interface IUnitOfWork : IDisposable
+public interface IUnitOfWork : IDisposable, IAsyncDisposable
 {
     IRepository<Employee> Employees { get; }
     IRepository<Team> Teams { get; }

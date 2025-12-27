@@ -1,10 +1,12 @@
-﻿namespace Temp.Services.Organizations.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class InvalidOrganizationException : Exception
+namespace Temp.Services.Organizations.Exceptions;
+
+public class InvalidOrganizationException : ValidationEx
 {
     public InvalidOrganizationException(string parameterName, object parameterValue)
-    : base($"Invalid Employee, " +
-         $"Parameter Name : {parameterName}, " +
-         $"Parameter Value : {parameterValue}.") { }
+        : base($"Invalid organization property: {parameterName}",
+               parameterName,
+               $"Invalid value: {parameterValue}") {
+    }
 }
-

@@ -1,0 +1,36 @@
+<Project>
+    <PropertyGroup>
+        <!-- Target Framework -->
+        <TargetFramework>net9.0</TargetFramework>
+
+        <!-- Language Features -->
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>latest</LangVersion>
+
+        <!-- Code Quality -->
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <WarningLevel>5</WarningLevel>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest-recommended</AnalysisLevel>
+
+        <!-- Build Settings -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);CS1591</NoWarn> <!-- Missing XML comments -->
+    </PropertyGroup>
+
+    <ItemGroup>
+    </ItemGroup>
+
+    <!-- Include global suppressions -->
+    <ItemGroup>
+        <Compile Include="$(MSBuildThisFileDirectory)GlobalSuppressions.cs"
+            Link="GlobalSuppressions.cs" />
+    </ItemGroup>
+
+    <!-- Common Package References for all projects -->
+    <ItemGroup Condition="'$(IsTestProject)' != 'true'">
+        <!-- Analyzers for non-test projects -->
+    </ItemGroup>
+</Project>

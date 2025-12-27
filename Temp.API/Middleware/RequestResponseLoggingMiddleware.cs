@@ -13,7 +13,7 @@ public class RequestResponseLoggingMiddleware
     }
 
     public async Task InvokeAsync(HttpContext context) {
-        // Skip logging for health checks and swagger
+
         if (context.Request.Path.StartsWithSegments("/health") ||
             context.Request.Path.StartsWithSegments("/swagger")) {
             await _next(context);
@@ -23,7 +23,7 @@ public class RequestResponseLoggingMiddleware
         var stopwatch = Stopwatch.StartNew();
         var requestBody = await ReadRequestBodyAsync(context.Request);
 
-        // Capture response
+
         var originalBodyStream = context.Response.Body;
         using var responseBody = new MemoryStream();
         context.Response.Body = responseBody;
@@ -66,7 +66,7 @@ public class RequestResponseLoggingMiddleware
         var body = await reader.ReadToEndAsync();
         request.Body.Position = 0;
 
-        // Mask sensitive data
+
         if (body.Contains("password", StringComparison.OrdinalIgnoreCase)) {
             return "[REDACTED - Contains sensitive data]";
         }
@@ -76,7 +76,8 @@ public class RequestResponseLoggingMiddleware
 
     private async Task<string> ReadResponseBodyAsync(HttpResponse response) {
         response.Body.Seek(0, SeekOrigin.Begin);
-        var text = await new StreamReader(response.Body).ReadToEndAsync();
+        using var reader = new StreamReader(response.Body, leaveOpen: true);
+        var text = await reader.ReadToEndAsync();
         response.Body.Seek(0, SeekOrigin.Begin);
 
         return text.Length > 1000 ? text[..1000] + "..." : text;
@@ -98,13 +99,18 @@ public class RequestResponseLoggingMiddleware
                        context.Response.StatusCode >= 400 ? LogLevel.Warning :
                        LogLevel.Information;
 
+
+        var safeResponseBody = context.Request.Path.StartsWithSegments("/api/accounts")
+            ? "[REDACTED - Auth Response]"
+            : (string.IsNullOrWhiteSpace(responseBody) ? "[Empty]" : responseBody);
+
         _logger.Log(logLevel,
             "HTTP {Method} {Path} | Status: {StatusCode} | Duration: {Duration}ms | Body: {Body}",
             context.Request.Method,
             context.Request.Path,
             context.Response.StatusCode,
             elapsedMs,
-            string.IsNullOrWhiteSpace(responseBody) ? "[Empty]" : responseBody
+            safeResponseBody
         );
     }
 }

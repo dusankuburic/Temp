@@ -1,7 +1,14 @@
-﻿namespace Temp.Services.Auth.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class UserDependencyException : Exception
+namespace Temp.Services.Auth.Exceptions;
+
+public class UserDependencyException : DependencyException
 {
     public UserDependencyException(Exception innerException)
-        : base("Service dependency error occurred, contact support.", innerException) { }
+        : base("User service dependency error occurred", innerException) {
+    }
+
+    public UserDependencyException(string message, Exception innerException)
+        : base(message, innerException) {
+    }
 }

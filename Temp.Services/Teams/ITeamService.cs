@@ -15,4 +15,3 @@ public interface ITeamService
     Task DeleteTeamAsync(int id);
     Task<IEnumerable<GetTeamResponse>> GetAllTeamsAsync();
 }
-

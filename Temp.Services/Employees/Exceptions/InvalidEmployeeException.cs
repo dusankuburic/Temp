@@ -1,9 +1,12 @@
-﻿namespace Temp.Services.Employees.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class InvalidEmployeeException : Exception
+namespace Temp.Services.Employees.Exceptions;
+
+public class InvalidEmployeeException : ValidationEx
 {
     public InvalidEmployeeException(string parameterName, object parameterValue)
-        : base($"Invalid Employee, " +
-              $"ParameterName : {parameterName}, " +
-              $"ParameterValue: {parameterValue}.") { }
+        : base($"Invalid employee property: {parameterName}",
+               parameterName,
+               $"Invalid value: {parameterValue}") {
+    }
 }

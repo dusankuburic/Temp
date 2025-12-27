@@ -1,5 +1,4 @@
-#angular setup
-FROM node AS build
+FROM node:22-alpine AS build
 WORKDIR /app
 COPY package.json .
 RUN npm install --legacy-peer-deps
@@ -7,7 +6,6 @@ COPY . .
 
 RUN npm run build
 
-#nginx setup
 FROM nginx:alpine
 
 # Install OpenSSL for generating self-signed certificates

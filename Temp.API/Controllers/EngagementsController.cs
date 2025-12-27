@@ -30,13 +30,9 @@ public class EngagementsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(CreateEngagementResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create([FromBody] CreateEngagementRequest request) {
-        try {
-            var response = await _engagementService.CreateEngagement(request);
+        var response = await _engagementService.CreateEngagement(request);
 
-            return Ok(response);
-        } catch (EngagementValidationException engagementValidationException) {
-            return BadRequest(GetInnerMessage(engagementValidationException));
-        }
+        return Ok(response);
     }
 
     [Authorize(Roles = "User")]
@@ -44,48 +40,28 @@ public class EngagementsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(List<GetUserEmployeeEngagementsResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserEmployeeEngagments([FromRoute] GetUserEmployeeEngagementsRequest request) {
-        try {
-            var response = await _engagementService.GetUserEmployeeEngagements(request);
+        var response = await _engagementService.GetUserEmployeeEngagements(request);
 
-            return Ok(response);
-        } catch (EngagementValidationException engagementValidationException) {
-            return BadRequest(GetInnerMessage(engagementValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpGet("without")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PagedList<GetEmployeesWithoutEngagementResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> WithoutEngagements([FromQuery] GetEmployeesWithoutEngagementRequest request) {
-        try {
-            var response = await _employeeService.GetEmployeesWithoutEngagement(request);
-            Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
+        var response = await _employeeService.GetEmployeesWithoutEngagement(request);
+        Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
 
-            return Ok(response);
-        } catch (EmployeeValidationException employeeValidationException) {
-            return BadRequest(GetInnerMessage(employeeValidationException));
-        } catch (WorkplaceValidationException workplaceValidationException) {
-            return BadRequest(GetInnerMessage(workplaceValidationException));
-        } catch (EmploymentStatusValidationException employmentStatusValidationException) {
-            return BadRequest(GetInnerMessage(employmentStatusValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpGet("with")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PagedList<GetEmployeesWithEngagementResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> WithEngagements([FromQuery] GetEmployeesWithEngagementRequest request) {
-        try {
-            var response = await _employeeService.GetEmployeesWithEngagement(request);
-            Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
-            return Ok(response);
-        } catch (EmployeeValidationException employeeValidationException) {
-            return BadRequest(GetInnerMessage(employeeValidationException));
-        } catch (WorkplaceValidationException workplaceValidationException) {
-            return BadRequest(GetInnerMessage(workplaceValidationException));
-        } catch (EmploymentStatusValidationException employmentStatusValidationException) {
-            return BadRequest(GetInnerMessage(employmentStatusValidationException));
-        }
+        var response = await _employeeService.GetEmployeesWithEngagement(request);
+        Response.AddPagination(response.CurrentPage, response.PageSize, response.TotalCount, response.TotalPages);
+        return Ok(response);
     }
 
     [HttpGet("employee/{id}")]
@@ -97,7 +73,4 @@ public class EngagementsController : ControllerBase
         return Ok(response);
     }
 
-    private static string GetInnerMessage(Exception exception) {
-        return exception.InnerException.Message;
-    }
 }

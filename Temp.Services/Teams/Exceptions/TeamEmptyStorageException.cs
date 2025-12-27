@@ -1,9 +1,10 @@
-﻿namespace Temp.Services.Teams.Exceptions;
+using Temp.Services.Exceptions;
 
-public class TeamEmptyStorageException : Exception
+namespace Temp.Services.Teams.Exceptions;
+
+public class TeamEmptyStorageException : NotFoundException
 {
-    public TeamEmptyStorageException() : base("No teams found in storage") {
-
+    public TeamEmptyStorageException()
+        : base("No teams found in storage") {
     }
 }
-

@@ -15,5 +15,18 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
 
         builder.Property(x => x.GroupId)
             .IsRequired();
+
+
+        builder.HasIndex(x => x.GroupId)
+            .HasDatabaseName("IX_Teams_GroupId");
+
+        builder.HasIndex(x => x.IsActive)
+            .HasDatabaseName("IX_Teams_IsActive");
+
+        builder.HasIndex(x => new { x.GroupId, x.IsActive })
+            .HasDatabaseName("IX_Teams_GroupId_IsActive");
+
+        builder.HasIndex(x => x.Name)
+            .HasDatabaseName("IX_Teams_Name");
     }
 }

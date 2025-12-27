@@ -1,7 +1,10 @@
-﻿namespace Temp.Services.Employees.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class EmployeeEmptyStorageException : Exception
+namespace Temp.Services.Employees.Exceptions;
+
+public class EmployeeEmptyStorageException : NotFoundException
 {
     public EmployeeEmptyStorageException()
-        : base("No employees found in storage") { }
+        : base("No employees found in storage") {
+    }
 }

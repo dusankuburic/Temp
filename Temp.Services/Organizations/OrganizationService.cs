@@ -1,6 +1,7 @@
 ﻿using Temp.Database.UnitOfWork;
 using Temp.Domain.Models;
 using Temp.Services._Helpers;
+using Temp.Services._Shared;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Organizations.Models.Commands;
 using Temp.Services.Organizations.Models.Queries;
@@ -8,42 +9,34 @@ using Temp.Services.Providers;
 
 namespace Temp.Services.Organizations;
 
-public partial class OrganizationService : IOrganizationService
+public partial class OrganizationService : BaseService<Organization>, IOrganizationService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ILoggingBroker _loggingBroker;
-    private readonly IIdentityProvider _identityProvider;
-
     public OrganizationService(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         ILoggingBroker loggingBroker,
-        IIdentityProvider identityProvider) {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _loggingBroker = loggingBroker;
-        _identityProvider = identityProvider;
+        IIdentityProvider identityProvider)
+        : base(unitOfWork, mapper, loggingBroker, identityProvider) {
     }
 
     public Task<CreateOrganizationResponse> CreateOrganization(CreateOrganizationRequest request) =>
         TryCatch(async () => {
-            var organization = _mapper.Map<Organization>(request);
+            var organization = Mapper.Map<Organization>(request);
 
-            organization.SetAuditableInfoOnCreate(await _identityProvider.GetCurrentUser());
+            organization.SetAuditableInfoOnCreate(await IdentityProvider.GetCurrentUser());
 
             ValidateOrganizationOnCreate(organization);
 
-            await _unitOfWork.Organizations.AddAsync(organization);
-            await _unitOfWork.SaveChangesAsync();
+            await UnitOfWork.Organizations.AddAsync(organization);
+            await UnitOfWork.SaveChangesAsync();
 
-            return _mapper.Map<CreateOrganizationResponse>(organization);
+            return Mapper.Map<CreateOrganizationResponse>(organization);
         });
 
 
     public Task<PagedList<GetOrganizationResponse>> GetPagedOrganizations(GetOrganizationsRequest request) =>
         TryCatch(async () => {
-            var organizationsQuery = _unitOfWork.Organizations
+            var organizationsQuery = UnitOfWork.Organizations
                 .QueryNoTracking()
                 .Where(x => x.IsActive);
 
@@ -61,14 +54,14 @@ public partial class OrganizationService : IOrganizationService
             organizationsQuery = organizationsQuery.OrderBy(x => x.Name);
 
             return await PagedList<GetOrganizationResponse>.CreateAsync(
-                organizationsQuery.ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider),
+                organizationsQuery.ProjectTo<GetOrganizationResponse>(Mapper.ConfigurationProvider),
                 request.PageNumber,
                 request.PageSize);
         });
 
     public Task<GetPagedInnerGroupsResponse> GetPagedInnerGroups(GetOrganizationInnerGroupsRequest request) =>
         TryCatch(async () => {
-            var innerGroupsQurey = _unitOfWork.Groups
+            var innerGroupsQurey = UnitOfWork.Groups
                 .QueryNoTracking()
                 .Where(x => x.OrganizationId == request.OrganizationId && x.IsActive);
 
@@ -86,11 +79,11 @@ public partial class OrganizationService : IOrganizationService
             innerGroupsQurey = innerGroupsQurey.OrderBy(x => x.Name);
 
             var pagedGroups = await PagedList<InnerGroup>.CreateAsync(
-                innerGroupsQurey.ProjectTo<InnerGroup>(_mapper.ConfigurationProvider),
+                innerGroupsQurey.ProjectTo<InnerGroup>(Mapper.ConfigurationProvider),
                 request.PageNumber,
                 request.PageSize);
 
-            var organizationName = await _unitOfWork.Organizations
+            var organizationName = await UnitOfWork.Organizations
                 .QueryNoTracking()
                 .Where(x => x.Id == request.OrganizationId && x.IsActive)
                 .Select(x => x.Name)
@@ -105,12 +98,12 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<List<InnerGroup>> GetInnerGroups(int id) =>
         TryCatch(async () => {
-            var innerGroups = await _unitOfWork.Groups
-                .Query()
-                .Include(x => x.Teams.Where(x => x.IsActive))
-                .Where(x => x.OrganizationId == id && x.IsActive && x.Teams.Count > 0)
+
+            var innerGroups = await UnitOfWork.Groups
+                .QueryNoTracking()
+                .Where(x => x.OrganizationId == id && x.IsActive && x.Teams.Any(t => t.IsActive))
                 .OrderBy(x => x.Name)
-                .ProjectTo<InnerGroup>(_mapper.ConfigurationProvider)
+                .ProjectTo<InnerGroup>(Mapper.ConfigurationProvider)
                 .ToListAsync();
 
             return innerGroups;
@@ -119,10 +112,10 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<GetOrganizationResponse> GetOrganization(GetOrganizationRequest request) =>
          TryCatch(async () => {
-             var organizaiton = await _unitOfWork.Organizations
+             var organizaiton = await UnitOfWork.Organizations
                 .QueryNoTracking()
                 .Where(x => x.Id == request.Id && x.IsActive)
-                .ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider)
+                .ProjectTo<GetOrganizationResponse>(Mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
              ValidateGetOrganizationViewModel(organizaiton);
@@ -133,12 +126,12 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<IEnumerable<GetOrganizationResponse>> GetOrganizations() =>
         TryCatch(async () => {
-            var organizations = await _unitOfWork.Organizations
-                .Query()
-                .Include(x => x.Groups.Where(x => x.IsActive))
-                .Where(x => x.IsActive && x.HasActiveGroup && x.Groups.Any(x => x.HasActiveTeam == true))
+
+            var organizations = await UnitOfWork.Organizations
+                .QueryNoTracking()
+                .Where(x => x.IsActive && x.HasActiveGroup && x.Groups.Any(g => g.IsActive && g.HasActiveTeam))
                 .OrderBy(x => x.Name)
-                .ProjectTo<GetOrganizationResponse>(_mapper.ConfigurationProvider)
+                .ProjectTo<GetOrganizationResponse>(Mapper.ConfigurationProvider)
                 .ToListAsync();
 
             ValidateStorageOrganizations(organizations);
@@ -149,17 +142,17 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<UpdateOrganizationResponse> UpdateOrganization(UpdateOrganizationRequest request) =>
          TryCatch(async () => {
-             var organization = await _unitOfWork.Organizations
+             var organization = await UnitOfWork.Organizations
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
 
-             organization.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
+             organization.SetAuditableInfoOnUpdate(await IdentityProvider.GetCurrentUser());
 
-             _mapper.Map(request, organization);
+             Mapper.Map(request, organization);
 
              ValidateOrganizationOnUpdate(organization);
 
-             _unitOfWork.Organizations.Update(organization);
-             await _unitOfWork.SaveChangesAsync();
+             UnitOfWork.Organizations.Update(organization);
+             await UnitOfWork.SaveChangesAsync();
 
              return new UpdateOrganizationResponse();
          });
@@ -167,24 +160,23 @@ public partial class OrganizationService : IOrganizationService
 
     public Task<UpdateOrganizationStatusResponse> UpdateOrganizationStatus(UpdateOrganizationStatusRequest request) =>
         TryCatch(async () => {
-            var organization = await _unitOfWork.Organizations
+            var organization = await UnitOfWork.Organizations
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
 
             organization.IsActive = !organization.IsActive;
-            organization.SetAuditableInfoOnUpdate(await _identityProvider.GetCurrentUser());
+            organization.SetAuditableInfoOnUpdate(await IdentityProvider.GetCurrentUser());
 
             ValidateOrganizationOnUpdate(organization);
 
-            _unitOfWork.Organizations.Update(organization);
-            await _unitOfWork.SaveChangesAsync();
+            UnitOfWork.Organizations.Update(organization);
+            await UnitOfWork.SaveChangesAsync();
 
             return new UpdateOrganizationStatusResponse();
         });
 
     public Task<bool> OrganizationExists(string name) =>
         TryCatch(async () => {
-            return await _unitOfWork.Organizations.AnyAsync(x => x.Name == name);
+            return await UnitOfWork.Organizations.AnyAsync(x => x.Name == name);
         });
 
 }
-

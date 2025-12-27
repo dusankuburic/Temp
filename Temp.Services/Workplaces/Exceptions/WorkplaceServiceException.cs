@@ -1,7 +1,14 @@
-﻿namespace Temp.Services.Workplaces.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class WorkplaceServiceException : Exception
+namespace Temp.Services.Workplaces.Exceptions;
+
+public class WorkplaceServiceException : ServiceException
 {
     public WorkplaceServiceException(Exception innerException)
-        : base("Service error, contact supprot", innerException) { }
+        : base("Workplace service error occurred", "WORKPLACE_SERVICE_ERROR", innerException) {
+    }
+
+    public WorkplaceServiceException(string message, Exception innerException)
+        : base(message, "WORKPLACE_SERVICE_ERROR", innerException) {
+    }
 }

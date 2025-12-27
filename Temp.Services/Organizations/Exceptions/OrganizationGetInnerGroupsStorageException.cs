@@ -1,10 +1,10 @@
-﻿namespace Temp.Services.Organizations.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class OrganizationGetInnerGroupsStorageException : Exception
+namespace Temp.Services.Organizations.Exceptions;
+
+public class OrganizationGetInnerGroupsStorageException : NotFoundException
 {
-    public OrganizationGetInnerGroupsStorageException() :
-        base("There are no groups inside organization") {
-
+    public OrganizationGetInnerGroupsStorageException()
+        : base("There are no groups inside organization") {
     }
 }
-

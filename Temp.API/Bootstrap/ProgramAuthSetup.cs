@@ -22,7 +22,8 @@ public static class ProgramAuthSetup
                         Encoding.ASCII.GetBytes(configuration.GetSection("AppSettings:Token").Value)),
                     ValidIssuer = configuration["AppSettings:Issuer"],
                     ValidateIssuer = true,
-                    ValidateAudience = false
+                    ValidateAudience = true,
+                    ValidAudience = configuration["AppSettings:Audience"] ?? configuration["AppSettings:Issuer"]
                 };
             });
 

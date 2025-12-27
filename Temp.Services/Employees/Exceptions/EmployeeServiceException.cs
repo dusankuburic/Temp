@@ -1,7 +1,14 @@
-﻿namespace Temp.Services.Employees.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class EmployeeServiceException : Exception
+namespace Temp.Services.Employees.Exceptions;
+
+public class EmployeeServiceException : ServiceException
 {
     public EmployeeServiceException(Exception innerException)
-        : base("Service error, contact support", innerException) { }
+        : base("Employee service error occurred", "EMPLOYEE_SERVICE_ERROR", innerException) {
+    }
+
+    public EmployeeServiceException(string message, Exception innerException)
+        : base(message, "EMPLOYEE_SERVICE_ERROR", innerException) {
+    }
 }

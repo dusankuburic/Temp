@@ -122,19 +122,19 @@ public partial class GroupService
 
     private GroupValidationException CreateAndLogValidationException(Exception exception) {
         var groupValidationException = new GroupValidationException(exception);
-        _loggingBroker.LogError(groupValidationException);
+        Logger.LogError(groupValidationException);
         return groupValidationException;
     }
 
     private GroupServiceException CreateAndLogServiceException(Exception exception) {
         var groupServiceException = new GroupServiceException(exception);
-        _loggingBroker.LogError(groupServiceException);
+        Logger.LogError(groupServiceException);
         return groupServiceException;
     }
 
     private GroupDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
         var groupDependencyException = new GroupDependencyException(exception);
-        _loggingBroker.LogCritical(groupDependencyException);
+        Logger.LogCritical(groupDependencyException);
         return groupDependencyException;
     }
 }

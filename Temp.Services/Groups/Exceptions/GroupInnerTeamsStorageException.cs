@@ -1,9 +1,10 @@
-﻿namespace Temp.Services.Groups.Exceptions;
+﻿using Temp.Services.Exceptions;
 
-public class GroupInnerTeamsStorageException : Exception
+namespace Temp.Services.Groups.Exceptions;
+
+public class GroupInnerTeamsStorageException : NotFoundException
 {
     public GroupInnerTeamsStorageException()
         : base("There are no Inner Teams inside Group") {
-
     }
 }

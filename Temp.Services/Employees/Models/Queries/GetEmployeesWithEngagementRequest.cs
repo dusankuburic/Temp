@@ -13,7 +13,7 @@ public class GetEmployeesWithEngagementRequest
         set { _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
     }
 
-    public string Role { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
+    public string? Role { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
 }

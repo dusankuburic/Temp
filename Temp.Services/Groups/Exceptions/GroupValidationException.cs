@@ -1,7 +1,17 @@
-﻿namespace Temp.Services.Groups.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class GroupValidationException : Exception
+namespace Temp.Services.Groups.Exceptions;
+
+public class GroupValidationException : ValidationEx
 {
     public GroupValidationException(Exception innerException)
-        : base("Invalid input, contact support", innerException) { }
+        : base("Group validation failed", new Dictionary<string, string[]>
+        {
+            { "Error", new[] { innerException.Message } }
+        }) {
+    }
+
+    public GroupValidationException(string fieldName, string errorMessage)
+        : base($"Group validation failed: {errorMessage}", fieldName, errorMessage) {
+    }
 }

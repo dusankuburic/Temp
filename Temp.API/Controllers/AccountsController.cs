@@ -1,4 +1,5 @@
-﻿using Temp.Services.Auth;
+﻿using Microsoft.AspNetCore.RateLimiting;
+using Temp.Services.Auth;
 using Temp.Services.Auth.Exceptions;
 using Temp.Services.Auth.Models.Commands;
 
@@ -15,15 +16,12 @@ public class AccountsController : ControllerBase
     }
 
     [HttpPost("login")]
+    [EnableRateLimiting("auth")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(LoginAppUserResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Login([FromBody] LoginAppUserRequest request) {
-        try {
-            var response = await _authService.Login(request);
-            return Ok(response);
-        } catch (UserValidationException) {
-            return Unauthorized();
-        }
+        var response = await _authService.Login(request);
+        return Ok(response);
     }
 
     [Authorize(Roles = "Admin")]
@@ -31,12 +29,8 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Register([FromBody] RegisterAppUserRequest request) {
-        try {
-            await _authService.Register(request);
-            return Ok();
-        } catch (UserValidationException userValidationException) {
-            return BadRequest(GetInnerMessage(userValidationException));
-        }
+        await _authService.Register(request);
+        return Ok();
     }
 
     [Authorize(Roles = "Admin,User,Moderator")]
@@ -53,12 +47,8 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> RemoveRole([FromBody] RemoveEmployeeRoleRequest request) {
-        try {
-            var response = await _authService.RemoveEmployeeRole(request);
-            return Ok();
-        } catch (UserValidationException userValidationException) {
-            return BadRequest(GetInnerMessage(userValidationException));
-        }
+        var response = await _authService.RemoveEmployeeRole(request);
+        return Ok();
     }
 
     [Authorize(Roles = "Admin")]
@@ -66,12 +56,8 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateEmployeeAccountStatus([FromRoute] int id) {
-        try {
-            var response = await _authService.UpdateEmployeeAccountStatus(id);
-            return NoContent();
-        } catch (UserValidationException userValidationException) {
-            return BadRequest(GetInnerMessage(userValidationException));
-        }
+        var response = await _authService.UpdateEmployeeAccountStatus(id);
+        return NoContent();
     }
 
     [Authorize(Roles = "Admin")]
@@ -79,13 +65,9 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> UsernameExists([FromQuery] string username) {
-        try {
-            var response = await _authService.CheckUsernameExists(username);
+        var response = await _authService.CheckUsernameExists(username);
 
-            return Ok(response);
-        } catch (UserValidationException userValidationException) {
-            return BadRequest(GetInnerMessage(userValidationException));
-        }
+        return Ok(response);
     }
 
     [Authorize(Roles = "Admin")]
@@ -95,9 +77,7 @@ public class AccountsController : ControllerBase
     public async Task<IActionResult> GetEmployeeUsername([FromRoute] int id) {
         var username = await _authService.GetEmployeeUsername(id);
 
-        return username != null ? Ok(new { username }) : BadRequest();
+        return !string.IsNullOrEmpty(username) ? Ok(new { username }) : BadRequest();
     }
 
-    private string GetInnerMessage(Exception exception) =>
-        exception.InnerException.Message;
 }

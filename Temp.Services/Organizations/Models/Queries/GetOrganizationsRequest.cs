@@ -12,6 +12,6 @@ public class GetOrganizationsRequest
         set { _pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
     }
 
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public string WithGroups { get; set; } = "all";
 }

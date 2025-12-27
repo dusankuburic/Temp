@@ -2,7 +2,6 @@
 using Temp.Services.Teams.Exceptions;
 using Temp.Services.Teams.Models.Commands;
 using Temp.Services.Teams.Models.Queries;
-using System.Collections.Generic;
 
 namespace Temp.API.Controllers;
 
@@ -22,13 +21,9 @@ public class TeamsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetTeamResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetTeam([FromRoute] GetTeamRequest request) {
-        try {
-            var response = await _teamService.GetTeam(request);
+        var response = await _teamService.GetTeam(request);
 
-            return Ok(response);
-        } catch (TeamValidationException teamValidationException) {
-            return BadRequest(GetInnerMessage(teamValidationException));
-        }
+        return Ok(response);
     }
 
     [Authorize(Roles = "Admin")]
@@ -36,26 +31,18 @@ public class TeamsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetFullTeamTreeResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetFullTeam([FromRoute] GetFullTeamTreeRequest request) {
-        try {
-            var response = await _teamService.GetFullTeamTree(request);
+        var response = await _teamService.GetFullTeamTree(request);
 
-            return Ok(response);
-        } catch (TeamValidationException teamValidationException) {
-            return BadRequest(GetInnerMessage(teamValidationException));
-        }
+        return Ok(response);
     }
 
     [HttpGet("employee/team/{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetUserTeamResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserTeam([FromRoute] GetUserTeamRequest request) {
-        try {
-            var response = await _teamService.GetUserTeam(request);
+        var response = await _teamService.GetUserTeam(request);
 
-            return Ok(response);
-        } catch (TeamValidationException teamValidationException) {
-            return BadRequest(GetInnerMessage(teamValidationException));
-        }
+        return Ok(response);
     }
 
     [Authorize(Roles = "Admin")]
@@ -63,13 +50,9 @@ public class TeamsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(CreateTeamResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create([FromBody] CreateTeamRequest request) {
-        try {
-            var response = await _teamService.CreateTeam(request);
+        var response = await _teamService.CreateTeam(request);
 
-            return Ok(response);
-        } catch (TeamValidationException teamValidationException) {
-            return BadRequest(GetInnerMessage(teamValidationException));
-        }
+        return Ok(response);
     }
 
     [Authorize(Roles = "Admin")]
@@ -77,13 +60,9 @@ public class TeamsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(UpdateTeamResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateTeam([FromBody] UpdateTeamRequest request) {
-        try {
-            var response = await _teamService.UpdateTeam(request);
+        var response = await _teamService.UpdateTeam(request);
 
-            return NoContent();
-        } catch (TeamValidationException teamValidationException) {
-            return BadRequest(GetInnerMessage(teamValidationException));
-        }
+        return NoContent();
     }
 
     [HttpPut("change-status/{id}")]
@@ -98,13 +77,9 @@ public class TeamsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     public async Task<IActionResult> TeamExists([FromQuery] string name, int groupId) {
-        try {
-            var response = await _teamService.TeamExists(name, groupId);
+        var response = await _teamService.TeamExists(name, groupId);
 
-            return Ok(response);
-        } catch (TeamValidationException teamValidationException) {
-            return BadRequest(GetInnerMessage(teamValidationException));
-        }
+        return Ok(response);
     }
 
     [Authorize(Roles = "Admin")]
@@ -112,21 +87,9 @@ public class TeamsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteTeam([FromRoute] int id)
-    {
-        try
-        {
-            await _teamService.DeleteTeamAsync(id);
-            return NoContent();
-        }
-        catch (TeamValidationException teamValidationException)
-        {
-            return BadRequest(GetInnerMessage(teamValidationException));
-        }
-        catch (TeamNotFoundException)
-        {
-            return NotFound();
-        }
+    public async Task<IActionResult> DeleteTeam([FromRoute] int id) {
+        await _teamService.DeleteTeamAsync(id);
+        return NoContent();
     }
 
     [Authorize]
@@ -138,7 +101,4 @@ public class TeamsController : ControllerBase
         return Ok(response);
     }
 
-    private static string GetInnerMessage(Exception exception) {
-        return exception.InnerException.Message;
-    }
 }

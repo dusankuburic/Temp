@@ -1,15 +1,17 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
+COPY ["Directory.Build.props", "./"]
+COPY ["Directory.Packages.props", "./"]
+COPY ["GlobalSuppressions.cs", "./"]
 COPY ["Temp.API/Temp.API.csproj", "Temp.API/"]
 COPY ["Temp.Services/Temp.Services.csproj", "Temp.Services/"]
 COPY ["Temp.Domain/Temp.Domain.csproj", "Temp.Domain/"]
 COPY ["Temp.Database/Temp.Database.csproj", "Temp.Database/"]
-
 
 RUN dotnet restore "Temp.API/Temp.API.csproj"
 COPY . .

@@ -53,4 +53,3 @@ public partial class OrganizationService
         return string.IsNullOrWhiteSpace(input);
     }
 }
-

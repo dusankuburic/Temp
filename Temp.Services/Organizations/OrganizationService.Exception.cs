@@ -127,20 +127,19 @@ public partial class OrganizationService
 
     private OrganizationValidationException CreateAndLogValidationException(Exception exception) {
         var organizationValidationException = new OrganizationValidationException(exception);
-        _loggingBroker.LogError(organizationValidationException);
+        Logger.LogError(organizationValidationException);
         return organizationValidationException;
     }
 
     private OrganizationServiceException CreateAndLogServiceException(Exception exception) {
         var organizationServiceException = new OrganizationServiceException(exception);
-        _loggingBroker.LogError(organizationServiceException);
+        Logger.LogError(organizationServiceException);
         return organizationServiceException;
     }
 
     private OrganizationDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
         var organizationDependencyException = new OrganizationDependencyException(exception);
-        _loggingBroker.LogCritical(organizationDependencyException);
+        Logger.LogCritical(organizationDependencyException);
         return organizationDependencyException;
     }
 }
-

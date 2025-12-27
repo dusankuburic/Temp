@@ -80,21 +80,7 @@ make start
 - Password: `toor` (configurable via `REDIS_UI_PASSWORD` env var)
 
 ---
-## Security Notes
-
-- All secrets should be configured via environment variables (see `.env.template`)
-- JWT secret token is loaded from `JWT_SECRET` environment variable
-- Database passwords should be strong and unique
-- For production, use Azure Key Vault or similar secret management
-- Never commit `.env` files to version control
-
----
 ## Production Deployment
-
-### Prerequisites
-- Production-ready environment (Linux server, cloud VM, or Kubernetes cluster)
-- Valid SSL certificates (replace self-signed certificates)
-- Secure password management (Azure Key Vault, AWS Secrets Manager, etc.)
 
 ### Production Setup
 
@@ -119,39 +105,6 @@ make start
    docker compose ps
    docker compose logs
    ```
-
-### Production Checklist
-
-- [ ] Replace self-signed SSL certificates with valid certificates (Let's Encrypt or commercial CA)
-- [ ] Configure firewall rules to restrict access
-- [ ] Set up automated backups for SQL Server and Redis data
-- [ ] Configure monitoring and logging (Application Insights, ELK Stack, etc.)
-- [ ] Enable HTTPS-only mode (disable HTTP port 80)
-- [ ] Review and harden security settings
-- [ ] Set up CI/CD pipeline for automated deployments
-- [ ] Configure reverse proxy (nginx, Traefik) if needed
-- [ ] Test disaster recovery procedures
-- [ ] Document runbook for operations team
-
-### Security Best Practices
-
-1. **Never use default passwords in production**
-2. **Rotate secrets regularly** (JWT tokens, database passwords)
-3. **Use managed secrets** (Azure Key Vault, AWS Secrets Manager)
-4. **Enable HTTPS only** - redirect HTTP to HTTPS
-5. **Regular security updates** - keep containers and dependencies updated
-6. **Monitor logs** for suspicious activity
-7. **Implement rate limiting** and DDoS protection
-8. **Regular backups** with tested restore procedures
-
-### Scaling Considerations
-
-For production at scale, consider:
-- **Database:** Use managed Azure SQL Database or AWS RDS instead of containerized SQL Server
-- **Cache:** Use Azure Cache for Redis or AWS ElastiCache
-- **Storage:** Use Azure Blob Storage instead of Azurite
-- **Load Balancing:** Add nginx or cloud load balancer in front of services
-- **Container Orchestration:** Deploy to Kubernetes (AKS, EKS, GKE) for high availability
 
 ---
 ## CI/CD & Automation
@@ -202,8 +155,6 @@ make [command]
 - Pull request → Run CI
 - New release → Deploy to production
 - Manual workflow dispatch → Deploy to any environment
-
-For detailed CI/CD documentation, see [CI-CD.md](CI-CD.md)
 
 ---
 ### UI (admin workflow)

@@ -5,4 +5,6 @@ export interface AssignRoleDto {
     displayName: string;
     password: string;
     role: string;
+    firstName: string;
+    lastName: string;
 }

@@ -19,17 +19,11 @@ public class ModeratorsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateGroups(int id, UpdateModeratorGroupsRequest request) {
-        try {
-            var response = await new UpdateModeratorGroups(_unitOfWork).Do(id, request);
-            if (response.Status)
-                return NoContent();
+        var response = await new UpdateModeratorGroups(_unitOfWork).Do(id, request);
+        if (response.Status)
+            return NoContent();
 
-            return BadRequest(response.Message);
-        } catch (ModeratorGroupValidationException moderatorGroupValidationException) {
-            return BadRequest(GetInnerMessage(moderatorGroupValidationException));
-        }
+        return BadRequest(response.Message);
     }
 
-    private static string GetInnerMessage(Exception exception) =>
-        exception.InnerException.Message;
 }

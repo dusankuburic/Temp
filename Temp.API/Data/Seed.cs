@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+using Newtonsoft.Json;
+using Temp.Database;
 using Temp.Domain.Models;
 
 namespace Temp.API.Data;
@@ -12,7 +14,9 @@ public class Seed
 
             organizations.ForEach(x => {
                 x.CreatedAt = DateTime.UtcNow;
+                x.CreatedBy = "System";
                 x.UpdatedAt = DateTime.UtcNow;
+                x.UpdatedBy = "System";
             });
 
             ctx.Organizations.AddRange(organizations);
@@ -28,7 +32,9 @@ public class Seed
 
             groups.ForEach(x => {
                 x.CreatedAt = DateTime.UtcNow;
+                x.CreatedBy = "System";
                 x.UpdatedAt = DateTime.UtcNow;
+                x.UpdatedBy = "System";
             });
 
             ctx.Groups.AddRange(groups);
@@ -44,7 +50,9 @@ public class Seed
 
             teams.ForEach(x => {
                 x.CreatedAt = DateTime.UtcNow;
+                x.CreatedBy = "System";
                 x.UpdatedAt = DateTime.UtcNow;
+                x.UpdatedBy = "System";
             });
 
             ctx.Teams.AddRange(teams);
@@ -60,7 +68,9 @@ public class Seed
 
             employmentStatuses.ForEach(x => {
                 x.CreatedAt = DateTime.UtcNow;
+                x.CreatedBy = "System";
                 x.UpdatedAt = DateTime.UtcNow;
+                x.UpdatedBy = "System";
             });
 
             ctx.EmploymentStatuses.AddRange(employmentStatuses);
@@ -76,7 +86,9 @@ public class Seed
 
             workplaces.ForEach(x => {
                 x.CreatedAt = DateTime.UtcNow;
+                x.CreatedBy = "System";
                 x.UpdatedAt = DateTime.UtcNow;
+                x.UpdatedBy = "System";
             });
 
             ctx.Workplaces.AddRange(workplaces);
@@ -92,7 +104,12 @@ public class Seed
 
             employees.ForEach(x => {
                 x.CreatedAt = DateTime.UtcNow;
+                x.CreatedBy = "System";
                 x.UpdatedAt = DateTime.UtcNow;
+                x.UpdatedBy = "System";
+                if (string.IsNullOrWhiteSpace(x.AppUserId)) {
+                    x.AppUserId = Guid.NewGuid().ToString();
+                }
             });
 
             ctx.Employees.AddRange(employees);

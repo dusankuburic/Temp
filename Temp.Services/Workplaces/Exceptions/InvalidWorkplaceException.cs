@@ -1,9 +1,12 @@
-﻿namespace Temp.Services.Workplaces.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class InvalidWorkplaceException : Exception
+namespace Temp.Services.Workplaces.Exceptions;
+
+public class InvalidWorkplaceException : ValidationEx
 {
     public InvalidWorkplaceException(string parameterName, object parameterValue)
-        : base($"Invalid Workplace, " +
-            $"Parameter Name: {parameterName}" +
-            $"Parameter Value: {parameterValue}.") { }
+        : base($"Invalid workplace property: {parameterName}",
+               parameterName,
+               $"Invalid value: {parameterValue}") {
+    }
 }

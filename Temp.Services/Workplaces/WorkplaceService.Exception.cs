@@ -99,19 +99,19 @@ public partial class WorkplaceService
 
     private WorkplaceValidationException CreateAndLogValidationException(Exception exception) {
         var workplaceValidaitonException = new WorkplaceValidationException(exception);
-        _loggingBroker.LogError(workplaceValidaitonException);
+        Logger.LogError(workplaceValidaitonException);
         return workplaceValidaitonException;
     }
 
     private WorkplaceServiceException CreateAndLogServiceException(Exception exception) {
         var workplaceServiceException = new WorkplaceServiceException(exception);
-        _loggingBroker.LogError(workplaceServiceException);
+        Logger.LogError(workplaceServiceException);
         return workplaceServiceException;
     }
 
     private WorkplaceDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
         var workplaceDependencyException = new WorkplaceDependencyException(exception);
-        _loggingBroker.LogCritical(workplaceDependencyException);
+        Logger.LogCritical(workplaceDependencyException);
         return workplaceDependencyException;
     }
 }

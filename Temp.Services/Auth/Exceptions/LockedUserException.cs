@@ -1,7 +1,14 @@
-﻿namespace Temp.Services.Auth.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class LockedUserException : Exception
+namespace Temp.Services.Auth.Exceptions;
+
+public class LockedUserException : ValidationEx
 {
-    public LockedUserException(Exception innerException)
-        : base("Locked user exception, please try again later.", innerException) { }
+    public LockedUserException()
+        : base("User account is locked", "User", "User account is locked. Please try again later.") {
+    }
+
+    public LockedUserException(string userId)
+        : base($"User account {userId} is locked", "User", "User account is locked. Please try again later.") {
+    }
 }

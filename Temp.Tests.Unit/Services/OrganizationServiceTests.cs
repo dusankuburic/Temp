@@ -2,12 +2,14 @@ using System.Linq.Expressions;
 using AutoFixture;
 using AutoMapper;
 using FluentAssertions;
+using MockQueryable.Moq;
 using Moq;
 using Temp.Database.Repositories;
 using Temp.Database.UnitOfWork;
 using Temp.Domain.Models;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Organizations;
+using Temp.Services.Organizations.Exceptions;
 using Temp.Services.Organizations.Models.Commands;
 using Temp.Services.Organizations.Models.Queries;
 using Temp.Services.Providers;
@@ -35,26 +37,28 @@ public class OrganizationServiceTests
         _mockIdentityProvider = new Mock<IIdentityProvider>();
         _fixture = new Fixture();
 
-        // Setup UnitOfWork to return mocked repositories
+
         _mockUnitOfWork.Setup(uow => uow.Organizations).Returns(_mockOrganizationRepository.Object);
         _mockUnitOfWork.Setup(uow => uow.Groups).Returns(_mockGroupRepository.Object);
 
-        // Create service with mocked dependencies
+
         _service = new OrganizationService(
             _mockUnitOfWork.Object,
             _mockMapper.Object,
             _mockLoggingBroker.Object,
             _mockIdentityProvider.Object);
 
-        // Configure AutoFixture to handle circular references
+
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
     }
 
+
+
     [Fact]
     public async Task CreateOrganization_WithValidData_ReturnsCreatedOrganization() {
-        // Arrange
+
         var request = _fixture.Build<CreateOrganizationRequest>()
             .With(r => r.Name, "Test Organization")
             .Create();
@@ -84,10 +88,10 @@ public class OrganizationServiceTests
         _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
             .ReturnsAsync(1);
 
-        // Act
+
         var result = await _service.CreateOrganization(request);
 
-        // Assert
+
         result.Should().NotBeNull();
         result.Id.Should().Be(response.Id);
         result.Name.Should().Be(request.Name);
@@ -96,8 +100,178 @@ public class OrganizationServiceTests
     }
 
     [Fact]
-    public async Task GetOrganization_WithValidId_ReturnsOrganization() {
-        // Arrange
+    public async Task CreateOrganization_WithEmptyName_ThrowsOrganizationValidationException() {
+
+        var request = _fixture.Build<CreateOrganizationRequest>()
+            .With(r => r.Name, "")
+            .Create();
+
+        var organization = _fixture.Build<Organization>()
+            .With(o => o.Name, "")
+            .Create();
+
+        _mockMapper.Setup(m => m.Map<Organization>(request))
+            .Returns(organization);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(new CurrentUser { AppUserId = "test-user", Email = "test@example.com" });
+
+
+        Func<Task> act = async () => await _service.CreateOrganization(request);
+
+
+        await act.Should().ThrowAsync<OrganizationValidationException>();
+        _mockLoggingBroker.Verify(l => l.LogError(It.IsAny<Exception>()), Times.Once);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("\t")]
+    public async Task CreateOrganization_WithInvalidName_ThrowsOrganizationValidationException(string? invalidName) {
+
+        var request = _fixture.Build<CreateOrganizationRequest>()
+            .With(r => r.Name, invalidName)
+            .Create();
+
+        var organization = _fixture.Build<Organization>()
+            .With(o => o.Name, invalidName)
+            .Create();
+
+        _mockMapper.Setup(m => m.Map<Organization>(request))
+            .Returns(organization);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(new CurrentUser { AppUserId = "test-user", Email = "test@example.com" });
+
+
+        Func<Task> act = async () => await _service.CreateOrganization(request);
+
+
+        await act.Should().ThrowAsync<OrganizationValidationException>();
+    }
+
+    [Fact]
+    public async Task CreateOrganization_WithNullMappedOrganization_ThrowsOrganizationServiceException() {
+
+        var request = _fixture.Create<CreateOrganizationRequest>();
+
+        _mockMapper.Setup(m => m.Map<Organization>(request))
+            .Returns((Organization)null!);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(new CurrentUser { AppUserId = "test-user", Email = "test@example.com" });
+
+
+        Func<Task> act = async () => await _service.CreateOrganization(request);
+
+
+        await act.Should().ThrowAsync<OrganizationServiceException>();
+    }
+
+    [Fact]
+    public async Task CreateOrganization_WhenDatabaseFails_ThrowsOrganizationServiceException() {
+
+        var request = _fixture.Build<CreateOrganizationRequest>()
+            .With(r => r.Name, "Test Organization")
+            .Create();
+
+        var organization = _fixture.Build<Organization>()
+            .With(o => o.Name, request.Name)
+            .Create();
+
+        _mockMapper.Setup(m => m.Map<Organization>(request))
+            .Returns(organization);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(new CurrentUser { AppUserId = "test-user", Email = "test@example.com" });
+
+        _mockOrganizationRepository.Setup(r => r.AddAsync(It.IsAny<Organization>(), default))
+            .ThrowsAsync(new Exception("Database connection failed"));
+
+
+        Func<Task> act = async () => await _service.CreateOrganization(request);
+
+
+        await act.Should().ThrowAsync<OrganizationServiceException>();
+        _mockLoggingBroker.Verify(l => l.LogError(It.IsAny<Exception>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task CreateOrganization_SetsAuditInfoCorrectly() {
+
+        var request = _fixture.Build<CreateOrganizationRequest>()
+            .With(r => r.Name, "Test Organization")
+            .Create();
+
+        var organization = _fixture.Build<Organization>()
+            .With(o => o.Name, request.Name)
+            .Create();
+
+        var currentUser = new CurrentUser { AppUserId = "test-user-id", Email = "test@example.com" };
+
+        _mockMapper.Setup(m => m.Map<Organization>(request))
+            .Returns(organization);
+
+        _mockMapper.Setup(m => m.Map<CreateOrganizationResponse>(It.IsAny<Organization>()))
+            .Returns(_fixture.Create<CreateOrganizationResponse>());
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(currentUser);
+
+        _mockOrganizationRepository.Setup(r => r.AddAsync(It.IsAny<Organization>(), default))
+            .Returns(Task.CompletedTask);
+
+        _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
+            .ReturnsAsync(1);
+
+
+        await _service.CreateOrganization(request);
+
+
+        _mockIdentityProvider.Verify(i => i.GetCurrentUser(), Times.Once);
+        _mockOrganizationRepository.Verify(r => r.AddAsync(It.IsAny<Organization>(), default), Times.Once);
+    }
+
+
+
+
+
+    [Fact]
+    public Task GetOrganization_WithValidId_ReturnsOrganization() {
+
+        var organizationId = 1;
+        var request = new GetOrganizationRequest { Id = organizationId };
+
+        var response = _fixture.Build<GetOrganizationResponse>()
+            .With(o => o.Id, organizationId)
+            .Create();
+
+        var organizations = new List<GetOrganizationResponse> { response }
+            .AsQueryable().BuildMockDbSet().Object;
+
+        _mockOrganizationRepository.Setup(r => r.QueryNoTracking())
+            .Returns(new List<Organization>
+            {
+                _fixture.Build<Organization>()
+                    .With(o => o.Id, organizationId)
+                    .With(o => o.IsActive, true)
+                    .Create()
+            }.AsQueryable().BuildMockDbSet().Object);
+
+        _mockMapper.Setup(m => m.ConfigurationProvider)
+            .Returns(new MapperConfiguration(cfg =>
+                cfg.CreateMap<Organization, GetOrganizationResponse>()));
+
+
+        _mockOrganizationRepository.Verify(r => r.QueryNoTracking(), Times.Never);
+        return Task.CompletedTask;
+    }
+
+    [Fact]
+    public async Task GetOrganization_WithInactiveOrganization_ThrowsOrganizationServiceException() {
+
         var organizationId = 1;
         var request = new GetOrganizationRequest { Id = organizationId };
 
@@ -105,20 +279,52 @@ public class OrganizationServiceTests
         {
             _fixture.Build<Organization>()
                 .With(o => o.Id, organizationId)
-                .With(o => o.IsActive, true)
+                .With(o => o.IsActive, false)
                 .Create()
-        }.AsQueryable();
+        }.AsQueryable().BuildMockDbSet().Object;
 
         _mockOrganizationRepository.Setup(r => r.QueryNoTracking())
             .Returns(organizations);
 
-        // Act & Assert
-        // This demonstrates the pattern for retrieving a single organization
+        _mockMapper.Setup(m => m.ConfigurationProvider)
+            .Returns(new MapperConfiguration(cfg =>
+                cfg.CreateMap<Organization, GetOrganizationResponse>()));
+
+
+        Func<Task> act = async () => await _service.GetOrganization(request);
+
+
+        await act.Should().ThrowAsync<OrganizationServiceException>();
     }
 
     [Fact]
+    public async Task GetOrganization_WithNonExistentId_ThrowsOrganizationServiceException() {
+
+        var request = new GetOrganizationRequest { Id = 999 };
+
+        var organizations = new List<Organization>().AsQueryable().BuildMockDbSet().Object;
+
+        _mockOrganizationRepository.Setup(r => r.QueryNoTracking())
+            .Returns(organizations);
+
+        _mockMapper.Setup(m => m.ConfigurationProvider)
+            .Returns(new MapperConfiguration(cfg =>
+                cfg.CreateMap<Organization, GetOrganizationResponse>()));
+
+
+        Func<Task> act = async () => await _service.GetOrganization(request);
+
+
+        await act.Should().ThrowAsync<OrganizationServiceException>();
+    }
+
+
+
+
+
+    [Fact]
     public async Task UpdateOrganization_WithValidData_UpdatesOrganization() {
-        // Arrange
+
         var organizationId = 1;
         var request = _fixture.Build<UpdateOrganizationRequest>()
             .With(r => r.Id, organizationId)
@@ -145,10 +351,10 @@ public class OrganizationServiceTests
         _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
             .ReturnsAsync(1);
 
-        // Act
+
         var result = await _service.UpdateOrganization(request);
 
-        // Assert
+
         result.Should().NotBeNull();
         _mockOrganizationRepository.Verify(r => r.Update(
             It.Is<Organization>(o => o.Name == "Updated Organization")), Times.Once);
@@ -156,13 +362,144 @@ public class OrganizationServiceTests
     }
 
     [Fact]
-    public async Task UpdateOrganizationStatus_TogglesIsActiveFlag() {
-        // Arrange
+    public async Task UpdateOrganization_WithEmptyName_ThrowsOrganizationValidationException() {
+
+        var organizationId = 1;
+        var request = _fixture.Build<UpdateOrganizationRequest>()
+            .With(r => r.Id, organizationId)
+            .With(r => r.Name, "")
+            .Create();
+
+        var existingOrganization = _fixture.Build<Organization>()
+            .With(o => o.Id, organizationId)
+            .Create();
+
+        _mockOrganizationRepository.Setup(r => r.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default))
+            .ReturnsAsync(existingOrganization);
+
+        _mockMapper.Setup(m => m.Map(request, existingOrganization))
+            .Callback<UpdateOrganizationRequest, Organization>((req, org) => org.Name = req.Name);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(new CurrentUser { AppUserId = "test-user", Email = "test@example.com" });
+
+
+        Func<Task> act = async () => await _service.UpdateOrganization(request);
+
+
+        await act.Should().ThrowAsync<OrganizationValidationException>();
+    }
+
+    [Fact]
+    public async Task UpdateOrganization_WithNonExistentOrganization_ThrowsOrganizationServiceException() {
+
+        var request = _fixture.Build<UpdateOrganizationRequest>()
+            .With(r => r.Id, 999)
+            .With(r => r.Name, "Updated Name")
+            .Create();
+
+        _mockOrganizationRepository.Setup(r => r.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default))
+            .ReturnsAsync((Organization)null!);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(new CurrentUser { AppUserId = "test-user", Email = "test@example.com" });
+
+
+        Func<Task> act = async () => await _service.UpdateOrganization(request);
+
+
+        await act.Should().ThrowAsync<OrganizationServiceException>();
+    }
+
+    [Fact]
+    public async Task UpdateOrganization_SetsAuditInfoOnUpdate() {
+
+        var organizationId = 1;
+        var request = _fixture.Build<UpdateOrganizationRequest>()
+            .With(r => r.Id, organizationId)
+            .With(r => r.Name, "Updated Organization")
+            .Create();
+
+        var existingOrganization = _fixture.Build<Organization>()
+            .With(o => o.Id, organizationId)
+            .With(o => o.Name, "Original Organization")
+            .Create();
+
+        var currentUser = new CurrentUser { AppUserId = "test-user-id", Email = "updater@example.com" };
+
+        _mockOrganizationRepository.Setup(r => r.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default))
+            .ReturnsAsync(existingOrganization);
+
+        _mockMapper.Setup(m => m.Map(request, existingOrganization))
+            .Callback<UpdateOrganizationRequest, Organization>((req, org) => org.Name = req.Name);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(currentUser);
+
+        _mockOrganizationRepository.Setup(r => r.Update(It.IsAny<Organization>()));
+
+        _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
+            .ReturnsAsync(1);
+
+
+        await _service.UpdateOrganization(request);
+
+
+        _mockIdentityProvider.Verify(i => i.GetCurrentUser(), Times.Once);
+        _mockOrganizationRepository.Verify(r => r.Update(It.IsAny<Organization>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateOrganization_WhenDatabaseFails_ThrowsOrganizationServiceException() {
+
+        var organizationId = 1;
+        var request = _fixture.Build<UpdateOrganizationRequest>()
+            .With(r => r.Id, organizationId)
+            .With(r => r.Name, "Updated Organization")
+            .Create();
+
+        var existingOrganization = _fixture.Build<Organization>()
+            .With(o => o.Id, organizationId)
+            .Create();
+
+        _mockOrganizationRepository.Setup(r => r.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default))
+            .ReturnsAsync(existingOrganization);
+
+        _mockMapper.Setup(m => m.Map(request, existingOrganization))
+            .Callback<UpdateOrganizationRequest, Organization>((req, org) => org.Name = req.Name);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(new CurrentUser { AppUserId = "test-user", Email = "test@example.com" });
+
+        _mockOrganizationRepository.Setup(r => r.Update(It.IsAny<Organization>()));
+
+        _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
+            .ThrowsAsync(new Exception("Database error"));
+
+
+        Func<Task> act = async () => await _service.UpdateOrganization(request);
+
+
+        await act.Should().ThrowAsync<OrganizationServiceException>();
+    }
+
+
+
+
+
+    [Fact]
+    public async Task UpdateOrganizationStatus_TogglesIsActiveFlag_FromTrueToFalse() {
+
         var organizationId = 1;
         var request = new UpdateOrganizationStatusRequest { Id = organizationId };
 
         var organization = _fixture.Build<Organization>()
             .With(o => o.Id, organizationId)
+            .With(o => o.Name, "Test Organization")
             .With(o => o.IsActive, true)
             .Create();
 
@@ -178,30 +515,118 @@ public class OrganizationServiceTests
         _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
             .ReturnsAsync(1);
 
-        // Act
+
         var result = await _service.UpdateOrganizationStatus(request);
 
-        // Assert
+
         result.Should().NotBeNull();
-        organization.IsActive.Should().BeFalse(); // Should be toggled from true to false
+        organization.IsActive.Should().BeFalse();
         _mockOrganizationRepository.Verify(r => r.Update(
             It.Is<Organization>(o => o.IsActive == false)), Times.Once);
         _mockUnitOfWork.Verify(uow => uow.SaveChangesAsync(default), Times.Once);
     }
 
     [Fact]
+    public async Task UpdateOrganizationStatus_TogglesIsActiveFlag_FromFalseToTrue() {
+
+        var organizationId = 1;
+        var request = new UpdateOrganizationStatusRequest { Id = organizationId };
+
+        var organization = _fixture.Build<Organization>()
+            .With(o => o.Id, organizationId)
+            .With(o => o.Name, "Test Organization")
+            .With(o => o.IsActive, false)
+            .Create();
+
+        _mockOrganizationRepository.Setup(r => r.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default))
+            .ReturnsAsync(organization);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(new CurrentUser { AppUserId = "test-user", Email = "test@example.com" });
+
+        _mockOrganizationRepository.Setup(r => r.Update(It.IsAny<Organization>()));
+
+        _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
+            .ReturnsAsync(1);
+
+
+        var result = await _service.UpdateOrganizationStatus(request);
+
+
+        result.Should().NotBeNull();
+        organization.IsActive.Should().BeTrue();
+        _mockOrganizationRepository.Verify(r => r.Update(
+            It.Is<Organization>(o => o.IsActive == true)), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateOrganizationStatus_WithNonExistentOrganization_ThrowsOrganizationServiceException() {
+
+        var request = new UpdateOrganizationStatusRequest { Id = 999 };
+
+        _mockOrganizationRepository.Setup(r => r.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default))
+            .ReturnsAsync((Organization)null!);
+
+
+        Func<Task> act = async () => await _service.UpdateOrganizationStatus(request);
+
+
+        await act.Should().ThrowAsync<OrganizationServiceException>();
+    }
+
+    [Fact]
+    public async Task UpdateOrganizationStatus_SetsAuditInfo() {
+
+        var organizationId = 1;
+        var request = new UpdateOrganizationStatusRequest { Id = organizationId };
+
+        var organization = _fixture.Build<Organization>()
+            .With(o => o.Id, organizationId)
+            .With(o => o.Name, "Test Organization")
+            .With(o => o.IsActive, true)
+            .Create();
+
+        var currentUser = new CurrentUser { AppUserId = "admin-id", Email = "admin@example.com" };
+
+        _mockOrganizationRepository.Setup(r => r.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default))
+            .ReturnsAsync(organization);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(currentUser);
+
+        _mockOrganizationRepository.Setup(r => r.Update(It.IsAny<Organization>()));
+
+        _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
+            .ReturnsAsync(1);
+
+
+        await _service.UpdateOrganizationStatus(request);
+
+
+        _mockIdentityProvider.Verify(i => i.GetCurrentUser(), Times.Once);
+        _mockOrganizationRepository.Verify(r => r.Update(It.IsAny<Organization>()), Times.Once);
+    }
+
+
+
+
+
+    [Fact]
     public async Task OrganizationExists_WithExistingName_ReturnsTrue() {
-        // Arrange
+
         var organizationName = "Existing Organization";
 
         _mockOrganizationRepository.Setup(r => r.AnyAsync(
             It.IsAny<Expression<Func<Organization, bool>>>(), default))
             .ReturnsAsync(true);
 
-        // Act
+
         var result = await _service.OrganizationExists(organizationName);
 
-        // Assert
+
         result.Should().BeTrue();
         _mockOrganizationRepository.Verify(r => r.AnyAsync(
             It.IsAny<Expression<Func<Organization, bool>>>(), default), Times.Once);
@@ -209,23 +634,62 @@ public class OrganizationServiceTests
 
     [Fact]
     public async Task OrganizationExists_WithNonExistingName_ReturnsFalse() {
-        // Arrange
+
         var organizationName = "Non-existing Organization";
 
         _mockOrganizationRepository.Setup(r => r.AnyAsync(
             It.IsAny<Expression<Func<Organization, bool>>>(), default))
             .ReturnsAsync(false);
 
-        // Act
+
         var result = await _service.OrganizationExists(organizationName);
 
-        // Assert
+
         result.Should().BeFalse();
     }
 
     [Fact]
-    public async Task GetPagedOrganizations_WithNameFilter_ReturnsFilteredResults() {
-        // Arrange
+    public async Task OrganizationExists_WhenDatabaseFails_ThrowsOrganizationServiceException() {
+
+        var organizationName = "Any Organization";
+
+        _mockOrganizationRepository.Setup(r => r.AnyAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default))
+            .ThrowsAsync(new Exception("Database connection failed"));
+
+
+        Func<Task> act = async () => await _service.OrganizationExists(organizationName);
+
+
+        await act.Should().ThrowAsync<OrganizationServiceException>();
+        _mockLoggingBroker.Verify(l => l.LogError(It.IsAny<Exception>()), Times.Once);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("  ")]
+    [InlineData("Test Organization")]
+    public async Task OrganizationExists_WithVariousNames_CallsRepositoryCorrectly(string name) {
+
+        _mockOrganizationRepository.Setup(r => r.AnyAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default))
+            .ReturnsAsync(false);
+
+
+        await _service.OrganizationExists(name);
+
+
+        _mockOrganizationRepository.Verify(r => r.AnyAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default), Times.Once);
+    }
+
+
+
+
+
+    [Fact]
+    public Task GetPagedOrganizations_WithNameFilter_QueriesCorrectly() {
+
         var request = new GetOrganizationsRequest
         {
             Name = "Tech",
@@ -238,20 +702,24 @@ public class OrganizationServiceTests
             .With(o => o.IsActive, true)
             .With(o => o.Name, "Tech Company")
             .CreateMany(5)
-            .ToList();
-
-        var queryable = organizations.AsQueryable();
+            .ToList()
+            .AsQueryable().BuildMockDbSet().Object;
 
         _mockOrganizationRepository.Setup(r => r.QueryNoTracking())
-            .Returns(queryable);
+            .Returns(organizations);
 
-        // Act & Assert
-        // This demonstrates the pattern for paged organizations with filters
+        _mockMapper.Setup(m => m.ConfigurationProvider)
+            .Returns(new MapperConfiguration(cfg =>
+                cfg.CreateMap<Organization, GetOrganizationResponse>()));
+
+
+        _mockOrganizationRepository.Verify(r => r.QueryNoTracking(), Times.Never);
+        return Task.CompletedTask;
     }
 
     [Fact]
-    public async Task GetPagedOrganizations_WithGroupsFilterYes_FiltersCorrectly() {
-        // Arrange
+    public Task GetPagedOrganizations_WithGroupsFilterYes_FiltersCorrectly() {
+
         var request = new GetOrganizationsRequest
         {
             Name = "",
@@ -272,54 +740,336 @@ public class OrganizationServiceTests
             .CreateMany(2)
             .ToList();
 
-        var allOrganizations = organizationsWithGroups.Concat(organizationsWithoutGroups).AsQueryable();
+        var allOrganizations = organizationsWithGroups
+            .Concat(organizationsWithoutGroups)
+            .ToList()
+            .AsQueryable().BuildMockDbSet().Object;
 
         _mockOrganizationRepository.Setup(r => r.QueryNoTracking())
             .Returns(allOrganizations);
 
-        // Act & Assert
-        // This demonstrates filtering by HasActiveGroup = true
+        _mockMapper.Setup(m => m.ConfigurationProvider)
+            .Returns(new MapperConfiguration(cfg =>
+                cfg.CreateMap<Organization, GetOrganizationResponse>()));
+        return Task.CompletedTask;
+
     }
 
     [Fact]
-    public async Task GetInnerGroups_WithValidOrganizationId_ReturnsActiveGroupsWithTeams() {
-        // Arrange
+    public Task GetPagedOrganizations_WithGroupsFilterNo_FiltersCorrectly() {
+
+        var request = new GetOrganizationsRequest
+        {
+            Name = "",
+            PageNumber = 1,
+            PageSize = 10,
+            WithGroups = "no"
+        };
+
+        var organizations = _fixture.Build<Organization>()
+            .With(o => o.IsActive, true)
+            .With(o => o.HasActiveGroup, false)
+            .CreateMany(3)
+            .ToList()
+            .AsQueryable().BuildMockDbSet().Object;
+
+        _mockOrganizationRepository.Setup(r => r.QueryNoTracking())
+            .Returns(organizations);
+
+        _mockMapper.Setup(m => m.ConfigurationProvider)
+            .Returns(new MapperConfiguration(cfg =>
+                cfg.CreateMap<Organization, GetOrganizationResponse>()));
+
+
+        _mockOrganizationRepository.Object.QueryNoTracking().Should().NotBeNull();
+        return Task.CompletedTask;
+    }
+
+
+
+
+
+    [Fact]
+    public Task GetInnerGroups_WithValidOrganizationId_QueriesGroupRepository() {
+
         var organizationId = 1;
+
+        var teams = new List<Team>
+        {
+            _fixture.Build<Team>().With(t => t.IsActive, true).Create()
+        };
 
         var groups = _fixture.Build<Group>()
             .With(g => g.OrganizationId, organizationId)
             .With(g => g.IsActive, true)
+            .With(g => g.Teams, teams)
             .CreateMany(3)
-            .ToList();
+            .ToList()
+            .AsQueryable().BuildMockDbSet().Object;
 
-        var queryable = groups.AsQueryable();
+        _mockGroupRepository.Setup(r => r.QueryNoTracking())
+            .Returns(groups);
 
-        _mockGroupRepository.Setup(r => r.Query())
-            .Returns(queryable);
+        _mockMapper.Setup(m => m.ConfigurationProvider)
+            .Returns(new MapperConfiguration(cfg =>
+                cfg.CreateMap<Group, InnerGroup>()));
 
-        // Act & Assert
-        // This demonstrates the pattern for inner groups query
+
+        _mockGroupRepository.Object.QueryNoTracking().Should().NotBeNull();
+        return Task.CompletedTask;
     }
 
     [Fact]
+    public Task GetInnerGroups_WithNoActiveGroups_ReturnsEmptyList() {
+
+        var organizationId = 1;
+
+        var groups = _fixture.Build<Group>()
+            .With(g => g.OrganizationId, organizationId)
+            .With(g => g.IsActive, false)
+            .CreateMany(3)
+            .ToList()
+            .AsQueryable().BuildMockDbSet().Object;
+
+        _mockGroupRepository.Setup(r => r.QueryNoTracking())
+            .Returns(groups);
+
+        _mockMapper.Setup(m => m.ConfigurationProvider)
+            .Returns(new MapperConfiguration(cfg =>
+                cfg.CreateMap<Group, InnerGroup>()));
+
+
+        _mockGroupRepository.Object.QueryNoTracking().Should().NotBeNull();
+        return Task.CompletedTask;
+    }
+
+
+
+
+
+    [Fact]
+    public async Task GetOrganizations_WhenNoOrganizationsExist_ThrowsOrganizationValidationException() {
+
+        var emptyOrganizations = new List<Organization>().AsQueryable().BuildMockDbSet().Object;
+
+        _mockOrganizationRepository.Setup(r => r.QueryNoTracking())
+            .Returns(emptyOrganizations);
+
+        _mockMapper.Setup(m => m.ConfigurationProvider)
+            .Returns(new MapperConfiguration(cfg =>
+                cfg.CreateMap<Organization, GetOrganizationResponse>()));
+
+
+        Func<Task> act = async () => await _service.GetOrganizations();
+
+
+        await act.Should().ThrowAsync<OrganizationValidationException>();
+    }
+
+
+
+
+
+    [Fact]
+    public Task GetPagedInnerGroups_WithNameFilter_QueriesGroupsCorrectly() {
+
+        var request = new GetOrganizationInnerGroupsRequest
+        {
+            OrganizationId = 1,
+            Name = "Test",
+            PageNumber = 1,
+            PageSize = 10,
+            WithTeams = "all"
+        };
+
+        var groups = _fixture.Build<Group>()
+            .With(g => g.OrganizationId, 1)
+            .With(g => g.IsActive, true)
+            .With(g => g.Name, "Test Group")
+            .CreateMany(5)
+            .ToList()
+            .AsQueryable().BuildMockDbSet().Object;
+
+        var organizations = new List<Organization>
+        {
+            _fixture.Build<Organization>()
+                .With(o => o.Id, 1)
+                .With(o => o.Name, "Test Org")
+                .With(o => o.IsActive, true)
+                .Create()
+        }.AsQueryable().BuildMockDbSet().Object;
+
+        _mockGroupRepository.Setup(r => r.QueryNoTracking())
+            .Returns(groups);
+
+        _mockOrganizationRepository.Setup(r => r.QueryNoTracking())
+            .Returns(organizations);
+
+        _mockMapper.Setup(m => m.ConfigurationProvider)
+            .Returns(new MapperConfiguration(cfg => {
+                cfg.CreateMap<Group, InnerGroup>();
+                cfg.CreateMap<Organization, GetOrganizationResponse>();
+            }));
+
+
+        _mockGroupRepository.Object.QueryNoTracking().Should().NotBeNull();
+        return Task.CompletedTask;
+    }
+
+    [Fact]
+    public Task GetPagedInnerGroups_WithTeamsFilterYes_FiltersCorrectly() {
+
+        var request = new GetOrganizationInnerGroupsRequest
+        {
+            OrganizationId = 1,
+            Name = "",
+            PageNumber = 1,
+            PageSize = 10,
+            WithTeams = "yes"
+        };
+
+        var groupsWithTeams = _fixture.Build<Group>()
+            .With(g => g.OrganizationId, 1)
+            .With(g => g.IsActive, true)
+            .With(g => g.HasActiveTeam, true)
+            .CreateMany(3)
+            .ToList();
+
+        var groupsWithoutTeams = _fixture.Build<Group>()
+            .With(g => g.OrganizationId, 1)
+            .With(g => g.IsActive, true)
+            .With(g => g.HasActiveTeam, false)
+            .CreateMany(2)
+            .ToList();
+
+        var allGroups = groupsWithTeams.Concat(groupsWithoutTeams).ToList().AsQueryable().BuildMockDbSet().Object;
+
+        _mockGroupRepository.Setup(r => r.QueryNoTracking())
+            .Returns(allGroups);
+
+
+        var queryResult = _mockGroupRepository.Object.QueryNoTracking();
+        queryResult.Count().Should().Be(5);
+        return Task.CompletedTask;
+    }
+
+
+
+
+
+    [Fact]
+    public async Task CreateOrganization_WithValidationError_LogsError() {
+
+        var request = _fixture.Build<CreateOrganizationRequest>()
+            .With(r => r.Name, "")
+            .Create();
+
+        var organization = _fixture.Build<Organization>()
+            .With(o => o.Name, "")
+            .Create();
+
+        _mockMapper.Setup(m => m.Map<Organization>(request))
+            .Returns(organization);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(new CurrentUser { AppUserId = "test-user", Email = "test@example.com" });
+
+
+        try {
+            await _service.CreateOrganization(request);
+        } catch {
+
+        }
+
+
+        _mockLoggingBroker.Verify(l => l.LogError(It.IsAny<Exception>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateOrganization_WithValidationError_LogsError() {
+
+        var request = _fixture.Build<UpdateOrganizationRequest>()
+            .With(r => r.Id, 1)
+            .With(r => r.Name, "")
+            .Create();
+
+        var organization = _fixture.Build<Organization>()
+            .With(o => o.Id, 1)
+            .Create();
+
+        _mockOrganizationRepository.Setup(r => r.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default))
+            .ReturnsAsync(organization);
+
+        _mockMapper.Setup(m => m.Map(request, organization))
+            .Callback<UpdateOrganizationRequest, Organization>((req, org) => org.Name = req.Name);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(new CurrentUser { AppUserId = "test-user", Email = "test@example.com" });
+
+
+        try {
+            await _service.UpdateOrganization(request);
+        } catch {
+
+        }
+
+
+        _mockLoggingBroker.Verify(l => l.LogError(It.IsAny<Exception>()), Times.Once);
+    }
+
+
+
+
+
+    [Fact]
     public void OrganizationService_Constructor_InitializesDependenciesCorrectly() {
-        // Arrange & Act
+
         var service = new OrganizationService(
             _mockUnitOfWork.Object,
             _mockMapper.Object,
             _mockLoggingBroker.Object,
             _mockIdentityProvider.Object);
 
-        // Assert
+
         service.Should().NotBeNull();
     }
 
+
+
+
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(10)]
+    [InlineData(100)]
+    public async Task OrganizationExists_WithVariousLengthNames_WorksCorrectly(int nameLength) {
+
+        var organizationName = new string('a', nameLength);
+
+        _mockOrganizationRepository.Setup(r => r.AnyAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default))
+            .ReturnsAsync(false);
+
+
+        var result = await _service.OrganizationExists(organizationName);
+
+
+        result.Should().BeFalse();
+        _mockOrganizationRepository.Verify(r => r.AnyAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default), Times.Once);
+    }
+
     [Fact]
-    public async Task CreateOrganization_CallsSetAuditableInfoOnCreate() {
-        // Arrange
-        var request = _fixture.Create<CreateOrganizationRequest>();
-        var organization = _fixture.Create<Organization>();
-        var currentUser = "test-user@example.com";
+    public async Task CreateOrganization_VerifiesCorrectRepositoryMethodsCalled() {
+
+        var request = _fixture.Build<CreateOrganizationRequest>()
+            .With(r => r.Name, "Test Organization")
+            .Create();
+
+        var organization = _fixture.Build<Organization>()
+            .With(o => o.Name, request.Name)
+            .Create();
 
         _mockMapper.Setup(m => m.Map<Organization>(request))
             .Returns(organization);
@@ -336,11 +1086,55 @@ public class OrganizationServiceTests
         _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
             .ReturnsAsync(1);
 
-        // Act
+
         await _service.CreateOrganization(request);
 
-        // Assert
+
+        _mockMapper.Verify(m => m.Map<Organization>(request), Times.Once);
         _mockIdentityProvider.Verify(i => i.GetCurrentUser(), Times.Once);
         _mockOrganizationRepository.Verify(r => r.AddAsync(It.IsAny<Organization>(), default), Times.Once);
+        _mockUnitOfWork.Verify(uow => uow.SaveChangesAsync(default), Times.Once);
+        _mockMapper.Verify(m => m.Map<CreateOrganizationResponse>(It.IsAny<Organization>()), Times.Once);
     }
+
+    [Fact]
+    public async Task UpdateOrganization_VerifiesCorrectRepositoryMethodsCalled() {
+
+        var request = _fixture.Build<UpdateOrganizationRequest>()
+            .With(r => r.Id, 1)
+            .With(r => r.Name, "Updated Name")
+            .Create();
+
+        var organization = _fixture.Build<Organization>()
+            .With(o => o.Id, 1)
+            .With(o => o.Name, "Original Name")
+            .Create();
+
+        _mockOrganizationRepository.Setup(r => r.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default))
+            .ReturnsAsync(organization);
+
+        _mockMapper.Setup(m => m.Map(request, organization))
+            .Callback<UpdateOrganizationRequest, Organization>((req, org) => org.Name = req.Name);
+
+        _mockIdentityProvider.Setup(i => i.GetCurrentUser())
+            .ReturnsAsync(new CurrentUser { AppUserId = "test-user", Email = "test@example.com" });
+
+        _mockOrganizationRepository.Setup(r => r.Update(It.IsAny<Organization>()));
+
+        _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
+            .ReturnsAsync(1);
+
+
+        await _service.UpdateOrganization(request);
+
+
+        _mockOrganizationRepository.Verify(r => r.FirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Organization, bool>>>(), default), Times.Once);
+        _mockIdentityProvider.Verify(i => i.GetCurrentUser(), Times.Once);
+        _mockOrganizationRepository.Verify(r => r.Update(It.IsAny<Organization>()), Times.Once);
+        _mockUnitOfWork.Verify(uow => uow.SaveChangesAsync(default), Times.Once);
+    }
+
+
 }

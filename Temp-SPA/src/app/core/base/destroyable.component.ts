@@ -1,18 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
-/**
- * Base component that provides automatic subscription cleanup
- *
- * Usage:
- * export class MyComponent extends DestroyableComponent {
- *   ngOnInit() {
- *     this.myService.getData()
- *       .pipe(takeUntil(this.destroy$))
- *       .subscribe(data => { });
- *   }
- * }
- */
+
 @Component({
     template: '',
     standalone: false

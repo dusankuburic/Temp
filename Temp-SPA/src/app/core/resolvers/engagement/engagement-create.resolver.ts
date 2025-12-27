@@ -5,7 +5,6 @@ import { catchError } from 'rxjs/operators';
 import { AlertifyService } from '../../services/alertify.service';
 import { EngagementService } from '../../services/engagement.service';
 
-//TODO: pass id into modal, then call db, discard this resolver you don't need it
 export const engagementCreateResolver: ResolveFn<any | null> = (route: ActivatedRouteSnapshot) => {
     const engagementService = inject(EngagementService);
     const router = inject(Router);

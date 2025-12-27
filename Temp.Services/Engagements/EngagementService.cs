@@ -1,5 +1,6 @@
 ﻿using Temp.Database.UnitOfWork;
 using Temp.Domain.Models;
+using Temp.Services._Shared;
 using Temp.Services.Engagements.Models.Commands;
 using Temp.Services.Engagements.Models.Queries;
 using Temp.Services.Integrations.Loggings;
@@ -7,52 +8,42 @@ using Temp.Services.Providers;
 
 namespace Temp.Services.Engagements;
 
-public partial class EngagementService : IEngagementService
+public partial class EngagementService : BaseService<Engagement>, IEngagementService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ILoggingBroker _loggingBroker;
-    private readonly IIdentityProvider _identityProvider;
-
     public EngagementService(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         ILoggingBroker loggingBroker,
-        IIdentityProvider identityProvider) {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _loggingBroker = loggingBroker;
-        _identityProvider = identityProvider;
+        IIdentityProvider identityProvider)
+        : base(unitOfWork, mapper, loggingBroker, identityProvider) {
     }
 
     public Task<CreateEngagementResponse> CreateEngagement(CreateEngagementRequest request) =>
         TryCatch(async () => {
-            var engagement = _mapper.Map<Engagement>(request);
+            var engagement = Mapper.Map<Engagement>(request);
 
-            engagement.SetAuditableInfoOnCreate(await _identityProvider.GetCurrentUser());
+            engagement.SetAuditableInfoOnCreate(await IdentityProvider.GetCurrentUser());
 
             ValidateEngagementOnCreate(engagement);
 
-            await _unitOfWork.Engagements.AddAsync(engagement);
-            await _unitOfWork.SaveChangesAsync();
+            await UnitOfWork.Engagements.AddAsync(engagement);
+            await UnitOfWork.SaveChangesAsync();
 
-            return _mapper.Map<CreateEngagementResponse>(engagement);
+            return Mapper.Map<CreateEngagementResponse>(engagement);
         });
 
     public Task<List<GetUserEmployeeEngagementsResponse>> GetUserEmployeeEngagements(GetUserEmployeeEngagementsRequest request) =>
         TryCatch(async () => {
-            var userEmployeeId = await _unitOfWork.Employees
+            var userEmployeeId = await UnitOfWork.Employees
                 .QueryNoTracking()
                 .Where(x => x.Id == request.Id)
                 .Select(x => x.Id)
                 .FirstOrDefaultAsync();
 
-            var engagements = await _unitOfWork.Engagements
-                .Query()
-                .Include(x => x.Workplace)
-                .Include(x => x.EmploymentStatus)
+            var engagements = await UnitOfWork.Engagements
+                .QueryNoTracking()
                 .Where(x => x.EmployeeId == userEmployeeId)
-                .ProjectTo<GetUserEmployeeEngagementsResponse>(_mapper.ConfigurationProvider)
+                .ProjectTo<GetUserEmployeeEngagementsResponse>(Mapper.ConfigurationProvider)
                 .ToListAsync();
 
             return engagements;
@@ -60,12 +51,10 @@ public partial class EngagementService : IEngagementService
 
     public Task<List<GetEngagementsForEmployeeResponse>> GetEngagementForEmployee(GetEngagementsForEmployeeRequest request) =>
         TryCatch(async () => {
-            var engagements = await _unitOfWork.Engagements
-                .Query()
-                .Include(x => x.Workplace)
-                .Include(x => x.EmploymentStatus)
+            var engagements = await UnitOfWork.Engagements
+                .QueryNoTracking()
                 .Where(x => x.EmployeeId == request.Id)
-                .ProjectTo<GetEngagementsForEmployeeResponse>(_mapper.ConfigurationProvider)
+                .ProjectTo<GetEngagementsForEmployeeResponse>(Mapper.ConfigurationProvider)
                 .ToListAsync();
 
             return engagements;

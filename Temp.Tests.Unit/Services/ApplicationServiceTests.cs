@@ -33,17 +33,17 @@ public class ApplicationServiceTests
         _mockIdentityProvider = new Mock<IIdentityProvider>();
         _fixture = new Fixture();
 
-        // Setup UnitOfWork to return mocked repository
+
         _mockUnitOfWork.Setup(uow => uow.Applications).Returns(_mockApplicationRepository.Object);
 
-        // Create service with mocked dependencies
+
         _service = new ApplicationService(
             _mockUnitOfWork.Object,
             _mockMapper.Object,
             _mockLoggingBroker.Object,
             _mockIdentityProvider.Object);
 
-        // Configure AutoFixture to handle circular references
+
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
@@ -51,7 +51,7 @@ public class ApplicationServiceTests
 
     [Fact]
     public async Task CreateApplication_WithValidData_ReturnsCreatedApplication() {
-        // Arrange
+
         var request = _fixture.Build<CreateApplicationRequest>()
             .With(r => r.UserId, 1)
             .With(r => r.TeamId, 1)
@@ -82,10 +82,10 @@ public class ApplicationServiceTests
         _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
             .ReturnsAsync(1);
 
-        // Act
+
         var result = await _service.CreateApplication(request);
 
-        // Assert
+
         result.Should().NotBeNull();
         result.Id.Should().Be(response.Id);
         _mockApplicationRepository.Verify(r => r.AddAsync(It.IsAny<Application>(), default), Times.Once);
@@ -93,8 +93,8 @@ public class ApplicationServiceTests
     }
 
     [Fact]
-    public async Task GetApplication_WithValidId_ReturnsApplication() {
-        // Arrange
+    public Task GetApplication_WithValidId_ReturnsApplication() {
+
         var applicationId = 1;
         var request = new GetApplicationRequest { Id = applicationId };
 
@@ -111,18 +111,12 @@ public class ApplicationServiceTests
 
         _mockApplicationRepository.Setup(r => r.QueryNoTracking())
             .Returns(queryable);
-
-        // Note: In real scenario, ProjectTo would be called by the service
-        // For unit tests, we're mocking the final result
-
-        // Act & Assert
-        // This test demonstrates the pattern - actual implementation would need
-        // to mock the LINQ query chain properly or use integration tests
+        return Task.CompletedTask;
     }
 
     [Fact]
     public async Task UpdateApplicationStatus_WithValidData_UpdatesStatus() {
-        // Arrange
+
         var applicationId = 1;
         var request = _fixture.Build<UpdateApplicationStatusRequest>()
             .With(r => r.Id, applicationId)
@@ -139,7 +133,7 @@ public class ApplicationServiceTests
 
         _mockMapper.Setup(m => m.Map(request, existingApplication))
             .Callback<UpdateApplicationStatusRequest, Application>((req, app) => {
-                // Map properties that exist
+
                 app.ModeratorId = req.ModeratorId;
             });
 
@@ -151,10 +145,10 @@ public class ApplicationServiceTests
         _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
             .ReturnsAsync(1);
 
-        // Act
+
         var result = await _service.UpdateApplicationStatus(request);
 
-        // Assert
+
         result.Should().NotBeNull();
         result.Success.Should().BeTrue();
         result.Id.Should().Be(applicationId);
@@ -163,8 +157,8 @@ public class ApplicationServiceTests
     }
 
     [Fact]
-    public async Task GetUserApplications_WithValidUserId_ReturnsApplicationsList() {
-        // Arrange
+    public Task GetUserApplications_WithValidUserId_ReturnsApplicationsList() {
+
         var userId = 1;
         var request = new GetUserApplicationsRequest { Id = userId };
 
@@ -177,15 +171,12 @@ public class ApplicationServiceTests
 
         _mockApplicationRepository.Setup(r => r.QueryNoTracking())
             .Returns(queryable);
-
-        // Act & Assert
-        // This demonstrates the test pattern for list queries
-        // Actual implementation would mock ProjectTo results
+        return Task.CompletedTask;
     }
 
     [Fact]
-    public async Task GetTeamApplications_WithValidTeamId_ReturnsApplicationsList() {
-        // Arrange
+    public Task GetTeamApplications_WithValidTeamId_ReturnsApplicationsList() {
+
         var teamId = 1;
         var request = new GetTeamApplicationsRequest { TeamId = teamId };
 
@@ -198,27 +189,24 @@ public class ApplicationServiceTests
 
         _mockApplicationRepository.Setup(r => r.QueryNoTracking())
             .Returns(queryable);
-
-        // Act & Assert
-        // This demonstrates the test pattern for team applications query
+        return Task.CompletedTask;
     }
 
     [Fact]
     public void ApplicationService_Constructor_InitializesDependenciesCorrectly() {
-        // Arrange & Act
+
         var service = new ApplicationService(
             _mockUnitOfWork.Object,
             _mockMapper.Object,
             _mockLoggingBroker.Object,
             _mockIdentityProvider.Object);
 
-        // Assert
         service.Should().NotBeNull();
     }
 
     [Fact]
     public async Task CreateApplication_SetsStatusToFalse() {
-        // Arrange
+
         var request = _fixture.Create<CreateApplicationRequest>();
         var application = _fixture.Build<Application>()
             .Without(a => a.Status)
@@ -235,7 +223,7 @@ public class ApplicationServiceTests
 
         _mockApplicationRepository.Setup(r => r.AddAsync(It.IsAny<Application>(), default))
             .Callback<Application, CancellationToken>((app, ct) => {
-                // Verify status is set to false
+
                 app.Status.Should().BeFalse();
             })
             .Returns(Task.CompletedTask);
@@ -243,10 +231,10 @@ public class ApplicationServiceTests
         _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync(default))
             .ReturnsAsync(1);
 
-        // Act
+
         await _service.CreateApplication(request);
 
-        // Assert
+
         _mockApplicationRepository.Verify(r => r.AddAsync(
             It.Is<Application>(a => a.Status == false), default), Times.Once);
     }

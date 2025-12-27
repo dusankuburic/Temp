@@ -1,6 +1,14 @@
-﻿namespace Temp.Services.Workplaces.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class NullWorkplaceException : Exception
+namespace Temp.Services.Workplaces.Exceptions;
+
+public class NullWorkplaceException : ValidationEx
 {
-    public NullWorkplaceException() : base("Workplace is null") { }
+    public NullWorkplaceException()
+        : base("Workplace cannot be null", "Workplace", "Workplace object is required") {
+    }
+
+    public NullWorkplaceException(string fieldName)
+        : base($"{fieldName} cannot be null", fieldName, "Value is required") {
+    }
 }

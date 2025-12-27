@@ -40,19 +40,19 @@ public partial class AuthService
 
     private UserServiceException CreateAndLogServiceException(Exception exception) {
         var userServiceException = new UserServiceException(exception);
-        _loggingBroker.LogError(userServiceException);
+        Logger.LogError(userServiceException);
         return userServiceException;
     }
 
     private UserValidationException CreateAndLogValidationException(Exception exception) {
         var userValidationException = new UserValidationException(exception);
-        _loggingBroker.LogError(userValidationException);
+        Logger.LogError(userValidationException);
         return userValidationException;
     }
 
     private UserDependencyException CreateAndLogCriticalDependencyException(Exception exception) {
         var userDependencyException = new UserDependencyException(exception);
-        _loggingBroker.LogError(userDependencyException);
+        Logger.LogError(userDependencyException);
         return userDependencyException;
     }
 }

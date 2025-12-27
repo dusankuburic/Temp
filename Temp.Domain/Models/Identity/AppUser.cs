@@ -4,5 +4,5 @@ namespace Temp.Domain.Models.Identity;
 
 public class AppUser : IdentityUser
 {
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 }

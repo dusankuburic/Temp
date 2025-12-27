@@ -1,7 +1,17 @@
-﻿namespace Temp.Services.Engagements.Exceptions;
+﻿using ValidationEx = Temp.Services.Exceptions.ValidationException;
 
-public class EngagementValidationException : Exception
+namespace Temp.Services.Engagements.Exceptions;
+
+public class EngagementValidationException : ValidationEx
 {
     public EngagementValidationException(Exception innerException)
-        : base("Invalid input, contact support.", innerException) { }
+        : base("Engagement validation failed", new Dictionary<string, string[]>
+        {
+            { "Error", new[] { innerException.Message } }
+        }) {
+    }
+
+    public EngagementValidationException(string fieldName, string errorMessage)
+        : base($"Engagement validation failed: {errorMessage}", fieldName, errorMessage) {
+    }
 }
