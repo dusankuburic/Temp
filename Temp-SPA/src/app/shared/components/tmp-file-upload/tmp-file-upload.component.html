@@ -1,0 +1,52 @@
+<div class="file-upload-container">
+  <label class="form-label fw-bold">{{ label }}</label>
+
+  <div
+    class="upload-zone"
+    [class.drag-over]="isDragOver"
+    [class.uploading]="isUploading"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)">
+
+    @if (isUploading) {
+      <div class="upload-status">
+        <fa-icon [icon]="spinnerIcon" [animation]="'spin'" class="upload-icon"></fa-icon>
+        <span>Uploading...</span>
+      </div>
+    } @else {
+      <fa-icon [icon]="uploadIcon" class="upload-icon"></fa-icon>
+      <p class="upload-text">Drag & drop a file here or click to browse</p>
+      <p class="upload-hint">Max size: {{ maxSizeMB }}MB</p>
+      <input
+        type="file"
+        class="file-input"
+        [accept]="acceptTypes"
+        (change)="onFileSelected($event)" />
+    }
+  </div>
+
+  @if (filteredFiles.length > 0) {
+    <div class="uploaded-files mt-3">
+      <h6>Uploaded Files</h6>
+      <ul class="list-group">
+        @for (file of filteredFiles; track file.uri) {
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="file-info">
+              <fa-icon [icon]="file.fileType === 'Image' ? imageIcon : fileIcon" class="me-2"></fa-icon>
+              <span class="file-name">{{ getFileName(file) }}</span>
+              <span class="file-size text-muted ms-2">({{ formatFileSize(file.size) }})</span>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-danger"
+              (click)="deleteFile(file.name || '')"
+              title="Delete file">
+              <fa-icon [icon]="deleteIcon"></fa-icon>
+            </button>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</div>

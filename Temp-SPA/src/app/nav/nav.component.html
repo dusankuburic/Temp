@@ -4,11 +4,16 @@
       @if (loggedIn()) {
       <div class="dropdown" dropdown>
         <span class="mr-1">
-          <img height="46" width="46" src="{{'../../assets/user.png'}}" alt="user image">
+          <tmp-avatar
+            [profilePictureUrl]="authService.currentUser?.profilePictureUrl ?? undefined"
+            [displayName]="authService.decodedToken?.unique_name ?? undefined"
+            [size]="'medium'"
+            [shape]="'circle'">
+          </tmp-avatar>
         </span>
         <span class="dropdown-toggle text-light" dropdownToggle>
           {{authService.decodedToken?.unique_name | titlecase}}
-        </span>    
+        </span>
         <ul class="dropdown-menu" *dropdownMenu>
           <li><a class="dropdown-item" href="#" (click)="logout()"><fa-icon [icon]="signOutIcon"></fa-icon> Logout</a></li>
         </ul>

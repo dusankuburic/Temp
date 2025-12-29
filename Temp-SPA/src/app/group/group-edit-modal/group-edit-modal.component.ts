@@ -7,6 +7,7 @@ import { GroupService } from 'src/app/core/services/group.service';
 import { GroupValidators } from '../group-validators';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
+import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
 
 @Component({
     selector: 'app-group-edit-modal',
@@ -20,6 +21,8 @@ export class GroupEditModalComponent extends DestroyableComponent implements OnI
   organizationId!: number;
   groupId!: number;
   title?: string;
+  groupFiles: BlobDto[] = [];
+  profilePictureUrl?: string;
 
   name = new FormControl('',[
     Validators.required,
@@ -57,12 +60,14 @@ export class GroupEditModalComponent extends DestroyableComponent implements OnI
       name: group.name
     });
 
+    this.profilePictureUrl = group.profilePictureUrl;
     this.name.addAsyncValidators(this.validators.validateNameNotTaken(this.organizationId, group.name));
   }
 
   update(): void {
     const groupForm = { ...this.editGroupForm.value };
     this.group.name = groupForm.name;
+    this.group.profilePictureUrl = this.profilePictureUrl;
     this.groupService.updateGroup(this.group.id, this.group).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.bsModalRef.content.isSaved = true;
@@ -72,5 +77,23 @@ export class GroupEditModalComponent extends DestroyableComponent implements OnI
         this.alertify.error('Unable to edit group');
       }
     });
+  }
+
+  onFileUploaded(response: BlobResponse): void {
+    if (!response.error && response.blob) {
+      // For profile picture (images), store the URL
+      if (response.blob.fileType === 'Image') {
+        this.profilePictureUrl = response.blob.name;
+      }
+      this.groupFiles = [...this.groupFiles, response.blob];
+    }
+  }
+
+  onFileDeleted(path: string): void {
+    // If deleted file is the profile picture, clear it
+    if (path === this.profilePictureUrl) {
+      this.profilePictureUrl = undefined;
+    }
+    this.groupFiles = this.groupFiles.filter(f => f.name !== path);
   }
 }

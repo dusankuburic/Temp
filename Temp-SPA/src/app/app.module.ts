@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { SharedModule } from './shared/shared.module';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AddAuthHeaderInterceptor } from './core/interceptors/auth-interceptor.interceptor';
@@ -29,6 +30,7 @@ export function tokenGetter(): any {
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         UserModule,
+        SharedModule,
         FormsModule,
         AppRoutingModule,
         ReactiveFormsModule,

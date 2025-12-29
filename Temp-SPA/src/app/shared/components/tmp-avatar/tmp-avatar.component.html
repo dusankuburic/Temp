@@ -1,0 +1,13 @@
+<div class="avatar-container" [ngClass]="[sizeClass, shapeClass]">
+  @if (profilePictureUrl && !imageError) {
+    <img
+      [src]="profilePictureUrl"
+      [alt]="displayName || 'Avatar'"
+      (error)="onImageError()"
+      class="avatar-image">
+  } @else {
+    <div class="avatar-fallback">
+      <span>{{ initials }}</span>
+    </div>
+  }
+</div>

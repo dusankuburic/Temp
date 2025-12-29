@@ -13,6 +13,8 @@ public class Employee : BaseEntity
 
     public string? Role { get; set; }
 
+    public string? ProfilePictureUrl { get; set; }
+
     public string? AppUserId { get; set; }
     public bool IsAppUserActive { get; set; }
 

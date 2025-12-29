@@ -13,6 +13,10 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Property(x => x.ProfilePictureUrl)
+            .HasMaxLength(500)
+            .IsRequired(false);
+
 
         builder.HasIndex(x => x.IsActive)
             .HasDatabaseName("IX_Organizations_IsActive");

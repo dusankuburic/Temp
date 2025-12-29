@@ -1,5 +1,6 @@
-﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs;
 using Temp.Database.UnitOfWork;
+using Temp.Services.Abstractions;
 using Temp.Services.Applications;
 using Temp.Services.Auth;
 using Temp.Services.Employees;
@@ -31,10 +32,15 @@ public static class ProgramServiceCollection
 
         services.AddScoped<IIdentityProvider, IdentityProvider>();
 
+        services.Configure<AzureStorageOptions>(
+            configuration.GetSection(AzureStorageOptions.SectionName));
+
         services.AddSingleton(_ =>
             new BlobServiceClient(configuration["ConnectionStrings:AzureConnection"]));
 
-        services.AddScoped<IAzureStorageService, AzureStorageService>();
+        services.AddScoped<AzureStorageService>();
+        services.AddScoped<IAzureStorageService>(sp => sp.GetRequiredService<AzureStorageService>());
+        services.AddScoped<IStorageService>(sp => sp.GetRequiredService<AzureStorageService>());
 
         return services;
     }

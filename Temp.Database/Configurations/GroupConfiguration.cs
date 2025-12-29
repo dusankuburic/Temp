@@ -17,6 +17,10 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
         builder.Property(x => x.OrganizationId)
             .IsRequired();
 
+        builder.Property(x => x.ProfilePictureUrl)
+            .HasMaxLength(500)
+            .IsRequired(false);
+
 
         builder.HasIndex(x => x.OrganizationId)
             .HasDatabaseName("IX_Groups_OrganizationId");

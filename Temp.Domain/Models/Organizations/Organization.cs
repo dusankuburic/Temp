@@ -6,6 +6,8 @@ public class Organization : BaseEntity
 
     public string? Name { get; set; }
 
+    public string? ProfilePictureUrl { get; set; }
+
     public bool IsActive { get; set; } = true;
 
     public ICollection<Group>? Groups { get; set; }

@@ -1,6 +1,7 @@
 export interface Organization {
     id: number;
     name: string;
+    profilePictureUrl?: string;
     hasActiveGroup: boolean;
 }
 

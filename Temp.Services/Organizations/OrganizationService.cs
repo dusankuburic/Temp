@@ -2,6 +2,7 @@
 using Temp.Domain.Models;
 using Temp.Services._Helpers;
 using Temp.Services._Shared;
+using Temp.Services.Integrations.Azure.AzureStorage;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Organizations.Models.Commands;
 using Temp.Services.Organizations.Models.Queries;
@@ -11,12 +12,16 @@ namespace Temp.Services.Organizations;
 
 public partial class OrganizationService : BaseService<Organization>, IOrganizationService
 {
+    private readonly IAzureStorageService _azureStorageService;
+
     public OrganizationService(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         ILoggingBroker loggingBroker,
-        IIdentityProvider identityProvider)
+        IIdentityProvider identityProvider,
+        IAzureStorageService azureStorageService)
         : base(unitOfWork, mapper, loggingBroker, identityProvider) {
+        _azureStorageService = azureStorageService;
     }
 
     public Task<CreateOrganizationResponse> CreateOrganization(CreateOrganizationRequest request) =>
@@ -145,6 +150,8 @@ public partial class OrganizationService : BaseService<Organization>, IOrganizat
              var organization = await UnitOfWork.Organizations
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
 
+             string? oldProfilePictureUrl = organization.ProfilePictureUrl;
+
              organization.SetAuditableInfoOnUpdate(await IdentityProvider.GetCurrentUser());
 
              Mapper.Map(request, organization);
@@ -153,6 +160,15 @@ public partial class OrganizationService : BaseService<Organization>, IOrganizat
 
              UnitOfWork.Organizations.Update(organization);
              await UnitOfWork.SaveChangesAsync();
+
+             if (!string.IsNullOrEmpty(oldProfilePictureUrl) &&
+                 oldProfilePictureUrl != request.ProfilePictureUrl) {
+                 try {
+                     await _azureStorageService.DeleteAsync(oldProfilePictureUrl);
+                 } catch (Exception ex) {
+                     Logger.LogError(ex);
+                 }
+             }
 
              return new UpdateOrganizationResponse();
          });

@@ -7,6 +7,8 @@ public class Group : BaseEntity
 
     public string? Name { get; set; }
 
+    public string? ProfilePictureUrl { get; set; }
+
     public bool IsActive { get; set; } = true;
 
     public int OrganizationId { get; set; }

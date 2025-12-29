@@ -3,6 +3,7 @@ import { PaginatedResult } from "./pagination";
 export interface Group {
     id: number;
     name: string;
+    profilePictureUrl?: string;
     organizationId: number;
     hasActiveTeam: boolean;
 }

@@ -9,6 +9,7 @@ import { GroupService } from 'src/app/core/services/group.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
+import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
 
 @Component({
     selector: 'app-employee-create-modal',
@@ -22,6 +23,8 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
   organizationsSelect!: SelectionOption[];
   innerGroupsSelect!: SelectionOption[];
   innerTeamsSelect!: SelectionOption[];
+  employeeFiles: BlobDto[] = [];
+  profilePictureUrl?: string;
 
   firstName = new FormControl('', [
     Validators.required,
@@ -99,7 +102,10 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
   }
 
   create(): void {
-    this.employee = { ...this.createEmployeeForm.value };
+    this.employee = {
+      ...this.createEmployeeForm.value,
+      profilePictureUrl: this.profilePictureUrl
+    };
     this.employeeService.createEmployee(this.employee)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -107,10 +113,30 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
           this.bsModalRef.content.isSaved = true;
           this.alertify.success('Successfully created');
           this.createEmployeeForm.reset();
+          this.employeeFiles = [];
+          this.profilePictureUrl = undefined;
         },
         error: () => {
           this.alertify.error('Unable to create employee');
         }
       });
+  }
+
+  onFileUploaded(response: BlobResponse): void {
+    if (!response.error && response.blob) {
+      // For profile picture (images), store the URL
+      if (response.blob.fileType === 'Image') {
+        this.profilePictureUrl = response.blob.name;
+      }
+      this.employeeFiles = [...this.employeeFiles, response.blob];
+    }
+  }
+
+  onFileDeleted(path: string): void {
+    // If deleted file is the profile picture, clear it
+    if (path === this.profilePictureUrl) {
+      this.profilePictureUrl = undefined;
+    }
+    this.employeeFiles = this.employeeFiles.filter(f => f.name !== path);
   }
 }

@@ -2,6 +2,7 @@
 export interface Workplace {
     id: number;
     name: string;
+    profilePictureUrl?: string;
 }
 
 export interface UpdateWorkplaceStatus {

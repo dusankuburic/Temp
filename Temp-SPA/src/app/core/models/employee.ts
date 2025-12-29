@@ -3,6 +3,7 @@ export interface Employee {
     id: number;
     firstName: string;
     lastName: string;
+    profilePictureUrl?: string;
     role: string;
     teamId: number;
     isAppUserActive: boolean;

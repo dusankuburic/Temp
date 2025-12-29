@@ -10,7 +10,28 @@
           <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Name'"></tmp-input>
         </div>
         <div class="form-group">
-          <button type="submit" [disabled]="!createOrganizationForm.valid" class="btn btn-success btn-ts float-end">Create</button>
+          <button type="submit" [disabled]="!createOrganizationForm.valid || isUploading" class="btn btn-success btn-ts float-end">
+            {{ isUploading ? 'Uploading...' : 'Create' }}
+          </button>
         </div>
       </form>
+
+    <hr class="my-4">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mb-3">
+                <label class="form-label">Profile Picture</label>
+                <input class="form-control" type="file" (change)="onFileSelected($event)" accept="image/*" [disabled]="isUploading">
+                <div *ngIf="isUploading" class="text-info mt-1">Uploading...</div>
+            </div>
+
+            @if (profilePictureUrl) {
+            <div class="mb-3 text-center">
+                <img [src]="profilePictureUrl" class="img-thumbnail" style="max-height: 200px;" alt="Profile Preview">
+                <p class="mt-2 text-muted">Preview</p>
+            </div>
+            }
+        </div>
+    </div>
 </div>

@@ -6,4 +6,8 @@ public class BlobDto
     public string? Name { get; set; }
     public string? ContentType { get; set; }
     public Stream? Content { get; set; }
+    public string? FolderPath { get; set; }
+    public FileType? FileType { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public long? Size { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using Temp.Services.Integrations.Azure.AzureStorage;
+using Temp.Services.Integrations.Azure.AzureStorage;
+using Temp.Services.Integrations.Azure.AzureStorage.Models;
 
 namespace Temp.API.Controllers;
 
@@ -8,71 +9,113 @@ namespace Temp.API.Controllers;
 public class FilesController : ControllerBase
 {
     private readonly IAzureStorageService _azureStorageService;
-    private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".pdf", ".doc", ".docx" };
-    private const long MaxFileSize = 10 * 1024 * 1024;
 
     public FilesController(IAzureStorageService azureStorageService) {
         _azureStorageService = azureStorageService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> ListAllBlobs() {
-        var result = await _azureStorageService.ListAsync();
+    public async Task<IActionResult> ListAllBlobs(CancellationToken ct) {
+        var result = await _azureStorageService.ListAsync(ct);
+        return Ok(result);
+    }
+
+    [HttpGet("images")]
+    public async Task<IActionResult> ListImages(
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to,
+        CancellationToken ct) {
+        var result = await _azureStorageService.ListAsync(FileType.Image, from, to, ct);
+        return Ok(result);
+    }
+
+    [HttpGet("documents")]
+    public async Task<IActionResult> ListDocuments(
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to,
+        CancellationToken ct) {
+        var result = await _azureStorageService.ListAsync(FileType.Document, from, to, ct);
         return Ok(result);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Upload(IFormFile file) {
-
+    public async Task<IActionResult> Upload(IFormFile file, CancellationToken ct) {
         if (file == null || file.Length == 0)
             return BadRequest("No file provided");
 
-        if (file.Length > MaxFileSize)
-            return BadRequest($"File size exceeds maximum allowed size of {MaxFileSize / 1024 / 1024}MB");
-
-        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
-        if (string.IsNullOrEmpty(extension) || !AllowedExtensions.Contains(extension))
-            return BadRequest($"File type '{extension}' is not allowed. Allowed types: {string.Join(", ", AllowedExtensions)}");
-
-        var result = await _azureStorageService.UploadAsync(file);
-        return Ok(result);
+        var result = await _azureStorageService.UploadAsync(file, ct);
+        return result.Error ? BadRequest(result) : Ok(result);
     }
 
-    [HttpGet]
-    [Route("filename")]
-    public async Task<IActionResult> Download(string filename) {
+    [HttpPost("images")]
+    public async Task<IActionResult> UploadImage(
+        IFormFile file,
+        [FromQuery] DateTime? createdAt,
+        CancellationToken ct) {
+        if (file == null || file.Length == 0)
+            return BadRequest("No file provided");
 
-        if (!IsValidFilename(filename))
-            return BadRequest("Invalid filename");
+        var result = await _azureStorageService.UploadImageAsync(file, createdAt, ct);
+        return result.Error ? BadRequest(result) : Ok(result);
+    }
 
-        var result = await _azureStorageService.DownloadAsync(filename);
+    [HttpPost("documents")]
+    public async Task<IActionResult> UploadDocument(
+        IFormFile file,
+        [FromQuery] DateTime? createdAt,
+        CancellationToken ct) {
+        if (file == null || file.Length == 0)
+            return BadRequest("No file provided");
 
-        return File(result.Content, result.ContentType, result.Name);
+        var result = await _azureStorageService.UploadDocumentAsync(file, createdAt, ct);
+        return result.Error ? BadRequest(result) : Ok(result);
+    }
+
+    [HttpGet("download")]
+    public async Task<IActionResult> Download([FromQuery] string path, CancellationToken ct) {
+        if (string.IsNullOrWhiteSpace(path))
+            return BadRequest("Path is required");
+
+        var result = await _azureStorageService.DownloadAsync(path, ct);
+
+        if (result == null)
+            return NotFound($"File not found: {path}");
+
+        return File(result.Content!, result.ContentType!, Path.GetFileName(result.Name));
+    }
+
+    [HttpGet("url")]
+    public async Task<IActionResult> GetDownloadUrl(
+        [FromQuery] string path,
+        [FromQuery] int expiresInMinutes = 60,
+        CancellationToken ct = default) {
+        if (string.IsNullOrWhiteSpace(path))
+            return BadRequest("Path is required");
+
+        try {
+            var url = await _azureStorageService.GetDownloadUrlAsync(path, TimeSpan.FromMinutes(expiresInMinutes), ct);
+            return Ok(new { url });
+        }
+        catch (FileNotFoundException) {
+            return NotFound($"File not found: {path}");
+        }
     }
 
     [HttpDelete]
-    [Route("filename")]
-    public async Task<IActionResult> Delete(string filename) {
+    public async Task<IActionResult> Delete([FromQuery] string path, CancellationToken ct) {
+        if (string.IsNullOrWhiteSpace(path))
+            return BadRequest("Path is required");
 
-        if (!IsValidFilename(filename))
-            return BadRequest("Invalid filename");
-
-        var result = await _azureStorageService.DeleteAsync(filename);
-        return Ok(result);
+        var result = await _azureStorageService.DeleteAsync(path, ct);
+        return result.Error ? NotFound(result) : Ok(result);
     }
 
-    private static bool IsValidFilename(string filename) {
-        if (string.IsNullOrWhiteSpace(filename))
-            return false;
+    [HttpGet("exists")]
+    public async Task<IActionResult> Exists([FromQuery] string path, CancellationToken ct) {
+        if (string.IsNullOrWhiteSpace(path))
+            return BadRequest("Path is required");
 
-
-        if (filename.Contains("..") || filename.Contains("/") || filename.Contains("\\"))
-            return false;
-
-
-        if (Path.GetFileName(filename) != filename)
-            return false;
-
-        return true;
+        var exists = await _azureStorageService.ExistsAsync(path, ct);
+        return Ok(new { exists });
     }
 }

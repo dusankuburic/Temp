@@ -2,6 +2,7 @@
 using Temp.Domain.Models;
 using Temp.Services._Helpers;
 using Temp.Services._Shared;
+using Temp.Services.Integrations.Azure.AzureStorage;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Providers;
 using Temp.Services.Workplaces.Models.Commands;
@@ -11,12 +12,16 @@ namespace Temp.Services.Workplaces;
 
 public partial class WorkplaceService : BaseService<Workplace>, IWorkplaceService
 {
+    private readonly IAzureStorageService _azureStorageService;
+
     public WorkplaceService(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         ILoggingBroker loggingBroker,
-        IIdentityProvider identityProvider)
+        IIdentityProvider identityProvider,
+        IAzureStorageService azureStorageService)
         : base(unitOfWork, mapper, loggingBroker, identityProvider) {
+        _azureStorageService = azureStorageService;
     }
 
     public Task<CreateWorkplaceResponse> CreateWorkplace(CreateWorkplaceRequest request) =>
@@ -80,6 +85,8 @@ public partial class WorkplaceService : BaseService<Workplace>, IWorkplaceServic
             var workplace = await UnitOfWork.Workplaces
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
 
+            string? oldProfilePictureUrl = workplace.ProfilePictureUrl;
+
             Mapper.Map(request, workplace);
 
             workplace.SetAuditableInfoOnUpdate(await IdentityProvider.GetCurrentUser());
@@ -88,6 +95,15 @@ public partial class WorkplaceService : BaseService<Workplace>, IWorkplaceServic
 
             UnitOfWork.Workplaces.Update(workplace);
             await UnitOfWork.SaveChangesAsync();
+
+            if (!string.IsNullOrEmpty(oldProfilePictureUrl) &&
+                oldProfilePictureUrl != request.ProfilePictureUrl) {
+                try {
+                    await _azureStorageService.DeleteAsync(oldProfilePictureUrl);
+                } catch (Exception ex) {
+                    Logger.LogError(ex);
+                }
+            }
 
             return new UpdateWorkplaceResponse();
         });
