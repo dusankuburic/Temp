@@ -7,6 +7,7 @@ import { GroupService } from 'src/app/core/services/group.service';
 import { GroupValidators } from '../group-validators';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
+import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
 
 @Component({
     selector: 'app-group-create-modal',
@@ -18,6 +19,8 @@ export class GroupCreateModalComponent extends DestroyableComponent {
   group!: Group;
   organizationId!: number;
   title?: string;
+  groupFiles: BlobDto[] = [];
+  profilePictureUrl?: string;
 
   name = new FormControl('', [
     Validators.required,
@@ -43,16 +46,40 @@ export class GroupCreateModalComponent extends DestroyableComponent {
     }
   
     create(): void {
-      this.group = {...this.createGroupForm.value, organizationId: this.organizationId };
+      this.group = {
+        ...this.createGroupForm.value,
+        organizationId: this.organizationId,
+        profilePictureUrl: this.profilePictureUrl
+      };
       this.groupService.createGroup(this.group).pipe(takeUntil(this.destroy$)).subscribe({
         next: () => {
           this.bsModalRef.content.isSaved = true;
           this.alertify.success('Successfully created');
           this.createGroupForm.reset();
+          this.groupFiles = [];
+          this.profilePictureUrl = undefined;
         },
         error: () => {
           this.alertify.error('Unable to create group');
         }
       });
+    }
+
+    onFileUploaded(response: BlobResponse): void {
+      if (!response.error && response.blob) {
+        // For profile picture (images), store the URL
+        if (response.blob.fileType === 'Image') {
+          this.profilePictureUrl = response.blob.name;
+        }
+        this.groupFiles = [...this.groupFiles, response.blob];
+      }
+    }
+
+    onFileDeleted(path: string): void {
+      // If deleted file is the profile picture, clear it
+      if (path === this.profilePictureUrl) {
+        this.profilePictureUrl = undefined;
+      }
+      this.groupFiles = this.groupFiles.filter(f => f.name !== path);
     }
 }

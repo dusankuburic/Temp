@@ -6,5 +6,7 @@ public class CreateEmployeeRequest
 
     public string? LastName { get; set; }
 
+    public string? ProfilePictureUrl { get; set; }
+
     public int TeamId { get; set; }
 }

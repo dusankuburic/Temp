@@ -14,6 +14,10 @@ public class WorkplaceConfiguration : IEntityTypeConfiguration<Workplace>
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Property(x => x.ProfilePictureUrl)
+            .HasMaxLength(500)
+            .IsRequired(false);
+
 
         builder.HasIndex(x => x.Name)
             .HasDatabaseName("IX_Workplaces_Name");

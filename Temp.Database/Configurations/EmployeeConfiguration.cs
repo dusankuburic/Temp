@@ -21,6 +21,10 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .HasMaxLength(50)
             .HasDefaultValue("None");
 
+        builder.Property(x => x.ProfilePictureUrl)
+            .HasMaxLength(500)
+            .IsRequired(false);
+
 
         builder.HasIndex(x => x.Role)
             .HasDatabaseName("IX_Employees_Role");

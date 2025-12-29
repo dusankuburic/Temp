@@ -4,6 +4,7 @@ using Temp.Services._Helpers;
 using Temp.Services._Shared;
 using Temp.Services.Groups.Models.Commands;
 using Temp.Services.Groups.Models.Queries;
+using Temp.Services.Integrations.Azure.AzureStorage;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Providers;
 
@@ -11,12 +12,16 @@ namespace Temp.Services.Groups;
 
 public partial class GroupService : BaseService<Group>, IGroupService
 {
+    private readonly IAzureStorageService _azureStorageService;
+
     public GroupService(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         ILoggingBroker loggingBroker,
-        IIdentityProvider identityProvider)
+        IIdentityProvider identityProvider,
+        IAzureStorageService azureStorageService)
         : base(unitOfWork, mapper, loggingBroker, identityProvider) {
+        _azureStorageService = azureStorageService;
     }
 
     public Task<CreateGroupResponse> CreateGroup(CreateGroupRequest request) =>
@@ -57,6 +62,8 @@ public partial class GroupService : BaseService<Group>, IGroupService
             var group = await UnitOfWork.Groups
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
 
+            string? oldProfilePictureUrl = group.ProfilePictureUrl;
+
             Mapper.Map(request, group);
 
             group.SetAuditableInfoOnUpdate(await IdentityProvider.GetCurrentUser());
@@ -65,6 +72,15 @@ public partial class GroupService : BaseService<Group>, IGroupService
 
             UnitOfWork.Groups.Update(group);
             await UnitOfWork.SaveChangesAsync();
+
+            if (!string.IsNullOrEmpty(oldProfilePictureUrl) &&
+                oldProfilePictureUrl != request.ProfilePictureUrl) {
+                try {
+                    await _azureStorageService.DeleteAsync(oldProfilePictureUrl);
+                } catch (Exception ex) {
+                    Logger.LogError(ex);
+                }
+            }
 
             return Mapper.Map<UpdateGroupResponse>(group);
         });

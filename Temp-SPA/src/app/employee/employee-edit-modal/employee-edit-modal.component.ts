@@ -15,6 +15,7 @@ import { OrganizationService } from 'src/app/core/services/organization.service'
 import { TeamService } from 'src/app/core/services/team.service';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
+import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
 
 @Component({
     selector: 'app-employee-edit-modal',
@@ -36,6 +37,8 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
   innerTeamsSelect!: SelectionOption[];
   currentModeratorGroups!: Group[];
   freeModeratorGroups!: Group[];
+  employeeFiles: BlobDto[] = [];
+  profilePictureUrl?: string;
 
   firstName = new FormControl('', [
     Validators.required,
@@ -105,6 +108,7 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
         firstName: employee.firstName,
         lastName: employee.lastName
       });
+      this.profilePictureUrl = employee.profilePictureUrl;
   }
   
   loadEmployeeUsername(employeeId: number) {
@@ -234,7 +238,11 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
   }
 
   update(): void {
-    const employeeForm = { ...this.editEmployeeForm.value, id: this.employee.id };
+    const employeeForm = {
+      ...this.editEmployeeForm.value,
+      id: this.employee.id,
+      profilePictureUrl: this.profilePictureUrl
+    };
 
     if (employeeForm.teamId == null) {
       employeeForm.teamId = this.employee.teamId;
@@ -249,5 +257,23 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
         this.alertify.error('Unable to update employee');
       }
     });
+  }
+
+  onFileUploaded(response: BlobResponse): void {
+    if (!response.error && response.blob) {
+      // For profile picture (images), store the URL
+      if (response.blob.fileType === 'Image') {
+        this.profilePictureUrl = response.blob.name;
+      }
+      this.employeeFiles = [...this.employeeFiles, response.blob];
+    }
+  }
+
+  onFileDeleted(path: string): void {
+    // If deleted file is the profile picture, clear it
+    if (path === this.profilePictureUrl) {
+      this.profilePictureUrl = undefined;
+    }
+    this.employeeFiles = this.employeeFiles.filter(f => f.name !== path);
   }
 }

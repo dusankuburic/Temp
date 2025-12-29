@@ -7,6 +7,7 @@ import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
 import { OrganizationValidators } from '../organization-validators';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
+import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
 
 @Component({
     selector: 'app-organization-edit-modal',
@@ -18,6 +19,8 @@ export class OrganizationEditModalComponent extends DestroyableComponent impleme
   organization!: Organization;
   title?: string;
   organizationId!: number;
+  organizationFiles: BlobDto[] = [];
+  profilePictureUrl?: string;
 
   name = new FormControl('', [
     Validators.required,
@@ -54,11 +57,16 @@ export class OrganizationEditModalComponent extends DestroyableComponent impleme
         name: organization.name
       });
 
+      this.profilePictureUrl = organization.profilePictureUrl;
       this.name.addAsyncValidators(this.validators.validateNameNotTaken(organization.name))
   }
 
   update(): void {
-    const request: Organization = {...this.editOrganizationForm.value, id: this.organization.id};
+    const request: Organization = {
+      ...this.editOrganizationForm.value,
+      id: this.organization.id,
+      profilePictureUrl: this.profilePictureUrl
+    };
     this.organizationService.updateOrganization(request).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.bsModalRef.content.isSaved = true;
@@ -68,5 +76,21 @@ export class OrganizationEditModalComponent extends DestroyableComponent impleme
         this.alertify.error('Unable to update organization');
       }
     });
+  }
+
+  onFileUploaded(response: BlobResponse): void {
+    if (!response.error && response.blob) {
+      if (response.blob.fileType === 'Image') {
+        this.profilePictureUrl = response.blob.name;
+      }
+      this.organizationFiles = [...this.organizationFiles, response.blob];
+    }
+  }
+
+  onFileDeleted(path: string): void {
+    if (path === this.profilePictureUrl) {
+      this.profilePictureUrl = undefined;
+    }
+    this.organizationFiles = this.organizationFiles.filter(f => f.name !== path);
   }
 }

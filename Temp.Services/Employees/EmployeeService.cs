@@ -5,6 +5,7 @@ using Temp.Services._Shared;
 using Temp.Services.Employees.Exceptions;
 using Temp.Services.Employees.Models.Commands;
 using Temp.Services.Employees.Models.Queries;
+using Temp.Services.Integrations.Azure.AzureStorage;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Providers;
 
@@ -12,12 +13,16 @@ namespace Temp.Services.Employees;
 
 public partial class EmployeeService : BaseService<Employee>, IEmployeeService
 {
+    private readonly IAzureStorageService _azureStorageService;
+
     public EmployeeService(
         IUnitOfWork unitOfWork,
         IMapper mapper,
         ILoggingBroker loggingBroker,
-        IIdentityProvider identityProvider)
+        IIdentityProvider identityProvider,
+        IAzureStorageService azureStorageService)
         : base(unitOfWork, mapper, loggingBroker, identityProvider) {
+        _azureStorageService = azureStorageService;
     }
 
     public Task<CreateEmployeeResponse> CreateEmployee(CreateEmployeeRequest request) =>
@@ -50,25 +55,16 @@ public partial class EmployeeService : BaseService<Employee>, IEmployeeService
     public Task<PagedList<GetEmployeesResponse>> GetEmployees(GetEmployeesRequest request) =>
     TryCatch(async () => {
         var employeesQuery = UnitOfWork.Employees
-            .QueryNoTracking()
-            .ProjectTo<GetEmployeesResponse>(Mapper.ConfigurationProvider);
+            .QueryNoTracking();
 
-        if (!string.IsNullOrEmpty(request.Role)) {
-            employeesQuery = employeesQuery.Where(x => x.Role == request.Role);
-        }
+        employeesQuery = ApplyEmployeeFilters(employeesQuery, request.Role, request.FirstName, request.LastName);
 
-        if (!string.IsNullOrEmpty(request.FirstName)) {
-            employeesQuery = employeesQuery.Where(x => x.FirstName.Contains(request.FirstName));
-        }
-
-        if (!string.IsNullOrEmpty(request.LastName)) {
-            employeesQuery = employeesQuery.Where(x => x.LastName.Contains(request.LastName));
-        }
-
-        employeesQuery = employeesQuery.OrderBy(x => x.FirstName);
+        var projectedQuery = employeesQuery
+            .ProjectTo<GetEmployeesResponse>(Mapper.ConfigurationProvider)
+            .OrderBy(x => x.FirstName);
 
         var employees = await PagedList<GetEmployeesResponse>.CreateAsync(
-            employeesQuery,
+            projectedQuery,
             request.PageNumber,
             request.PageSize);
 
@@ -78,30 +74,19 @@ public partial class EmployeeService : BaseService<Employee>, IEmployeeService
     public Task<PagedList<GetEmployeesWithEngagementResponse>>
     GetEmployeesWithEngagement(GetEmployeesWithEngagementRequest request) =>
     TryCatch(async () => {
-
-
-        var employeesWithEngagement = UnitOfWork.Employees
+        IQueryable<Employee> employeesQuery = UnitOfWork.Employees
             .QueryNoTracking()
             .Where(x => x.Engagements.Any(n => n.DateTo > DateTime.UtcNow))
-            .OrderByDescending(x => x.Id)
-            .ProjectTo<GetEmployeesWithEngagementResponse>(Mapper.ConfigurationProvider);
+            .OrderByDescending(x => x.Id);
 
-        if (!string.IsNullOrEmpty(request.Role)) {
-            employeesWithEngagement = employeesWithEngagement.Where(x => x.Role == request.Role);
-        }
+        employeesQuery = ApplyEmployeeFilters(employeesQuery, request.Role, request.FirstName, request.LastName);
 
-        if (!string.IsNullOrEmpty(request.FirstName)) {
-            employeesWithEngagement = employeesWithEngagement.Where(x => x.FirstName.Contains(request.FirstName));
-        }
-
-        if (!string.IsNullOrEmpty(request.LastName)) {
-            employeesWithEngagement = employeesWithEngagement.Where(x => x.LastName.Contains(request.LastName));
-        }
-
-        employeesWithEngagement = employeesWithEngagement.OrderBy(x => x.FirstName);
+        var projectedQuery = employeesQuery
+            .ProjectTo<GetEmployeesWithEngagementResponse>(Mapper.ConfigurationProvider)
+            .OrderBy(x => x.FirstName);
 
         var employees = await PagedList<GetEmployeesWithEngagementResponse>.CreateAsync(
-            employeesWithEngagement,
+            projectedQuery,
             request.PageNumber,
             request.PageSize);
 
@@ -111,42 +96,53 @@ public partial class EmployeeService : BaseService<Employee>, IEmployeeService
     public Task<PagedList<GetEmployeesWithoutEngagementResponse>>
     GetEmployeesWithoutEngagement(GetEmployeesWithoutEngagementRequest request) =>
     TryCatch(async () => {
-
         var currentDateTime = DateTime.UtcNow;
 
-
-        var employeesWithoutEngagement = UnitOfWork.Employees
+        IQueryable<Employee> employeesQuery = UnitOfWork.Employees
             .QueryNoTracking()
             .Where(x => !x.Engagements.Any(n => n.DateTo > currentDateTime))
-            .OrderByDescending(x => x.Id)
-            .ProjectTo<GetEmployeesWithoutEngagementResponse>(Mapper.ConfigurationProvider);
+            .OrderByDescending(x => x.Id);
 
-        if (!string.IsNullOrEmpty(request.Role)) {
-            employeesWithoutEngagement = employeesWithoutEngagement.Where(x => x.Role == request.Role);
-        }
+        employeesQuery = ApplyEmployeeFilters(employeesQuery, request.Role, request.FirstName, request.LastName);
 
-        if (!string.IsNullOrEmpty(request.FirstName)) {
-            employeesWithoutEngagement = employeesWithoutEngagement.Where(x => x.FirstName.Contains(request.FirstName));
-        }
-
-        if (!string.IsNullOrEmpty(request.LastName)) {
-            employeesWithoutEngagement = employeesWithoutEngagement.Where(x => x.LastName.Contains(request.LastName));
-        }
-
-        employeesWithoutEngagement = employeesWithoutEngagement.OrderBy(x => x.FirstName);
+        var projectedQuery = employeesQuery
+            .ProjectTo<GetEmployeesWithoutEngagementResponse>(Mapper.ConfigurationProvider)
+            .OrderBy(x => x.FirstName);
 
         var employees = await PagedList<GetEmployeesWithoutEngagementResponse>.CreateAsync(
-            employeesWithoutEngagement,
+            projectedQuery,
             request.PageNumber,
             request.PageSize);
 
         return employees;
     });
 
+    private IQueryable<Employee> ApplyEmployeeFilters(IQueryable<Employee> query, string? role, string? firstName, string? lastName)
+    {
+        if (!string.IsNullOrEmpty(role))
+        {
+            query = query.Where(x => x.Role == role);
+        }
+
+        if (!string.IsNullOrEmpty(firstName))
+        {
+            query = query.Where(x => x.FirstName.Contains(firstName));
+        }
+
+        if (!string.IsNullOrEmpty(lastName))
+        {
+            query = query.Where(x => x.LastName.Contains(lastName));
+        }
+
+        return query;
+    }
+
     public Task<UpdateEmployeeResponse> UpdateEmployee(UpdateEmployeeRequest request) =>
     TryCatch(async () => {
         var employee = await UnitOfWork.Employees
             .FirstOrDefaultAsync(x => x.Id == request.Id);
+
+        string? oldProfilePictureUrl = employee.ProfilePictureUrl;
 
         Mapper.Map(request, employee);
 
@@ -156,6 +152,16 @@ public partial class EmployeeService : BaseService<Employee>, IEmployeeService
 
         UnitOfWork.Employees.Update(employee);
         await UnitOfWork.SaveChangesAsync();
+
+        // Delete old blob if URL changed
+        if (!string.IsNullOrEmpty(oldProfilePictureUrl) &&
+            oldProfilePictureUrl != request.ProfilePictureUrl) {
+            try {
+                await _azureStorageService.DeleteAsync(oldProfilePictureUrl);
+            } catch (Exception ex) {
+                Logger.LogError(ex);
+            }
+        }
 
         return new UpdateEmployeeResponse() {
             Success = true
@@ -170,8 +176,19 @@ public partial class EmployeeService : BaseService<Employee>, IEmployeeService
                 throw new EmployeeNotFoundException();
             }
 
+            string? profilePictureUrl = employee.ProfilePictureUrl;
+
             UnitOfWork.Employees.Remove(employee);
             await UnitOfWork.SaveChangesAsync();
+
+            // Delete associated blob if exists
+            if (!string.IsNullOrEmpty(profilePictureUrl)) {
+                try {
+                    await _azureStorageService.DeleteAsync(profilePictureUrl);
+                } catch (Exception ex) {
+                    Logger.LogError(ex);
+                }
+            }
 
             return new DeleteEmployeeResponse { Success = true };
         });
