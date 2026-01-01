@@ -17,5 +17,5 @@ public interface IAzureStorageService
     Task<BlobResponseDto> DeleteAsync(string blobPath, CancellationToken ct = default);
     Task<bool> ExistsAsync(string blobPath, CancellationToken ct = default);
     Task<string> GetDownloadUrlAsync(string blobPath, TimeSpan expiresIn, CancellationToken ct = default);
-    string GenerateSasTokenForUpload(string filename);
+    Task<string> GenerateSasTokenForUploadAsync(string filename, FileType fileType, CancellationToken ct = default);
 }
