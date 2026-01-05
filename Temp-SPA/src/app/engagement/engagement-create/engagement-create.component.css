@@ -1,0 +1,243 @@
+/**
+ * OBSIDIAN NOIR - Engagement Create
+ * Page layout and styling for creating employee engagements
+ */
+
+/* ===================================
+ * PAGE HEADER
+ * =================================== */
+
+.engagement-create-header {
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-xl) 0;
+}
+
+.engagement-create-title-section {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.engagement-create-title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-800);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-foreground-1);
+  margin: 0 0 var(--spacing-s) 0;
+
+  background: linear-gradient(135deg, var(--color-foreground-1) 0%, var(--color-brand-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.engagement-create-subtitle {
+  font-size: var(--font-size-400);
+  color: var(--color-foreground-3);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ===================================
+ * MAIN CONTAINER
+ * =================================== */
+
+.engagement-create-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.engagement-create-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-l);
+}
+
+/* ===================================
+ * SECTION TITLES
+ * =================================== */
+
+.engagement-create-section-title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-500);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-foreground-1);
+  margin: 0 0 var(--spacing-m) 0;
+  padding-bottom: var(--spacing-m);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+/* ===================================
+ * FORM CARD
+ * =================================== */
+
+.engagement-create-form-card {
+  padding: var(--spacing-l);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-m);
+}
+
+.engagement-create-employee-info {
+  padding: var(--spacing-m);
+  background: linear-gradient(135deg, var(--color-surface-2) 0%, var(--color-surface-3) 100%);
+  border: 1px solid var(--color-brand-primary);
+  box-shadow: var(--shadow-glow-teal-sm);
+}
+
+.engagement-create-employee-name {
+  font-size: var(--font-size-400);
+  color: var(--color-foreground-1);
+  text-align: center;
+}
+
+.engagement-create-employee-name strong {
+  color: var(--color-brand-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.engagement-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-m);
+}
+
+/* ===================================
+ * HISTORY CARD
+ * =================================== */
+
+.engagement-create-history-card {
+  padding: var(--spacing-l);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-m);
+}
+
+.engagement-create-table-card {
+  overflow: hidden;
+}
+
+/* ===================================
+ * EMPTY STATE
+ * =================================== */
+
+.engagement-create-empty-card {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.engagement-create-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-xl);
+}
+
+.engagement-create-empty-icon {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-surface-2) 0%, var(--color-surface-3) 100%);
+  border: 2px dashed var(--color-border-default);
+  border-radius: var(--border-radius-circle);
+  margin-bottom: var(--spacing-l);
+  color: var(--color-foreground-3);
+  transition: all 300ms ease;
+}
+
+.engagement-create-empty-state:hover .engagement-create-empty-icon {
+  border-color: var(--color-brand-primary);
+  color: var(--color-brand-primary);
+}
+
+.engagement-create-empty-state h4 {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-500);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-foreground-1);
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.engagement-create-empty-state p {
+  font-size: var(--font-size-300);
+  color: var(--color-foreground-3);
+  margin: 0;
+  max-width: 300px;
+}
+
+/* ===================================
+ * RESPONSIVE
+ * =================================== */
+
+@media (max-width: 1024px) {
+  .engagement-create-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .engagement-create-header {
+    padding: var(--spacing-l) 0;
+    margin-bottom: var(--spacing-l);
+  }
+
+  .engagement-create-title {
+    font-size: var(--font-size-700);
+  }
+
+  .engagement-create-subtitle {
+    font-size: var(--font-size-300);
+  }
+
+  .engagement-create-container {
+    padding: 0 var(--spacing-m);
+  }
+
+  .engagement-create-form-card,
+  .engagement-create-history-card {
+    padding: var(--spacing-m);
+  }
+
+  .engagement-create-section-title {
+    font-size: var(--font-size-400);
+  }
+
+  .engagement-create-empty-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .engagement-create-empty-state h4 {
+    font-size: var(--font-size-400);
+  }
+
+  .engagement-create-empty-state p {
+    font-size: var(--font-size-200);
+  }
+}
+
+/* ===================================
+ * ACCESSIBILITY
+ * =================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .engagement-create-form-card,
+  .engagement-create-history-card,
+  .engagement-create-employee-info {
+    border-width: 2px;
+  }
+}

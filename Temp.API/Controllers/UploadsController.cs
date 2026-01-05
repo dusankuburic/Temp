@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Temp.Services.Integrations.Azure.AzureStorage;
+using Temp.Services.Integrations.Azure.AzureStorage.Models;
 
 namespace Temp.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UploadsController : ControllerBase
@@ -15,20 +18,28 @@ namespace Temp.API.Controllers
         }
 
         [HttpPost("signed-url")]
-        public ActionResult<object> GetSignedUrl([FromBody] UploadRequest request)
+        public async Task<ActionResult<object>> GetSignedUrl([FromBody] UploadRequest request, CancellationToken ct)
         {
-            if (string.IsNullOrEmpty(request.Filename))
+            if (string.IsNullOrWhiteSpace(request.Filename))
             {
                 return BadRequest("Filename is required.");
             }
 
-            var sasUrl = _blobStorageService.GenerateSasTokenForUpload(request.Filename);
-            return Ok(new { url = sasUrl });
+            try
+            {
+                var sasUrl = await _blobStorageService.GenerateSasTokenForUploadAsync(request.Filename, request.FileType, ct);
+                return Ok(new { url = sasUrl });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 
     public class UploadRequest
     {
-        public string Filename { get; set; }
+        public string Filename { get; set; } = string.Empty;
+        public FileType FileType { get; set; } = FileType.Image;
     }
 }

@@ -10,6 +10,7 @@ import { DestroyableComponent } from '../../core/base/destroyable.component';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
     standalone: false
 })
 export class LoginComponent extends DestroyableComponent implements OnInit {

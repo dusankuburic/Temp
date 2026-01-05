@@ -30,6 +30,16 @@ public class EngagementConfiguration : IEntityTypeConfiguration<Engagement>
         builder.Property(x => x.Salary)
             .IsRequired();
 
+        builder.HasOne(x => x.Employee)
+            .WithMany(x => x.Engagements)
+            .HasForeignKey(x => x.EmployeeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(x => x.Workplace)
+            .WithMany(x => x.Engagements)
+            .HasForeignKey(x => x.WorkplaceId)
+            .OnDelete(DeleteBehavior.Restrict);
+
 
         builder.HasIndex(x => x.EmployeeId)
             .HasDatabaseName("IX_Engagements_EmployeeId");

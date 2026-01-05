@@ -1,137 +1,204 @@
-<div class="modal-header">
-    <h4 class="modal-title pull-left">{{title}}</h4>
-    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()" (keydown.enter)="bsModalRef.hide()" (keydown.space)="bsModalRef.hide()">
-      <span aria-hidden="true" class="visually-hidden">&times;</span>
+<div class="modal-header-obsidian">
+    <h4 class="modal-title-obsidian">{{title}}</h4>
+    <button type="button" class="modal-close-obsidian" aria-label="Close" (click)="bsModalRef.hide()" (keydown.enter)="bsModalRef.hide()" (keydown.space)="bsModalRef.hide()">
+      <span class="modal-close-icon" aria-hidden="true">×</span>
     </button>
 </div>
-<div class="modal-body">
-    <div class="row justify-content-center">
-      @if (username) {
-      <div class="alert alert-info text-center" role="alert">
-        <h4>{{username}}</h4>
-      </div>
-      }
-      <form class="row g-2" [formGroup]="editEmployeeForm" (ngSubmit)="update()">
-          <div class="form-group">
-            <tmp-input [formControl]="firstName" [label]="'First Name'" [placeholder]="'Enter First Name'"></tmp-input>
-          </div>
-          <div class="form-group">
-            <tmp-input [formControl]="lastName" [label]="'Last Name'" [placeholder]="'Enter Last Name'"></tmp-input>
-          </div>
-          <div class="form-group">
-            <tmp-select
-              [options]="organizationsSelect"
-              [label]="'Organization'"
-              formControlName="organizationId"
-              (change)="loadInnerGroups(editEmployeeForm.get('organizationId')?.value)">
-            </tmp-select>
-          </div>
-          <div class="form-group">
-            <tmp-select
-              [options]="innerGroupsSelect"
-              [label]="'Group'"
-              formControlName="groupId"
-              (change)="loadInnerTeams(editEmployeeForm.get('groupId')?.value)">
-            </tmp-select>
-          </div>
-          <div class="form-group">                 
-            <tmp-select [options]="innerTeamsSelect" [label]="'Team'" formControlName="teamId"></tmp-select>
-          </div>
-          <div class="form-group">
-            <button type="submit" [disabled]="!editEmployeeForm.valid" class="btn btn-success btn-ts float-end">Save</button>
-          </div>
-        </form>
+<div class="modal-body-obsidian">
+    <tabset>
+        <tab heading="Profile">
+            <div>
+                <form [formGroup]="editEmployeeForm" (ngSubmit)="update()">
+                    <div class="employee-edit-grid">
+                        <div>
+                            <!-- Profile Avatar & Name Header -->
+                            <tmp-card variant="subtle" class="employee-profile-card">
+                                <div class="employee-profile-header">
+                                    <tmp-avatar
+                                        [profilePictureUrl]="profilePictureUrl"
+                                        [displayName]="firstName.value + ' ' + lastName.value"
+                                        [size]="'large'"
+                                        [shape]="'circle'">
+                                    </tmp-avatar>
+                                    <div class="employee-profile-info">
+                                        <h3 class="employee-name">{{firstName.value}} {{lastName.value}}</h3>
+                                        @if (username) {
+                                        <p class="employee-username">{{username}}</p>
+                                        }
+                                    </div>
+                                </div>
+                            </tmp-card>
 
-        <hr class="my-4">
+                            <tmp-card variant="filled" class="form-card">
+                                <h4 class="section-title">Basic Information</h4>
+                                <div class="modal-form-section">
+                                    <tmp-input [formControl]="firstName" [label]="'First Name'" [placeholder]="'Enter First Name'"></tmp-input>
+                                    <tmp-input [formControl]="lastName" [label]="'Last Name'" [placeholder]="'Enter Last Name'"></tmp-input>
+                                </div>
+                            </tmp-card>
+                        </div>
 
-        <div class="row">
-          <div class="col-md-6">
-            @if (profilePictureUrl) {
-            <div class="mb-3 text-center">
-              <tmp-avatar
-                [profilePictureUrl]="profilePictureUrl"
-                [displayName]="firstName.value + ' ' + lastName.value"
-                [size]="'large'"
-                [shape]="'circle'">
-              </tmp-avatar>
-              <p class="mt-2 text-muted">Current Profile Picture</p>
+                        <div>
+                            <tmp-card variant="filled" class="form-card">
+                                <h4 class="section-title">Organization Structure</h4>
+                                <div class="modal-form-section">
+                                    <tmp-select
+                                        [options]="organizationsSelect"
+                                        [label]="'Organization'"
+                                        formControlName="organizationId"
+                                        (change)="loadInnerGroups(editEmployeeForm.get('organizationId')?.value)">
+                                    </tmp-select>
+                                    <tmp-select
+                                        [options]="innerGroupsSelect"
+                                        [label]="'Group'"
+                                        formControlName="groupId"
+                                        (change)="loadInnerTeams(editEmployeeForm.get('groupId')?.value)">
+                                    </tmp-select>
+                                    <tmp-select [options]="innerTeamsSelect" [label]="'Team'" formControlName="teamId"></tmp-select>
+                                </div>
+                            </tmp-card>
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <tmp-button type="submit" variant="success" [disabled]="!editEmployeeForm.valid">Save Changes</tmp-button>
+                    </div>
+                </form>
+
+                @if (employee?.role === 'Moderator') {
+                <tmp-card variant="filled" class="moderator-card">
+                    <h4 class="section-title">Assign Moderator Groups</h4>
+                    <div class="modal-form-grid">
+                        <div class="group-container">
+                            <h5 class="group-subtitle">Current Groups</h5>
+                            <tmp-table [hoverable]="true">
+                                <thead>
+                                    <tr>
+                                        <th>Group Name</th>
+                                        <th class="text-center">Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (group of currentModeratorGroups; track group.id) {
+                                    <tr>
+                                        <td>{{group.name}}</td>
+                                        <td class="text-center">
+                                            <tmp-button variant="danger" size="small" (clicked)="updateGroup(employeeId, group.id)" ariaLabel="Remove group {{group.name}}">
+                                                <fa-icon [icon]="minusIcon" [size]="'xl'"></fa-icon>
+                                            </tmp-button>
+                                        </td>
+                                    </tr>
+                                    }
+                                    @if (!currentModeratorGroups || currentModeratorGroups.length === 0) {
+                                    <tr>
+                                        <td colspan="2" class="empty-state">No groups assigned</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </tmp-table>
+                        </div>
+
+                        <div class="group-container">
+                            <h5 class="group-subtitle">Available Groups</h5>
+                            <tmp-table [hoverable]="true">
+                                <thead>
+                                    <tr>
+                                        <th>Group Name</th>
+                                        <th class="text-center">Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (group of freeModeratorGroups; track group.id) {
+                                    <tr>
+                                        <td>{{group.name}}</td>
+                                        <td class="text-center">
+                                            <tmp-button variant="success" size="small" (clicked)="updateGroup(employeeId, group.id)" ariaLabel="Add group {{group.name}}">
+                                                <fa-icon [icon]="plusIcon" [size]="'xl'"></fa-icon>
+                                            </tmp-button>
+                                        </td>
+                                    </tr>
+                                    }
+                                    @if (!freeModeratorGroups || freeModeratorGroups.length === 0) {
+                                    <tr>
+                                        <td colspan="2" class="empty-state">No available groups</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </tmp-table>
+                        </div>
+                    </div>
+                </tmp-card>
+                }
             </div>
-            }
-            <tmp-file-upload
-              [label]="'Upload Photo'"
-              [fileType]="'Image'"
-              [maxSizeMB]="5"
-              [employeeId]="employeeId"
-              [uploadedFiles]="employeeFiles"
-              (fileUploaded)="onFileUploaded($event)"
-              (fileDeleted)="onFileDeleted($event)">
-            </tmp-file-upload>
-          </div>
-          <div class="col-md-6">
-            <tmp-file-upload
-              [label]="'Upload Documents'"
-              [fileType]="'Document'"
-              [maxSizeMB]="10"
-              [employeeId]="employeeId"
-              [uploadedFiles]="employeeFiles"
-              (fileUploaded)="onFileUploaded($event)"
-              (fileDeleted)="onFileDeleted($event)">
-            </tmp-file-upload>
-          </div>
-        </div>
-    </div>
-    @if (employee?.role === 'Moderator') {
-        <div>
-        <div class="container">
-          <h3 class="text-center">Assign Groups</h3>
-          <div class="row justify-content-center">
-           
-            <div class="col-lg-6">
-              <h3 class="text-center">Current</h3>
-              <table class="table table-striped table-hover text-center">
-                <thead>
-                  <th>Group Name</th>
-                  <th>Options</th>
-                </thead>
-                <tbody>
-                  @for (group of currentModeratorGroups; track group.id) {
-                  <tr>
-                    <td>{{group.name}}</td>
-                    <td>
-                      <button type="button" class="btn btn-danger" (click)="updateGroup(employeeId, group.id)" (keydown.enter)="updateGroup(employeeId, group.id)" (keydown.space)="updateGroup(employeeId, group.id)" aria-label="Remove group">
-                        <fa-icon [icon]="minusIcon"></fa-icon>
-                      </button>
-                    </td>
-                  </tr>
-                  }
-                </tbody>
-              </table>
+        </tab>
+        <tab heading="Files">
+            <div class="employee-files-grid">
+                <tmp-card variant="filled" class="upload-card">
+                    <h4 class="section-title">Upload Files</h4>
+                    <div class="modal-form-section modal-form-section-tight">
+                        <div class="modal-upload-section">
+                            <tmp-file-upload
+                                [label]="'Upload Photo'"
+                                [fileType]="'Image'"
+                                [maxSizeMB]="5"
+                                [employeeId]="employeeId"
+                                [uploadedFiles]="employeeFiles"
+                                (fileUploaded)="onFileUploaded($event)"
+                                (fileDeleted)="onFileDeleted($event)">
+                            </tmp-file-upload>
+                        </div>
+                        <div class="modal-upload-section">
+                            <tmp-file-upload
+                                [label]="'Upload Documents'"
+                                [fileType]="'Document'"
+                                [maxSizeMB]="10"
+                                [employeeId]="employeeId"
+                                [uploadedFiles]="employeeFiles"
+                                (fileUploaded)="onFileUploaded($event)"
+                                (fileDeleted)="onFileDeleted($event)">
+                            </tmp-file-upload>
+                        </div>
+                    </div>
+                </tmp-card>
+
+                <tmp-card variant="filled" class="files-table-card">
+                    <h4 class="section-title">File Library</h4>
+                    <tmp-table [hoverable]="true">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Type</th>
+                                <th class="text-center">Preview</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (file of employeeFiles; track file.name) {
+                            <tr>
+                                <td class="file-name" [attr.title]="file.name">{{file.name}}</td>
+                                <td>{{file.fileType}}</td>
+                                <td class="text-center">
+                                    @if (file.fileType === 'Image') {
+                                    <tmp-avatar
+                                        [profilePictureUrl]="file.name"
+                                        [displayName]="file.name"
+                                        [size]="'small'"
+                                        [shape]="'square'">
+                                    </tmp-avatar>
+                                    } @else {
+                                    <fa-icon [icon]="fileIcon" [size]="'xl'"></fa-icon>
+                                    }
+                                </td>
+                            </tr>
+                            }
+                            @if (!employeeFiles || employeeFiles.length === 0) {
+                            <tr>
+                                <td colspan="3" class="empty-state">No files uploaded</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </tmp-table>
+                </tmp-card>
             </div>
-    
-            <div class="col-lg-6">
-              <h3 class="text-center">Free</h3>
-              <table class="table table-striped table-hover text-center">
-                <thead>
-                  <th>Group Name</th>
-                  <th>Options</th>
-                </thead>
-                <tbody>
-                  @for (group of freeModeratorGroups; track group.id) {
-                  <tr>
-                    <td>{{group.name}}</td>
-                    <td>
-                      <button type="button" class="btn btn-success" (click)="updateGroup(employeeId, group.id)" (keydown.enter)="updateGroup(employeeId, group.id)" (keydown.space)="updateGroup(employeeId, group.id)" aria-label="Add group">
-                        <fa-icon [icon]="plusIcon"></fa-icon>
-                      </button>
-                    </td>
-                  </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-    
-          </div>
-        </div>
-    </div>
-    }
+        </tab>
+    </tabset>
 </div>

@@ -1,27 +1,51 @@
 services:
   tempdb:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      - temp-network
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
+    networks:
+      - temp-network
 
   redis:
     image: redis:latest
+    networks:
+      - temp-network
 
   redis-commander:
     image: rediscommander/redis-commander:latest
+    networks:
+      - temp-network
+    depends_on:
+      - redis
 
-  temp.api:
+  tempapi:
     image: ${DOCKER_REGISTRY-}tempapi
     build:
       context: .
       dockerfile: Temp.API/Dockerfile
+    networks:
+      - temp-network
+    depends_on:
+      tempdb:
+        condition: service_healthy
+      azurite:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
-  temp.spa.angular:
-    image: ${DOCKER_REGISTRY-}temp.spa.angular
+  tempspaangular:
+    image: ${DOCKER_REGISTRY-}tempspaangular
     build:
       context: ./Temp-SPA
       dockerfile: ./Dockerfile
+    networks:
+      - temp-network
+    depends_on:
+      tempapi:
+        condition: service_healthy
 
 volumes:
   redis-data:

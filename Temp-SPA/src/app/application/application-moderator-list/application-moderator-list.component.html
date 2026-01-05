@@ -1,45 +1,67 @@
-<div class="row justify-content-center">
-
-  <div class="col-lg-9">
-      <h1 class="text-center">Application search</h1>
-      <table class="table table-striped table-hover text-center">
-          <thead>
-              <tr>
-                  <th>Category</th>
-                  <th>Username</th>
-                  <th>Created At</th>
-                  <th>Status</th>
-                  <th colspan="2" class="text-center">Options</th>
-              </tr>
-          </thead>
-          <tbody>
-            @for (application of applications; track application.id) {
-            <tr>
-                <td>{{application.category}}</td>
-                <td>{{application.username}}</td>
-                <td>{{application.createdAt | date}}</td>
-                <td>
-                    <h5>
-                        <span class="badge rounded-pill" [ngClass]="{'text-bg-danger': application.status === false, 'text-bg-success': application.status === true}">
-                            <fa-icon [icon]="eyeIcon"></fa-icon>
-                        </span>
-                    </h5>
-                </td>
-                @if (application.status === false) {
-                <td>
-                    <button type="button" (click)="updateStatus(application.id, application.teamId)" (keydown.enter)="updateStatus(application.id, application.teamId)" (keydown.space)="updateStatus(application.id, application.teamId)" class="btn btn-info" aria-label="Update status">
-                        <fa-icon [icon]="bookmarkIcon"></fa-icon>
-                    </button>
-                </td>
-                }
-                <td>
-                    <a class="btn btn-primary" [routerLink]="['/applications/moderator/', application.id]">
-                        <fa-icon [icon]="eyeIcon"></fa-icon>
-                    </a>
-                </td>
-            </tr>
-            }
-          </tbody>
-      </table>
+<div class="application-header">
+    <div class="application-title-section">
+        <h1 class="application-title">Application Search</h1>
+        <p class="application-subtitle">Review and manage pending applications</p>
+    </div>
 </div>
+
+<tmp-card variant="filled" class="application-table-card">
+    @if (applications && applications.length) {
+        <tmp-table [hoverable]="true" [striped]="true">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Username</th>
+                    <th>Created At</th>
+                    <th>Status</th>
+                    <th class="text-center">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (application of applications; track application.id) {
+                <tr>
+                    <td>{{application.category}}</td>
+                    <td>{{application.username}}</td>
+                    <td>{{application.createdAt | date}}</td>
+                    <td>
+                        @if (application.status === true) {
+                            <tmp-badge color="success" variant="filled">
+                                <fa-icon [icon]="eyeIcon" [size]="'lg'"></fa-icon>
+                                <span style="margin-left: var(--spacing-xs);">Reviewed</span>
+                            </tmp-badge>
+                        }
+                        @if (application.status === false) {
+                            <tmp-badge color="error" variant="filled">
+                                <fa-icon [icon]="eyeIcon" [size]="'lg'"></fa-icon>
+                                <span style="margin-left: var(--spacing-xs);">Pending</span>
+                            </tmp-badge>
+                        }
+                    </td>
+                    <td class="text-center">
+                        <div style="display: flex; gap: var(--spacing-xs); justify-content: center;">
+                            @if (application.status === false) {
+                                <tmp-button variant="info" size="small" (clicked)="updateStatus(application.id, application.teamId)" ariaLabel="Update status for {{application.username}}">
+                                    <fa-icon [icon]="bookmarkIcon" [size]="'lg'"></fa-icon>
+                                </tmp-button>
+                            }
+                            <tmp-button variant="primary" size="small" [routerLink]="['/applications/moderator/', application.id]" ariaLabel="View application from {{application.username}}">
+                                <fa-icon [icon]="eyeIcon" [size]="'lg'"></fa-icon>
+                            </tmp-button>
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </tmp-table>
+    }
+    @if (!applications || applications.length === 0) {
+        <div class="application-empty-state">
+            <div class="application-empty-icon">
+                <fa-icon [icon]="eyeIcon" [size]="'xl'" size="3x"></fa-icon>
+            </div>
+            <h3>No Applications Found</h3>
+            <p>There are no applications to review at this time.</p>
+        </div>
+    }
+</tmp-card>
 

@@ -5,15 +5,17 @@ import { takeUntil } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
+import { FileService } from 'src/app/core/services/file.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
-import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
+import { BlobResponse } from 'src/app/core/models/blob';
 
 @Component({
     selector: 'app-employee-create-modal',
     templateUrl: './employee-create-modal.component.html',
+    styleUrls: ['../../shared/styles/modal.css'],
     standalone: false
 })
 export class EmployeeCreateModalComponent extends DestroyableComponent implements OnInit{
@@ -23,8 +25,10 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
   organizationsSelect!: SelectionOption[];
   innerGroupsSelect!: SelectionOption[];
   innerTeamsSelect!: SelectionOption[];
-  employeeFiles: BlobDto[] = [];
   profilePictureUrl?: string;
+  profilePicturePreviewUrl?: string;
+  private profilePhotoFile: File | null = null;
+  private profilePhotoObjectUrl: string | null = null;
 
   firstName = new FormControl('', [
     Validators.required,
@@ -42,6 +46,7 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
     private employeeService: EmployeeService,
     private organizationService: OrganizationService,
     private groupService: GroupService,
+    private fileService: FileService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
     public bsModalRef: BsModalRef) {
@@ -61,7 +66,7 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
       .pipe(takeUntil(this.destroy$))
       .subscribe(res => {
         this.organizationsSelect = [
-          {value: null, display: 'Select Organization', hidden: true},
+          {value: null, display: '', hidden: true},
           ...res
         ];
     });
@@ -75,11 +80,11 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
       .subscribe((res) => {
         if (res !== null) {
           this.innerGroupsSelect = [
-          {value: null, display: 'Select Group', hidden: true},
+          {value: null, display: '', hidden: true},
             ...res
           ];
           this.createEmployeeForm.get('groupId')?.setValue(null);
-          this.innerTeamsSelect = [{value: null, display: 'Select Team', hidden: true}];
+          this.innerTeamsSelect = [{value: null, display: '', hidden: true}];
         }
       });
   }
@@ -93,7 +98,7 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
         if (res !== null) {
           this.innerTeamsSelect = [];
           this.innerTeamsSelect = [
-            {value: null, display: 'Select Team', hidden: true},
+            {value: null, display: '', hidden: true},
             ...res
           ];
           this.createEmployeeForm.get('teamId')?.setValue(null);
@@ -106,15 +111,61 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
       ...this.createEmployeeForm.value,
       profilePictureUrl: this.profilePictureUrl
     };
+
     this.employeeService.createEmployee(this.employee)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => {
-          this.bsModalRef.content.isSaved = true;
-          this.alertify.success('Successfully created');
-          this.createEmployeeForm.reset();
-          this.employeeFiles = [];
-          this.profilePictureUrl = undefined;
+        next: (created: any) => {
+          const createdId: number | undefined = created?.id ?? created?.Id;
+
+          const finishSuccess = () => {
+            this.bsModalRef.content.isSaved = true;
+            this.alertify.success('Successfully created');
+            this.resetFormState();
+          };
+
+          if (!createdId || !this.profilePhotoFile) {
+            finishSuccess();
+            return;
+          }
+
+          this.fileService.uploadImage(this.profilePhotoFile).pipe(takeUntil(this.destroy$)).subscribe({
+            next: (uploadRes: BlobResponse) => {
+              if (uploadRes?.error) {
+                this.alertify.error(uploadRes.errorMessage || 'Unable to upload profile photo');
+                finishSuccess();
+                return;
+              }
+
+              const profilePictureUrl = uploadRes?.blob?.name;
+              if (!profilePictureUrl) {
+                finishSuccess();
+                return;
+              }
+
+              const updateRequest = {
+                id: createdId,
+                firstName: this.firstName.value,
+                lastName: this.lastName.value,
+                teamId: this.createEmployeeForm.get('teamId')?.value,
+                profilePictureUrl
+              };
+
+              this.employeeService.updateEmployee(updateRequest as any)
+                .pipe(takeUntil(this.destroy$))
+                .subscribe({
+                  next: () => finishSuccess(),
+                  error: () => {
+                    this.alertify.error('Employee created but failed to set profile photo');
+                    finishSuccess();
+                  }
+                });
+            },
+            error: () => {
+              this.alertify.error('Employee created but failed to upload profile photo');
+              finishSuccess();
+            }
+          });
         },
         error: () => {
           this.alertify.error('Unable to create employee');
@@ -122,21 +173,50 @@ export class EmployeeCreateModalComponent extends DestroyableComponent implement
       });
   }
 
-  onFileUploaded(response: BlobResponse): void {
-    if (!response.error && response.blob) {
-      // For profile picture (images), store the URL
-      if (response.blob.fileType === 'Image') {
-        this.profilePictureUrl = response.blob.name;
-      }
-      this.employeeFiles = [...this.employeeFiles, response.blob];
+  onProfilePhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+
+    if (!file) {
+      this.clearProfilePhoto();
+      return;
     }
+
+    if (!file.type.startsWith('image/')) {
+      this.alertify.error('Please select an image file');
+      input.value = '';
+      return;
+    }
+
+    const maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      this.alertify.error('File size exceeds 5MB limit');
+      input.value = '';
+      return;
+    }
+
+    this.profilePhotoFile = file;
+    this.setProfilePreviewUrl(URL.createObjectURL(file));
   }
 
-  onFileDeleted(path: string): void {
-    // If deleted file is the profile picture, clear it
-    if (path === this.profilePictureUrl) {
-      this.profilePictureUrl = undefined;
+  clearProfilePhoto(): void {
+    this.profilePhotoFile = null;
+    this.profilePictureUrl = undefined;
+    this.setProfilePreviewUrl(undefined);
+  }
+
+  private setProfilePreviewUrl(url?: string): void {
+    if (this.profilePhotoObjectUrl) {
+      URL.revokeObjectURL(this.profilePhotoObjectUrl);
+      this.profilePhotoObjectUrl = null;
     }
-    this.employeeFiles = this.employeeFiles.filter(f => f.name !== path);
+
+    this.profilePicturePreviewUrl = url;
+    if (url) this.profilePhotoObjectUrl = url;
+  }
+
+  private resetFormState(): void {
+    this.createEmployeeForm.reset();
+    this.clearProfilePhoto();
   }
 }

@@ -12,6 +12,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-team-create',
     templateUrl: './team-create.component.html',
+    styleUrl: './team-create.component.css',
     standalone: false
 })
 export class TeamCreateComponent extends DestroyableComponent implements OnInit {

@@ -244,19 +244,29 @@ public class AzureStorageService : IAzureStorageService, IStorageService
         return client.GenerateSasUri(sasBuilder).ToString();
     }
 
-    public string GenerateSasTokenForUpload(string filename)
+    public async Task<string> GenerateSasTokenForUploadAsync(string filename, FileType fileType, CancellationToken ct = default)
     {
-        var blobContainerClient = _blobServiceClient.GetBlobContainerClient(_options.ContainerName);
-        var blobClient = blobContainerClient.GetBlobClient(filename);
+        var container = await GetContainerClientAsync(ct);
+        
+        var extension = Path.GetExtension(filename).ToLowerInvariant();
+        var allowedExtensions = fileType switch {
+            FileType.Image => _options.AllowedImageExtensions,
+            FileType.Document => _options.AllowedDocumentExtensions,
+            _ => [.. _options.AllowedImageExtensions, .. _options.AllowedDocumentExtensions]
+        };
 
-        blobContainerClient.CreateIfNotExists(); 
+        if (!allowedExtensions.Contains(extension))
+            throw new InvalidOperationException($"File extension '{extension}' not allowed for {fileType}.");
+
+        var blobClient = container.GetBlobClient(filename);
 
         var sasBuilder = new BlobSasBuilder
         {
             BlobContainerName = _options.ContainerName,
             BlobName = filename,
             Resource = "b",
-            ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(30)
+            StartsOn = DateTimeOffset.UtcNow.AddMinutes(-1),
+            ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(5)
         };
 
         sasBuilder.SetPermissions(BlobSasPermissions.Write | BlobSasPermissions.Create);

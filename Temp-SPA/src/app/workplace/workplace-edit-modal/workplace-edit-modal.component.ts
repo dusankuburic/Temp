@@ -12,6 +12,7 @@ import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
 @Component({
     selector: 'workplace-edit-modal',
     templateUrl: './workplace-edit-modal.component.html',
+    styleUrls: ['../../shared/styles/modal.css'],
     standalone: false
 })
 export class WorkplaceEditModalComponent extends DestroyableComponent implements OnInit {

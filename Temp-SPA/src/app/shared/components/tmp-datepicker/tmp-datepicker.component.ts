@@ -1,6 +1,8 @@
 import { Component, Input, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+
+
+let nextUniqueId = 0;
 
 @Component({
     selector: 'tmp-datepicker',
@@ -11,14 +13,13 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 export class TmpDatepickerComponent implements ControlValueAccessor {
   @Input() placeholder = '';
   @Input() label = '';
-  bsConfig!: Partial<BsDatepickerConfig>;
-  
+  @Input() minDate: Date | null = null;
+  @Input() maxDate: Date | null = null;
+
+  private uniqueId = `tmp-datepicker-${++nextUniqueId}`;
+
   constructor(@Self() public controlDir: NgControl) {
     this.controlDir.valueAccessor = this;
-
-    this.bsConfig = {
-      containerClass: 'theme-dark-blue'
-    };
   }
 
   writeValue(obj: any): void {}
@@ -28,6 +29,14 @@ export class TmpDatepickerComponent implements ControlValueAccessor {
 
   get control(): FormControl {
     return this.controlDir.control as FormControl;
+  }
+
+  get datepickerId(): string {
+    return this.uniqueId;
+  }
+
+  get errorId(): string {
+    return `${this.uniqueId}-error`;
   }
 
 }

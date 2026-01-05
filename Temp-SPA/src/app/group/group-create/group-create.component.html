@@ -1,22 +1,27 @@
-<div id="page-content-wrapper">
-  <div class="container-fluid">
-    <h1 class="text-center">Create Group</h1>
-      <div class="row justify-content-center">
-        <div class="col-lg-6 col-sm-6 col-8 alert alert-info text-center" role="alert">
-          <h4> Organization: {{organization.name}}</h4>
-        </div>
-      </div>
-      <div class="row justify-content-center">
-          <div class="col-lg-6 col-sm-6 col-8">
-            <form class="row g-2" [formGroup]="createGroupForm" (ngSubmit)="create()">
-              <div class="form-group">
-                <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Name'"></tmp-input>
-              </div>
-              <div class="form-group">
-                <button type="submit" [disabled]="!createGroupForm.valid" class="btn btn-success btn-ts float-end">Create</button>
-              </div>
-            </form>
-          </div>
-      </div>
+<div class="group-create-header">
+  <div class="group-create-title-section">
+    <h1 class="group-create-title">Create Group</h1>
+    <p class="group-create-subtitle">Add a new group to {{organization.name}}</p>
   </div>
+</div>
+
+<div class="group-create-container">
+  <tmp-card variant="subtle" class="group-create-info-card">
+    <div class="group-create-info-item">
+      <span class="group-create-info-label">Organization</span>
+      <span class="group-create-info-value">{{organization.name}}</span>
+    </div>
+  </tmp-card>
+
+  <tmp-card variant="filled" class="group-create-card">
+    <form [formGroup]="createGroupForm" (ngSubmit)="create()">
+      <div class="group-create-form-fields">
+        <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Enter group name'"></tmp-input>
+      </div>
+
+      <div class="group-create-form-actions">
+        <tmp-button type="submit" variant="success" [disabled]="!createGroupForm.valid">Create Group</tmp-button>
+      </div>
+    </form>
+  </tmp-card>
 </div>

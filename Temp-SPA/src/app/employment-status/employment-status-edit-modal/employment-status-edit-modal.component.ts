@@ -8,12 +8,15 @@ import { EmploymentStatusValidators } from '../employment-status-validators';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+
 @Component({
     selector: 'app-employment-status-edit-modal',
     templateUrl: './employment-status-edit-modal.component.html',
     standalone: false
 })
 export class EmploymentStatusEditModalComponent extends DestroyableComponent implements OnInit {
+  faTimes = faTimes;
   editEmploymentStatusForm!: FormGroup;
   employmentStatus!: EmploymentStatus;
   title?: string;

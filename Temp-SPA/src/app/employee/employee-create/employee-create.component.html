@@ -1,40 +1,39 @@
-<div class="row justify-content-center">
-  <div class="col-lg-4">
-    <h1 class="text-center">Create Employee</h1>
-      <form class="row g-2" [formGroup]="createEmployeeForm" (ngSubmit)="create()">
-        <div class="form-group">
-          <tmp-input [formControl]="firstName" [label]="'First Name'" [placeholder]="'Enter First Name'"></tmp-input>
-        </div>
-        <div class="form-group">
-          <tmp-input [formControl]="lastName" [label]="'Last Name'" [placeholder]="'Last Name'"></tmp-input>
-        </div>
-        <div class="form-group">
-          <tmp-select 
-            [options]="organizationsSelect"
-            [label]="'Organization'"
-            formControlName="organizationId"
-            (change)="loadInnerGroups(createEmployeeForm.get('organizationId')?.value)">
-          </tmp-select>
-        </div>
+<div class="employee-create-header">
+  <div class="employee-create-title-section">
+    <h1 class="employee-create-title">Create Employee</h1>
+    <p class="employee-create-subtitle">Add a new employee to the system</p>
+  </div>
+</div>
+
+<div class="employee-create-container">
+  <tmp-card variant="filled" class="employee-create-card">
+    <form [formGroup]="createEmployeeForm" (ngSubmit)="create()">
+      <div class="employee-create-form-fields">
+        <tmp-input [formControl]="firstName" [label]="'First Name'" [placeholder]="'Enter first name'"></tmp-input>
+        <tmp-input [formControl]="lastName" [label]="'Last Name'" [placeholder]="'Enter last name'"></tmp-input>
+        <tmp-select
+          [options]="organizationsSelect"
+          [label]="'Organization'"
+          formControlName="organizationId"
+          (change)="loadInnerGroups(createEmployeeForm.get('organizationId')?.value)">
+        </tmp-select>
         @if (createEmployeeForm.get('organizationId')?.value) {
-        <div class="form-group">
           <tmp-select
             [options]="innerGroupsSelect"
             [label]="'Group'"
             formControlName="groupId"
             (change)="loadInnerTeams(createEmployeeForm.get('groupId')?.value)">
           </tmp-select>
-        </div>
         }
         @if (createEmployeeForm.get('groupId')?.value) {
-        <div class="form-group">
           <tmp-select [options]="innerTeamsSelect" [label]="'Team'" formControlName="teamId"></tmp-select>
-        </div>
         }
-        <div class="form-gorup">
-          <button type="submit" [disabled]="!createEmployeeForm.valid" class="btn btn-success btn-ts float-end">Create</button>
-        </div>
-      </form>
-  </div>
+      </div>
+
+      <div class="employee-create-form-actions">
+        <tmp-button type="submit" variant="success" [disabled]="!createEmployeeForm.valid">Create Employee</tmp-button>
+      </div>
+    </form>
+  </tmp-card>
 </div>
 

@@ -1,0 +1,13 @@
+<div [class]="cardClasses" [attr.role]="clickable ? 'button' : null" [attr.tabindex]="clickable ? 0 : null">
+  <div class="tmp-card-header" *ngIf="hasHeader">
+    <ng-content select="[card-header]"></ng-content>
+  </div>
+
+  <div class="tmp-card-body">
+    <ng-content></ng-content>
+  </div>
+
+  <div class="tmp-card-footer" *ngIf="hasFooter">
+    <ng-content select="[card-footer]"></ng-content>
+  </div>
+</div>

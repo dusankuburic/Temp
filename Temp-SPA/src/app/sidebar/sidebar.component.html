@@ -1,104 +1,24 @@
-@if (loggedIn() && isAdmin()) {
-<div class="bg-light border-right" id="sidebar-wrapper">
-  <div class="list-group">
-
-      <div class="dropdown" dropdown>
-          <a class="list-group-item list-group-item-action bg-light side-head-ts" dropdownToggle>
-            <fa-icon [icon]="employeeIcon"></fa-icon> Employee
+@if (loggedIn() && menuSections.length) {
+  <div class="sidebar-fluent" id="sidebar-wrapper">
+    <nav class="sidebar-nav" role="navigation" aria-label="Main navigation">
+      <div class="sidebar-section" *ngFor="let section of menuSections" [class.show]="isSectionOpen(section.key)">
+        <button class="sidebar-item sidebar-item-header" (click)="toggleSection(section.key)" type="button" [attr.aria-expanded]="isSectionOpen(section.key)">
+          <fa-icon class="sidebar-icon" [icon]="section.icon"></fa-icon>
+          <span class="sidebar-label">{{ section.label }}</span>
+          <fa-icon class="sidebar-chevron" [icon]="arrowIcon"></fa-icon>
+        </button>
+        <div class="sidebar-dropdown">
+          <a
+            *ngFor="let link of section.links"
+            class="sidebar-dropdown-item"
+            [routerLink]="link.commands"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="handleLinkClick()">
+            <span class="sidebar-dropdown-label">{{ link.label }}</span>
           </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-              <a class="dropdown-item" [routerLink]="['/employees']"><fa-icon [icon]="arrowIcon"></fa-icon> Employees</a>
-              <a class="dropdown-item" [routerLink]="['/employees/create']"><fa-icon [icon]="arrowIcon"></fa-icon> Create Employee</a>
-          </div>
-      </div>
-
-      <div class="dropdown" dropdown>
-          <a class="list-group-item list-group-item-action bg-light side-head-ts" dropdownToggle>
-            <fa-icon [icon]="workplaceIcon"></fa-icon> Workplace
-          </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-              <a class="dropdown-item" [routerLink]="['/workplaces']"><fa-icon [icon]="arrowIcon"></fa-icon> Workplaces</a>
-              <a class="dropdown-item" [routerLink]="['/workplaces/create']"><fa-icon [icon]="arrowIcon"></fa-icon> Create Workplace</a>
-          </div>
-      </div>
-
-
-      <div class="dropdown" dropdown>
-          <a class="list-group-item list-group-item-action bg-light side-head-ts"  dropdownToggle>
-            <fa-icon [icon]="employmentStatusIcon"></fa-icon> Employment Status
-          </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-              <a class="dropdown-item" [routerLink]="['/employment-statuses']"><fa-icon [icon]="arrowIcon"></fa-icon> Statuses</a>
-              <a class="dropdown-item" [routerLink]="['/employment-statuses/create']"><fa-icon [icon]="arrowIcon"></fa-icon> Create Status</a>
-          </div>
-      </div>
-
-      <div class="dropdown" dropdown>
-          <a class="list-group-item list-group-item-action bg-light side-head-ts" dropdownToggle>
-            <fa-icon [icon]="engagementIcon"></fa-icon> Engagement
-          </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-              <a class="dropdown-item" [routerLink]="['/engagements/with-employee']"><fa-icon [icon]="arrowIcon"></fa-icon> With Engagements</a>
-              <a class="dropdown-item" [routerLink]="['/engagements/without-employee']"><fa-icon [icon]="arrowIcon"></fa-icon> Without Engagements</a>
-          </div>
-      </div>
-
-      <div class="dropdown" dropdown>
-          <a class="list-group-item list-group-item-action bg-light side-head-ts" dropdownToggle>
-            <fa-icon [icon]="organizationIcon"></fa-icon> Organization
-          </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-              <a class="dropdown-item" [routerLink]="['/organizations']"><fa-icon [icon]="arrowIcon"></fa-icon> Organizations</a>
-              <a class="dropdown-item" [routerLink]="['/organizations/create']"><fa-icon [icon]="arrowIcon"></fa-icon> Create Organization</a>
-          </div>
-      </div>
-
-  </div>
-
-</div>
-}
-
-@if (loggedIn() && isUser()) {
-<div class="bg-light border-right" id="sidebar-wrapper">
-  <div class="list-group">
-
-      <div class="dropdown" dropdown>
-          <a class="list-group-item list-group-item-action bg-light side-head-ts" dropdownToggle>
-            <fa-icon [icon]="applicationIcon"></fa-icon> Application
-          </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-              <a class="dropdown-item" [routerLink]="['/applications/list/', user.id]"><fa-icon [icon]="arrowIcon"></fa-icon> Applications</a>
-              <a class="dropdown-item" [routerLink]="['/applications/create/',user.id]"><fa-icon [icon]="arrowIcon"></fa-icon> Create Application</a>
-          </div>
-      </div>
-
-
-    <div class="dropdown" dropdown>
-        <a class="list-group-item list-group-item-action bg-light side-head-ts" dropdownToggle>
-            <fa-icon [icon]="engagementIcon"></fa-icon> Engagement
-        </a>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-            <a class="dropdown-item" [routerLink]="['/engagements/user-list/', user.id]"><fa-icon [icon]="arrowIcon"></fa-icon> Engagements</a>
         </div>
-    </div>
-      
-  </div>
-</div>
-}
-
-@if (loggedIn() && isModerator()) {
-<div class="bg-light border-right" id="sidebar-wrapper">
-    <div class="list-group">
-  
-        <div class="dropdown" dropdown>
-            <a class="list-group-item list-group-item-action bg-light side-head-ts" dropdownToggle>
-                <fa-icon [icon]="groupsIcon"></fa-icon> Groups
-            </a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenu" *dropdownMenu>
-                <a class="dropdown-item" [routerLink]="['/groups/',user.id, 'assigned-groups']"><fa-icon [icon]="arrowIcon"></fa-icon> Assigned groups</a>
-            </div>
-        </div>
-        
-    </div>
+      </div>
+    </nav>
   </div>
 }

@@ -11,6 +11,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-workplace-edit',
     templateUrl: './workplace-edit.component.html',
+    styleUrl: './workplace-edit.component.css',
     standalone: false
 })
 export class WorkplaceEditComponent extends DestroyableComponent implements OnInit {

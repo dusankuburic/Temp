@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { FileType } from '../models/blob';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,8 @@ export class UploadService {
 
   constructor(private http: HttpClient) {}
 
-  uploadFile(file: File, reportProgress = false): Observable<any> {
-    return this.getSasToken(file.name).pipe(
+  uploadFile(file: File, fileType: FileType = 'Image', reportProgress = false): Observable<any> {
+    return this.getSasToken(file.name, fileType).pipe(
       switchMap(response => {
         const sasUrl = response.url;
         const headers = new HttpHeaders({
@@ -35,7 +36,7 @@ export class UploadService {
     );
   }
 
-  private getSasToken(filename: string): Observable<{ url: string }> {
-    return this.http.post<{ url: string }>(`${this.baseUrl}/signed-url`, { filename });
+  private getSasToken(filename: string, fileType: FileType): Observable<{ url: string }> {
+    return this.http.post<{ url: string }>(`${this.baseUrl}/signed-url`, { filename, fileType });
   }
 }

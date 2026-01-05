@@ -1,6 +1,6 @@
 import { Routes } from "@angular/router";
 import { OrganizationListComponent } from "./organization-list/organization-list.component";
-import { organizationListResolver } from "../core/resolvers/organization/organization-list.resolver";
+
 import { OrganizationEditComponent } from "./organization-edit/organization-edit.component";
 import { organizationEditResolver } from "../core/resolvers/organization/organization-edit.resolver";
 import { OrganizationCreateComponent } from "./organization-create/organization-create.component";
@@ -8,8 +8,7 @@ import { OrganizationCreateComponent } from "./organization-create/organization-
 export const organizationRoutes: Routes = [    
     { 
         path: '', 
-        component: OrganizationListComponent, 
-        resolve: { organizations: organizationListResolver }
+        component: OrganizationListComponent 
     },
     {
         path: ':id/edit',

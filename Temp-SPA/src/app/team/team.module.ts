@@ -9,10 +9,12 @@ import { SharedModule } from '../shared/shared.module';
 import { TeamValidators } from './team-validators';
 import { TeamCreateModalComponent } from './team-create-modal/team-create-modal.component';
 import { TeamEditModalComponent } from './team-edit-modal/team-edit-modal.component';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 @NgModule({
     imports: [
-        SharedModule,      
+        SharedModule,
+        TabsModule,
         RouterModule.forChild(teamRoutes)
     ],
     exports: [],

@@ -1,13 +1,20 @@
-<div class="row justify-content-center">
-  <div class="col-lg-4">
-    <h1 class="text-center">Create Workplace</h1>
-      <form class="row g-2" [formGroup]="createWorkplaceForm" (ngSubmit)="create()">
-        <div class="form-group">
-          <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
-        </div>
-        <div class="form-gorup">
-          <button type="submit" [disabled]="!createWorkplaceForm.valid" class="btn btn-success btn-ts float-end">Create</button>
-        </div>
-      </form>
-    </div>
+<div class="workplace-create-header">
+  <div class="workplace-create-title-section">
+    <h1 class="workplace-create-title">Create Workplace</h1>
+    <p class="workplace-create-subtitle">Add a new workplace location to the system</p>
+  </div>
+</div>
+
+<div class="workplace-create-container">
+  <tmp-card variant="filled" class="workplace-create-card">
+    <form [formGroup]="createWorkplaceForm" (ngSubmit)="create()">
+      <div class="workplace-create-form-fields">
+        <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Enter workplace name'"></tmp-input>
+      </div>
+
+      <div class="workplace-create-form-actions">
+        <tmp-button type="submit" variant="success" [disabled]="!createWorkplaceForm.valid">Create Workplace</tmp-button>
+      </div>
+    </form>
+  </tmp-card>
 </div>

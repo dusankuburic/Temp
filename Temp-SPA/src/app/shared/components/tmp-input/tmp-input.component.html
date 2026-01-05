@@ -1,68 +1,92 @@
 @if (control) {
-<div class="form-floating">
-    <input
-        [type]="type" 
-        [formControl]="control"
-        [placeholder]="placeholder"
-        class="form-control"
-        [ngClass]="(isFilter) ? null : (control.touched) ? control.invalid ? 'is-invalid' : 'is-valid' : null">
-        <label>{{label}}</label>
+<div class="tmp-input-wrapper" [class.tmp-input-filter]="isFilter">
+    <div class="tmp-input-container"
+         [class.tmp-input-filled]="control.value"
+         [class.tmp-input-focused]="isFocused"
+         [class.tmp-input-error]="!isFilter && control.touched && control.invalid"
+         [class.tmp-input-success]="!isFilter && control.touched && control.valid"
+         [class.tmp-input-disabled]="control.disabled">
+
+        <input
+            #inputElement
+            [type]="type"
+            [formControl]="control"
+            [placeholder]="' '"
+            [id]="inputId"
+            class="tmp-input-field"
+            (focus)="onFocus()"
+            (blur)="onBlur()"
+            [attr.aria-label]="label"
+            [attr.aria-invalid]="!isFilter && control.touched && control.invalid"
+            [attr.aria-describedby]="control.touched && control.invalid ? errorId : null">
+
+        <label [for]="inputId" class="tmp-input-label">{{label}}</label>
+
+        @if (!isFilter && control.touched) {
+            @if (control.valid) {
+                <span class="tmp-input-icon tmp-input-icon-success" aria-hidden="true">
+                    <fa-icon [icon]="faCheck" [size]="'xl'"></fa-icon>
+                </span>
+            }
+            @if (control.invalid) {
+                <span class="tmp-input-icon tmp-input-icon-error" aria-hidden="true">
+                    <fa-icon [icon]="faExclamationCircle" [size]="'xl'"></fa-icon>
+                </span>
+            }
+        }
+    </div>
+
     @if (isFilter === false && control.touched && control.invalid) {
-        @if (control.errors?.pattern) {
-        <div class="invalid-feedback">
-            Passwords must be at least 8 characters long, have 1 uppercase letter, 1
-            lowercase letter, and 1 number.
+        <div [id]="errorId" class="tmp-input-error-message" role="alert">
+            @if (control.errors?.pattern) {
+                <span class="tmp-input-error-text">
+                    Passwords must be at least 8 characters long, have 1 uppercase letter, 1 lowercase letter, and 1 number.
+                </span>
+            }
+            @if (control.errors?.required) {
+                <span class="tmp-input-error-text">
+                    Please enter {{label}}.
+                </span>
+            }
+            @if (control.errors?.minlength) {
+                <span class="tmp-input-error-text">
+                    The value you inputted is {{ control.errors?.minlength.actualLength }} characters long.
+                    It must be at least {{ control.errors?.minlength.requiredLength }} characters long.
+                </span>
+            }
+            @if (control.errors?.maxlength) {
+                <span class="tmp-input-error-text">
+                    The value you inputted is {{ control.errors?.maxlength.actualLength }} characters long.
+                    It must be less than {{ control.errors?.maxlength.requiredLength }} characters long.
+                </span>
+            }
+            @if (control.errors?.email) {
+                <span class="tmp-input-error-text">
+                    You must enter a valid email.
+                </span>
+            }
+            @if (control.errors?.usernameExists) {
+                <span class="tmp-input-error-text">
+                    Username is already taken.
+                </span>
+            }
+            @if (control.errors?.noMatch) {
+                <span class="tmp-input-error-text">
+                    Passwords do not match.
+                </span>
+            }
+            @if (control.errors?.nameExists) {
+                <span class="tmp-input-error-text">
+                    Name taken. Please try another name.
+                </span>
+            }
+            @if (control.errors?.min) {
+                <span class="tmp-input-error-text">Value too low.</span>
+            }
+            @if (control.errors?.max) {
+                <span class="tmp-input-error-text">Value too high.</span>
+            }
         </div>
-        }
-        @if (control.errors?.required) {
-        <div class="invalid-feedback">
-            Please enter {{label}}.
-        </div>
-        }
-        @if (control.errors?.minlength) {
-        <div class="invalid-feedback">
-            The value you inputted is
-            {{ control.errors?.minlength.actualLength }}
-            characters long. It must be at least
-            {{ control.errors?.minlength.requiredLength }}
-            characters long.
-        </div>
-        }
-        @if (control.errors?.maxlength) {
-        <div class="invalid-feedback">
-            The value you inputted is
-            {{ control.errors?.maxlength.actualLength }}
-            characters long. It must be less than
-            {{ control.errors?.maxlength.requiredLength }}
-            characters long.
-        </div>
-        }
-        @if (control.errors?.email) {
-        <div class="invalid-feedback">
-            You must enter a valid email.
-        </div>
-        }
-        @if (control.errors?.usernameExists) {
-        <div class="invalid-feedback">
-            Username is already taken.
-        </div>
-        }
-        @if (control.errors?.noMatch) {
-        <div class="invalid-feedback">
-            Passwords do not match.
-        </div>
-        }
-        @if (control.errors?.nameExists) {
-        <div class="invalid-feedback">
-            Name taken. Please try another name.
-        </div>
-        }
-        @if (control.errors?.min) {
-        <div class="invalid-feedback">Value too low.</div>
-        }
-        @if (control.errors?.max) {
-        <div class="invalid-feedback">Value too high.</div>
-        }
     }
 </div>
 }

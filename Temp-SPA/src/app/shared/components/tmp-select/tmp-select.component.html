@@ -1,27 +1,56 @@
 @if (control) {
-<div class="form-floating">
-    <select 
-        [formControl]="control" 
-        class="form-select"
-        [ngClass]="(isFilter) ? null : (control.touched) ? control.invalid ? 'is-invalid' : 'is-valid' : null">
-        @for (option of options; track option.value) {
-        <option 
-            [value]="option.value"
-            [disabled]="option.disabled"
-            [hidden]="option.hidden">
-            {{option.display}}
-        </option>
+<div class="tmp-select-wrapper" [class.tmp-select-filter]="isFilter">
+    <div class="tmp-select-container"
+         [class.tmp-select-filled]="control.value"
+         [class.tmp-select-focused]="isFocused"
+         [class.tmp-select-error]="!isFilter && control.touched && control.invalid"
+         [class.tmp-select-success]="!isFilter && control.touched && control.valid"
+         [class.tmp-select-disabled]="control.disabled">
+
+        <select
+            #selectElement
+            [formControl]="control"
+            [id]="selectId"
+            class="tmp-select-field"
+            (focus)="onFocus()"
+            (blur)="onBlur()"
+            [attr.aria-label]="label"
+            [attr.aria-invalid]="!isFilter && control.touched && control.invalid"
+            [attr.aria-describedby]="control.touched && control.invalid ? errorId : null">
+            @for (option of options; track option.value) {
+            <option
+                [value]="option.value"
+                [disabled]="option.disabled"
+                [hidden]="option.hidden">
+                {{option.display}}
+            </option>
+            }
+        </select>
+
+        @if (label) {
+        <label [for]="selectId" class="tmp-select-label">{{label}}</label>
         }
-    </select>
-    @if (label) {
-    <label>{{label}}</label>
-    }
+
+        <span class="tmp-select-chevron" aria-hidden="true">▼</span>
+
+        @if (!isFilter && control.touched) {
+            @if (control.valid) {
+                <span class="tmp-select-icon tmp-select-icon-success" aria-hidden="true">✓</span>
+            }
+            @if (control.invalid) {
+                <span class="tmp-select-icon tmp-select-icon-error" aria-hidden="true">!</span>
+            }
+        }
+    </div>
+
     @if (isFilter === false && control.touched && control.invalid) {
-        @if (control.errors?.required) {
-        <div class="invalid-feedback">
-            Please choose one of the options.
+        <div [id]="errorId" class="tmp-select-error-message" role="alert">
+            @if (control.errors?.required) {
+                <span class="tmp-select-error-text">
+                    Please choose one of the options.
+                </span>
+            }
         </div>
-        }
     }
 </div>
 } 

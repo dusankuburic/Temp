@@ -1,72 +1,66 @@
-<div class="modal-header">
-    <h4 class="modal-title pull-left">{{title}}</h4>
-    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-      <span aria-hidden="true" class="visually-hidden">&times;</span>
+<div class="modal-header-obsidian">
+    <h4 class="modal-title-obsidian">{{title}}</h4>
+    <button type="button" class="modal-close-obsidian" aria-label="Close" (click)="bsModalRef.hide()">
+        <span class="modal-close-icon" aria-hidden="true">×</span>
     </button>
 </div>
-<div class="modal-body">
-  <tabset>
-    <tab heading="Form">
-      <div class="col-lg-12 pt-3">
-        <div class="alert alert-info text-center" role="alert">
-            <h4>Name: {{employee.firstName}}  {{employee.lastName}}</h4>
-        </div>
-        <form class="row g-2" [formGroup]="createEngagementForm" (ngSubmit)="create()">
-            <div class="form-group">
-              <tmp-select [options]="workplacesList" [label]="'Workplace'" formControlName="workplaceId"></tmp-select>
+<div class="modal-body-obsidian">
+    <tabset>
+        <tab heading="Form">
+            <div class="pt-3">
+                <tmp-card variant="subtle">
+                    <h4>Name: {{employee?.firstName}} {{employee?.lastName}}</h4>
+                </tmp-card>
+
+                <form [formGroup]="createEngagementForm" (ngSubmit)="create()">
+                    <div class="modal-form-section">
+                        <tmp-select [options]="workplacesList" [label]="'Workplace'" formControlName="workplaceId"></tmp-select>
+                        <tmp-input [formControl]="salary" [type]="'number'" [label]="'Salary'" [placeholder]="'Enter Salary'"></tmp-input>
+                        <tmp-datepicker [formControl]="dateFrom" [label]="'Date From'" [placeholder]="'Enter Date From'"></tmp-datepicker>
+                        <tmp-datepicker [formControl]="dateTo" [label]="'Date To'" [placeholder]="'Enter Date To'"></tmp-datepicker>
+                        <tmp-select [options]="employmentStatusesList" [label]="'Employment Status'" formControlName="employmentStatusId"></tmp-select>
+                    </div>
+
+                    <div class="modal-actions">
+                        <tmp-button type="submit" variant="success" [disabled]="!createEngagementForm.valid">Create Engagement</tmp-button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-              <tmp-input [formControl]="salary" [type]="'number'" [label]="'Salary'" [placeholder]="'Enter Salary'"></tmp-input>
+        </tab>
+        <tab heading="Engagements">
+            <div class="pt-3">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover text-center">
+                        <thead>
+                            <tr>
+                                <th>Workplace</th>
+                                <th>Employment status</th>
+                                <th>Salary</th>
+                                <th>From</th>
+                                <th>To</th>
+                            </tr>
+                        </thead>
+                        @if (existingEngagements.length !== 0) {
+                        <tbody>
+                            @for (data of existingEngagements; track data.workplaceName) {
+                            <tr>
+                                <td>{{data.workplaceName}}</td>
+                                <td>{{data.employmentStatusName}}</td>
+                                <td>{{data.salary}}</td>
+                                <td>{{data.dateFrom | date }}</td>
+                                <td>{{data.dateTo | date }}</td>
+                            </tr>
+                            }
+                        </tbody>
+                        }
+                    </table>
+                </div>
+                @if (existingEngagements.length === 0) {
+                <tmp-card variant="filled">
+                    Employee doesn't have assigned engagement
+                </tmp-card>
+                }
             </div>
-            <div class="form-group">
-              <tmp-datepicker [formControl]="dateFrom" [label]="'Date From'" [placeholder]="'Enter Date From'"></tmp-datepicker>
-            </div>
-            <div class="form-group">
-              <tmp-datepicker [formControl]="dateTo" [label]="'Date To'" [placeholder]="'Enter Date To'"></tmp-datepicker>
-            </div>
-            <div class="form-group">
-              <tmp-select [options]="employmentStatusesList" [label]="'Employment Status'" formControlName="employmentStatusId"></tmp-select>
-            </div>
-            <div class="form-gorup">
-              <button type="submit" [disabled]="!createEngagementForm.valid" class="btn btn-success btn-ts float-end">Create</button>
-            </div>
-        </form>          
-      </div>
-    </tab>
-    <tab heading="Engagements">
-      <div class="col-lg-12 pt-3">
-        <div class="table-responsive">   
-          <table class="table table-striped table-hover text-center">
-            <thead>
-                <tr>
-                  <th>Workplace</th>
-                  <th>Employment status</th>
-                  <th>Salary</th>
-                  <th>From</th>
-                  <th>To</th>
-              </tr>
-            </thead>
-            @if (existingEngagements?.length !== 0) {
-            <tbody>
-              @for (data of existingEngagements; track data.workplaceName) {
-              <tr>
-                <td>{{data.workplaceName}}</td>
-                <td>{{data.employmentStatusName}}</td>
-                <td>{{data.salary}}</td>
-                <td>{{data.dateFrom | date }}</td>
-                <td>{{data.dateTo | date }}</td>
-              </tr>
-              }
-            </tbody>
-            }                     
-          </table>
-        </div>
-        @if (existingEngagements?.length === 0) {
-        <div class="alert alert-danger text-center" role="alert">
-            Employee doesn't have assigned engagement
-        </div>
-        }                     
-    </div>
-    </tab>
-  </tabset>
+        </tab>
+    </tabset>
 </div>

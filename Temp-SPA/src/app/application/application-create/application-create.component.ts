@@ -11,6 +11,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-application-create',
     templateUrl: './application-create.component.html',
+    styleUrl: './application-create.component.css',
     standalone: false
 })
 export class ApplicationCreateComponent extends DestroyableComponent implements OnInit {
