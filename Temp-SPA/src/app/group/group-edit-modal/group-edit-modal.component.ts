@@ -8,13 +8,17 @@ import { GroupValidators } from '../group-validators';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
+import { faFile } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-group-edit-modal',
     templateUrl: './group-edit-modal.component.html',
+    styleUrls: ['../../shared/styles/modal.css'],
     standalone: false
 })
 export class GroupEditModalComponent extends DestroyableComponent implements OnInit {
+  fileIcon = faFile;
+
   editGroupForm!: FormGroup;
   group!: Group;
 

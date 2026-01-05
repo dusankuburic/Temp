@@ -15,7 +15,7 @@
         <tr>
           <td>{{group.name}}</td>
           <td>
-            <a class="btn btn-success"[routerLink]="['/teams/', group.id, 'assigned-groups']"><fa-icon [icon]="usersIcon"></fa-icon></a>
+            <tmp-button variant="success" [routerLink]="['/teams/', group.id, 'assigned-groups']"><fa-icon [icon]="usersIcon" [size]="'lg'"></fa-icon></tmp-button>
           </td>
         </tr>
         }

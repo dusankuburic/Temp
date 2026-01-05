@@ -1,17 +1,20 @@
-<div class="row justify-content-center">
-  <div class="col-lg-8">
-    <h1 class="text-center">Edit Team</h1>
-      <div class="row justify-content-center">
-          <div class="col-lg-6 col-sm-6 col-8">
-            <form class="row g-2" [formGroup]="editTeamForm" (ngSubmit)="update()">
-              <div class="form-group">
-                <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
-              </div>
-              <div class="form-gorup">
-                <button type="submit" [disabled]="!editTeamForm.valid" class="btn btn-success btn-ts float-end">Save</button>
-              </div>
-            </form>
-          </div>
-      </div>
+<div class="team-edit-header">
+  <div class="team-edit-title-section">
+    <h1 class="team-edit-title">Edit Team</h1>
+    <p class="team-edit-subtitle">Update team information</p>
   </div>
+</div>
+
+<div class="team-edit-container">
+  <tmp-card variant="filled" class="team-edit-card">
+    <form [formGroup]="editTeamForm" (ngSubmit)="update()">
+      <div class="team-edit-form-fields">
+        <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Enter team name'"></tmp-input>
+      </div>
+
+      <div class="team-edit-form-actions">
+        <tmp-button type="submit" variant="success" [disabled]="!editTeamForm.valid">Save Changes</tmp-button>
+      </div>
+    </form>
+  </tmp-card>
 </div>

@@ -11,16 +11,23 @@ import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { WorkplaceCreateModalComponent } from '../workplace-create-modal/workplace-create-modal.component';
 import { WorkplaceEditModalComponent } from '../workplace-edit-modal/workplace-edit-modal.component';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
+import { TableColumn } from 'src/app/shared/components/tmp-table/tmp-table.component';
 
 @Component({
     selector: 'app-workplace-list',
     templateUrl: './workplace-list.component.html',
+    styleUrl: './workplace-list.component.css',
     standalone: false
 })
 export class WorkplaceListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   archiveIcon = faTrashAlt;
   editIcon = faPenToSquare
   plusIcon = faPlusCircle;
+
+  columns: TableColumn[] = [
+    { key: 'name', header: 'Name', align: 'left' },
+    { key: 'options', header: 'Options', align: 'center' }
+  ];
 
   bsModalRef?: BsModalRef;
   subscriptions!: Subscription;

@@ -1,13 +1,20 @@
-<div class="row justify-content-center">
-    <div class="col-lg-4">
-      <h1 class="text-center">Edit Organization</h1>
-      <form class="row g-2" [formGroup]="editOrganizationForm" (ngSubmit)="update()">
-        <div class="form-group">
-          <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
-        </div>
-        <div class="form-group">
-          <button type="submit" [disabled]="!editOrganizationForm.valid" class="btn btn-success btn-ts float-end">Save</button>
-        </div>
-      </form>
-    </div>
+<div class="organization-edit-header">
+  <div class="organization-edit-title-section">
+    <h1 class="organization-edit-title">Edit Organization</h1>
+    <p class="organization-edit-subtitle">Update organization information</p>
+  </div>
+</div>
+
+<div class="organization-edit-container">
+  <tmp-card variant="filled" class="organization-edit-card">
+    <form [formGroup]="editOrganizationForm" (ngSubmit)="update()">
+      <div class="organization-edit-form-fields">
+        <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Enter organization name'"></tmp-input>
+      </div>
+
+      <div class="organization-edit-form-actions">
+        <tmp-button type="submit" variant="success" [disabled]="!editOrganizationForm.valid">Save Changes</tmp-button>
+      </div>
+    </form>
+  </tmp-card>
 </div>

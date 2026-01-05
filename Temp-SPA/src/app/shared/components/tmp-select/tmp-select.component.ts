@@ -3,11 +3,13 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 
 export interface SelectionOption {
-  value: any, 
+  value: any,
   display: any,
   disabled?: boolean,
   hidden?: boolean
 }
+
+let nextUniqueId = 0;
 
 @Component({
     selector: 'tmp-select',
@@ -25,5 +27,24 @@ export interface SelectionOption {
 export class TmpSelectComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() options: SelectionOption[] = [];
   @Input() label = '';
-  @Input() isFilter: boolean = false;  
+  @Input() isFilter: boolean = false;
+
+  isFocused = false;
+  private uniqueId = `tmp-select-${++nextUniqueId}`;
+
+  get selectId(): string {
+    return this.uniqueId;
+  }
+
+  get errorId(): string {
+    return `${this.uniqueId}-error`;
+  }
+
+  onFocus(): void {
+    this.isFocused = true;
+  }
+
+  onBlur(): void {
+    this.isFocused = false;
+  }
 }

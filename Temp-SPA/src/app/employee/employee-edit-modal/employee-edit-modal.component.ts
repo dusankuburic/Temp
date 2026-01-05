@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -20,11 +20,13 @@ import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
 @Component({
     selector: 'app-employee-edit-modal',
     templateUrl: './employee-edit-modal.component.html',
+    styleUrls: ['../../shared/styles/modal.css'],
     standalone: false
 })
 export class EmployeeEditModalComponent extends DestroyableComponent implements OnInit { 
   minusIcon = faMinus;
   plusIcon = faPlus;
+  fileIcon = faFile;
 
   title?: string;
   employeeId!: number;
@@ -97,7 +99,7 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
     this.organizationService.getOrganizationsForSelect()
       .pipe(takeUntil(this.destroy$)).subscribe(res => {
         this.organizationsSelect = [
-          {value: null, display: 'Select Organization', hidden: true},
+          {value: null, display: '', hidden: true},
           ...res
         ];
       });
@@ -163,7 +165,7 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
     this.organizationService.getInnerGroupsForSelect(fullTeam.organizationId).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res !== null) {
         this.innerGroupsSelect = [
-          {value: null, display: 'Select Group', hidden: true},
+          {value: null, display: '', hidden: true},
           ...res
         ];
       }
@@ -174,7 +176,7 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
       if (res !== null) {
         this.innerTeamsSelect = [];
         this.innerTeamsSelect = [
-          {value: null, display: 'Select Team', hidden: true},
+          {value: null, display: '', hidden: true},
           ...res
         ];
       }
@@ -188,7 +190,7 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
     this.organizationService.getInnerGroupsForSelect(id).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res !== null) {
         this.innerGroupsSelect = [
-          {value: null, display: 'Select Group', hidden: true},
+          {value: null, display: '', hidden: true},
           ...res
         ];
         this.editEmployeeForm.get('teamId')?.setValue(null);
@@ -203,7 +205,7 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
       if (res !== null) {
         this.innerTeamsSelect = [];
         this.innerTeamsSelect = [
-          {value: null, display: 'Select Team', hidden: true},
+          {value: null, display: '', hidden: true},
           ...res
         ];
         this.editEmployeeForm.get('teamId')?.setValue(null);

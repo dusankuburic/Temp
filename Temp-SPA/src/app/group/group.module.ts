@@ -8,10 +8,12 @@ import { groupRoutes } from './group.routes';
 import { SharedModule } from '../shared/shared.module';
 import { GroupCreateModalComponent } from './group-create-modal/group-create-modal.component';
 import { GroupEditModalComponent } from './group-edit-modal/group-edit-modal.component';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 @NgModule({
     imports: [
         SharedModule,
+        TabsModule,
         RouterModule.forChild(groupRoutes)
     ],
     exports: [],

@@ -1,103 +1,91 @@
-<div class="row d-flex justify-content-around">
-    <div class="col-lg-2">
-        <h4>Employees</h4>
+<div class="employee-list-header">
+  <div class="employee-list-title-section">
+    <h1 class="employee-list-title">Employees</h1>
+    <p class="employee-list-subtitle">Manage and view all employees in the system</p>
+  </div>
+</div>
+
+<div class="employee-list-container">
+  <!-- Filters Card -->
+  <tmp-card variant="subtle" class="employee-list-filters-card">
+    <div class="employee-list-filters-header">
+      <h3 class="employee-list-filters-title">Filters</h3>
+      <tmp-button variant="success" size="small" (clicked)="openCreateModal()" ariaLabel="Create employee">
+        <fa-icon [icon]="plusIcon" [size]="'xl'"></fa-icon>
+        <span style="margin-left: var(--spacing-xs);">Create</span>
+      </tmp-button>
     </div>
-    <div class="col-lg-7">
-        <form class="form" [formGroup]="filtersForm">
-            <div class="row g-2">
-                <div class="col-md">
-                    <tmp-select [options]="rolesSelect" label="Role" formControlName="role" [isFilter]="true"></tmp-select>
-                </div>
-                <div class="col-md">
-                    <tmp-input placeholder="First Name" label="First Name" formControlName="firstName" [isFilter]="true"></tmp-input>
-                </div>
-                <div class="col-md">
-                    <tmp-input placeholder="Last Name" label="Last Name" formControlName="lastName" [isFilter]="true"></tmp-input>
-                </div>
+    <form class="employee-list-filters-form" [formGroup]="filtersForm">
+      <tmp-select [options]="rolesSelect" label="Role" formControlName="role" [isFilter]="true"></tmp-select>
+      <tmp-input placeholder="First Name" label="First Name" formControlName="firstName" [isFilter]="true"></tmp-input>
+      <tmp-input placeholder="Last Name" label="Last Name" formControlName="lastName" [isFilter]="true"></tmp-input>
+    </form>
+  </tmp-card>
+
+  <!-- Data Table Card -->
+  <tmp-card variant="filled" class="employee-list-table-card">
+    <tmp-table
+      [columns]="columns"
+      [data]="employees"
+      [striped]="true"
+      [hoverable]="true"
+      emptyMessage="No employees found">
+
+      <!-- Custom row template for complex content -->
+      <ng-template #rowTemplate let-employee>
+        <tr>
+          <td>{{ employee.firstName }}</td>
+          <td>{{ employee.lastName }}</td>
+          <td class="text-center">
+            <tmp-badge
+              variant="filled"
+              [color]="employee.role === 'Admin' ? 'warning' :
+                       employee.role === 'Moderator' ? 'success' :
+                       employee.role === 'User' ? 'info' : 'neutral'">
+              {{ employee.role }}
+            </tmp-badge>
+          </td>
+          <td class="text-center">
+            <div class="tmp-button-group">
+              <!-- Edit button -->
+              <tmp-button variant="primary" size="small" (clicked)="openEditModal(employee.id)" ariaLabel="Edit employee {{employee.firstName}} {{employee.lastName}}">
+                <fa-icon [icon]="editIcon" [size]="'lg'"></fa-icon>
+              </tmp-button>
+
+              <!-- Assign role (only for None role) -->
+              @if (employee.role === 'None') {
+                <tmp-button variant="info" size="small" (clicked)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)" ariaLabel="Assign role to {{employee.firstName}} {{employee.lastName}}">
+                  <fa-icon [icon]="assignRoleIcon" [size]="'lg'"></fa-icon>
+                </tmp-button>
+              }
+
+              <!-- Status toggle and remove role (for assigned roles) -->
+              @if (employee.role !== 'None') {
+                <tmp-button
+                  [variant]="employee.isAppUserActive ? 'success' : 'warning'"
+                  size="small"
+                  (clicked)="changeStatus(employee.id)"
+                  ariaLabel="{{employee.isAppUserActive ? 'Deactivate' : 'Activate'}} {{employee.firstName}} {{employee.lastName}}">
+                  <fa-icon [icon]="employee.isAppUserActive ? deactivateUserIcon : activateUserIcon" [size]="'lg'"></fa-icon>
+                </tmp-button>
+                <tmp-button variant="danger" size="small" (clicked)="removeRole(employee.id)" ariaLabel="Remove role from {{employee.firstName}} {{employee.lastName}}">
+                  <fa-icon [icon]="removeRoleIcon" [size]="'lg'"></fa-icon>
+                </tmp-button>
+              }
             </div>
-        </form>
-    </div> 
-    <div class="col-lg-2">
-                <button type="button" class="btn btn-success float-end" (click)="openCreateModal()" (keydown.enter)="openCreateModal()" (keydown.space)="openCreateModal()" aria-label="Create employee">
-                    <fa-icon [icon]="plusIcon"></fa-icon>
-                </button>
-    </div>
-</div>
-<div class="row justify-content-center">
-    <div class="col-lg-10">
-        <hr>
-        <div class="table-responsive">
-            <table class="table table-striped table-hover text-center">
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Role</th>
-                        <th colspan="2" class="text-center">Options</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @for (employee of employees; track employee.id) {
-                <tr>
-                    <td>{{employee.firstName}}</td>
-                    <td>{{employee.lastName}}</td>
-                    <td>
-                        <span class="badge rounded-pill pill-ts" 
-                        [ngClass]="{'text-bg-warning': employee.role === 'Admin',
-                            'text-bg-info' : employee.role === 'User',
-                            'text-bg-success' : employee.role === 'Moderator',
-                            'text-bg-secondary': employee.role === 'None'}">
-                            {{employee.role}}
-                        </span>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-primary" (click)="openEditModal(employee.id)" (keydown.enter)="openEditModal(employee.id)" (keydown.space)="openEditModal(employee.id)" aria-label="Edit employee">
-                            <fa-icon [icon]="editIcon"></fa-icon>
-                        </button>
-                    </td>
-                    @if (employee.role === 'None') {
-                    <td>
-                        <button type="button" class="btn btn-info" (click)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)" (keydown.enter)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)" (keydown.space)="openAssignRoleModal(employee.id, employee.firstName, employee.lastName)" aria-label="Assign role">
-                            <fa-icon [icon]="assignRoleIcon"></fa-icon>
-                        </button>
-                    </td>
-                    }
-                    @if (employee.role !== 'None') {
-                    <td>
-                        <div class="btn-group">
-                        <button type="button" (click)="changeStatus(employee.id)" (keydown.enter)="changeStatus(employee.id)" (keydown.space)="changeStatus(employee.id)" class="btn" [ngClass]="{'btn-success': employee.isAppUserActive, 'btn-warning': !employee.isAppUserActive}" aria-label="Change status">
-                            <fa-icon [icon]="employee.isAppUserActive ? deactivateUserIcon : activateUserIcon"></fa-icon>
-                        </button>
-                        <button type="button" (click)="removeRole(employee.id)" (keydown.enter)="removeRole(employee.id)" (keydown.space)="removeRole(employee.id)" class="btn btn-danger" aria-label="Remove role">
-                            <fa-icon [icon]="removeRoleIcon"></fa-icon>
-                        </button>
-                        </div>
-                    </td>
-                    }
-                </tr>
-                }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    @if (!employees.length) {
-    <div class="col-lg-6">
-        <div class="alert alert-info text-center" role="alert">
-            <h5>There are no employees</h5>
-        </div>
-    </div>
-    }
-</div>
-<div class="d-flex justify-content-center">
+          </td>
+        </tr>
+      </ng-template>
+    </tmp-table>
+  </tmp-card>
+
+  <!-- Pagination -->
+  <div class="employee-list-pagination">
     <tmp-pagination
-        [totalCount]="pagination.totalItems"
-        [pageSize]="pagination.itemsPerPage"
-        [pageNumber]="pagination.currentPage"
-        (pageChanged)="pageChanged($event)">
+      [totalCount]="pagination.totalItems"
+      [pageSize]="pagination.itemsPerPage"
+      [pageNumber]="pagination.currentPage"
+      (pageChanged)="pageChanged($event)">
     </tmp-pagination>
+  </div>
 </div>
-
-
-
-
-

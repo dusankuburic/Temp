@@ -17,9 +17,9 @@
         <tr>
           <td>{{team.name}}</td>
           <td>
-            <a class="btn btn-primary" [routerLink]="['/applications/list/team/', team.id]">
-              <fa-icon [icon]="listIcon"></fa-icon>
-            </a>
+            <tmp-button variant="primary" [routerLink]="['/applications/list/team/', team.id]">
+              <fa-icon [icon]="listIcon" [size]="'lg'"></fa-icon>
+            </tmp-button>
           </td>  
         </tr>
         }

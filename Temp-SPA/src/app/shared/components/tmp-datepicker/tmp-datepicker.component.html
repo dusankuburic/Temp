@@ -1,17 +1,42 @@
-<div class="form-floating">
+<div class="tmp-datepicker-wrapper">
+  <div class="tmp-datepicker-container"
+       [class.tmp-datepicker-filled]="control.value"
+       [class.tmp-datepicker-error]="control.touched && control.invalid">
+    
     <input 
-        bsDatepicker
-        [bsConfig]="bsConfig"
-        [formControl]="control"
-        placeholder="{{placeholder}}"
-        class="form-control"
-        [ngClass]="(control.touched) ? control.invalid ? 'is-invalid' : 'is-valid' : null">
-        <label>{{label}}</label>
-    @if (control.touched && control.invalid) {
-        @if (control.errors?.required) {
-        <div class="invalid-feedback">
-            Please choose {{label}}.
-        </div>
-        }
+      matInput 
+      [matDatepicker]="picker"
+      [formControl]="control"
+      [id]="datepickerId"
+      [min]="minDate"
+      [max]="maxDate"
+      class="tmp-datepicker-field"
+      (click)="picker.open()"
+      readonly>
+
+    <label [for]="datepickerId" class="tmp-datepicker-label">{{label}}</label>
+
+    <!-- Calendar Icon / Toggle -->
+    <mat-datepicker-toggle matIconSuffix [for]="picker" class="tmp-datepicker-toggle">
+      <mat-icon matDatepickerToggleIcon>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M5 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5V3h1.5A1.5 1.5 0 0 1 14 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5v-9A1.5 1.5 0 0 1 3.5 3H5v-.5zM6 3v.5h4V3H6zm5.5 1H11V3h.5a.5.5 0 0 1 .5.5V4zm-7 0H5V3h-.5a.5.5 0 0 0-.5.5V4h1zM3 5v8.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V5H3z"/>
+        </svg>
+      </mat-icon>
+    </mat-datepicker-toggle>
+
+    <mat-datepicker #picker panelClass="tmp-datepicker-panel"></mat-datepicker>
+
+    @if (control.touched && control.valid) {
+      <span class="tmp-datepicker-icon tmp-datepicker-icon-success">✓</span>
     }
+  </div>
+
+  @if (control.touched && control.invalid) {
+    <div class="tmp-datepicker-error-message" role="alert" [id]="errorId">
+      @if (control.errors?.['required']) {
+        <span class="tmp-datepicker-error-text">{{label}} is required</span>
+      }
+    </div>
+  }
 </div>

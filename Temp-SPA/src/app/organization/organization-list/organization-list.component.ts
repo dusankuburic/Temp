@@ -9,6 +9,7 @@ import { PaginatedResult, Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
+import { TableColumn } from 'src/app/shared/components/tmp-table/tmp-table.component';
 import { OrganizationCreateModalComponent } from '../organization-create-modal/organization-create-modal.component';
 import { OrganizationEditModalComponent } from '../organization-edit-modal/organization-edit-modal.component';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
@@ -16,6 +17,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-organization-list',
     templateUrl: './organization-list.component.html',
+    styleUrl: './organization-list.component.css',
     standalone: false
 })
 export class OrganizationListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
@@ -25,14 +27,21 @@ export class OrganizationListComponent extends DestroyableComponent implements O
   createGroupIcon = faProjectDiagram
   plusIcon = faPlusCircle;
 
+  columns: TableColumn[] = [
+    { key: 'name', header: 'Name', align: 'left' },
+    { key: 'options', header: 'Options', align: 'center' },
+    { key: 'groupOptions', header: 'Group Options', align: 'center' }
+  ];
+
   bsModalRef?: BsModalRef;
   subscriptions!: Subscription;
   filtersForm!: FormGroup;
-  organizations!: Organization[];
-  pagination!: Pagination;
+  organizations: Organization[] = [];
+  pagination: Pagination = { currentPage: 1, itemsPerPage: 10, totalItems: 0, totalPages: 0 };
   organizationParams!: OrganizationParams;
+  isLoading = false;
   groupsSelect: SelectionOption[] = [
-    {value: '', display: 'Select with groups', disabled: true },
+    {value: '', display: '', disabled: true },
     {value: 'all', display: 'All'},
     {value: 'yes', display: 'With groups'},
     {value: 'no', display: 'Without groups'}
@@ -84,10 +93,7 @@ export class OrganizationListComponent extends DestroyableComponent implements O
   }
 
   ngOnInit(): void {
-    this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
-      this.organizations = data['organizations'].result;
-      this.pagination = data['organizations'].pagination;
-    });
+    this.loadOrganizations();
   }
 
   openCreateModal(): void {
@@ -134,15 +140,18 @@ export class OrganizationListComponent extends DestroyableComponent implements O
   }
 
   loadOrganizations(): void {
+    this.isLoading = true;
     this.organizationsService.getPagedOrganizations()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: PaginatedResult<Organization[]>) => {
           this.organizations = res.result;
           this.pagination = res.pagination;
+          this.isLoading = false;
         },
         error: () => {
           this.alertify.error('Unable to load organizations');
+          this.isLoading = false;
         }
       })
   }

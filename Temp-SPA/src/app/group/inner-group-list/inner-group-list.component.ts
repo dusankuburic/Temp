@@ -11,6 +11,7 @@ import { Pagination } from 'src/app/core/models/pagination';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
+import { TableColumn } from 'src/app/shared/components/tmp-table/tmp-table.component';
 import { GroupCreateModalComponent } from '../group-create-modal/group-create-modal.component';
 import { GroupEditModalComponent } from '../group-edit-modal/group-edit-modal.component';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
@@ -18,6 +19,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-group-list',
     templateUrl: './inner-group-list.component.html',
+    styleUrl: './inner-group-list.component.css',
     standalone: false
 })
 export class GroupListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
@@ -27,6 +29,12 @@ export class GroupListComponent extends DestroyableComponent implements OnInit, 
   createTeamIcon = faProjectDiagram;
   plusIcon = faPlusCircle;
 
+  columns: TableColumn[] = [
+    { key: 'name', header: 'Name', align: 'left' },
+    { key: 'options', header: 'Options', align: 'center' },
+    { key: 'teamOptions', header: 'Team Options', align: 'center' }
+  ];
+
   bsModalRef?: BsModalRef;
   subscriptions!: Subscription;
   filtersForm!: FormGroup;
@@ -35,7 +43,7 @@ export class GroupListComponent extends DestroyableComponent implements OnInit, 
   organization!: Organization;
   groupParams!: GroupParams;
   teamSelect: SelectionOption[] = [
-    {value: '', display: 'Select with teams', disabled: true},
+    {value: '', display: '', disabled: true},
     {value: 'all', display: 'All'},
     {value: 'yes', display: 'With teams'},
     {value: 'no', display: 'Without teams'},

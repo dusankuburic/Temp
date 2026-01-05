@@ -1,46 +1,42 @@
-<div class="modal-header">
-    <h4 class="modal-title pull-left">{{title}}</h4>
-    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-        <span aria-hidden="true" class="visually-hidden">&times;</span>
+<div class="modal-header-obsidian">
+    <h4 class="modal-title-obsidian">{{title}}</h4>
+    <button type="button" class="modal-close-obsidian" aria-label="Close" (click)="bsModalRef.hide()">
+        <span class="modal-close-icon" aria-hidden="true">×</span>
     </button>
 </div>
-<div class="modal-body">
-    <div class="row justify-content-center">
-    <div class="col alert alert-info text-center" role="alert">
-        <h5>Name: {{this.firstName}} {{this.lastName}}</h5>
-        </div>
-    <form class="row g-2" [formGroup]="createAssignRoleForm" (ngSubmit)="register()">
-        <input type="hidden" asp-for="@employee.Id" />
-        <div class="form-group">
+<div class="modal-body-obsidian">
+    <tmp-card variant="subtle" style="margin-bottom: var(--spacing-l); text-align: center;">
+        <h5 style="color: var(--color-brand-primary); margin: 0; font-weight: var(--font-weight-semibold);">{{this.firstName}} {{this.lastName}}</h5>
+    </tmp-card>
+
+    <form [formGroup]="createAssignRoleForm" (ngSubmit)="register()">
+        <div class="modal-form-section">
             <tmp-input [formControl]="displayName" [label]="'Display Name'" [placeholder]="'Enter display name'"></tmp-input>
-        </div>
-        <div class="form-group">
             <tmp-input [type]="'email'" [formControl]="email" [label]="'Email'" [placeholder]="'Enter email'"></tmp-input>
-        </div>
-        <div class="form-group">
             <tmp-input [type]="'password'" [formControl]="password" [label]="'Password'" [placeholder]="'Enter password'"></tmp-input>
-        </div>
-        <div class="form-group">
             <tmp-input [type]="'password'" [formControl]="confirmPassword" [label]="'Confirmed Password'" [placeholder]="'Enter your password again'"></tmp-input>
+
+            <div class="modal-radio-group">
+                <label class="modal-radio-group-label">Role</label>
+                <div class="modal-radio-options">
+                    <label class="modal-radio-option">
+                        <input type="radio" id="roleUser" formControlName="role" value="User" class="modal-radio-input"/>
+                        <span class="modal-radio-label">User</span>
+                    </label>
+                    <label class="modal-radio-option">
+                        <input type="radio" id="roleModerator" formControlName="role" value="Moderator" class="modal-radio-input"/>
+                        <span class="modal-radio-label">Moderator</span>
+                    </label>
+                    <label class="modal-radio-option">
+                        <input type="radio" id="roleAdmin" formControlName="role" value="Admin" class="modal-radio-input"/>
+                        <span class="modal-radio-label">Admin</span>
+                    </label>
+                </div>
+            </div>
         </div>
-        <fieldset class="form-group">
-            <legend>Role</legend>
-            <div class="form-check form-check-inline">
-                <input type="radio" id="roleUser" formControlName="role" value="User" class="form-check-input"/>
-                <label class="form-check-label" for="roleUser">User</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input type="radio" id="roleModerator" formControlName="role" value="Moderator" class="form-check-input" />  
-                <label class="form-check-label" for="roleModerator">Moderator</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input type="radio" id="roleAdmin" formControlName="role" value="Admin" class="form-check-input" />  
-                <label class="form-check-label" for="roleAdmin">Admin</label>
-            </div>
-        </fieldset> 
-        <div class="form-group">
-            <button class="btn btn-success btn-ts float-end" [disabled]="!createAssignRoleForm.valid" type="submit">Save</button>
+
+        <div class="modal-actions">
+            <tmp-button type="submit" variant="success" [disabled]="!createAssignRoleForm.valid">Assign Role</tmp-button>
         </div>
     </form>
-    </div>
 </div>

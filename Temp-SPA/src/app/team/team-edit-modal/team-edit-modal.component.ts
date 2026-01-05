@@ -7,19 +7,26 @@ import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { TeamService } from 'src/app/core/services/team.service';
 import { TeamValidators } from '../team-validators';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
+import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
+import { faFile } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-team-edit-modal',
     templateUrl: './team-edit-modal.component.html',
+    styleUrls: ['../../shared/styles/modal.css'],
     standalone: false
 })
 export class TeamEditModalComponent extends DestroyableComponent implements OnInit{
+  fileIcon = faFile;
+
   editTeamForm!: FormGroup;
   team!: Team;
 
   groupId!: number;
   teamId!: number;
   title?: string;
+
+  teamFiles: BlobDto[] = [];
 
   name = new FormControl('', [
     Validators.required,
@@ -71,5 +78,15 @@ export class TeamEditModalComponent extends DestroyableComponent implements OnIn
         this.alertify.error('Unable to update team');
       }
     });
+  }
+
+  onFileUploaded(response: BlobResponse): void {
+    if (!response.error && response.blob) {
+      this.teamFiles = [...this.teamFiles, response.blob];
+    }
+  }
+
+  onFileDeleted(path: string): void {
+    this.teamFiles = this.teamFiles.filter(f => f.name !== path);
   }
 }

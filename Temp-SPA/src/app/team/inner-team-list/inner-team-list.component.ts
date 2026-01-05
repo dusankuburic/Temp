@@ -12,16 +12,23 @@ import { TeamService } from 'src/app/core/services/team.service';
 import { TeamCreateModalComponent } from '../team-create-modal/team-create-modal.component';
 import { TeamEditModalComponent } from '../team-edit-modal/team-edit-modal.component';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
+import { TableColumn } from 'src/app/shared/components/tmp-table/tmp-table.component';
 
 @Component({
     selector: 'app-team-list',
     templateUrl: './inner-team-list.component.html',
+    styleUrl: './inner-team-list.component.css',
     standalone: false
 })
 export class TeamListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   editTeamIcon = faEdit;
   archiveTeamIcon = faTrashAlt;
   plusIcon = faPlusCircle;
+
+  columns: TableColumn[] = [
+    { key: 'name', header: 'Name', align: 'left' },
+    { key: 'options', header: 'Options', align: 'center' }
+  ];
 
   bsModalRef?: BsModalRef;
   subscriptions!: Subscription;

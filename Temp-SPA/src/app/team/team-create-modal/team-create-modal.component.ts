@@ -11,6 +11,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-team-create-modal',
     templateUrl: './team-create-modal.component.html',
+    styleUrls: ['../../shared/styles/modal.css'],
     standalone: false
 })
 export class TeamCreateModalComponent extends DestroyableComponent implements OnInit {
