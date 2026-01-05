@@ -11,6 +11,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-team-edit',
     templateUrl: './team-edit.component.html',
+    styleUrl: './team-edit.component.css',
     standalone: false
 })
 export class TeamEditComponent extends DestroyableComponent implements OnInit {

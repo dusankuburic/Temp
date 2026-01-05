@@ -12,6 +12,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-group-create',
     templateUrl: './group-create.component.html',
+    styleUrl: './group-create.component.css',
     standalone: false
 })
 

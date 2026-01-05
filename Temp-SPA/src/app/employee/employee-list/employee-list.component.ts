@@ -10,6 +10,7 @@ import { UnassignRoleDto } from 'src/app/core/models/unassignRoleDto';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
+import { TableColumn } from 'src/app/shared/components/tmp-table/tmp-table.component';
 import { EmployeeCreateModalComponent } from '../employee-create-modal/employee-create-modal.component';
 import { EmployeeEditModalComponent } from '../employee-edit-modal/employee-edit-modal.component';
 import { EmployeeAssignRoleModalComponent } from '../employee-assign-role-modal/employee-assign-role-modal.component';
@@ -18,6 +19,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-employee-list',
     templateUrl: './employee-list.component.html',
+    styleUrl: './employee-list.component.css',
     standalone: false
 })
 export class EmployeeListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
@@ -28,13 +30,20 @@ export class EmployeeListComponent extends DestroyableComponent implements OnIni
   deactivateUserIcon = faLockOpen
   plusIcon = faPlusCircle;
 
+  columns: TableColumn[] = [
+    { key: 'firstName', header: 'First Name', align: 'left' },
+    { key: 'lastName', header: 'Last Name', align: 'left' },
+    { key: 'role', header: 'Role', align: 'center' },
+    { key: 'actions', header: 'Options', align: 'center' }
+  ];
+
   bsModalRef?: BsModalRef;
   subscriptions!: Subscription;
   filtersForm!: FormGroup;
   employees!: Employee[];
   unassignRoleDto!: UnassignRoleDto;
   rolesSelect: SelectionOption[] = [
-    {value: '', display: 'Select Role', disabled: true},
+    {value: '', display: '', disabled: true},
     {value: '', display: 'All'},
     {value: 'User', display: 'User'},
     {value: 'Admin', display: 'Admin'},

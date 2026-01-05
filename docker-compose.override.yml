@@ -11,7 +11,11 @@ services:
     ports:
       - 1433:1433
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $${MSSQL_SA_PASSWORD} -Q 'SELECT 1' -C || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $${MSSQL_SA_PASSWORD} -Q 'SELECT 1' -C || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -28,12 +32,12 @@ services:
       - "10001:10001"
       - "10002:10002"
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "10000"]
+      test: ["CMD", "node", "-e", "require('net').connect(10000).destroy()"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
-      
+
   redis:
     container_name: "redis-cache"
     command: ["redis-server", "--appendonly", "yes"]
@@ -63,8 +67,8 @@ services:
     depends_on:
       - redis
 
-  temp.api:
-    container_name: temp.api
+  tempapi:
+    container_name: tempapi
     networks:
       - temp-network
     environment:
@@ -91,24 +95,36 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -k -f https://localhost:8081/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
+      test:
+        [
+          "CMD-SHELL",
+          "curl -k -f https://localhost:8081/health || curl -f http://localhost:8080/health || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
-  temp.spa.angular:
-    container_name: temp.spa.angular
+  tempspaangular:
+    container_name: tempspaangular
     networks:
       - temp-network
     ports:
       - 4323:80
       - 4443:443
     depends_on:
-      temp.api:
-        condition: service_healthy
+      tempapi:
+        condition: service_started
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost/health",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3

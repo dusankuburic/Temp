@@ -12,6 +12,7 @@ import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
 @Component({
     selector: 'workplace-create-modal',
     templateUrl: './workplace-create-modal.component.html',
+    styleUrls: ['../../shared/styles/modal.css'],
     standalone: false
 })
 export class WorkplaceCreateModalComponent extends DestroyableComponent implements OnInit {

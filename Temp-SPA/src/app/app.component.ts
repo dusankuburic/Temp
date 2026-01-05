@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthService } from './core/services/auth.service';
 
@@ -24,5 +25,9 @@ export class AppComponent implements OnInit {
     if (user) {
       this.authService.currentUser = user;
     }
+  }
+
+  get isLoggedIn(): boolean {
+    return this.authService.loggedIn();
   }
 }

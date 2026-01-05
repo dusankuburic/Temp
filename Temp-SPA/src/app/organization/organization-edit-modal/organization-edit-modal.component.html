@@ -1,52 +1,107 @@
-<div class="modal-header">
-    <h4 class="modal-title pull-left">{{title}}</h4>
-    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-      <span aria-hidden="true" class="visually-hidden">&times;</span>
+<div class="modal-header-obsidian">
+    <h4 class="modal-title-obsidian">{{title}}</h4>
+    <button type="button" class="modal-close-obsidian" aria-label="Close" (click)="bsModalRef.hide()">
+        <span class="modal-close-icon" aria-hidden="true">×</span>
     </button>
 </div>
-<div class="modal-body">
-    <form class="row g-2" [formGroup]="editOrganizationForm" (ngSubmit)="update()">
-        <div class="form-group">
-          <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
-        </div>
-        <div class="form-group">
-          <button type="submit" [disabled]="!editOrganizationForm.valid" class="btn btn-success btn-ts float-end">Save</button>
-        </div>
-      </form>
+<div class="modal-body-obsidian">
+    <tabset>
+        <tab heading="Profile">
+            <form [formGroup]="editOrganizationForm" (ngSubmit)="update()">
+                <tmp-card variant="filled" class="employee-profile-card">
+                    <div class="employee-profile-header">
+                        <tmp-avatar
+                            [profilePictureUrl]="profilePictureUrl"
+                            [displayName]="name.value ?? undefined"
+                            [size]="'large'"
+                            [shape]="'circle'">
+                        </tmp-avatar>
+                        <div class="employee-profile-info">
+                            <p class="employee-name">{{ name.value }}</p>
+                        </div>
+                    </div>
+                </tmp-card>
 
-    <hr class="my-4">
+                <tmp-card variant="filled" class="form-card">
+                    <h4 class="section-title">Organization Details</h4>
+                    <div class="modal-form-section modal-form-section-tight">
+                        <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Enter Organization Name'"></tmp-input>
+                    </div>
+                </tmp-card>
 
-    <div class="row">
-        <div class="col-md-6">
-            @if (profilePictureUrl) {
-            <div class="mb-3 text-center">
-                <tmp-avatar
-                    [profilePictureUrl]="profilePictureUrl"
-                    [displayName]="name.value ?? undefined"
-                    [size]="'large'"
-                    [shape]="'circle'">
-                </tmp-avatar>
-                <p class="mt-2 text-muted">Current Profile Picture</p>
+                <div class="modal-actions">
+                    <tmp-button type="submit" variant="success" [disabled]="!editOrganizationForm.valid">Save Organization</tmp-button>
+                </div>
+            </form>
+        </tab>
+
+        <tab heading="Files">
+            <div class="employee-files-grid">
+                <tmp-card variant="filled" class="upload-card">
+                    <h4 class="section-title">Upload Files</h4>
+                    <div class="modal-form-section modal-form-section-tight">
+                        <div class="modal-upload-section">
+                            <tmp-file-upload
+                                [label]="'Upload Photo'"
+                                [fileType]="'Image'"
+                                [maxSizeMB]="5"
+                                [uploadedFiles]="organizationFiles"
+                                (fileUploaded)="onFileUploaded($event)"
+                                (fileDeleted)="onFileDeleted($event)">
+                            </tmp-file-upload>
+                        </div>
+                        <div class="modal-upload-section">
+                            <tmp-file-upload
+                                [label]="'Upload Documents'"
+                                [fileType]="'Document'"
+                                [maxSizeMB]="10"
+                                [uploadedFiles]="organizationFiles"
+                                (fileUploaded)="onFileUploaded($event)"
+                                (fileDeleted)="onFileDeleted($event)">
+                            </tmp-file-upload>
+                        </div>
+                    </div>
+                </tmp-card>
+
+                <tmp-card variant="filled" class="files-table-card">
+                    <h4 class="section-title">File Library</h4>
+                    <tmp-table [hoverable]="true">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Type</th>
+                                <th class="text-center">Preview</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (organizationFiles && organizationFiles.length > 0) {
+                                @for (file of organizationFiles; track file.name) {
+                                <tr>
+                                    <td class="file-name" [attr.title]="file.name">{{file.name}}</td>
+                                    <td>{{file.fileType}}</td>
+                                    <td class="text-center">
+                                        @if (file.fileType === 'Image') {
+                                        <tmp-avatar
+                                            [profilePictureUrl]="file.name"
+                                            [displayName]="file.name"
+                                            [size]="'small'"
+                                            [shape]="'square'">
+                                        </tmp-avatar>
+                                        } @else {
+                                        <fa-icon [icon]="fileIcon" [size]="'xl'"></fa-icon>
+                                        }
+                                    </td>
+                                </tr>
+                                }
+                            } @else {
+                            <tr>
+                                <td colspan="3" class="empty-state">No files uploaded</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </tmp-table>
+                </tmp-card>
             </div>
-            }
-            <tmp-file-upload
-                [label]="'Upload Photo'"
-                [fileType]="'Image'"
-                [maxSizeMB]="5"
-                [uploadedFiles]="organizationFiles"
-                (fileUploaded)="onFileUploaded($event)"
-                (fileDeleted)="onFileDeleted($event)">
-            </tmp-file-upload>
-        </div>
-        <div class="col-md-6">
-            <tmp-file-upload
-                [label]="'Upload Documents'"
-                [fileType]="'Document'"
-                [maxSizeMB]="10"
-                [uploadedFiles]="organizationFiles"
-                (fileUploaded)="onFileUploaded($event)"
-                (fileDeleted)="onFileDeleted($event)">
-            </tmp-file-upload>
-        </div>
-    </div>
+        </tab>
+    </tabset>
 </div>

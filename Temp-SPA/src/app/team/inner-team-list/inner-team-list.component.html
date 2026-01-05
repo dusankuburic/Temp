@@ -1,62 +1,51 @@
-<div class="row justify-content-around">
- <div class="col-lg-2 col-md-6 col-sm-6">
-    @if (innerTeams) {
-    <h4>Teams inside {{group.name}}</h4>
-    }
-  </div>
-  <div class="col-lg-7">
-    <form class="form" [formGroup]="filtersForm">
-      <tmp-input [placeholder]="'Name'" [label]="'Name'" formControlName="name" [isFilter]="true"></tmp-input>
-  </form>
-  </div>
-  <div class="col-lg-2">
-    <button type="button" class="btn btn-success float-end" (click)="openCreateModal(group.id)" (keydown.enter)="openCreateModal(group.id)" (keydown.space)="openCreateModal(group.id)" aria-label="Create team">
-      <fa-icon [icon]="plusIcon"></fa-icon>
-    </button>
+<div class="team-list-header">
+  <div class="team-list-title-section">
+    <h1 class="team-list-title">{{group.name}} Teams</h1>
+    <p class="team-list-subtitle">Manage teams within this group</p>
   </div>
 </div>
 
-<div class="row justify-content-center">
-  <div class="col-lg-10">
-    <hr>
-    <table class="table table-striped table-hover text-center">
-      <thead>
-          <tr>
-            <th>Name</th>
-            <th>Options</th>
-          </tr>
-      </thead>
-      @if (innerTeams) {
-      <tbody> 
-        @for (team of innerTeams; track team.id) {
-        <tr>
-          <td>{{team.name}}</td>
-          <td>
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-primary" (click)="openEditModal(team.id, group.id)" (keydown.enter)="openEditModal(team.id, group.id)" (keydown.space)="openEditModal(team.id, group.id)" aria-label="Edit team">
-                <fa-icon [icon]="editTeamIcon"></fa-icon>
-              </button>
-              <button type="button" class="btn btn-danger" (click)="changeStatus(team.id)" (keydown.enter)="changeStatus(team.id)" (keydown.space)="changeStatus(team.id)" aria-label="Archive team">
-                <fa-icon [icon]="archiveTeamIcon"></fa-icon>
-              </button>
-            </div>
-          </td>  
-        </tr>
-        }
-      </tbody>
-      }
-    </table>
-  </div>
-  @if (!innerTeams.length) {
-  <div class="col-lg-6">
-    <div class="alert alert-info text-center" role="alert">
-      <h5>There are no teams inside group</h5>
+<div class="team-list-container">
+  <tmp-card variant="subtle" class="team-list-filters-card">
+    <div class="team-list-filters-header">
+      <h3 class="team-list-filters-title">Filters</h3>
+      <tmp-button variant="success" size="small" (clicked)="openCreateModal(group.id)" ariaLabel="Create team">
+        <fa-icon [icon]="plusIcon" [size]="'xl'"></fa-icon>
+        <span style="margin-left: var(--spacing-xs);">Create</span>
+      </tmp-button>
     </div>
-  </div>
-  }
-  </div>
-  @if (innerTeams.length) {
-  <div class="d-flex justify-content-center">
+    <form class="team-list-filters-form" [formGroup]="filtersForm">
+      <tmp-input placeholder="Name" label="Name" formControlName="name" [isFilter]="true"></tmp-input>
+    </form>
+  </tmp-card>
+
+  <tmp-card variant="filled" class="team-list-table-card">
+    <tmp-table
+      [columns]="columns"
+      [data]="innerTeams"
+      [striped]="true"
+      [hoverable]="true"
+      emptyMessage="No teams found">
+
+      <ng-template #rowTemplate let-team>
+        <tr>
+          <td>{{ team.name }}</td>
+          <td class="text-center">
+            <div class="tmp-button-group">
+              <tmp-button variant="primary" size="small" (clicked)="openEditModal(team.id, group.id)" ariaLabel="Edit team {{team.name}}">
+                <fa-icon [icon]="editTeamIcon" [size]="'lg'"></fa-icon>
+              </tmp-button>
+              <tmp-button variant="danger" size="small" (clicked)="changeStatus(team.id)" ariaLabel="Archive team {{team.name}}">
+                <fa-icon [icon]="archiveTeamIcon" [size]="'lg'"></fa-icon>
+              </tmp-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </tmp-table>
+  </tmp-card>
+
+  <div class="team-list-pagination">
     <tmp-pagination
       [totalCount]="pagination.totalItems"
       [pageSize]="pagination.itemsPerPage"
@@ -64,4 +53,4 @@
       (pageChanged)="pageChanged($event)">
     </tmp-pagination>
   </div>
-  }
+</div>

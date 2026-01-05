@@ -1,13 +1,20 @@
-<div class="row justify-content-center">
-  <div class="col-lg-4">
-    <h1 class="text-center">Edit Workplace</h1>
-      <form class="row g-2" [formGroup]="editWorkplaceForm" (ngSubmit)="update()">
-        <div class="form-group">
-          <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
-        </div>      
-        <div class="form-gorup">
-          <button type="submit" [disabled]="!editWorkplaceForm.valid" class="btn btn-success btn-ts float-end">Save</button>
-        </div>
-      </form>
-    </div>
+<div class="workplace-edit-header">
+  <div class="workplace-edit-title-section">
+    <h1 class="workplace-edit-title">Edit Workplace</h1>
+    <p class="workplace-edit-subtitle">Update workplace information</p>
+  </div>
+</div>
+
+<div class="workplace-edit-container">
+  <tmp-card variant="filled" class="workplace-edit-card">
+    <form [formGroup]="editWorkplaceForm" (ngSubmit)="update()">
+      <div class="workplace-edit-form-fields">
+        <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Enter workplace name'"></tmp-input>
+      </div>
+
+      <div class="workplace-edit-form-actions">
+        <tmp-button type="submit" variant="success" [disabled]="!editWorkplaceForm.valid">Save Changes</tmp-button>
+      </div>
+    </form>
+  </tmp-card>
 </div>

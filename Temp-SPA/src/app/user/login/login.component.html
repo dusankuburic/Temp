@@ -1,16 +1,57 @@
 @if (!loggedIn()) {
-<form class="row g-3" [formGroup]="loginForm" (ngSubmit)="login()">
-  <h2 class="text-center text-primary">Log In</h2>
-  <hr>
-  <div class="form-group">
-    <tmp-input [formControl]="username" [label]="'Username'" [placeholder]="'Username'"></tmp-input>
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-accent"></div>
+    <div class="login-header">
+      <div class="login-logo">
+        <i class="fa fa-bolt"></i>
+      </div>
+      <h1 class="login-title">Welcome back</h1>
+      <p class="login-subtitle">Sign in to continue to your workspace</p>
+    </div>
+
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
+      <div class="login-form-group">
+        <tmp-input
+          [formControl]="username"
+          [label]="'Username'"
+          [placeholder]="'Enter your username'">
+        </tmp-input>
+      </div>
+
+      <div class="login-form-group">
+        <tmp-input
+          [type]="'password'"
+          [formControl]="password"
+          [label]="'Password'"
+          [placeholder]="'Enter your password'">
+        </tmp-input>
+      </div>
+
+      <div class="login-actions">
+        <tmp-button
+          [fullWidth]="true"
+          variant="primary"
+          type="submit"
+          [disabled]="!loginForm.valid"
+          [loading]="false">
+          Sign In
+        </tmp-button>
+
+        <!-- Clear Button -->
+        <tmp-button
+          variant="secondary"
+          type="button"
+          (clicked)="cancel()">
+          Clear
+        </tmp-button>
+      </div>
+    </form>
+
+    <div class="login-footer">
+      <span class="login-footer-text type-caption">
+      </span>
+    </div>
   </div>
-  <div class="form-group">
-    <tmp-input [type]="'password'" [formControl]="password" [label]="'Password'" [placeholder]="'Password'"></tmp-input>
-  </div>
-  <div class="btn-group ">
-    <button class="btn btn-success btn-ts " [disabled]="!loginForm.valid" type="submit">Login</button>
-    <button class="btn btn-outline-primary btn-ts" type="button" (click)="cancel()">Cancel</button>
-  </div>
-</form>
+</div>
 }

@@ -11,6 +11,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-employee-assign-role-modal',
     templateUrl: './employee-assign-role-modal.component.html',
+    styleUrls: ['../../shared/styles/modal.css'],
     standalone: false
 })
 export class EmployeeAssignRoleModalComponent extends DestroyableComponent implements OnInit {

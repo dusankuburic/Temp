@@ -15,6 +15,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-engagement-create-modal',
     templateUrl: './engagement-create-modal.component.html',
+    styleUrls: ['../../shared/styles/modal.css'],
     standalone: false
 })
 export class EngagementCreateModalComponent extends DestroyableComponent implements OnInit{
@@ -25,10 +26,10 @@ export class EngagementCreateModalComponent extends DestroyableComponent impleme
   createEngagementForm!: FormGroup;
   engagement!: Engagement;
 
-  existingEngagements!: ExistingEngagement[];
+  existingEngagements: ExistingEngagement[] = [];
   employee!: Employee;
-  workplacesList!: SelectionOption[];
-  employmentStatusesList!: SelectionOption[];
+  workplacesList: SelectionOption[] = [];
+  employmentStatusesList: SelectionOption[] = [];
 
   salary = new FormControl('', [
     Validators.required,
@@ -88,7 +89,7 @@ export class EngagementCreateModalComponent extends DestroyableComponent impleme
     this.workplaceService.getWorkplacesForSelect().pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.workplacesList = [
-          {value: null, display: 'Select Workplace', disabled: true},
+          {value: null, display: '', disabled: true},
           ...res
         ];
       },
@@ -102,7 +103,7 @@ export class EngagementCreateModalComponent extends DestroyableComponent impleme
     this.employmentStatusService.getEmploymentStatusesForSelect().pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.employmentStatusesList = [
-          {value: null, display: 'Select Team', disabled: true},
+          {value: null, display: '', disabled: true},
           ...res
         ];
       },

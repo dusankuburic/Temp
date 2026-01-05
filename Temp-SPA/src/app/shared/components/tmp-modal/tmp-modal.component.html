@@ -1,0 +1,39 @@
+@if (isOpen) {
+  <div class="tmp-modal-overlay"
+       [class.tmp-modal-opening]="isAnimating && isOpen"
+       [class.tmp-modal-closing]="isAnimating && !isOpen"
+       (click)="onBackdropClick()"
+       role="dialog"
+       aria-modal="true"
+       [attr.aria-labelledby]="showHeader ? 'modal-title' : null">
+
+    <div [class]="modalClasses"
+         (click)="onDialogClick($event)">
+
+      @if (showHeader) {
+        <div class="tmp-modal-header">
+          <h2 class="tmp-modal-title" id="modal-title">{{ title }}</h2>
+          @if (closable) {
+            <button type="button"
+                    class="tmp-modal-close"
+                    (click)="close()"
+                    aria-label="Close modal">
+              <span class="tmp-modal-close-icon" aria-hidden="true">×</span>
+            </button>
+          }
+        </div>
+      }
+
+      <div class="tmp-modal-body">
+        <ng-content></ng-content>
+      </div>
+
+      @if (showFooter) {
+        <div class="tmp-modal-footer">
+          <ng-content select="[modal-footer]"></ng-content>
+        </div>
+      }
+
+    </div>
+  </div>
+}

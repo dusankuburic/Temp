@@ -1,37 +1,41 @@
-<div class="modal-header">
-    <h4 class="modal-title pull-left">{{title}}</h4>
-    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-      <span aria-hidden="true" class="visually-hidden">&times;</span>
+<div class="modal-header-obsidian">
+    <h4 class="modal-title-obsidian">{{title}}</h4>
+    <button type="button" class="modal-close-obsidian" aria-label="Close" (click)="bsModalRef.hide()">
+        <span class="modal-close-icon" aria-hidden="true">×</span>
     </button>
 </div>
-<div class="modal-body">
-    <form class="row g-2" [formGroup]="createOrganizationForm" (ngSubmit)="create()">
-        <div class="form-group">
-          <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Name'"></tmp-input>
+<div class="modal-body-obsidian">
+    <form [formGroup]="createOrganizationForm" (ngSubmit)="create()">
+        <div class="modal-form-section">
+            <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Enter Organization Name'"></tmp-input>
         </div>
-        <div class="form-group">
-          <button type="submit" [disabled]="!createOrganizationForm.valid || isUploading" class="btn btn-success btn-ts float-end">
-            {{ isUploading ? 'Uploading...' : 'Create' }}
-          </button>
-        </div>
-      </form>
 
-    <hr class="my-4">
+        <hr class="modal-section-divider">
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="mb-3">
-                <label class="form-label">Profile Picture</label>
-                <input class="form-control" type="file" (change)="onFileSelected($event)" accept="image/*" [disabled]="isUploading">
-                <div *ngIf="isUploading" class="text-info mt-1">Uploading...</div>
-            </div>
-
+        <div class="modal-upload-section">
             @if (profilePictureUrl) {
-            <div class="mb-3 text-center">
-                <img [src]="profilePictureUrl" class="img-thumbnail" style="max-height: 200px;" alt="Profile Preview">
-                <p class="mt-2 text-muted">Preview</p>
-            </div>
+                <div class="modal-upload-preview">
+                    <tmp-avatar
+                        [profilePictureUrl]="profilePictureUrl"
+                        [displayName]="name.value ?? undefined"
+                        [size]="'large'"
+                        [shape]="'circle'">
+                    </tmp-avatar>
+                    <p class="modal-upload-label">Current Profile Picture</p>
+                </div>
             }
+            <tmp-file-upload
+                [label]="'Upload Profile Picture'"
+                [fileType]="'Image'"
+                [maxSizeMB]="5"
+                [uploadedFiles]="organizationFiles"
+                (fileUploaded)="onFileUploaded($event)"
+                (fileDeleted)="onFileDeleted($event)">
+            </tmp-file-upload>
         </div>
-    </div>
+
+        <div class="modal-actions">
+            <tmp-button type="submit" variant="success" [disabled]="!createOrganizationForm.valid">Create Organization</tmp-button>
+        </div>
+    </form>
 </div>

@@ -1,23 +1,66 @@
-<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Temp</a>
-      @if (loggedIn()) {
-      <div class="dropdown" dropdown>
-        <span class="mr-1">
-          <tmp-avatar
-            [profilePictureUrl]="authService.currentUser?.profilePictureUrl ?? undefined"
-            [displayName]="authService.decodedToken?.unique_name ?? undefined"
-            [size]="'medium'"
-            [shape]="'circle'">
-          </tmp-avatar>
-        </span>
-        <span class="dropdown-toggle text-light" dropdownToggle>
-          {{authService.decodedToken?.unique_name | titlecase}}
-        </span>
-        <ul class="dropdown-menu" *dropdownMenu>
-          <li><a class="dropdown-item" href="#" (click)="logout()"><fa-icon [icon]="signOutIcon"></fa-icon> Logout</a></li>
-        </ul>
+<nav class="navbar-fluent" role="navigation" aria-label="Top navigation">
+  <div class="navbar-container">
+    <!-- Left section: Brand and toggle -->
+    <div class="navbar-left">
+      <button
+        class="navbar-toggle"
+        id="menu-toggle"
+        type="button"
+        aria-label="Toggle navigation menu"
+        [attr.aria-expanded]="isMenuOpen"
+        [class.is-open]="isMenuOpen"
+        (click)="toggleSidebar()">
+        <span class="navbar-toggle-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#" aria-label="Temp ERP Home">
+        <span class="navbar-brand-text">Temp</span>
+      </a>
+    </div>
+
+    <!-- Right section: User menu -->
+    @if (loggedIn()) {
+      <div class="navbar-right">
+        <div class="navbar-user-menu" [class.show]="isUserMenuOpen">
+          <button
+            class="navbar-user-button"
+            type="button"
+            aria-label="User menu"
+            [attr.aria-expanded]="isUserMenuOpen"
+            (click)="toggleUserMenu($event)">
+            <tmp-avatar
+              class="navbar-avatar"
+              [profilePictureUrl]="authService.currentUser?.profilePictureUrl"
+              [displayName]="authService.decodedToken?.unique_name"
+              [size]="'small'"
+              [shape]="'circle'">
+            </tmp-avatar>
+            <span class="navbar-username">
+              {{authService.decodedToken?.unique_name | titlecase}}
+            </span>
+            <span class="navbar-chevron">▼</span>
+          </button>
+
+          <div class="navbar-dropdown" *ngIf="isUserMenuOpen" (click)="$event.stopPropagation()">
+            <div class="navbar-dropdown-header">
+              <tmp-avatar
+                [profilePictureUrl]="authService.currentUser?.profilePictureUrl"
+                [displayName]="authService.decodedToken?.unique_name"
+                [size]="'medium'"
+                [shape]="'circle'">
+              </tmp-avatar>
+              <div class="navbar-dropdown-user-info">
+                <span class="navbar-dropdown-username">{{authService.decodedToken?.unique_name | titlecase}}</span>
+                <span class="navbar-dropdown-role">{{authService.decodedToken?.role}}</span>
+              </div>
+            </div>
+            <div class="navbar-dropdown-divider"></div>
+            <button class="navbar-dropdown-item" type="button" (click)="logout()">
+              <fa-icon class="navbar-dropdown-icon" [icon]="signOutIcon"></fa-icon>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
       </div>
-      }
+    }
   </div>
 </nav>

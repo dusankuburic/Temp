@@ -1,52 +1,53 @@
-<div class="modal-header">
-    <h4 class="modal-title pull-left">{{title}}</h4>
-    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-      <span aria-hidden="true" class="visually-hidden">&times;</span>
+<div class="modal-header-obsidian">
+    <h4 class="modal-title-obsidian">{{title}}</h4>
+    <button type="button" class="modal-close-obsidian" aria-label="Close" (click)="bsModalRef.hide()">
+        <span class="modal-close-icon" aria-hidden="true">×</span>
     </button>
 </div>
-<div class="modal-body">
-    <form class="row g-2" [formGroup]="editWorkplaceForm" (ngSubmit)="update()">
-        <div class="form-group">
-          <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
+<div class="modal-body-obsidian">
+    <form [formGroup]="editWorkplaceForm" (ngSubmit)="update()">
+        <div class="modal-form-section">
+            <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Enter Workplace Name'"></tmp-input>
         </div>
-        <div class="form-gorup">
-          <button type="submit" [disabled]="!editWorkplaceForm.valid" class="btn btn-success btn-ts float-end">Save</button>
-        </div>
-      </form>
 
-    <hr class="my-4">
+        <hr class="modal-section-divider">
 
-    <div class="row">
-        <div class="col-md-6">
-            @if (profilePictureUrl) {
-            <div class="mb-3 text-center">
-                <tmp-avatar
-                    [profilePictureUrl]="profilePictureUrl"
-                    [displayName]="name.value ?? undefined"
-                    [size]="'large'"
-                    [shape]="'circle'">
-                </tmp-avatar>
-                <p class="mt-2 text-muted">Current Profile Picture</p>
+        <div class="modal-form-grid">
+            <div class="modal-upload-section">
+                @if (profilePictureUrl) {
+                    <div class="modal-upload-preview">
+                        <tmp-avatar
+                            [profilePictureUrl]="profilePictureUrl"
+                            [displayName]="name.value ?? undefined"
+                            [size]="'large'"
+                            [shape]="'circle'">
+                        </tmp-avatar>
+                        <p class="modal-upload-label">Current Profile Picture</p>
+                    </div>
+                }
+                <tmp-file-upload
+                    [label]="'Upload Photo'"
+                    [fileType]="'Image'"
+                    [maxSizeMB]="5"
+                    [uploadedFiles]="workplaceFiles"
+                    (fileUploaded)="onFileUploaded($event)"
+                    (fileDeleted)="onFileDeleted($event)">
+                </tmp-file-upload>
             </div>
-            }
-            <tmp-file-upload
-                [label]="'Upload Photo'"
-                [fileType]="'Image'"
-                [maxSizeMB]="5"
-                [uploadedFiles]="workplaceFiles"
-                (fileUploaded)="onFileUploaded($event)"
-                (fileDeleted)="onFileDeleted($event)">
-            </tmp-file-upload>
+            <div class="modal-upload-section">
+                <tmp-file-upload
+                    [label]="'Upload Documents'"
+                    [fileType]="'Document'"
+                    [maxSizeMB]="10"
+                    [uploadedFiles]="workplaceFiles"
+                    (fileUploaded)="onFileUploaded($event)"
+                    (fileDeleted)="onFileDeleted($event)">
+                </tmp-file-upload>
+            </div>
         </div>
-        <div class="col-md-6">
-            <tmp-file-upload
-                [label]="'Upload Documents'"
-                [fileType]="'Document'"
-                [maxSizeMB]="10"
-                [uploadedFiles]="workplaceFiles"
-                (fileUploaded)="onFileUploaded($event)"
-                (fileDeleted)="onFileDeleted($event)">
-            </tmp-file-upload>
+
+        <div class="modal-actions">
+            <tmp-button type="submit" variant="success" [disabled]="!editWorkplaceForm.valid">Save Workplace</tmp-button>
         </div>
-    </div>
+    </form>
 </div>

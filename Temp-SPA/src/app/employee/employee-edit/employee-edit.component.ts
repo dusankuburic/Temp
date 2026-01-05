@@ -18,6 +18,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-employee-edit',
     templateUrl: './employee-edit.component.html',
+    styleUrl: './employee-edit.component.css',
     standalone: false
 })
 export class EmployeeEditComponent extends DestroyableComponent implements OnInit {
@@ -69,19 +70,19 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
     this.route.data.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.employee = data['employee'];
       this.setupForm(this.employee);
-    });
 
-    if (this.employee.role === 'Moderator') {
-      this.loadModeratorGroups(this.employee.teamId, this.employee.id);
-    } else {
-      this.loadFullTeam(this.employee.teamId);
-    }
+      if (this.employee?.role === 'Moderator') {
+        this.loadModeratorGroups(this.employee.teamId, this.employee.id);
+      } else {
+        this.loadFullTeam(this.employee.teamId);
+      }
+    });
 
     this.organizationService.getOrganizationsForSelect()
       .pipe(takeUntil(this.destroy$))
       .subscribe(res => {
         this.organizationsSelect = [
-          {value: null, display: 'Select Organization', hidden: true},
+          {value: null, display: '', hidden: true},
           ...res
         ];
       });
@@ -137,7 +138,7 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
     this.organizationService.getInnerGroupsForSelect(fullTeam.organizationId).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res !== null) {
         this.innerGroupsSelect = [
-          {value: null, display: 'Select Group', hidden: true},
+          {value: null, display: '', hidden: true},
           ...res
         ];
       }
@@ -148,7 +149,7 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
       if (res !== null) {
         this.innerTeamsSelect = [];
         this.innerTeamsSelect = [
-          {value: null, display: 'Select Team', hidden: true},
+          {value: null, display: '', hidden: true},
           ...res
         ];
       }
@@ -162,7 +163,7 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
     this.organizationService.getInnerGroupsForSelect(id).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res !== null) {
         this.innerGroupsSelect = [
-          {value: null, display: 'Select Group', hidden: true},
+          {value: null, display: '', hidden: true},
           ...res
         ];
         this.editEmployeeForm.get('teamId')?.setValue(null);
@@ -177,7 +178,7 @@ export class EmployeeEditComponent extends DestroyableComponent implements OnIni
       if (res !== null) {
         this.innerTeamsSelect = [];
         this.innerTeamsSelect = [
-          {value: null, display: 'Select Team', hidden: true},
+          {value: null, display: '', hidden: true},
           ...res
         ];
         this.editEmployeeForm.get('teamId')?.setValue(null);

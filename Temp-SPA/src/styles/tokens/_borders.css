@@ -1,0 +1,321 @@
+/**
+ * Fluent Design System - Border & Radius Tokens
+ *
+ * This file defines border width, style, and border radius tokens
+ * based on Microsoft Fluent Design System.
+ *
+ * Structure:
+ * - Border width tokens
+ * - Border radius tokens
+ * - Border style presets
+ * - Component-specific border configurations
+ *
+ * Reference: https://fluent2.microsoft.design
+ */
+
+:root {
+  /* ===================================
+   * BORDER WIDTH TOKENS
+   * =================================== */
+
+  --border-width-none: 0;
+  --border-width-thin: 1px;           /* Hairline - Most common */
+  --border-width-thick: 2px;          /* Emphasized borders */
+  --border-width-thicker: 3px;        /* Strong emphasis */
+  --border-width-thickest: 4px;       /* Maximum emphasis */
+
+  /* Semantic border widths */
+  --border-width-default: var(--border-width-thin);
+  --border-width-focus: var(--border-width-thick);
+  --border-width-active: var(--border-width-thick);
+
+  /* ===================================
+   * BORDER RADIUS TOKENS
+   * Fluent uses subtle curves for modern feel
+   * =================================== */
+
+  --border-radius-none: 0;
+  --border-radius-small: 4px;         /* Subtle rounding (was 2px) */
+  --border-radius-medium: 8px;        /* Default rounding (was 4px) */
+  --border-radius-large: 16px;        /* Emphasized rounding (was 6px) */
+  --border-radius-xl: 24px;           /* Extra large rounding (was 8px) */
+  --border-radius-xxl: 32px;          /* Cards, panels (was 12px) */
+  --border-radius-circular: 50%;      /* Perfect circles */
+  --border-radius-pill: 9999px;       /* Pill-shaped (fully rounded ends) */
+
+  /* Semantic radius tokens */
+  --border-radius-default: var(--border-radius-medium);
+  --border-radius-button: var(--border-radius-medium);
+  --border-radius-input: var(--border-radius-medium);
+  --border-radius-card: var(--border-radius-large);
+  --border-radius-modal: var(--border-radius-xl);
+  --border-radius-avatar: var(--border-radius-circular);
+  --border-radius-badge: var(--border-radius-pill);
+
+  /* ===================================
+   * BORDER STYLE TOKENS
+   * =================================== */
+
+  --border-style-solid: solid;
+  --border-style-dashed: dashed;
+  --border-style-dotted: dotted;
+  --border-style-none: none;
+
+  /* ===================================
+   * BORDER PRESETS
+   * Complete border definitions ready to use
+   * =================================== */
+
+  /* Default borders */
+  --border-default: var(--border-width-thin) var(--border-style-solid) var(--color-stroke-1);
+  --border-subtle: var(--border-width-thin) var(--border-style-solid) var(--color-stroke-2);
+  --border-strong: var(--border-width-thick) var(--border-style-solid) var(--color-stroke-accessible);
+
+  /* Interactive state borders */
+  --border-hover: var(--border-width-thin) var(--border-style-solid) var(--color-stroke-accessible);
+  --border-focus: var(--border-width-thick) var(--border-style-solid) var(--color-stroke-focus);
+  --border-active: var(--border-width-thick) var(--border-style-solid) var(--color-foreground-brand-1);
+  --border-disabled: var(--border-width-thin) var(--border-style-solid) var(--color-stroke-disabled);
+
+  /* Semantic borders */
+  --border-success: var(--border-width-thin) var(--border-style-solid) var(--color-success-primary);
+  --border-warning: var(--border-width-thin) var(--border-style-solid) var(--color-warning-primary);
+  --border-error: var(--border-width-thin) var(--border-style-solid) var(--color-error-primary);
+  --border-info: var(--border-width-thin) var(--border-style-solid) var(--color-info-primary);
+
+  /* Dashed borders */
+  --border-dashed: var(--border-width-thin) var(--border-style-dashed) var(--color-stroke-1);
+  --border-dashed-subtle: var(--border-width-thin) var(--border-style-dashed) var(--color-stroke-2);
+
+  /* ===================================
+   * COMPONENT-SPECIFIC BORDERS
+   * =================================== */
+
+  /* Button borders */
+  --border-button-default: var(--border-width-thin) var(--border-style-solid) var(--color-stroke-1);
+  --border-button-primary: var(--border-width-thin) var(--border-style-solid) transparent;
+  --border-button-outline: var(--border-width-thin) var(--border-style-solid) var(--color-foreground-brand-1);
+
+  /* Input borders */
+  --border-input-default: var(--border-width-thin) var(--border-style-solid) var(--color-stroke-1);
+  --border-input-hover: var(--border-width-thin) var(--border-style-solid) var(--color-stroke-accessible);
+  --border-input-focus: var(--border-width-thick) var(--border-style-solid) var(--color-stroke-focus);
+  --border-input-error: var(--border-width-thin) var(--border-style-solid) var(--color-error-primary);
+
+  /* Card borders */
+  --border-card: var(--border-width-thin) var(--border-style-solid) var(--color-stroke-1);
+  --border-card-hover: var(--border-width-thin) var(--border-style-solid) var(--color-stroke-accessible);
+
+  /* Divider */
+  --border-divider: var(--border-width-thin) var(--border-style-solid) var(--color-divider);
+
+  /* Table borders */
+  --border-table-cell: var(--border-width-thin) var(--border-style-solid) var(--color-stroke-2);
+  --border-table-header: var(--border-width-thick) var(--border-style-solid) var(--color-stroke-accessible);
+
+  /* ===================================
+   * OUTLINE TOKENS
+   * For focus indicators and accessibility
+   * =================================== */
+
+  --outline-width: 2px;
+  --outline-offset: 2px;
+  --outline-style: solid;
+  --outline-color: var(--color-stroke-focus);
+
+  /* Outline presets */
+  --outline-focus: var(--outline-width) var(--outline-style) var(--outline-color);
+  --outline-focus-offset: var(--outline-offset);
+}
+
+/* ===================================
+ * BORDER UTILITY CLASSES
+ * Helper classes for quick application
+ * =================================== */
+
+/* Border widths */
+.border-0 {
+  border-width: var(--border-width-none);
+}
+
+.border-thin {
+  border-width: var(--border-width-thin);
+}
+
+.border-thick {
+  border-width: var(--border-width-thick);
+}
+
+.border-thicker {
+  border-width: var(--border-width-thicker);
+}
+
+/* Border styles */
+.border-solid {
+  border-style: var(--border-style-solid);
+}
+
+.border-dashed {
+  border-style: var(--border-style-dashed);
+}
+
+.border-dotted {
+  border-style: var(--border-style-dotted);
+}
+
+.border-none {
+  border-style: var(--border-style-none);
+}
+
+/* Complete border presets */
+.border-default {
+  border: var(--border-default);
+}
+
+.border-subtle {
+  border: var(--border-subtle);
+}
+
+.border-strong {
+  border: var(--border-strong);
+}
+
+/* Semantic borders */
+.border-success {
+  border: var(--border-success);
+}
+
+.border-warning {
+  border: var(--border-warning);
+}
+
+.border-error {
+  border: var(--border-error);
+}
+
+.border-info {
+  border: var(--border-info);
+}
+
+/* Directional borders */
+.border-top {
+  border-top: var(--border-default);
+}
+
+.border-bottom {
+  border-bottom: var(--border-default);
+}
+
+.border-left {
+  border-left: var(--border-default);
+}
+
+.border-right {
+  border-right: var(--border-default);
+}
+
+/* Border radius utilities */
+.rounded-none {
+  border-radius: var(--border-radius-none);
+}
+
+.rounded-sm {
+  border-radius: var(--border-radius-small);
+}
+
+.rounded {
+  border-radius: var(--border-radius-medium);
+}
+
+.rounded-md {
+  border-radius: var(--border-radius-medium);
+}
+
+.rounded-lg {
+  border-radius: var(--border-radius-large);
+}
+
+.rounded-xl {
+  border-radius: var(--border-radius-xl);
+}
+
+.rounded-xxl {
+  border-radius: var(--border-radius-xxl);
+}
+
+.rounded-full {
+  border-radius: var(--border-radius-circular);
+}
+
+.rounded-pill {
+  border-radius: var(--border-radius-pill);
+}
+
+/* Component-specific radius */
+.rounded-button {
+  border-radius: var(--border-radius-button);
+}
+
+.rounded-input {
+  border-radius: var(--border-radius-input);
+}
+
+.rounded-card {
+  border-radius: var(--border-radius-card);
+}
+
+.rounded-modal {
+  border-radius: var(--border-radius-modal);
+}
+
+/* Directional border radius */
+.rounded-top {
+  border-top-left-radius: var(--border-radius-medium);
+  border-top-right-radius: var(--border-radius-medium);
+}
+
+.rounded-bottom {
+  border-bottom-left-radius: var(--border-radius-medium);
+  border-bottom-right-radius: var(--border-radius-medium);
+}
+
+.rounded-left {
+  border-top-left-radius: var(--border-radius-medium);
+  border-bottom-left-radius: var(--border-radius-medium);
+}
+
+.rounded-right {
+  border-top-right-radius: var(--border-radius-medium);
+  border-bottom-right-radius: var(--border-radius-medium);
+}
+
+/* Outline utilities */
+.outline-none {
+  outline: none;
+}
+
+.outline-focus {
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
+/* Focus-visible (keyboard navigation only) */
+.focus-outline:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
+/* Remove default outline and use box-shadow for focus */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.focus-ring:focus:not(:focus-visible) {
+  box-shadow: none;
+}
+
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}

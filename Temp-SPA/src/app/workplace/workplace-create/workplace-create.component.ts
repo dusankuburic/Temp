@@ -10,6 +10,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-workplace-create',
     templateUrl: './workplace-create.component.html',
+    styleUrl: './workplace-create.component.css',
     standalone: false
 })
 export class WorkplaceCreateComponent extends DestroyableComponent implements OnInit {

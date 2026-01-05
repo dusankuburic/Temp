@@ -16,6 +16,7 @@ import { EngagementCreateModalComponent } from '../engagement-create-modal/engag
 @Component({
     selector: 'app-engagement-with-employee-list',
     templateUrl: './engagement-with-employee-list.component.html',
+    styleUrl: './engagement-with-employee-list.component.css',
     standalone: false
 })
 export class EngagementWithEmployeeListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
@@ -25,7 +26,7 @@ export class EngagementWithEmployeeListComponent extends DestroyableComponent im
   subscriptions!: Subscription;
   filtersForm!: FormGroup;
   rolesSelect: SelectionOption[] = [
-    {value: '', display: 'Select Role', disabled: true},
+    {value: '', display: '', disabled: true},
     {value: '', display: 'All'},
     {value: 'User', display: 'User'},
     {value: 'Admin', display: 'Admin'},
@@ -34,6 +35,14 @@ export class EngagementWithEmployeeListComponent extends DestroyableComponent im
   employees!: Employee[];
   pagination!: Pagination;
   engagementParams!: EngagementParams;
+  isLoading = false;
+
+  columns = [
+    { key: 'firstName', header: 'First Name' },
+    { key: 'lastName', header: 'Last Name' },
+    { key: 'role', header: 'Role' },
+    { key: 'actions', header: 'Actions', align: 'center' as const }
+  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -129,13 +138,16 @@ export class EngagementWithEmployeeListComponent extends DestroyableComponent im
   }
 
   loadEmployeesWithEngagement(): void {
+    this.isLoading = true;
     this.engagementService.getEmployeesWithEngagement().pipe(takeUntil(this.destroy$)).subscribe({
         next: (res: PaginatedResult<Employee[]>) => {
           this.employees = res.result;
           this.pagination = res.pagination;
+          this.isLoading = false;
         },
         error: () => {
           this.alertify.error('Unable to list employees');
+          this.isLoading = false;
         }
       });
   }

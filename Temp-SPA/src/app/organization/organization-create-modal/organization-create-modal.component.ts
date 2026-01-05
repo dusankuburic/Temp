@@ -1,25 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { takeUntil, finalize } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { Organization } from 'src/app/core/models/organization';
 import { AlertifyService } from 'src/app/core/services/alertify.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
-import { UploadService } from 'src/app/core/services/upload.service';
 import { OrganizationValidators } from '../organization-validators';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
+import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
 
 @Component({
     selector: 'app-organization-create-modal',
     templateUrl: './organization-create-modal.component.html',
+    styleUrls: ['../../shared/styles/modal.css'],
     standalone: false
 })
 export class OrganizationCreateModalComponent extends DestroyableComponent implements OnInit {
   createOrganizationForm!: FormGroup;
   organization!: Organization;
   title?: string;
+  organizationFiles: BlobDto[] = [];
   profilePictureUrl?: string;
-  isUploading = false;
 
   name = new FormControl('',[
     Validators.required,
@@ -29,7 +30,6 @@ export class OrganizationCreateModalComponent extends DestroyableComponent imple
 
   constructor(
     private organizationService: OrganizationService,
-    private uploadService: UploadService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
     private validators: OrganizationValidators,
@@ -44,8 +44,6 @@ export class OrganizationCreateModalComponent extends DestroyableComponent imple
   }
 
   create(): void {
-    if (this.isUploading) return;
-
     this.organization = {
       ...this.createOrganizationForm.value,
       profilePictureUrl: this.profilePictureUrl
@@ -55,6 +53,7 @@ export class OrganizationCreateModalComponent extends DestroyableComponent imple
         this.bsModalRef.content.isSaved = true;
         this.alertify.success('Successfully created');
         this.createOrganizationForm.reset();
+        this.organizationFiles = [];
         this.profilePictureUrl = undefined;
       },
       error: () => {
@@ -63,21 +62,19 @@ export class OrganizationCreateModalComponent extends DestroyableComponent imple
     });
   }
 
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.isUploading = true;
-      this.uploadService.uploadFile(file)
-        .pipe(finalize(() => this.isUploading = false))
-        .subscribe({
-          next: () => {
-             this.profilePictureUrl = `http://127.0.0.1:10000/devstoreaccount1/uploads/${file.name}`;
-             this.alertify.success('Image uploaded successfully');
-          },
-          error: () => {
-            this.alertify.error('Image upload failed');
-          }
-        });
+  onFileUploaded(response: BlobResponse): void {
+    if (!response.error && response.blob) {
+      if (response.blob.fileType === 'Image') {
+        this.profilePictureUrl = response.blob.name;
+      }
+      this.organizationFiles = [...this.organizationFiles, response.blob];
     }
+  }
+
+  onFileDeleted(path: string): void {
+    if (path === this.profilePictureUrl) {
+      this.profilePictureUrl = undefined;
+    }
+    this.organizationFiles = this.organizationFiles.filter(f => f.name !== path);
   }
 }

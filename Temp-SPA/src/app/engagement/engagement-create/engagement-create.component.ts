@@ -15,6 +15,7 @@ import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select
 @Component({
     selector: 'app-engagement-create',
     templateUrl: './engagement-create.component.html',
+    styleUrl: './engagement-create.component.css',
     standalone: false
 })
 export class EngagementCreateComponent extends DestroyableComponent implements OnInit {
@@ -81,7 +82,7 @@ export class EngagementCreateComponent extends DestroyableComponent implements O
     this.workplaceService.getWorkplacesForSelect().pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.workplacesList = [
-          {value: null, display: 'Select Workplace', disabled: true},
+          {value: null, display: '', disabled: true},
           ...res
         ];
       },
@@ -95,7 +96,7 @@ export class EngagementCreateComponent extends DestroyableComponent implements O
     this.employmentStatusService.getEmploymentStatusesForSelect().pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.employmentStatusesList = [
-          {value: null, display: 'Select Team', disabled: true},
+          {value: null, display: '', disabled: true},
           ...res
         ];
       },

@@ -1,0 +1,83 @@
+<div class="tmp-table-wrapper">
+  <div class="tmp-table-container">
+    <table
+      [class]="tableClasses"
+      role="grid"
+      [attr.aria-rowcount]="safeData.length"
+      [attr.aria-colcount]="columns.length">
+      @if (columns.length) {
+        <thead class="tmp-table-head">
+          <tr role="row">
+            @for (column of columns; track column.key) {
+              <th
+                [style.width]="column.width"
+                [style.text-align]="getColumnAlign(column)"
+                [attr.colspan]="column.colspan || null"
+                scope="col"
+                role="columnheader"
+                [attr.aria-sort]="'none'">
+                {{ column.header }}
+              </th>
+            }
+          </tr>
+        </thead>
+      }
+
+      <!-- Body -->
+      <tbody class="tmp-table-body" [@tableAnimations]="safeData.length" *ngIf="!loading">
+        @if (safeData.length) {
+          @for (item of safeData; track trackByFn($index, item)) {
+            @if (rowTemplate) {
+              <ng-container *ngTemplateOutlet="rowTemplate; context: { $implicit: item, index: $index, rowIndex: $index }"></ng-container>
+            } @else {
+              <tr role="row" [attr.aria-rowindex]="$index + 2">
+                @for (column of columns; track column.key) {
+                  <td
+                    [style.text-align]="getColumnAlign(column)"
+                    role="gridcell"
+                    [attr.aria-colindex]="$index + 1">
+                    {{ item[column.key] }}
+                  </td>
+                }
+              </tr>
+            }
+          }
+        }
+      </tbody>
+      
+      <tbody class="tmp-table-body" *ngIf="loading">
+        @for (i of [1,2,3,4,5]; track i) {
+          <tr role="row">
+            @for (column of columns; track column.key) {
+              <td>
+                <div class="skeleton-loader skeleton-text"></div>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (!loading && !safeData.length && showEmptyState) {
+    <div class="tmp-table-empty" role="status" aria-live="polite" aria-atomic="true">
+      @if (emptyTemplate) {
+        <ng-container *ngTemplateOutlet="emptyTemplate"></ng-container>
+      } @else {
+        <div class="tmp-table-empty-content">
+          <svg
+            class="tmp-table-empty-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            aria-hidden="true">
+            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            <path d="M9 14l2 2 4-4"/>
+          </svg>
+          <p class="tmp-table-empty-text">{{ emptyMessage }}</p>
+        </div>
+      }
+    </div>
+  }
+</div>

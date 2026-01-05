@@ -1,61 +1,56 @@
-<div class="row d-flex justify-content-around">
-    <div class="col-lg-2">
-        <h4>Workplaces</h4>
-    </div>
-    <div class="col-lg-7">
-        <form class="form" [formGroup]="filtersForm">
-            <tmp-input [placeholder]="'Name'" [label]="'Name'" formControlName="name" [isFilter]="true"></tmp-input>
-        </form>
-    </div>
-    <div class="col-lg-2">
-        <button type="button" class="btn btn-success float-end" (click)="openCreateModal()" (keydown.enter)="openCreateModal()" (keydown.space)="openCreateModal()" aria-label="Create workplace">
-            <fa-icon [icon]="plusIcon"></fa-icon>
-        </button>
-    </div>
+<div class="workplace-list-header">
+  <div class="workplace-list-title-section">
+    <h1 class="workplace-list-title">Workplaces</h1>
+    <p class="workplace-list-subtitle">Manage and view all workplace locations</p>
+  </div>
 </div>
 
-<div class="row justify-content-center">
-    <div class="col-lg-10">
-        <hr>
-        <table class="table table-striped table-hover text-center">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Options</th>
-                </tr>
-            </thead>
-            <tbody>
-            @for (workplace of workplaces; track workplace.id) {
-            <tr>
-                <td>{{workplace.name}}</td>
-                <td>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary" (click)="openEditModal(workplace.id)" (keydown.enter)="openEditModal(workplace.id)" (keydown.space)="openEditModal(workplace.id)" aria-label="Edit workplace">
-                            <fa-icon [icon]="editIcon"></fa-icon>
-                        </button>
-                        <button type="button" class="btn btn-danger" (click)="changeStatus(workplace.id)" (keydown.enter)="changeStatus(workplace.id)" (keydown.space)="changeStatus(workplace.id)" aria-label="Archive workplace">
-                            <fa-icon [icon]="archiveIcon"></fa-icon>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            }
-            </tbody>
-        </table>
+<div class="workplace-list-container">
+  <tmp-card variant="subtle" class="workplace-list-filters-card">
+    <div class="workplace-list-filters-header">
+      <h3 class="workplace-list-filters-title">Filters</h3>
+      <tmp-button variant="success" size="small" (clicked)="openCreateModal()" ariaLabel="Create workplace">
+        <fa-icon [icon]="plusIcon" [size]="'xl'"></fa-icon>
+        <span style="margin-left: var(--spacing-xs);">Create</span>
+      </tmp-button>
     </div>
-    @if (!workplaces.length) {
-    <div class="col-lg-6">
-        <div class="alert alert-info text-center" role="alert">
-            <h5>There are no workplaces</h5>
-        </div>
-    </div>
-    }
-</div>
-<div class="d-flex justify-content-center">
+    <form class="workplace-list-filters-form" [formGroup]="filtersForm">
+      <tmp-input placeholder="Name" label="Name" formControlName="name" [isFilter]="true"></tmp-input>
+    </form>
+  </tmp-card>
+
+  <tmp-card variant="filled" class="workplace-list-table-card">
+    <tmp-table
+      [columns]="columns"
+      [data]="workplaces"
+      [striped]="true"
+      [hoverable]="true"
+      emptyMessage="No workplaces found">
+
+      <ng-template #rowTemplate let-workplace>
+        <tr>
+          <td>{{ workplace.name }}</td>
+          <td class="text-center">
+            <div class="tmp-button-group">
+              <tmp-button variant="primary" size="small" (clicked)="openEditModal(workplace.id)" ariaLabel="Edit workplace {{workplace.name}}">
+                <fa-icon [icon]="editIcon" [size]="'lg'"></fa-icon>
+              </tmp-button>
+              <tmp-button variant="danger" size="small" (clicked)="changeStatus(workplace.id)" ariaLabel="Archive workplace {{workplace.name}}">
+                <fa-icon [icon]="archiveIcon" [size]="'lg'"></fa-icon>
+              </tmp-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </tmp-table>
+  </tmp-card>
+
+  <div class="workplace-list-pagination">
     <tmp-pagination
-        [totalCount]="pagination.totalItems"
-        [pageSize]="pagination.itemsPerPage"
-        [pageNumber]="pagination.currentPage"
-        (pageChanged)="pageChanged($event)">
+      [totalCount]="pagination.totalItems"
+      [pageSize]="pagination.itemsPerPage"
+      [pageNumber]="pagination.currentPage"
+      (pageChanged)="pageChanged($event)">
     </tmp-pagination>
+  </div>
 </div>

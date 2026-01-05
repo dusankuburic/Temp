@@ -1,27 +1,38 @@
-<div class="row justify-content-center">
-  <div class="col-lg-6">
-    <h1 class="text-center">Create Application</h1>
-    <div  class="alert alert-info text-center" role="alert">
-      <h4>Team: {{team.name}}</h4>
-    </div>
-      <form class="row g-2" [formGroup]="createApplicationForm" (ngSubmit)="create()">
-        <div class="form-group">
-          <tmp-input formControlName="category" [label]="'Category'" [placeholder]="'Category'" ></tmp-input>
-        </div>
+<div class="application-header">
+  <div class="application-title-section">
+    <h1 class="application-title">Create Application</h1>
+    <p class="application-subtitle">Submit your application to {{team.name}}</p>
+  </div>
+</div>
 
-        <div class="form-group">
-          <h4>Content</h4>
-          <textarea [ngClass]="{'is-invalid': createApplicationForm.get('content')?.errors && createApplicationForm.get('content')?.touched}"
-            class="form-control"
+<div class="application-form-container">
+  <tmp-card variant="subtle" class="application-team-card">
+    <h4 class="application-team-name">Team: {{team.name}}</h4>
+  </tmp-card>
+
+  <tmp-card variant="filled" class="application-form-card">
+    <form [formGroup]="createApplicationForm" (ngSubmit)="create()">
+      <div class="application-form-section">
+        <tmp-input formControlName="category" [label]="'Category'" [placeholder]="'Enter application category'"></tmp-input>
+
+        <div class="application-textarea-group">
+          <label class="application-textarea-label">Content</label>
+          <textarea
+            class="application-textarea"
+            [class.application-textarea-error]="createApplicationForm.get('content')?.errors && createApplicationForm.get('content')?.touched"
             rows="7"
-            formControlName="content">
+            formControlName="content"
+            placeholder="Enter your application content...">
           </textarea>
-          <div class="invalid-feedback">Please enter a Content</div>
+          @if (createApplicationForm.get('content')?.errors && createApplicationForm.get('content')?.touched) {
+            <span class="application-textarea-error-text">Please enter content for your application</span>
+          }
         </div>
-        <div class="form-group">
-          <button type="submit" [disabled]="!createApplicationForm.valid" class="btn btn-success btn-ts float-right">Send</button>
-        </div>
-      </form>
-      
-    </div>
+      </div>
+
+      <div class="application-form-actions">
+        <tmp-button type="submit" variant="success" [disabled]="!createApplicationForm.valid">Submit Application</tmp-button>
+      </div>
+    </form>
+  </tmp-card>
 </div>

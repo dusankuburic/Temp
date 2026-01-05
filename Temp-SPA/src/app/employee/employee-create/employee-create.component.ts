@@ -12,6 +12,7 @@ import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 @Component({
     selector: 'app-employee-create',
     templateUrl: './employee-create.component.html',
+    styleUrl: './employee-create.component.css',
     standalone: false
 })
 export class EmployeeCreateComponent extends DestroyableComponent implements OnInit {
@@ -55,7 +56,7 @@ export class EmployeeCreateComponent extends DestroyableComponent implements OnI
       .pipe(takeUntil(this.destroy$))
       .subscribe(res => {
         this.organizationsSelect = [
-          {value: null, display: 'Select Organization', hidden: true},
+          {value: null, display: '', hidden: true},
           ...res
         ];
     });
@@ -69,11 +70,11 @@ export class EmployeeCreateComponent extends DestroyableComponent implements OnI
       .subscribe((res) => {
         if (res !== null) {
           this.innerGroupsSelect = [
-          {value: null, display: 'Select Group', hidden: true},
+          {value: null, display: '', hidden: true},
             ...res
           ];
           this.createEmployeeForm.get('groupId')?.setValue(null);
-          this.innerTeamsSelect = [{value: null, display: 'Select Team', hidden: true}];
+          this.innerTeamsSelect = [{value: null, display: '', hidden: true}];
         }
       });
   }
@@ -87,7 +88,7 @@ export class EmployeeCreateComponent extends DestroyableComponent implements OnI
         if (res !== null) {
           this.innerTeamsSelect = [];
           this.innerTeamsSelect = [
-            {value: null, display: 'Select Team', hidden: true},
+            {value: null, display: '', hidden: true},
             ...res
           ];
           this.createEmployeeForm.get('teamId')?.setValue(null);

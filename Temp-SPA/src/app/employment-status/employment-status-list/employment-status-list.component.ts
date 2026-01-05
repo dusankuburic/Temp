@@ -11,17 +11,24 @@ import { EmploymentStatusService } from 'src/app/core/services/employment-status
 import { EmploymentStatusCreateModalComponent } from '../employment-status-create-modal/employment-status-create-modal.component';
 import { EmploymentStatusEditModalComponent } from '../employment-status-edit-modal/employment-status-edit-modal.component';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
+import { TableColumn } from 'src/app/shared/components/tmp-table/tmp-table.component';
 
 @Component({
     selector: 'app-employment-status-list',
     templateUrl: './employment-status-list.component.html',
+    styleUrl: './employment-status-list.component.css',
     standalone: false
 })
 export class EmploymentStatusListComponent extends DestroyableComponent implements OnInit, AfterViewInit {
   editIcon = faEdit;
   archiveIcon = faTrashAlt;
   plusIcon = faPlusCircle;
-  
+
+  columns: TableColumn[] = [
+    { key: 'name', header: 'Name', align: 'left' },
+    { key: 'options', header: 'Options', align: 'center' }
+  ];
+
   bsModalRef?: BsModalRef;
   subscriptions!: Subscription;
   filtersForm!: FormGroup;

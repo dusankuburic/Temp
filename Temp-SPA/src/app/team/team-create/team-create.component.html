@@ -1,22 +1,27 @@
-<div class="row justify-content-center">
-  <div class="col-lg-8">
-    <h1 class="text-center">Create Team</h1>
-      <div class="row justify-content-center">
-        <div class="col-lg-6 col-sm-6 col-8 alert alert-info text-center" role="alert">
-          <h4> Group Name: {{group.name}}</h4>
-        </div>
-      </div>
-      <div class="row justify-content-center">
-          <div class="col-lg-6 col-sm-6 col-8">
-            <form class="row g-2" [formGroup]="createTeamForm" (ngSubmit)="create()">
-              <div class="form-group">
-                <tmp-input [formControl]="name" [label]="'Name'" placeholder="'Name'"></tmp-input>
-              </div>
-              <div class="form-group">
-                <button type="submit" [disabled]="!createTeamForm.valid" class="btn btn-success btn-ts float-end">Create</button>
-              </div>
-            </form>
-          </div>
-      </div>
+<div class="team-create-header">
+  <div class="team-create-title-section">
+    <h1 class="team-create-title">Create Team</h1>
+    <p class="team-create-subtitle">Add a new team to {{group.name}}</p>
   </div>
+</div>
+
+<div class="team-create-container">
+  <tmp-card variant="subtle" class="team-create-info-card">
+    <div class="team-create-info-item">
+      <span class="team-create-info-label">Group</span>
+      <span class="team-create-info-value">{{group.name}}</span>
+    </div>
+  </tmp-card>
+
+  <tmp-card variant="filled" class="team-create-card">
+    <form [formGroup]="createTeamForm" (ngSubmit)="create()">
+      <div class="team-create-form-fields">
+        <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Enter team name'"></tmp-input>
+      </div>
+
+      <div class="team-create-form-actions">
+        <tmp-button type="submit" variant="success" [disabled]="!createTeamForm.valid">Create Team</tmp-button>
+      </div>
+    </form>
+  </tmp-card>
 </div>

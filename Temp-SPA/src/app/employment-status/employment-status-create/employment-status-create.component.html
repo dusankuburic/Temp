@@ -1,13 +1,20 @@
-<div class="row justify-content-center">
-  <div class="col-lg-4">
-    <h1 class="text-center">Create Employment Status</h1>
-      <form class="row g-2" [formGroup]="createEmploymentStatusForm" (ngSubmit)="create()">
-        <div class="form-group">
-            <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Name'"></tmp-input>
-        </div>
-        <div class="form-gorup">
-          <button type="submit" [disabled]="!createEmploymentStatusForm.valid" class="btn btn-success btn-ts float-end">Create</button>
-        </div>
-      </form>
+<div class="employment-status-create-header">
+  <div class="employment-status-create-title-section">
+    <h1 class="employment-status-create-title">Create Employment Status</h1>
+    <p class="employment-status-create-subtitle">Add a new employment status to the system</p>
   </div>
+</div>
+
+<div class="employment-status-create-container">
+  <tmp-card variant="filled" class="employment-status-create-card">
+    <form [formGroup]="createEmploymentStatusForm" (ngSubmit)="create()">
+      <div class="employment-status-create-form-fields">
+        <tmp-input [formControl]="name" [label]="'Name'" [placeholder]="'Enter employment status name'"></tmp-input>
+      </div>
+
+      <div class="employment-status-create-form-actions">
+        <tmp-button type="submit" variant="success" [disabled]="!createEmploymentStatusForm.valid">Create Employment Status</tmp-button>
+      </div>
+    </form>
+  </tmp-card>
 </div>
