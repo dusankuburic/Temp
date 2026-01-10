@@ -8,6 +8,7 @@ using Temp.Database.Repositories;
 using Temp.Database.UnitOfWork;
 using Temp.Domain.Models;
 using Temp.Services.Integrations.Loggings;
+using Temp.Services.Integrations.Azure.AzureStorage;
 using Temp.Services.Organizations;
 using Temp.Services.Organizations.Exceptions;
 using Temp.Services.Organizations.Models.Commands;
@@ -25,6 +26,7 @@ public class OrganizationServiceTests
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<ILoggingBroker> _mockLoggingBroker;
     private readonly Mock<IIdentityProvider> _mockIdentityProvider;
+    private readonly Mock<IAzureStorageService> _mockAzureStorageService;
     private readonly IFixture _fixture;
     private readonly IOrganizationService _service;
 
@@ -35,6 +37,7 @@ public class OrganizationServiceTests
         _mockMapper = new Mock<IMapper>();
         _mockLoggingBroker = new Mock<ILoggingBroker>();
         _mockIdentityProvider = new Mock<IIdentityProvider>();
+        _mockAzureStorageService = new Mock<IAzureStorageService>();
         _fixture = new Fixture();
 
 
@@ -46,7 +49,8 @@ public class OrganizationServiceTests
             _mockUnitOfWork.Object,
             _mockMapper.Object,
             _mockLoggingBroker.Object,
-            _mockIdentityProvider.Object);
+            _mockIdentityProvider.Object,
+            _mockAzureStorageService.Object);
 
 
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
@@ -1029,7 +1033,8 @@ public class OrganizationServiceTests
             _mockUnitOfWork.Object,
             _mockMapper.Object,
             _mockLoggingBroker.Object,
-            _mockIdentityProvider.Object);
+            _mockIdentityProvider.Object,
+            _mockAzureStorageService.Object);
 
 
         service.Should().NotBeNull();

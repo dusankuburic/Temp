@@ -9,6 +9,7 @@ using Temp.Domain.Models;
 using Temp.Services.Employees;
 using Temp.Services.Engagements;
 using Temp.Services.Groups;
+using Temp.Services.Integrations.Azure.AzureStorage;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Organizations;
 using Temp.Services.Providers;
@@ -144,6 +145,7 @@ public class ServiceQueryOptimizationTests
         var mockMapper = new Mock<IMapper>();
         var mockLoggingBroker = new Mock<ILoggingBroker>();
         var mockIdentityProvider = new Mock<IIdentityProvider>();
+        var mockAzureStorageService = new Mock<IAzureStorageService>();
 
         var groups = _fixture.CreateMany<Group>(5).ToList();
         var mockQueryable = groups.AsQueryable().BuildMockDbSet().Object;
@@ -162,7 +164,8 @@ public class ServiceQueryOptimizationTests
             mockUnitOfWork.Object,
             mockMapper.Object,
             mockLoggingBroker.Object,
-            mockIdentityProvider.Object);
+            mockIdentityProvider.Object,
+            mockAzureStorageService.Object);
 
         mockGroupRepository.Verify(r => r.Query(), Times.Never);
     }
@@ -175,6 +178,7 @@ public class ServiceQueryOptimizationTests
         var mockMapper = new Mock<IMapper>();
         var mockLoggingBroker = new Mock<ILoggingBroker>();
         var mockIdentityProvider = new Mock<IIdentityProvider>();
+        var mockAzureStorageService = new Mock<IAzureStorageService>();
 
         var organizations = _fixture.CreateMany<Organization>(5).ToList();
         var mockQueryable = organizations.AsQueryable().BuildMockDbSet().Object;
@@ -191,7 +195,8 @@ public class ServiceQueryOptimizationTests
             mockUnitOfWork.Object,
             mockMapper.Object,
             mockLoggingBroker.Object,
-            mockIdentityProvider.Object);
+            mockIdentityProvider.Object,
+            mockAzureStorageService.Object);
 
         mockOrganizationRepository.Verify(r => r.Query(), Times.Never);
     }
@@ -204,6 +209,7 @@ public class ServiceQueryOptimizationTests
         var mockMapper = new Mock<IMapper>();
         var mockLoggingBroker = new Mock<ILoggingBroker>();
         var mockIdentityProvider = new Mock<IIdentityProvider>();
+        var mockAzureStorageService = new Mock<IAzureStorageService>();
 
         var employees = _fixture.CreateMany<Employee>(5).ToList();
         var mockQueryable = employees.AsQueryable().BuildMockDbSet().Object;
@@ -220,7 +226,8 @@ public class ServiceQueryOptimizationTests
             mockUnitOfWork.Object,
             mockMapper.Object,
             mockLoggingBroker.Object,
-            mockIdentityProvider.Object);
+            mockIdentityProvider.Object,
+            mockAzureStorageService.Object);
 
         mockEmployeeRepository.Verify(r => r.Query(), Times.Never);
     }
