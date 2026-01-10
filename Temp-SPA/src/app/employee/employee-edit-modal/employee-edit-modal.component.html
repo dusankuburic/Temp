@@ -15,7 +15,7 @@
                             <tmp-card variant="subtle" class="employee-profile-card">
                                 <div class="employee-profile-header">
                                     <tmp-avatar
-                                        [profilePictureUrl]="profilePictureUrl"
+                                        [profilePictureUrl]="profilePictureDisplayUrl"
                                         [displayName]="firstName.value + ' ' + lastName.value"
                                         [size]="'large'"
                                         [shape]="'circle'">
@@ -25,6 +25,20 @@
                                         @if (username) {
                                         <p class="employee-username">{{username}}</p>
                                         }
+                                        
+                                        <div class="employee-photo-actions" style="margin-top: 1rem;">
+                                            <label class="modal-file-label" for="editProfilePhoto">Change photo</label>
+                                            <input
+                                                id="editProfilePhoto"
+                                                class="modal-file-input"
+                                                type="file"
+                                                accept="image/*"
+                                                (change)="onProfilePhotoSelected($event)">
+                    
+                                            @if (profilePictureUrl) {
+                                                <button type="button" class="modal-file-clear" (click)="clearProfilePhoto()">Remove</button>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </tmp-card>
@@ -65,7 +79,7 @@
                     </div>
                 </form>
 
-                @if (employee?.role === 'Moderator') {
+                @if (employee && employee.role === 'Moderator') {
                 <tmp-card variant="filled" class="moderator-card">
                     <h4 class="section-title">Assign Moderator Groups</h4>
                     <div class="modal-form-grid">
@@ -132,72 +146,74 @@
             </div>
         </tab>
         <tab heading="Files">
-            <div class="employee-files-grid">
-                <tmp-card variant="filled" class="upload-card">
-                    <h4 class="section-title">Upload Files</h4>
-                    <div class="modal-form-section modal-form-section-tight">
-                        <div class="modal-upload-section">
-                            <tmp-file-upload
-                                [label]="'Upload Photo'"
-                                [fileType]="'Image'"
-                                [maxSizeMB]="5"
-                                [employeeId]="employeeId"
-                                [uploadedFiles]="employeeFiles"
-                                (fileUploaded)="onFileUploaded($event)"
-                                (fileDeleted)="onFileDeleted($event)">
-                            </tmp-file-upload>
-                        </div>
-                        <div class="modal-upload-section">
-                            <tmp-file-upload
-                                [label]="'Upload Documents'"
-                                [fileType]="'Document'"
-                                [maxSizeMB]="10"
-                                [employeeId]="employeeId"
-                                [uploadedFiles]="employeeFiles"
-                                (fileUploaded)="onFileUploaded($event)"
-                                (fileDeleted)="onFileDeleted($event)">
-                            </tmp-file-upload>
-                        </div>
-                    </div>
-                </tmp-card>
-
-                <tmp-card variant="filled" class="files-table-card">
-                    <h4 class="section-title">File Library</h4>
-                    <tmp-table [hoverable]="true">
-                        <thead>
-                            <tr>
-                                <th>File Name</th>
-                                <th>Type</th>
-                                <th class="text-center">Preview</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (file of employeeFiles; track file.name) {
-                            <tr>
-                                <td class="file-name" [attr.title]="file.name">{{file.name}}</td>
-                                <td>{{file.fileType}}</td>
-                                <td class="text-center">
-                                    @if (file.fileType === 'Image') {
-                                    <tmp-avatar
-                                        [profilePictureUrl]="file.name"
-                                        [displayName]="file.name"
-                                        [size]="'small'"
-                                        [shape]="'square'">
-                                    </tmp-avatar>
-                                    } @else {
-                                    <fa-icon [icon]="fileIcon" [size]="'xl'"></fa-icon>
+            <div class="pt-3">
+                <div class="employee-files-grid">
+                    <tmp-card variant="filled" class="upload-card">
+                        <h4 class="section-title">Upload Files</h4>
+                        <div class="modal-form-section modal-form-section-tight">
+                            <div class="row">
+                                <div class="col-6 col-xl-12 mb-3">
+                                    @if (employee) {
+                                    <tmp-file-upload
+                                        [label]="'Upload Photo'"
+                                        [fileType]="'Image'"
+                                        [maxSizeMB]="5"
+                                        [uploadedFiles]="employeeFiles"
+                                        [customFolder]="'employees/' + employeeId + '/images'"
+                                        [compact]="true"
+                                        (fileUploaded)="onFileUploaded($event)"
+                                        (fileDeleted)="onFileDeleted($event)">
+                                    </tmp-file-upload>
                                     }
-                                </td>
-                            </tr>
-                            }
-                            @if (!employeeFiles || employeeFiles.length === 0) {
-                            <tr>
-                                <td colspan="3" class="empty-state">No files uploaded</td>
-                            </tr>
-                            }
-                        </tbody>
-                    </tmp-table>
-                </tmp-card>
+                                </div>
+                                <div class="col-6 col-xl-12 mb-3">
+                                    @if (employee) {
+                                    <tmp-file-upload
+                                        [label]="'Upload Documents'"
+                                        [fileType]="'Document'"
+                                        [maxSizeMB]="10"
+                                        [uploadedFiles]="employeeFiles"
+                                        [customFolder]="'employees/' + employeeId + '/documents'"
+                                        [compact]="true"
+                                        (fileUploaded)="onFileUploaded($event)"
+                                        (fileDeleted)="onFileDeleted($event)">
+                                    </tmp-file-upload>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </tmp-card>
+
+                    <tmp-card variant="filled" class="files-table-card" style="overflow: visible;">
+                        <h4 class="section-title">File Library</h4>
+                        <tmp-table [hoverable]="true" [data]="paginatedFiles" [columns]="fileColumns">
+                            <ng-template #rowTemplate let-file>
+                                <tr>
+                                    <td class="file-name" [attr.title]="file.name" style="width: 50%;">{{file.displayName || file.name}}</td>
+                                    <td style="width: 20%;">{{file.fileTypeDisplay || file.fileType}}</td>
+                                    <td class="text-center" style="width: 30%;">
+                                        <div class="tmp-button-group justify-content-center">
+                                            <tmp-button variant="subtle" size="small" (clicked)="downloadFile(file)" ariaLabel="Download file {{file.displayName}}">
+                                                <fa-icon [icon]="downloadIcon" [size]="'xl'"></fa-icon>
+                                            </tmp-button>
+                                            <tmp-button variant="danger" size="small" (clicked)="removeFile(file)" ariaLabel="Delete file {{file.displayName}}">
+                                                <fa-icon [icon]="removeIcon" [size]="'xl'"></fa-icon>
+                                            </tmp-button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </tmp-table>
+                        <div class="mt-3 d-flex justify-content-center p-2">
+                            <tmp-pagination
+                                [totalCount]="employeeFiles.length"
+                                [pageSize]="pageSize"
+                                [pageNumber]="pageNumber"
+                                (pageChanged)="onPageChanged($event)">
+                            </tmp-pagination>
+                        </div>
+                    </tmp-card>
+                </div>
             </div>
         </tab>
     </tabset>

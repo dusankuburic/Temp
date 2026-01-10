@@ -18,28 +18,32 @@
 
 .tmp-table-container {
   width: 100%;
+  max-width: 100%; /* Ensure it doesn't overflow parent */
   overflow-x: auto;
   border-radius: var(--border-radius-large);
   background-color: var(--color-surface-1);
   border: 1px solid var(--color-border-subtle);
   box-shadow: var(--shadow-4);
 
-  /* Custom scrollbar */
+  /* Custom scrollbar - High visibility */
   scrollbar-width: thin;
-  scrollbar-color: var(--color-border-strong) transparent;
+  scrollbar-color: var(--color-foreground-3) var(--color-surface-3);
 }
 
 .tmp-table-container::-webkit-scrollbar {
-  height: 8px;
+  height: 10px; /* Slightly thicker */
+  width: 10px;
 }
 
 .tmp-table-container::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--color-surface-3);
+  border-radius: var(--border-radius-large);
 }
 
 .tmp-table-container::-webkit-scrollbar-thumb {
-  background-color: var(--color-border-strong);
+  background-color: var(--color-foreground-3);
   border-radius: var(--border-radius-pill);
+  border: 2px solid var(--color-surface-3); /* Padding effect */
 }
 
 .tmp-table-container::-webkit-scrollbar-thumb:hover {
@@ -52,6 +56,7 @@
 
 .tmp-table {
   width: 100%;
+  min-width: 600px;
   border-collapse: separate;
   border-spacing: 0;
   font-family: var(--font-family-base);

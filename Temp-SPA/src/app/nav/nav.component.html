@@ -29,13 +29,13 @@
             (click)="toggleUserMenu($event)">
             <tmp-avatar
               class="navbar-avatar"
-              [profilePictureUrl]="authService.currentUser?.profilePictureUrl"
-              [displayName]="authService.decodedToken?.unique_name"
+              [profilePictureUrl]="currentUser?.profilePictureUrl"
+              [displayName]="decodedToken?.unique_name"
               [size]="'small'"
               [shape]="'circle'">
             </tmp-avatar>
             <span class="navbar-username">
-              {{authService.decodedToken?.unique_name | titlecase}}
+              {{decodedToken?.unique_name | titlecase}}
             </span>
             <span class="navbar-chevron">▼</span>
           </button>
@@ -43,14 +43,14 @@
           <div class="navbar-dropdown" *ngIf="isUserMenuOpen" (click)="$event.stopPropagation()">
             <div class="navbar-dropdown-header">
               <tmp-avatar
-                [profilePictureUrl]="authService.currentUser?.profilePictureUrl"
-                [displayName]="authService.decodedToken?.unique_name"
+                [profilePictureUrl]="currentUser?.profilePictureUrl"
+                [displayName]="decodedToken?.unique_name"
                 [size]="'medium'"
                 [shape]="'circle'">
               </tmp-avatar>
               <div class="navbar-dropdown-user-info">
-                <span class="navbar-dropdown-username">{{authService.decodedToken?.unique_name | titlecase}}</span>
-                <span class="navbar-dropdown-role">{{authService.decodedToken?.role}}</span>
+                <span class="navbar-dropdown-username">{{decodedToken?.unique_name | titlecase}}</span>
+                <span class="navbar-dropdown-role">{{decodedToken?.role}}</span>
               </div>
             </div>
             <div class="navbar-dropdown-divider"></div>

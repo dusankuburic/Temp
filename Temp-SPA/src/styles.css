@@ -63,6 +63,9 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  background-color: var(--obsidian-28);
+  height: 100%;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -76,6 +79,8 @@ body {
   background: radial-gradient(circle at 20% 20%, var(--obsidian-22), var(--obsidian-26) 35%, var(--obsidian-28));
   background-attachment: fixed;
   overflow-x: hidden;
+  min-height: 100%;
+  padding-right: 0 !important;
 }
 
 /* ===================================
@@ -1117,4 +1122,11 @@ hr {
 
 .cdk-overlay-connected-position-bounding-box {
   z-index: 2000 !important;
+}
+
+/* Force modal-xl to be wider on large screens */
+@media (min-width: 800px) {
+  .modal-dialog.modal-xl {
+    max-width: 70vw !important;
+  }
 }
