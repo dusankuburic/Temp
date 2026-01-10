@@ -1,4 +1,5 @@
 using Azure.Storage.Blobs;
+using System.Threading;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
 using Microsoft.AspNetCore.Http;
@@ -12,8 +13,7 @@ public class AzureStorageService : IAzureStorageService, IStorageService
 {
     private readonly BlobServiceClient _blobServiceClient;
     private readonly AzureStorageOptions _options;
-    private BlobContainerClient? _containerClient;
-
+    
     private const string ImagesFolderPrefix = "images";
     private const string DocumentsFolderPrefix = "documents";
 
@@ -40,14 +40,10 @@ public class AzureStorageService : IAzureStorageService, IStorageService
     private static string BuildBlobPath(FileType fileType, DateTime createdAt, string fileName) =>
         $"{BuildFolderPath(fileType, createdAt)}/{UniqueFileName(fileName)}";
 
-    private async Task<BlobContainerClient> GetContainerClientAsync(CancellationToken ct = default) {
-        if (_containerClient != null)
-            return _containerClient;
-
-        _containerClient = _blobServiceClient.GetBlobContainerClient(_options.ContainerName);
-        await _containerClient.CreateIfNotExistsAsync(cancellationToken: ct);
-
-        return _containerClient;
+    private Task<BlobContainerClient> GetContainerClientAsync(CancellationToken ct = default) {
+        // We assume the container is created by AzureStorageInitializer at startup
+        var client = _blobServiceClient.GetBlobContainerClient(_options.ContainerName);
+        return Task.FromResult(client);
     }
 
     private BlobResponseDto? ValidateFile(IFormFile file, FileType fileType) {
@@ -126,18 +122,20 @@ public class AzureStorageService : IAzureStorageService, IStorageService
             $"File {blobPath} uploaded successfully");
     }
 
-    public Task<BlobResponseDto> UploadImageAsync(IFormFile image, DateTime? createdAt = null, CancellationToken ct = default) =>
+    public Task<BlobResponseDto> UploadImageAsync(IFormFile image, DateTime? createdAt = null, string? folder = null, CancellationToken ct = default) =>
         UploadAsync(new BlobUploadRequest {
             File = image,
             FileType = FileType.Image,
-            CreatedAt = createdAt
+            CreatedAt = createdAt,
+            CustomFolder = folder
         }, ct);
 
-    public Task<BlobResponseDto> UploadDocumentAsync(IFormFile document, DateTime? createdAt = null, CancellationToken ct = default) =>
+    public Task<BlobResponseDto> UploadDocumentAsync(IFormFile document, DateTime? createdAt = null, string? folder = null, CancellationToken ct = default) =>
         UploadAsync(new BlobUploadRequest {
             File = document,
             FileType = FileType.Document,
-            CreatedAt = createdAt
+            CreatedAt = createdAt,
+            CustomFolder = folder
         }, ct);
 
     public async Task<List<BlobDto>> ListAsync(CancellationToken ct = default) {
@@ -146,6 +144,11 @@ public class AzureStorageService : IAzureStorageService, IStorageService
 
         await foreach (var file in container.GetBlobsAsync(cancellationToken: ct)) {
             var fullUri = $"{container.Uri}/{file.Name}";
+            if (!string.IsNullOrEmpty(_options.PublicHost) && fullUri.Contains("http://azurite:10000"))
+            {
+                fullUri = fullUri.Replace("http://azurite:10000", _options.PublicHost);
+            }
+
             var folderPath = file.Name.Contains('/') ? file.Name[..file.Name.LastIndexOf('/')] : string.Empty;
 
             files.Add(new BlobDto {
@@ -161,18 +164,23 @@ public class AzureStorageService : IAzureStorageService, IStorageService
         return files;
     }
 
-    public async Task<List<BlobDto>> ListAsync(FileType fileType, DateTime? fromDate = null, DateTime? toDate = null, CancellationToken ct = default) {
+    public async Task<List<BlobDto>> ListAsync(FileType fileType, DateTime? fromDate = null, DateTime? toDate = null, string? prefix = null, CancellationToken ct = default) {
         var container = await GetContainerClientAsync(ct);
         var files = new List<BlobDto>();
-        var prefix = GetFolderPrefix(fileType);
+        var searchPrefix = !string.IsNullOrEmpty(prefix) ? prefix : GetFolderPrefix(fileType);
 
-        await foreach (var file in container.GetBlobsAsync(prefix: prefix, cancellationToken: ct)) {
+        await foreach (var file in container.GetBlobsAsync(prefix: searchPrefix, cancellationToken: ct)) {
             var createdAt = file.Properties.CreatedOn?.UtcDateTime;
 
             if (fromDate.HasValue && createdAt < fromDate.Value) continue;
             if (toDate.HasValue && createdAt > toDate.Value) continue;
 
             var fullUri = $"{container.Uri}/{file.Name}";
+            if (!string.IsNullOrEmpty(_options.PublicHost) && fullUri.Contains("http://azurite:10000"))
+            {
+                fullUri = fullUri.Replace("http://azurite:10000", _options.PublicHost);
+            }
+
             var folderPath = file.Name.Contains('/') ? file.Name[..file.Name.LastIndexOf('/')] : string.Empty;
 
             files.Add(new BlobDto {
@@ -241,7 +249,15 @@ public class AzureStorageService : IAzureStorageService, IStorageService
         };
         sasBuilder.SetPermissions(BlobSasPermissions.Read);
 
-        return client.GenerateSasUri(sasBuilder).ToString();
+        var uri = client.GenerateSasUri(sasBuilder).ToString();
+
+        // Fix for docker development environment where internal host is not accessible to browser
+        if (!string.IsNullOrEmpty(_options.PublicHost) && uri.Contains("http://azurite:10000"))
+        {
+            return uri.Replace("http://azurite:10000", _options.PublicHost);
+        }
+
+        return uri;
     }
 
     public async Task<string> GenerateSasTokenForUploadAsync(string filename, FileType fileType, CancellationToken ct = default)

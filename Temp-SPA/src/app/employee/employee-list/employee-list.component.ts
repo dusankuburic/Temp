@@ -50,7 +50,9 @@ export class EmployeeListComponent extends DestroyableComponent implements OnIni
     {value: 'Moderator', display: 'Moderator'},
     {value: 'None', display: 'None'}];
   employeeParams!: EmployeeParams;
+
   pagination!: Pagination;
+  isLoading = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -142,7 +144,7 @@ export class EmployeeListComponent extends DestroyableComponent implements OnIni
 
   openEditModal(id: number): void {
     const initialState: ModalOptions = {
-      class: 'modal-dialog-centered',
+      class: 'modal-dialog-centered modal-xl',
       initialState: {
         title: 'Edit Employee',
         employeeId: id
@@ -187,15 +189,20 @@ export class EmployeeListComponent extends DestroyableComponent implements OnIni
   }
 
   loadEmployees(): void {
+    this.isLoading = true;
     this.employeeService.getEmployees()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+      )
       .subscribe({
         next: (res: PaginatedResult<Employee[]>) => {
           this.employees = res.result;
           this.pagination = res.pagination;
+          this.isLoading = false;
         },
         error: () => {
           this.alertify.error('Unable to load employees');
+          this.isLoading = false;
         }
       });
   }

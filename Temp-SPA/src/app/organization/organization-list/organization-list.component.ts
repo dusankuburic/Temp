@@ -117,7 +117,7 @@ export class OrganizationListComponent extends DestroyableComponent implements O
 
   openEditModal(id: number): void {
     const initialState: ModalOptions = {
-      class: 'modal-dialog-centered',
+      class: 'modal-dialog-centered modal-xl',
       initialState: {
         title: 'Edit Organization',
         organizationId: id

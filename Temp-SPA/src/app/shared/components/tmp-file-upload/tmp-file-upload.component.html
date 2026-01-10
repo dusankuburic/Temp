@@ -5,6 +5,7 @@
     class="upload-zone"
     [class.drag-over]="isDragOver"
     [class.uploading]="isUploading"
+    [class.compact]="compact"
     (dragover)="onDragOver($event)"
     (dragleave)="onDragLeave($event)"
     (drop)="onDrop($event)">

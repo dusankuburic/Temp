@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { faFile, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faMinus, faPlus, faCloudDownloadAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs';
 import { Employee } from 'src/app/core/models/employee';
 import { Group, ModeratorGroups } from 'src/app/core/models/group';
@@ -13,9 +14,11 @@ import { EmployeeService } from 'src/app/core/services/employee.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { OrganizationService } from 'src/app/core/services/organization.service';
 import { TeamService } from 'src/app/core/services/team.service';
+import { FileService } from 'src/app/core/services/file.service';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
 import { BlobDto, BlobResponse } from 'src/app/core/models/blob';
+import { TableColumn } from 'src/app/shared/components/tmp-table/tmp-table.component';
 
 @Component({
     selector: 'app-employee-edit-modal',
@@ -27,10 +30,21 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
   minusIcon = faMinus;
   plusIcon = faPlus;
   fileIcon = faFile;
+  downloadIcon = faCloudDownloadAlt;
+  removeIcon = faTrashAlt;
 
   title?: string;
   employeeId!: number;
   editEmployeeForm!: FormGroup;
+  employeeFiles: any[] = [];
+  
+  pageNumber = 1;
+  pageSize = 5;
+
+  get paginatedFiles(): any[] {
+      const start = (this.pageNumber - 1) * this.pageSize;
+      return this.employeeFiles.slice(start, start + this.pageSize);
+  }
   employee!: Employee;
   username?: string;
   fullTeam!: FullTeam;
@@ -39,8 +53,16 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
   innerTeamsSelect!: SelectionOption[];
   currentModeratorGroups!: Group[];
   freeModeratorGroups!: Group[];
-  employeeFiles: BlobDto[] = [];
+
+  fileColumns: TableColumn[] = [
+      { key: 'displayName', header: 'File Name', width: '50%' },
+      { key: 'fileType', header: 'Type', width: '20%' },
+      { key: 'actions', header: 'Actions', align: 'center', width: '30%' }
+  ];
+
   profilePictureUrl?: string;
+  profilePictureDisplayUrl?: string;
+  isSaved = false;
 
   firstName = new FormControl('', [
     Validators.required,
@@ -59,8 +81,10 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
     private organizationService: OrganizationService,
     private groupService: GroupService,
     private teamService: TeamService,
+    private fileService: FileService,
     private fb: FormBuilder,
     private alertify: AlertifyService,
+    private http: HttpClient,
     public bsModalRef: BsModalRef) {
     super();
   }
@@ -90,6 +114,7 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
           this.loadFullTeam(this.employee.teamId);
         }
 
+        this.loadEmployeeFiles();
       },
       error: () => {
         this.alertify.error('Unable to get employee');
@@ -111,6 +136,18 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
         lastName: employee.lastName
       });
       this.profilePictureUrl = employee.profilePictureUrl;
+      
+      if (this.profilePictureUrl) {
+          this.fileService.getDownloadUrl(this.profilePictureUrl).pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: (res) => {
+                    this.profilePictureDisplayUrl = res.url;
+                },
+                error: () => {
+                  console.error('Failed to load profile picture URL');
+                }
+            });
+      }
   }
   
   loadEmployeeUsername(employeeId: number) {
@@ -122,6 +159,25 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
         this.alertify.error('Unable to get employee username');
       }
     })
+  }
+
+  loadEmployeeFiles(): void {
+    const images$ = this.fileService.listImages(undefined, undefined, `employees/${this.employeeId}/images`);
+    const documents$ = this.fileService.listDocuments(undefined, undefined, `employees/${this.employeeId}/documents`);
+
+    forkJoin([images$, documents$]).pipe(takeUntil(this.destroy$)).subscribe({
+      next: ([images, documents]) => {
+        const allFiles = [...images, ...documents];
+        this.employeeFiles = allFiles.map(file => ({
+            ...file,
+            displayName: file.name ? (file.name.split('/').pop() || file.name) : 'Unknown',
+            fileTypeDisplay: file.fileType === 'Image' ? 'Image' : 'Document'
+        }));
+      },
+      error: () => {
+        this.alertify.error('Failed to load employee files');
+      }
+    });
   }
 
   loadFullTeam(id: number): void {
@@ -252,7 +308,7 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
 
     this.employeeService.updateEmployee(employeeForm).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
-        this.bsModalRef.content.isSaved = true;
+        this.isSaved = true;
         this.alertify.success('Successfully updated');
       },
       error: () => {
@@ -262,20 +318,122 @@ export class EmployeeEditModalComponent extends DestroyableComponent implements 
   }
 
   onFileUploaded(response: BlobResponse): void {
-    if (!response.error && response.blob) {
-      // For profile picture (images), store the URL
-      if (response.blob.fileType === 'Image') {
-        this.profilePictureUrl = response.blob.name;
+      if (!response.error && response.blob) {
+          if (response.blob.fileType === 'Image') {
+              this.profilePictureUrl = response.blob.name;
+          }
+          const fileName = response.blob.name || 'Unknown';
+          const processed = {
+              ...response.blob,
+              displayName: fileName.split('/').pop() || fileName,
+              fileTypeDisplay: response.blob.fileType === 'Image' ? 'Image' : 'Document'
+          };
+          this.employeeFiles = [...this.employeeFiles, processed];
       }
-      this.employeeFiles = [...this.employeeFiles, response.blob];
-    }
   }
 
   onFileDeleted(path: string): void {
-    // If deleted file is the profile picture, clear it
-    if (path === this.profilePictureUrl) {
-      this.profilePictureUrl = undefined;
+      if (path === this.profilePictureUrl) {
+          this.profilePictureUrl = undefined;
+          this.profilePictureDisplayUrl = undefined;
+      }
+      this.employeeFiles = this.employeeFiles.filter(f => f.name !== path);
+  }
+
+  onProfilePhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+
+    if (!file) {
+      return;
     }
-    this.employeeFiles = this.employeeFiles.filter(f => f.name !== path);
+
+    if (!file.type.startsWith('image/')) {
+      this.alertify.error('Please select an image file');
+      input.value = '';
+      return;
+    }
+
+    const maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      this.alertify.error('File size exceeds 5MB limit');
+      input.value = '';
+      return;
+    }
+
+    this.profilePictureDisplayUrl = URL.createObjectURL(file);
+
+    this.fileService.uploadImage(file).pipe(takeUntil(this.destroy$)).subscribe({
+        next: (res: BlobResponse) => {
+            if (res.blob) {
+                this.profilePictureUrl = res.blob.name;
+                const processed = {
+                  ...res.blob,
+                  displayName: res.blob.name?.split('/').pop() || res.blob.name,
+                  fileTypeDisplay: 'Image'
+                };
+                this.employeeFiles = [...this.employeeFiles, processed];
+            } else {
+                this.alertify.error('Upload succeeded but no blob returned');
+            }
+        },
+        error: () => {
+             this.alertify.error('Unable to upload profile photo');
+             input.value = '';
+        }
+    });
+  }
+
+  clearProfilePhoto(): void {
+    this.profilePictureUrl = undefined;
+    this.profilePictureDisplayUrl = undefined;
+  }
+
+  downloadFile(file: any): void {
+    if (!file.name) {
+        this.alertify.error('File path not available');
+        return;
+    }
+
+    this.fileService.getDownloadUrl(file.name).pipe(takeUntil(this.destroy$)).subscribe({
+        next: (res) => {
+            this.http.get(res.url, { responseType: 'blob' }).subscribe({
+                next: (blob) => {
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    link.download = file.displayName || 'download';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(downloadUrl);
+                },
+                error: () => this.alertify.error('Failed to download file content')
+            });
+        },
+        error: () => this.alertify.error('Failed to get download URL')
+    });
+  }
+
+  removeFile(file: any): void {
+      if (!file.name) return;
+      
+      this.alertify.confirm('Are you sure you want to delete this file?', () => {
+          this.fileService.delete(file.name).pipe(takeUntil(this.destroy$)).subscribe({
+              next: () => {
+                  this.alertify.success('File deleted');
+                  this.employeeFiles = this.employeeFiles.filter(f => f.name !== file.name);
+                  if (this.profilePictureUrl === file.name) {
+                      this.profilePictureUrl = undefined;
+                      this.profilePictureDisplayUrl = undefined;
+                  }
+              },
+              error: () => this.alertify.error('Failed to delete file')
+          });
+      });
+  }
+
+  onPageChanged(page: number): void {
+      this.pageNumber = page;
   }
 }
