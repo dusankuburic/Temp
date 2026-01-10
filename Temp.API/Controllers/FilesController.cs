@@ -24,8 +24,9 @@ public class FilesController : ControllerBase
     public async Task<IActionResult> ListImages(
         [FromQuery] DateTime? from,
         [FromQuery] DateTime? to,
+        [FromQuery] string? folder,
         CancellationToken ct) {
-        var result = await _azureStorageService.ListAsync(FileType.Image, from, to, ct);
+        var result = await _azureStorageService.ListAsync(FileType.Image, from, to, folder, ct);
         return Ok(result);
     }
 
@@ -33,8 +34,9 @@ public class FilesController : ControllerBase
     public async Task<IActionResult> ListDocuments(
         [FromQuery] DateTime? from,
         [FromQuery] DateTime? to,
+        [FromQuery] string? folder,
         CancellationToken ct) {
-        var result = await _azureStorageService.ListAsync(FileType.Document, from, to, ct);
+        var result = await _azureStorageService.ListAsync(FileType.Document, from, to, folder, ct);
         return Ok(result);
     }
 
@@ -51,11 +53,12 @@ public class FilesController : ControllerBase
     public async Task<IActionResult> UploadImage(
         IFormFile file,
         [FromQuery] DateTime? createdAt,
+        [FromQuery] string? folder,
         CancellationToken ct) {
         if (file == null || file.Length == 0)
             return BadRequest("No file provided");
 
-        var result = await _azureStorageService.UploadImageAsync(file, createdAt, ct);
+        var result = await _azureStorageService.UploadImageAsync(file, createdAt, folder, ct);
         return result.Error ? BadRequest(result) : Ok(result);
     }
 
@@ -63,11 +66,12 @@ public class FilesController : ControllerBase
     public async Task<IActionResult> UploadDocument(
         IFormFile file,
         [FromQuery] DateTime? createdAt,
+        [FromQuery] string? folder,
         CancellationToken ct) {
         if (file == null || file.Length == 0)
             return BadRequest("No file provided");
 
-        var result = await _azureStorageService.UploadDocumentAsync(file, createdAt, ct);
+        var result = await _azureStorageService.UploadDocumentAsync(file, createdAt, folder, ct);
         return result.Error ? BadRequest(result) : Ok(result);
     }
 

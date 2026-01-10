@@ -42,6 +42,8 @@ public static class ProgramServiceCollection
         services.AddScoped<IAzureStorageService>(sp => sp.GetRequiredService<AzureStorageService>());
         services.AddScoped<IStorageService>(sp => sp.GetRequiredService<AzureStorageService>());
 
+        services.AddHostedService<AzureStorageInitializer>();
+
         return services;
     }
 }

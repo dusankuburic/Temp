@@ -16,17 +16,19 @@ export class FileService {
     return this.http.get<BlobDto[]>(this.baseUrl);
   }
 
-  listImages(from?: Date, to?: Date): Observable<BlobDto[]> {
+  listImages(from?: Date, to?: Date, folder?: string): Observable<BlobDto[]> {
     let params = new HttpParams();
     if (from) params = params.append('from', from.toISOString());
     if (to) params = params.append('to', to.toISOString());
+    if (folder) params = params.append('folder', folder);
     return this.http.get<BlobDto[]>(`${this.baseUrl}/images`, { params });
   }
 
-  listDocuments(from?: Date, to?: Date): Observable<BlobDto[]> {
+  listDocuments(from?: Date, to?: Date, folder?: string): Observable<BlobDto[]> {
     let params = new HttpParams();
     if (from) params = params.append('from', from.toISOString());
     if (to) params = params.append('to', to.toISOString());
+    if (folder) params = params.append('folder', folder);
     return this.http.get<BlobDto[]>(`${this.baseUrl}/documents`, { params });
   }
 
@@ -36,19 +38,21 @@ export class FileService {
     return this.http.post<BlobResponse>(this.baseUrl, formData);
   }
 
-  uploadImage(file: File, createdAt?: Date): Observable<BlobResponse> {
+  uploadImage(file: File, createdAt?: Date, folder?: string): Observable<BlobResponse> {
     const formData = new FormData();
     formData.append('file', file);
     let params = new HttpParams();
     if (createdAt) params = params.append('createdAt', createdAt.toISOString());
+    if (folder) params = params.append('folder', folder);
     return this.http.post<BlobResponse>(`${this.baseUrl}/images`, formData, { params });
   }
 
-  uploadDocument(file: File, createdAt?: Date): Observable<BlobResponse> {
+  uploadDocument(file: File, createdAt?: Date, folder?: string): Observable<BlobResponse> {
     const formData = new FormData();
     formData.append('file', file);
     let params = new HttpParams();
     if (createdAt) params = params.append('createdAt', createdAt.toISOString());
+    if (folder) params = params.append('folder', folder);
     return this.http.post<BlobResponse>(`${this.baseUrl}/documents`, formData, { params });
   }
 

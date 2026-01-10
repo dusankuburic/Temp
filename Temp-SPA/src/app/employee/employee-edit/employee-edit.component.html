@@ -53,7 +53,7 @@
     </tmp-card>
   </div>
 
-  @if (employee?.role === 'Moderator') {
+  @if (employee && employee.role === 'Moderator') {
     <div class="employee-edit-moderator-section">
       <div class="employee-edit-section-header">
         <h2 class="employee-edit-section-title">Manage Groups</h2>

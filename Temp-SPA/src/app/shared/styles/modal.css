@@ -7,6 +7,13 @@
  * MODAL HEADER
  * =================================== */
 
+/* Bootstrap Modal Overrides */
+@media (min-width: 1200px) {
+  .modal-dialog.modal-xl {
+    max-width: 95vw; /* maximize width on large screens */
+  }
+}
+
 .modal-header-obsidian {
   /* Layout */
   display: flex;
@@ -208,9 +215,15 @@
 
 .employee-files-grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
+  grid-template-columns: 300px 1fr;
   gap: var(--spacing-l);
   align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .employee-files-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ===================================
@@ -300,6 +313,7 @@
 .upload-card,
 .files-table-card {
   margin-bottom: var(--spacing-l);
+  min-width: 0; /* Important for grid/flex child truncation */
 }
 
 .section-title {
@@ -333,7 +347,8 @@
 }
 
 .file-name {
-  max-width: 520px;
+  max-width: 400px; /* Increased from 250px as modal is now 95vw */
+  padding-right: var(--spacing-s);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
