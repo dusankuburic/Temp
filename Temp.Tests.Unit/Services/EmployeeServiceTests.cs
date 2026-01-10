@@ -10,6 +10,7 @@ using Temp.Services.Employees;
 using Temp.Services.Employees.Exceptions;
 using Temp.Services.Employees.Models.Commands;
 using Temp.Services.Employees.Models.Queries;
+using Temp.Services.Integrations.Azure.AzureStorage;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Providers;
 using Temp.Services.Providers.Models;
@@ -22,6 +23,7 @@ public class EmployeeServiceTests
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<ILoggingBroker> _mockLoggingBroker;
     private readonly Mock<IIdentityProvider> _mockIdentityProvider;
+    private readonly Mock<IAzureStorageService> _mockAzureStorageService;
     private readonly Mock<IRepository<Employee>> _mockEmployeeRepository;
     private readonly IFixture _fixture;
     private readonly IEmployeeService _service;
@@ -31,6 +33,7 @@ public class EmployeeServiceTests
         _mockMapper = new Mock<IMapper>();
         _mockLoggingBroker = new Mock<ILoggingBroker>();
         _mockIdentityProvider = new Mock<IIdentityProvider>();
+        _mockAzureStorageService = new Mock<IAzureStorageService>();
         _mockEmployeeRepository = new Mock<IRepository<Employee>>();
 
 
@@ -46,7 +49,8 @@ public class EmployeeServiceTests
             _mockUnitOfWork.Object,
             _mockMapper.Object,
             _mockLoggingBroker.Object,
-            _mockIdentityProvider.Object);
+            _mockIdentityProvider.Object,
+            _mockAzureStorageService.Object);
 
         _fixture = new Fixture();
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
@@ -191,7 +195,7 @@ public class EmployeeServiceTests
         await Assert.ThrowsAsync<EmployeeServiceException>(
             async () => await _service.CreateEmployee(request));
 
-        _mockLoggingBroker.Verify(l => l.LogError(It.IsAny<Exception>()), Times.Once);
+        _mockLoggingBroker.Verify(l => l.LogError(It.IsAny<Exception>()), Times.Exactly(2));
     }
 
     [Fact]
