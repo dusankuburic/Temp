@@ -69,7 +69,8 @@ jobs:
             docker compose ps
 
             # Run database migrations if needed
-            docker exec temp.api-prod dotnet ef database update --no-build || echo "No migrations to apply"
+            # NOTE: container name must match docker-compose.prod.yml
+            docker exec tempapi-prod dotnet ef database update --no-build || echo "No migrations to apply"
 
             echo "Deployment completed successfully!"
 

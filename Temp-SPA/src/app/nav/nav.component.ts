@@ -96,6 +96,14 @@ export class NavComponent extends DestroyableComponent implements OnInit, OnDest
     }
   }
 
+  get currentUser(): any {
+    return this.authService.currentUser;
+  }
+
+  get decodedToken(): any {
+      return this.authService.decodedToken;
+  }
+
   private isMobile(): boolean {
     return typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
   }

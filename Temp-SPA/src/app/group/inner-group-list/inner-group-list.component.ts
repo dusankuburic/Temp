@@ -128,7 +128,7 @@ export class GroupListComponent extends DestroyableComponent implements OnInit, 
 
   openEditModal(groupId: number, organizationId: number): void {
     const initialState: ModalOptions = {
-      class: 'modal-dialog-centered',
+      class: 'modal-dialog-centered modal-xl',
       initialState: {
         title: 'Edit Group',
         groupId: groupId,

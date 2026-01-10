@@ -23,6 +23,8 @@ export class TmpFileUploadComponent {
   @Input() maxSizeMB = 10;
   @Input() employeeId?: number;
   @Input() uploadedFiles: BlobDto[] = [];
+  @Input() customFolder?: string;
+  @Input() compact = false;
 
   @Output() fileUploaded = new EventEmitter<BlobResponse>();
   @Output() fileDeleted = new EventEmitter<string>();
@@ -95,8 +97,8 @@ export class TmpFileUploadComponent {
     this.isUploading = true;
 
     const upload$ = this.fileType === 'Image'
-      ? this.fileService.uploadImage(this.selectedFile)
-      : this.fileService.uploadDocument(this.selectedFile);
+      ? this.fileService.uploadImage(this.selectedFile, undefined, this.customFolder)
+      : this.fileService.uploadDocument(this.selectedFile, undefined, this.customFolder);
 
     upload$.subscribe({
       next: (response: BlobResponse) => {

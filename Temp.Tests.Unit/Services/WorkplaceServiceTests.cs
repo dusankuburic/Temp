@@ -7,6 +7,7 @@ using Moq;
 using Temp.Database.Repositories;
 using Temp.Database.UnitOfWork;
 using Temp.Domain.Models;
+using Temp.Services.Integrations.Azure.AzureStorage;
 using Temp.Services.Integrations.Loggings;
 using Temp.Services.Providers;
 using Temp.Services.Providers.Models;
@@ -24,6 +25,7 @@ public class WorkplaceServiceTests
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<ILoggingBroker> _mockLoggingBroker;
     private readonly Mock<IIdentityProvider> _mockIdentityProvider;
+    private readonly Mock<IAzureStorageService> _mockAzureStorageService;
     private readonly IFixture _fixture;
     private readonly IWorkplaceService _service;
 
@@ -33,6 +35,7 @@ public class WorkplaceServiceTests
         _mockMapper = new Mock<IMapper>();
         _mockLoggingBroker = new Mock<ILoggingBroker>();
         _mockIdentityProvider = new Mock<IIdentityProvider>();
+        _mockAzureStorageService = new Mock<IAzureStorageService>();
         _fixture = new Fixture();
 
         _mockUnitOfWork.Setup(uow => uow.Workplaces).Returns(_mockWorkplaceRepository.Object);
@@ -41,7 +44,8 @@ public class WorkplaceServiceTests
             _mockUnitOfWork.Object,
             _mockMapper.Object,
             _mockLoggingBroker.Object,
-            _mockIdentityProvider.Object);
+            _mockIdentityProvider.Object,
+            _mockAzureStorageService.Object);
 
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
@@ -827,7 +831,8 @@ public class WorkplaceServiceTests
             _mockUnitOfWork.Object,
             _mockMapper.Object,
             _mockLoggingBroker.Object,
-            _mockIdentityProvider.Object);
+            _mockIdentityProvider.Object,
+            _mockAzureStorageService.Object);
 
 
         service.Should().NotBeNull();

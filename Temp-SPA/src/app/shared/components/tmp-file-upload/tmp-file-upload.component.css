@@ -72,6 +72,37 @@
   pointer-events: none;
 }
 
+/* Compact State */
+.upload-zone.compact {
+  min-height: 80px;
+  padding: var(--spacing-s);
+}
+
+.upload-zone.compact .upload-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  margin-bottom: var(--spacing-xs);
+}
+
+.upload-zone.compact .upload-text {
+  font-size: var(--font-size-200);
+  margin-bottom: 0;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.upload-zone.compact .upload-hint {
+  display: none; /* Hide hint to save space */
+}
+
+@media (max-width: 576px) {
+  .upload-zone.compact {
+    min-height: 70px;
+    padding: var(--spacing-xs);
+  }
+}
+
 /* ===================================
  * UPLOAD ZONE CONTENT
  * =================================== */

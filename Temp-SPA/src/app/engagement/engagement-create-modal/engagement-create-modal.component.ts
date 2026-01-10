@@ -11,6 +11,12 @@ import { EngagementService } from 'src/app/core/services/engagement.service';
 import { WorkplaceService } from 'src/app/core/services/workplace.service';
 import { SelectionOption } from 'src/app/shared/components/tmp-select/tmp-select.component';
 import { DestroyableComponent } from 'src/app/core/base/destroyable.component';
+import { faFile, faCloudDownloadAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FileService } from 'src/app/core/services/file.service';
+import { HttpClient } from '@angular/common/http';
+import { TableColumn } from 'src/app/shared/components/tmp-table/tmp-table.component';
+import { BlobResponse } from 'src/app/core/models/blob';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-engagement-create-modal',
@@ -31,6 +37,18 @@ export class EngagementCreateModalComponent extends DestroyableComponent impleme
   workplacesList: SelectionOption[] = [];
   employmentStatusesList: SelectionOption[] = [];
 
+  fileIcon = faFile;
+  downloadIcon = faCloudDownloadAlt;
+  removeIcon = faTrashAlt;
+  employeeFiles: any[] = [];
+  pageNumber = 1;
+  pageSize = 5;
+  fileColumns: TableColumn[] = [
+    { key: 'displayName', header: 'File Name', width: '50%' },
+    { key: 'fileType', header: 'Type', width: '20%' },
+    { key: 'actions', header: 'Actions', align: 'center', width: '30%' }
+  ];
+
   salary = new FormControl('', [
     Validators.required,
     Validators.min(300),
@@ -47,6 +65,8 @@ export class EngagementCreateModalComponent extends DestroyableComponent impleme
     private workplaceService: WorkplaceService,
     private fb: FormBuilder,
     private alertify: AlertifyService,
+    private fileService: FileService,
+    private http: HttpClient,
     public bsModalRef: BsModalRef) {
     super();
   }
@@ -72,6 +92,99 @@ export class EngagementCreateModalComponent extends DestroyableComponent impleme
     this.loadEmployee();
     this.loadWorkplaces();
     this.loadEmploymentStatuses();
+    this.loadEmployeeFiles();
+  }
+
+  loadEmployeeFiles(): void {
+    const images$ = this.fileService.listImages(undefined, undefined, `employees/${this.employeeId}/images`);
+    const documents$ = this.fileService.listDocuments(undefined, undefined, `employees/${this.employeeId}/documents`);
+
+    forkJoin([images$, documents$]).pipe(takeUntil(this.destroy$)).subscribe({
+      next: ([images, documents]) => {
+        const allFiles = [...images, ...documents];
+        this.employeeFiles = allFiles.map(file => ({
+            ...file,
+            displayName: file.name ? (file.name.split('/').pop() || file.name) : 'Unknown',
+            fileTypeDisplay: file.fileType === 'Image' ? 'Image' : 'Document'
+        }));
+      },
+      error: () => {
+        this.alertify.error('Failed to load employee files');
+      }
+    });
+  }
+
+  get paginatedFiles(): any[] {
+      const startIndex = (this.pageNumber - 1) * this.pageSize;
+      return this.employeeFiles.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  onPageChanged(page: number): void {
+      this.pageNumber = page;
+  }
+
+  onFileUploaded(response: BlobResponse): void {
+      if (!response.error && response.blob) {
+          const fileName = response.blob.name || 'Unknown';
+          const processed = {
+              ...response.blob,
+              displayName: fileName.split('/').pop() || fileName,
+              fileTypeDisplay: response.blob.fileType === 'Image' ? 'Image' : 'Document'
+          };
+          this.employeeFiles = [...this.employeeFiles, processed];
+      }
+  }
+
+  onFileDeleted(path: string): void {
+      this.employeeFiles = this.employeeFiles.filter(f => f.name !== path);
+  }
+
+  downloadFile(file: any): void {
+      if (!file || !file.name) {
+          this.alertify.error("File path not available");
+          return;
+      }
+
+      this.fileService.getDownloadUrl(file.name).pipe(takeUntil(this.destroy$)).subscribe({
+          next: (res) => {
+              this.http.get(res.url, { responseType: 'blob' }).subscribe({
+                  next: (blob) => {
+                      const url = window.URL.createObjectURL(blob);
+                      const link = document.createElement('a');
+                      link.href = url;
+                      link.download = file.displayName || 'download';
+                      link.click();
+                      window.URL.revokeObjectURL(url);
+                  },
+                  error: () => {
+                      this.alertify.error('Failed to download file');
+                  }
+              });
+          },
+          error: () => {
+              this.alertify.error('Failed to get download URL');
+          }
+      });
+  }
+
+  removeFile(file: any): void {
+      if (!file) return;
+
+      this.alertify.confirm('Are you sure you want to delete this file?', () => {
+          this.fileService.delete(file.name).pipe(takeUntil(this.destroy$)).subscribe({
+              next: (response) => {
+                  if (!response.error) {
+                      this.alertify.success('File deleted successfully');
+                      this.onFileDeleted(file.name);
+                  } else {
+                      this.alertify.error(response.errorMessage || 'Delete failed');
+                  }
+              },
+              error: () => {
+                  this.alertify.error('Failed to delete file');
+              }
+          });
+      });
   }
 
   loadEmployee(): void {
